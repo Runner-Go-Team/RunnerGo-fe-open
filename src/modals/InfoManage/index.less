@@ -1,0 +1,205 @@
+.info-modal {
+    .apipost-modal-container {
+        width: 567px;
+        height: 592px;
+        background-color: var(--module);
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+    }
+
+    .apipost-modal-body {
+        position: relative;
+    }
+
+    .logo-right {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .close-btn {
+        width: 24px;
+        height: 24px;
+        background-color: var(--border-line);
+        border-radius: 3px;
+        position: absolute;
+        top: 18px;
+        right: 40px;
+
+        svg {
+            fill: var(--font-1);
+            width: 12px;
+            height: 12px;
+        }
+    }
+
+    &-container {
+        margin-top: 68px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .avatar-item {
+            position: relative;
+            
+            .avatar-mask {
+                background-color: var(--avatar) !important;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: var(--common-white);
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                cursor: pointer;
+            }
+
+            .avatar {
+                height: 100px;
+                width: 100px;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            color: var(--font-1);
+            width: 333px;
+            border-bottom: 1px solid var(--border-line);
+
+            &-left {
+                display: flex;
+                flex-direction: column;
+
+                p:first-child {
+                    margin-bottom: 5px;
+                    font-size: 16px;
+                }
+
+                p:last-child {
+                    font-size: 14px;
+                    color: var(--default-font);
+                }
+            }
+
+            &-right {
+                min-width: 75px;
+                height: 26px;
+                border: 1px solid var(--theme-color);
+                border-radius: 49px;
+                color: var(--theme-color);
+            }
+        }
+
+        .quit-btn {
+            margin-top: 21px;
+            min-width: 333px;
+            height: 40px;
+            background-color: var(--theme-color);
+            border-radius: 5px;
+            color: var(--common-white);
+            font-size: 14px;
+        }
+    }
+
+    .apipost-modal-close {
+        display: none;
+    }
+}
+
+.edit-name-modal {
+    .apipost-modal-container {
+        width: 567px;
+        height: 592px;
+        position: absolute;
+        background-color: var(--module);
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+    }
+
+    .apipost-modal-body {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .logo-right {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .close-btn {
+            width: 24px;
+            height: 24px;
+            background-color: var(--border-line);
+            border-radius: 3px;
+            position: absolute;
+            top: 18px;
+            right: 40px;
+
+            svg {
+                fill: var(--font-1);
+                width: 12px;
+                height: 12px;
+            }
+        }
+    }
+
+    .apipost-modal-close {
+        display: none;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-width: 392px;
+
+        .edit-name-title {
+            color: var(--font-1);
+            font-size: 20px;
+        }
+
+        .apipost-input-inner-wrapper {
+            background-color: transparent;
+            border: 1px solid var(--border-line);
+            border-radius: 5px;
+            margin-top: 30px;
+            width: 392px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 26px;
+            width: 100%;
+
+            .apipost-btn {
+                width: 186px;
+                height: 40px;
+                border-radius: 5px;
+            }
+
+            .cancel-btn {
+                background-color: var(--border-line);
+                border: 1px solid var(--border-line);
+                color: var(--font-1);
+            }
+
+            .ok-btn {
+                background-color: var(--theme-color);
+                color: var(--common-white);
+            }
+        }
+
+
+    }
+}

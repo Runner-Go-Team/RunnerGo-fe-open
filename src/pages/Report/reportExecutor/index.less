@@ -1,0 +1,61 @@
+.report-executor {
+    display: flex;
+    align-items: center;
+    color: var(--font-1);
+    margin-top: 14px;
+    .executor-info {
+        display: flex;
+        align-items: center;
+        // margin-left: 28px;
+        margin-left: 4px;
+        p {
+            margin-left: 4px;
+        }
+        .avatar {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+        }
+    }
+    .create-time, .last-time, .run-time {
+        margin-left: 16px;
+    }
+    .close-debug {
+        min-width: 120px;
+        height: 26px;
+        background-color: var(--sub-color-5-10);
+        border: 1px solid var(--sub-color-5);
+        border-radius: 3px;
+        color: var(--font-1);
+        margin-left: 16px;
+
+        svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--font-1);
+            margin-left: 7px;
+        }
+    }
+}
+
+.drop-debug {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 6px;
+    
+    p {
+        width: 163px;
+        height: 23px;
+        margin: 2px 0;
+    }
+    p:hover {
+        color: var(--font-1);
+        cursor: pointer;
+    }
+
+    .select {
+        background-color: var(--bg-5);
+        color: var(--font-1);
+        border-radius: 2px;
+    }
+}

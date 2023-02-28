@@ -1,0 +1,222 @@
+.event-list-panel {
+  padding-right: 20px;
+
+
+  .event-item-wraper {
+    display: flex;
+    flex-direction: row;
+    // align-items: center;
+    margin: 8px 0;
+
+
+    /*拖动排序*/
+    .sort-item {
+      width: 40px;
+      display: flex;
+      // padding-top: 10px;
+      align-items: center;
+      justify-content: center;
+      // background-color: #cccccc;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        cursor: move;
+        fill: var(--content-color-secondary);
+      }
+
+      &:hover {
+        svg {
+          fill: var(--content-color-primary);
+        }
+      }
+    }
+
+    .buttons-panel {
+      padding: 8px;
+      padding-top: 0;
+
+      .apipost-light-btn {
+        width: 100%;
+      }
+    }
+
+    &.api,
+    &.request,
+    &.wait {
+      .expand-item {
+        visibility: hidden;
+      }
+    }
+
+    &.api,
+    &.request,
+    &.script,
+    &.assert,
+    &.wait {
+      .buttons-panel {
+        display: none !important;
+      }
+
+      .btn-more {
+        display: none;
+      }
+    }
+
+    .runner-for-span,
+    .runner-if-span,
+    .runner-while-span {
+      word-break: keep-all;
+      margin: 0 8px;
+    }
+
+    /*主内容*/
+    .event-item-panel {
+      flex: 1;
+      border-radius: var(--border-radius-default);
+      border: 1px solid var(--border-color-default);
+
+      &:hover {
+        color: var(--content-color-primary);
+        // background-color: var(--highlight-background-color-primary);
+      }
+
+      /*首行*/
+      .primary-node {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-right: 10px;
+        padding: 10px 0;
+
+        .expand-item {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          padding: 0 4px;
+
+          .expand-icon {
+            fill: var(--content-color-secondary);
+            width: 16px;
+            height: 16px;
+          }
+
+          &:hover {
+            color: var(--content-color-primary);
+
+            .expand-icon {
+              fill: var(--content-color-primary);
+            }
+          }
+        }
+
+        /*控制器主内容*/
+        .main-wraper {
+          flex: 1;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          .event-path {
+            border-radius: 2px;
+            padding: 0 4px;
+            align-items: center;
+            display: flex;
+            background-color: var(--background-color-tertiary);
+            min-width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            color: var(--content-color-primary);
+          }
+        }
+
+        /*右侧按钮区域*/
+        .button-item {
+          width: auto;
+          display: flex;
+          align-items: center;
+
+          .btn-more {
+            width: 30px;
+            height: 30px;
+
+          }
+
+          .apipost-btn {
+            margin-left: 4px;
+            height: 24px;
+          }
+        }
+      }
+
+      /*子列表*/
+      .child-node {
+        display: flex;
+        flex-direction: row;
+
+        /*左侧锁进*/
+        .item-padding {}
+
+        /*右侧事件列表*/
+        .event-list {
+          flex: 1;
+
+
+
+          .script-panel {
+            height: 300px;
+          }
+        }
+
+      }
+
+      .buttons-panel {
+        display: flex;
+        justify-content: center;
+      }
+
+    }
+
+  }
+
+  /* 主内容*/
+  .event-content-panel {
+    background-color: #cccccc;
+  }
+
+
+
+  /*调试按钮*/
+  .btn-execute{
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin-right: 10px;
+    background-color: var(--base-color-info) !important;
+    &>svg{
+      fill:var(--font-1)fff;
+    }
+    @keyframes btnRotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    &.requesting {
+
+      opacity: 0.5;
+      &>svg{
+       animation: btnRotate 1s infinite linear;
+      }
+    }
+  }
+
+  /*api request调试区域*/
+  .api-runner-box{
+    padding-right: 10px;
+    padding-bottom: 10px;
+  }
+
+}

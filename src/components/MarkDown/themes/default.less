@@ -1,0 +1,119 @@
+@charset "utf-8";
+
+
+.toastui-editor-defaultUI {
+  border-color: var(--border-color-default) !important;
+  color: var(--content-color-secondary) !important;
+  border-radius: 0;
+
+  .toastui-editor-defaultUI-toolbar {
+    background-color: var(--background-color-primary) !important;
+    padding: 0;
+
+    .toastui-editor-toolbar-group {
+      align-items: center;
+
+      .toastui-editor-toolbar-icons {
+        transform: scale(0.7);
+        margin: 0 -3px 0 0;
+      }
+    }
+  }
+
+  button {
+    border: 1px solid var(--border-color-strong);
+
+    &:hover {
+      border: 1px solid var(--border-color-strong) !important;
+      color: var(--content-color-primary) !important;
+      background-color: var(--highlight-background-color-tertiary) !important;
+
+      svg {
+        fill: var(--content-color-primary);
+      }
+    }
+  }
+
+  .toastui-editor-toolbar-divider {
+    background-color: var(--border-color-strong) !important;
+  }
+
+  .toastui-editor-tabs .tab-item {
+
+    &.active {
+      color: var(--base-color-info) !important;
+      border-bottom-color: var(--base-color-info) !important;
+    }
+  }
+
+  .toastui-editor-ww-code-block-language {
+    display: none;
+  }
+
+  .toastui-editor-ok-button {
+    background-color: var(--base-color-info) !important;
+
+    &:hover {
+      background-color: var(--base-color-info) !important;
+      opacity: 0.8;
+    }
+  }
+
+  .ProseMirror {
+    color: var(--content-color-secondary) !important;
+  }
+
+  .toastui-editor-main-container,
+  .toastui-editor-contents * {
+    color: var(--content-color-primary) !important;
+  }
+  .toastui-editor-main-container,
+  .toastui-editor-contents del {
+    color: #999 !important;
+  }
+
+  .toastui-editor-main .toastui-editor-md-splitter {
+    background-color: var(--border-color-default) !important;
+  }
+
+  .toastui-editor-defaultUI-toolbar {
+    border-bottom: 1px solid var(--border-color-default) !important;
+  }
+
+  .toastui-editor-mode-switch {
+    background-color: var(--background-color-secondary) !important;
+    border-top: 1px solid var(--border-color-default) !important;
+  }
+
+  .toastui-editor-mode-switch .tab-item {
+    display: inline-block;
+    width: 96px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    color: var(--content-color-secondary) !important;
+    margin-top: -1px;
+    margin-right: -1px;
+    cursor: pointer;
+    background-color: var(--background-color-secondary) !important;
+    box-sizing: border-box;
+    border: 0;
+    border-radius: 0;
+    &.active {
+      font-weight: 500;
+      height: 28px;
+      line-height: 28px;
+      color: var(--content-color-primary) !important;
+      border-top: 0;
+      border-bottom: 2px solid var(--base-color-brand);
+    }
+  }
+
+  .toastui-editor-contents .toastui-editor-md-preview-highlight::after {
+    background-color: var(--text-select-color) !important
+  }
+
+  .toastui-editor-ww-container{
+    background-color: transparent!important
+  }
+}

@@ -1,0 +1,79 @@
+.email-report-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--font-1);
+    padding-top: 20px;
+
+    &-left {
+        display: flex;
+        align-items: center;
+
+        svg {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            fill: var(--font-color);
+        }
+
+        .report-name {
+            font-size: 14px;
+            margin-left: 4px;
+        }
+
+        .report-status {
+            height: 21px;
+            background-color: var(--select);
+            border-radius: 3px;
+            padding: 2px 8px;
+            color: var(--run-green);
+            margin-left: 16px;
+            line-height: 17px;
+        }
+    }
+
+    &-right {
+        display: flex;
+        align-items: center;
+
+        .notice,
+        .download {
+            height: 25px;
+            background: var(--select);
+            border-radius: 3px;
+            padding: 8px;
+            color: var(--font-1);
+            svg {
+                fill: var(--font-1);
+            }
+        }
+
+        .notice {
+            // width: 96px;
+            margin-right: 16px;
+            svg {
+                margin-right: 5px;
+            }
+        }
+
+        .download {
+            width: 48px;
+            margin-right: 16px;
+        }
+
+        .stop {
+            // width: 84px;
+            height: 25px;
+            background: var(--theme-color) !important;
+            border-radius: 3px;
+            padding: 12px 8px;
+            color: var(--common-white);
+            svg {
+                fill: var(--common-white);
+                margin-right: 8px;
+                width: 10px;
+                height: 10px;
+            }
+        }
+    }
+}

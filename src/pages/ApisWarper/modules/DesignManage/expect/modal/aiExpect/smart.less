@@ -1,0 +1,105 @@
+.smart-hope {
+  &-case {
+    position: relative;
+    margin: 0 0 24px 0;
+    padding: 0 0 0 40px;
+    &:hover {
+      .del-case {
+        display: flex;
+      }
+    }
+    &::after {
+      content: '';
+      width: 1px;
+      height: calc(100% - 40px);
+      background: var(--border-color-default);
+      position: absolute;
+      top: 24px;
+      left: 18px;
+    }
+    &-condition {
+      width: 40px;
+      text-align: center;
+      position: absolute;
+      top: 4px;
+      left: 0;
+      color: var(--log-blue);
+    }
+    &-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 24px;
+      margin: 0 0 16px 0;
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+      .top-left, .top-right {
+        display: flex;
+        align-items: center;
+      }
+      .del-case {
+        display: none;
+        align-items: center;
+        color: var(--base-color-brand);
+        cursor: pointer;
+        margin: 0 8px 0 0;
+        svg {
+          fill: var(--base-color-brand);
+          margin: 0 4px 0 0;
+        }
+      }
+    }
+    &-bottom {
+      display: flex;
+      align-items: center;
+      margin: 16px 0;
+      .bottom-return {
+        font-size: var(--size-12px);
+        color: var(--base-color-info);
+        margin: 0 4px 0 0;
+      }
+      .bottom-text {
+        color: var(--content-color-secondary);
+      }
+    }
+  }
+
+  &-add {
+    width: 100%;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* 暗黑模式/3 */
+    // background: var(--bg-3);
+    /* 暗黑模式/4 */
+    border: 1px dashed var(--border-color-default);;
+    border-radius: 3px;
+    margin: 0 0 24px 0;
+    svg {
+      width: 16px;
+      height: 16px;
+      margin: 0 8px 0 0;
+    }
+  }
+
+  &-defaultcase {
+    display: flex;
+    align-items: center;
+    height: 24px;
+
+    .defaultcase-return {
+      color: var(--base-color-brand);
+      font-size: var(--size-12px);
+      margin: 0 4px 0 0;
+    }
+
+    .defaultcase-text {
+      color: var(--content-color-secondary);
+    }
+
+  }
+}

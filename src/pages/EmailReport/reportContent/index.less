@@ -1,0 +1,35 @@
+.report {
+    padding: 16px;
+    &-logo {
+        display: flex;
+        margin-top: 15px;
+        justify-content: center;
+        align-items: center;
+        .svg-right {
+            margin: 0 12px 0 16px;
+            fill: var(--theme-color);
+
+            path {
+                fill: var(--theme-color);
+            }
+        }
+        &-title {
+            font-size: 16px;
+            align-items: center;
+            color: var(--font-1);
+        }
+    }
+    .scene-tabs {
+        margin-top: 32px;
+    }
+    .tabs-item.active {
+        border-bottom-color: var(--theme-color) !important;
+        background-color: var(--select);
+    }
+    .logo-right {
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+    }
+}

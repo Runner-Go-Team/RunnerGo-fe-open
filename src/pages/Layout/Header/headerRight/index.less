@@ -1,0 +1,387 @@
+.header-right {
+  display: flex;
+  align-items: center;
+
+  .handle-log {
+    min-width: 64px;
+    width: auto !important;
+    height: 30px;
+    background-color: var(--border-line);
+    border-radius: 5px;
+    color: var(--font-1);
+    padding: 5px 8px;
+    margin: 0;
+    margin-left: 12px;
+    border: none;
+
+    svg {
+      min-width: 13px;
+      min-height: 13px;
+    }
+  }
+
+  .team-person {
+    margin-left: 12px;
+    display: flex;
+
+    .person-avatar {
+      position: relative;
+      margin-left: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
+
+
+      .person-status {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color: #07E81D;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+    }
+
+    .person-number {
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--border-line);
+      background-color: var(--bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 4px;
+    }
+  }
+
+  .invite {
+    margin-left: 12px;
+    min-width: 64px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: var(--theme-color);
+    padding: 5px 8px;
+    color: #fff;
+
+    svg {
+      fill: #fff;
+      margin-right: 6px;
+    }
+  }
+
+  .invite:hover {
+    background-color: #5567FF;
+  }
+
+  .more-btn {
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--font-1);
+      margin-right: 8px;
+    }
+  }
+
+  .single-user {
+    height: 50px;
+    border-bottom: 1px solid var(--border-color-default);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+
+    .worker-avatar {
+      position: relative;
+
+      img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin: 0 8px 0 0;
+      }
+
+      .isOnline {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        left: 15px;
+        top: 15px;
+        background: var(--base-color-success);
+
+        &.notOnline {
+          background: var(--background-color-tertiary);
+        }
+      }
+    }
+
+    .worker-msg {
+      width: 128px;
+      font-size: var(--size-12px);
+      flex-grow: 0;
+      flex-shrink: 0;
+
+      .name {
+        color: var(--content-color-primary);
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .email {
+        color: var(--content-color-secondary);
+        height: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-top: 4px;
+      }
+    }
+
+    .work-role {
+      width: 44px;
+      height: 17px;
+      margin: 0 0 0 8px;
+      position: relative;
+
+      .role-msg {
+        width: 44px;
+        height: 17px;
+        border-radius: 3px;
+        cursor: pointer;
+        line-height: 17px;
+        text-align: center;
+        font-size: var(--size-12px);
+        color: var(--content-color-constant);
+        background-color: var(--base-color-brand);
+
+        &.isRead {
+          color: var(--content-color-primary);
+          background-color: var(--background-color-tertiary);
+        }
+
+        &.isOwner {
+          background-color: var(--base-color-success);
+        }
+
+        &.isAdmin {
+          background-color: var(--base-color-info);
+        }
+      }
+    }
+  }
+
+  .online-list {
+    width: 234px;
+    max-height: 500px;
+    overflow-y: auto;
+  }
+}
+
+.single-user {
+  height: 50px;
+  border-bottom: 1px solid var(--border-color-default);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  color: var(--font-1);
+
+  .worker-avatar {
+    position: relative;
+
+    img {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin: 0 8px 0 0;
+    }
+
+    .isOnline {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      left: 15px;
+      top: 15px;
+      background: var(--base-color-success);
+
+      &.notOnline {
+        background: var(--background-color-tertiary);
+      }
+    }
+  }
+
+  .worker-msg {
+    width: 128px;
+    font-size: var(--size-12px);
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    .name {
+      color: var(--content-color-primary);
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .email {
+      color: var(--content-color-secondary);
+      height: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+  }
+
+  .work-role {
+    width: 44px;
+    height: 17px;
+    margin: 0 0 0 8px;
+    position: relative;
+
+    .role-msg {
+      width: 44px;
+      height: 17px;
+      border-radius: 3px;
+      cursor: pointer;
+      line-height: 17px;
+      text-align: center;
+      font-size: var(--size-12px);
+      color: var(--content-color-constant);
+      background-color: var(--base-color-brand);
+
+      &.isRead {
+        color: var(--content-color-primary);
+        background-color: var(--background-color-tertiary);
+      }
+
+      &.isOwner {
+        background-color: var(--base-color-success);
+      }
+
+      &.isAdmin {
+        background-color: var(--base-color-info);
+      }
+    }
+  }
+}
+
+.change-role {
+  .role-item {
+    width: 64px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    text-align: center;
+    color: var(--content-color-secondary);
+
+    &:hover {
+      background: var(--base-color-info);
+      color: var(--content-color-constant);
+    }
+  }
+}
+
+
+.counter {
+  width: 30px;
+  height: 30px;
+  margin-left: 4px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color-default);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--content-color-secondary);
+  ;
+  position: relative;
+  cursor: pointer;
+}
+
+.user-home {
+  min-width: 166px;
+  height: 178px;
+  color: var(--font-1);
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: center;
+  padding: 12px;
+  border-radius: 5px;
+  background-color: var(--bg);
+  border: none;
+
+  .name {
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--theme-color);
+  }
+
+  .email {
+    font-weight: 400;
+    font-size: 12px;
+    margin-top: 4px;
+    color: #666;
+  }
+
+  .line {
+    width: 130px;
+    border: 1px solid var(--bg-4);
+    margin-top: 12px;
+    transform: scale(1, .5);
+  }
+
+  .person-page {
+    width: 130px;
+    height: 22px;
+    color: var(--font-1);
+    padding: 7px 12px;
+    background-color: var(--select-hover);
+    margin-top: 15px;
+
+    svg {
+      margin-right: 8px;
+      fill: var(--font-1);
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .person-drop {
+    display: flex;
+    flex-direction: column;
+
+    &-item {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      cursor: pointer;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--font-1);
+      }
+
+      span {
+        margin-left: 8px;
+      }
+    }
+  }
+}

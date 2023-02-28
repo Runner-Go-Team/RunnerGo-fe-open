@@ -1,0 +1,580 @@
+.create-preset {
+    display: flex;
+    flex-direction: column;
+
+    .must-input {
+        margin-right: 6px;
+    }
+
+    .apipost-modal-container {
+        width: 800px;
+        min-height: 570px;
+    }
+
+    .apipost-modal-body {
+        padding: 32px;
+        background-color: var(--module);
+
+        padding-bottom: 48px;
+    }
+
+    .apipost-modal-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: var(--scene-api-line);
+
+        .apipost-btn-default {
+            background-color: var(--module);
+            border-radius: 5px;
+        }
+    }
+
+    .apipost-modal-close {
+        display: none;
+    }
+
+    .arco-select {
+        height: 30px;
+        background-color: var(--bg);
+        border-color: transparent;
+
+        .arco-select-view {
+            background-color: var(--bg);
+            border: none;
+        }
+    }
+
+    .select-date {
+        display: flex;
+        flex-direction: column;
+
+        .label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        &-detail {
+            display: flex;
+            margin-top: 6px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .arco-picker {
+            background-color: var(--bg);
+            cursor: pointer;
+            width: 192px;
+
+            input {
+                font-size: 12px !important;
+            }
+        }
+
+        .time-explain {
+            line-height: 14px;
+            margin-bottom: 20px;
+        }
+    }
+
+    .top {
+        display: flex;
+        justify-content: space-between;
+
+        &-left {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--font-1);
+        }
+
+        &-right {
+            width: 24px;
+            height: 24px;
+            background-color: var(--border-line);
+            border-radius: 3px;
+
+            svg {
+                min-width: 12px;
+                min-height: 12px;
+                width: 12px;
+                height: 12px;
+
+                fill: var(--font-1);
+            }
+        }
+    }
+
+    .config-name {
+        display: flex;
+        align-items: center;
+        margin-top: 26px;
+        margin-bottom: 10px;
+
+        p {
+            white-space: nowrap;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .arco-input {
+            width: 300px;
+            height: 32px;
+            border-radius: 3px;
+            background-color: var(--bg);
+            margin-left: 6.77px;
+        }
+    }
+
+    .task-config-container {
+        display: flex;
+        flex-direction: row;
+        background-color: var(--module);
+        border-radius: 5px;
+        box-sizing: border-box;
+        padding-top: 12px;
+        padding-left: 8px;
+
+        &-left {
+            display: flex;
+            flex-direction: column;
+
+            .item {
+                display: flex;
+                align-items: center;
+
+                p {
+                    white-space: nowrap;
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+
+
+                .explain {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+
+                    &-left {
+                        display: flex;
+                        align-items: center;
+
+                        p {
+                            margin-right: 6px;
+                        }
+
+                        svg {
+                            cursor: pointer;
+                        }
+                    }
+
+                    &-right {
+                        background-color: var(--bg-1);
+                        width: 146px;
+                        height: 32px;
+                        border: 1px solid var(--bg-4);
+                        border-radius: 3px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 6px;
+                        padding-right: 0;
+                        box-sizing: border-box;
+                        margin-right: 20px;
+
+                        .time-item {
+                            display: flex;
+                            flex-direction: column !important;
+                        }
+
+                        .arco-select {
+                            height: 30px;
+                            background-color: var(--bg);
+                            border-color: transparent;
+
+                            .arco-select-view {
+                                background-color: var(--bg);
+                                border: none;
+                            }
+
+                            .arco-select-view-value {
+                                font-size: 14px;
+                                padding-left: 20px;
+                            }
+
+                            .arco-select-view-suffix {
+                                svg {
+                                    width: 8px;
+                                    height: 8px;
+                                    min-width: 8px;
+                                    fill: var(--font-1);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .select-date {
+                    display: flex;
+                    margin-top: 15px;
+                    width: 100%;
+
+                    &-left {
+                        background-color: var(--bg-1);
+                        width: 146px;
+                        height: 32px;
+                        border: 1px solid var(--bg-4);
+                        border-radius: 3px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 6px;
+                        padding-right: 0;
+                        box-sizing: border-box;
+                        margin-right: 20px;
+
+                        .apipost-select {
+                            height: 30px;
+                            background-color: var(--bg-1);
+                            border-color: transparent;
+
+                            .apipost-select-view-text {
+                                font-size: 14px;
+                            }
+
+                            .apipost-select-view-suffix {
+                                svg {
+                                    width: 8px;
+                                    height: 8px;
+                                    min-width: 8px;
+                                    fill: var(--font-1);
+                                }
+                            }
+                        }
+                    }
+
+                    &-right {
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+                }
+            }
+
+            .time-select {
+                display: flex;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .apipost-table {
+                margin-top: 32px;
+            }
+
+            .other-config {
+                box-sizing: border-box;
+                padding: 10px 0;
+                // border: 1px solid var(--bg-4);
+                // border-radius: 5px;
+                display: flex;
+                flex-direction: column;
+                // height: 94px;
+                align-items: baseline;
+
+                .mode-config-title {
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+
+                &-item {
+                    margin-top: 15px;
+
+                    .apipost-radio-group {
+                        display: flex;
+                        flex-wrap: wrap;
+
+                        .apipost-radio-wrapper {
+                            width: 45%;
+
+                            .apipost-radio-children {
+                                display: flex;
+                                align-items: center;
+
+                                .label {
+                                    white-space: nowrap;
+                                }
+
+                                .arco-input {
+                                    margin-left: 10px;
+                                    width: 40%;
+                                    margin-right: 5px;
+                                    background-color: var(--bg);
+                                    border: none;
+                                }
+                            }
+                        }
+                    }
+
+                    .other-config-detail {
+                        display: flex;
+                        flex-direction: column;
+
+                        .config-detail-item {
+                            display: flex;
+                            align-items: center;
+                            margin-top: 15px;
+
+                            span {
+                                white-space: nowrap;
+                                width: 130px;
+                            }
+
+                            .arco-input {
+                                width: 180px;
+                                margin-left: 20px;
+                                margin-right: 5px;
+                                background-color: var(--bg);
+                                border: none;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        .apipost-radio-group,
+        .apipost-switch {
+            margin-left: 4px;
+        }
+
+        &-right {
+            width: 450px;
+            margin-left: 52px;
+
+            .echarts {
+                margin-left: 20px;
+            }
+        }
+
+
+        .other-config {
+            box-sizing: border-box;
+            padding: 10px 0;
+            // border: 1px solid var(--bg-4);
+            // border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            // height: 94px;
+            align-items: baseline;
+
+            .mode-config-title {
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            &-item {
+                margin-top: 15px;
+
+                .apipost-radio-group {
+                    display: flex;
+                    flex-wrap: wrap;
+
+                    .apipost-radio-wrapper {
+                        width: 45%;
+
+                        .apipost-radio-children {
+                            display: flex;
+                            align-items: center;
+
+                            .label {
+                                white-space: nowrap;
+                            }
+
+                            .arco-input {
+                                margin-left: 10px;
+                                width: 40%;
+                                margin-right: 5px;
+                                background-color: var(--bg);
+                                border: none;
+                            }
+                        }
+                    }
+                }
+
+                .other-config-detail {
+                    display: flex;
+                    flex-direction: column;
+
+                    .config-detail-item {
+                        display: flex;
+                        align-items: center;
+                        margin-top: 15px;
+
+                        span {
+                            white-space: nowrap;
+                            width: 130px;
+                        }
+
+                        .arco-input {
+                            width: 180px;
+                            margin-left: 20px;
+                            margin-right: 5px;
+                            background-color: var(--bg);
+                            border: none;
+                        }
+                    }
+                }
+
+            }
+
+            .task-config-detail {
+                display: flex;
+                justify-content: flex-start;
+                flex-direction: column;
+
+                .left {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    // height: 229px;
+
+                    &-container {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: flex-start;
+                        // height: 220px;
+                        // padding-top: 16px;
+
+                        p {
+                            margin-bottom: 32px;
+                            cursor: pointer;
+                            height: 12px;
+                            margin-right: auto;
+                        }
+
+                        .select {
+                            color: var(--theme-color);
+                        }
+                    }
+                }
+
+                .right {
+                    margin-left: 0;
+                    position: relative;
+                    height: 229px;
+
+                    .radio-group {
+                        display: flex;
+                        margin-bottom: 12px;
+
+                        &-item {
+                            display: flex;
+                            align-items: center;
+
+                            .apipost-radio-children {
+                                display: flex;
+                                align-items: center;
+                            }
+
+                            span {
+                                white-space: nowrap;
+                            }
+
+                            .arco-input {
+                                width: 100px;
+                                height: 29px;
+                                margin-left: 2px;
+                                background-color: var(--bg);
+                                border: none;
+                            }
+                        }
+                    }
+
+                    // .delta {
+                    //     position: absolute;
+                    //     width: 0;
+                    //     height: 0;
+                    //     border: 20px solid;
+                    //     border-color: transparent #f00 transparent transparent;
+                    //     // border-right: #f00;
+                    //     top: 0;
+                    //     z-index: 999;
+                    // }
+
+                    &-container,
+                    &-container-first {
+                        min-height: 229px;
+                        background-color: var(--select-hover);
+                        padding: 12px 10px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start !important;
+                        box-sizing: border-box;
+                        border-radius: 6px;
+                        border: 1px solid var(--border-line);
+
+                        .right-item {
+                            display: flex;
+                            margin-bottom: 16px;
+                            align-items: center;
+
+                            .reheat-explain {
+                                display: flex;
+                                width: 100px;
+
+                                span {
+                                    width: auto;
+                                }
+                            }
+
+                            span {
+                                width: 100px;
+                                white-space: nowrap;
+                            }
+
+                            .arco-input {
+                                width: 270px;
+                                height: 29px;
+                                background-color: var(--bg);
+                                border: none;
+                                font-size: 12px;
+                            }
+                        }
+                    }
+
+                    &-container-first {
+                        min-height: 130px !important;
+                        align-items: flex-start;
+
+                        .arco-input {
+                            font-size: 12px;
+                            background-color: var(--bg);
+                        }
+
+                        .right-item {
+                            // margin-left: 6px;
+
+                            span {
+                                width: 100px;
+                            }
+
+                            .arco-input {
+                                width: 270px;
+                                height: 29px;
+                                // margin-left: 8px !important;
+                                background-color: var(--bg);
+                                font-size: 12px;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        }
+    }
+}

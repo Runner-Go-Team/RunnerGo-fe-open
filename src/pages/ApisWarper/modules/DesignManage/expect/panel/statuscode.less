@@ -1,0 +1,25 @@
+ .http-status-code-list {
+        background-color: var(--background-color-primary);
+        border: 1px solid var(--border-color-default);
+        box-sizing: border-box;
+        backdrop-filter: blur(20px);
+        font-size: var(--size-14px);
+        max-height: 200px;
+        overflow: auto;
+        position: absolute;
+        border-radius: var(--border-radius-default);
+        padding: 3px;
+        right: 0;
+        z-index: 999;
+        width: 150px;
+        .status-code-item {
+          height: 28px;
+          line-height: 28px;
+          padding: 0 9px;
+          cursor: pointer;
+          &:hover {
+            color: var(--content-color-primary);
+            background-color: var(--highlight-background-color-primary);
+          }
+        }
+      }

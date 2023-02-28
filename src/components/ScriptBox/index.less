@@ -1,0 +1,70 @@
+.script-box {
+  display: flex;
+  height: 100%;
+
+  .scale-item-content {
+    height: 100%;
+  }
+
+  &-editor {
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  &-scriptlist {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    padding: 12px 0;
+    border-radius: var(--border-radius-default);
+    border: 1px solid var(--border-color-default);
+    background-color: var(--background-color-secondary);
+    color: var(--content-color-secondary);
+
+    & .script-item {
+      height: 28px;
+      font-size: var(--size-12px);
+      display: flex;
+      align-items: center;
+      border-radius: 0;
+      justify-content: space-between;
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      padding: 0 16px;
+      cursor: pointer;
+
+      .scripticon {
+        width: 12px;
+        height: 12px;
+        padding: 3px;
+        margin-left: 8px;
+        text-align: center;
+        background-color: var(--highlight-background-color-tertiary);
+        border-radius: 3px;
+      }
+
+      .svgfill {
+        width: 16px;
+        fill: var(--content-color-secondary);
+      }
+
+      &:hover {
+        color: var(--content-color-primary);
+        background-color: var(--highlight-background-color-secondary);
+
+        .scripticon {
+          background-color: var(--highlight-background-color-tertiary);
+        }
+
+        .svgfill {
+          fill: var(--content-color-primary);
+        }
+      }
+    }
+
+  }
+
+}

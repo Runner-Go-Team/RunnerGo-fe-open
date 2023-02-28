@@ -1,0 +1,159 @@
+.report-list {
+    padding: 12px;
+    background-color: var(--module);
+    height: 100%;
+    margin-top: 14px;
+
+    .report-table {
+        // width: 95%;
+        // margin: 0 auto;
+        margin-top: 12px;
+        margin-bottom: 18px;
+        padding-right: 8px;
+
+        // min-height: 500px;
+        // margin: 40px auto;
+        .apipost-table {
+            position: relative;
+
+
+            .empty {
+                width: 82vw;
+                height: 400px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                // text-align: center;
+                // line-height: 500px;
+                // position: absolute;
+                // top: 50%;
+                // color: var(--font-1);
+
+                p {
+                    color: var(--font-2) !important;
+                    margin-top: 8px;
+                }
+            }
+        }
+
+        .apipost-table-th {
+            background-color: var(--bg-3);
+        }
+
+        .apipost-table-td {
+            color: var(--font-1);
+            height: 30px;
+
+            .apipost-table-cell {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        .arco-table-container {
+            border-color: var(--border-line);
+        }
+
+
+        .arco-table-tr {
+
+            .arco-table-th {
+                background-color: var(--bg);
+                border-color: var(--border-line);
+            }
+
+            .arco-table-checkbox {
+                .arco-table-th-item {
+                    margin-left: 0;
+                    padding-left: 0 !important;
+                }
+            }
+
+            .arco-checkbox-indeterminate {
+                .arco-checkbox-mask {
+                    background-color: var(--sub-color-1);
+                }
+            }
+
+            .arco-checkbox-checked {
+                .arco-checkbox-mask {
+                    background-color: var(--sub-color-1);
+                }
+            }
+
+            .arco-table-td {
+                background-color: var(--module);
+                border-color: var(--border-line);
+            }
+        }
+
+        .handle-content {
+            display: flex;
+            justify-content: center;
+
+            div {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+            }
+
+            .run-btn,
+            .stop-btn {
+                width: 60px;
+                height: 18px;
+                border-radius: 3px;
+                padding: 10px 8px;
+                color: var(--font-1);
+                margin-right: 25px;
+            }
+
+            .run-btn {
+                background: var(--run-green);
+            }
+
+            .stop-btn {
+                background: var(--delete-red);
+            }
+
+            .delete-svg {
+                fill: #f00;
+            }
+
+            svg {
+                width: 16px;
+                height: 16px;
+                fill: var(--font-1);
+                flex: 1;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .arco-table-border .arco-table-container::before {
+        border-color: var(--border-line);
+        background-color: var(--border-line);
+    }
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table-demo-resizable-column .react-resizable {
+    position: relative;
+    background-clip: padding-box;
+}
+
+.table-demo-resizable-column .react-resizable-handle {
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    bottom: 0;
+    right: -5px;
+    cursor: col-resize;
+    z-index: 1;
+}

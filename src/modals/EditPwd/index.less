@@ -1,0 +1,141 @@
+.edit-pwd-modal {
+    .edit-pwd-title {
+        color: var(--font-1);
+        font-weight: 600;
+        font-size: 16px;
+        margin: 26px 0;
+    }
+
+    .apipost-modal-container {
+        width: 567px;
+        height: 592px;
+        background-color: var(--module);
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+    }
+
+    .apipost-modal-body {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo-right {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .close-btn {
+        width: 24px;
+        height: 24px;
+        background-color: var(--border-line);
+        border-radius: 3px;
+        position: absolute;
+        top: 18px;
+        right: 40px;
+
+        svg {
+            fill: var(--font-1);
+            width: 12px;
+            height: 12px;
+        }
+    }
+
+    .input-error {
+        border: 1px solid var(--run-red);
+        background-color: rgba(192, 60, 60, 0.05);
+    }
+
+    .text-error {
+        margin-top: 10px;
+        color: var(--run-red);
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .apipost-modal-close {
+        display: none;
+    }
+
+    .apipost-input-inner-wrapper {
+        // margin-bottom: 32px;
+    }
+
+    .apipost-input {
+        height: 44px;
+    }
+
+    .arco-input {
+        // width: 320px;
+        height: 44px;
+    }
+
+    .arco-input-inner-wrapper-focus {
+        border: none !important;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-width: 392px;
+
+        .edit-pwd-title {
+            color: var(--font-1);
+            font-size: 20px;
+        }
+
+        .input-list {
+            display: flex;
+            flex-direction: column;
+            margin-top: 4px;
+
+            &-item {
+                margin-top: 26px;
+
+                .arco-input-inner-wrapper {
+                    width: 392px;
+                    background-color: transparent !important;
+                    border: 1px solid var(--border-line) !important;
+                }
+
+                .arco-input:focus {
+                    border: none;
+                    background-color: transparent !important;
+                }
+
+                .arco-input-inner-wrapper-focus {
+                    background-color: transparent !important;
+                }
+            }
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 26px;
+            width: 100%;
+
+            .apipost-btn {
+                width: 186px;
+                height: 40px;
+                border-radius: 5px;
+            }
+
+            .cancel-btn {
+                background-color: var(--border-line);
+                border: 1px solid var(--border-line);
+                color: var(--font-1);
+            }
+
+            .ok-btn {
+                background-color: var(--theme-color);
+                color: var(--common-white);
+            }
+        }
+    }
+}

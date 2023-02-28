@@ -1,0 +1,384 @@
+.modal-header {
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  cursor: pointer;
+}
+
+.modal-title {
+  padding: 15px;
+  color: var(--content-color-secondary);
+  font-size: var(--size-16px);
+  // border-bottom: 1px solid #e8e8e8;
+}
+
+.modal-big-title {
+  font-size: var(--size-16px);
+  font-weight: 600;
+}
+
+.modal-body {
+  // padding: 30px;
+  font-size: var(--size-14px);
+
+  button {
+    border-radius: 25px;
+  }
+
+  // border-bottom: 1px solid #e8e8e8;
+}
+
+.modal-footer {
+  text-align: center;
+  // padding: 20px;
+  display: flex;
+  justify-content: end;
+}
+
+.modal-footer .r-btn {
+  text-align: center;
+  margin: 0 8px;
+}
+
+.modal-footer .modal-cancel-btn {
+  /* background: white;
+  margin-right: 30px;
+  border-color: #d9d9d9;
+  border-radius: var(--border-radius-default); */
+}
+
+.modal-footer .modal-confirm-btn {
+  /* background: #1890ff; */
+  /* color: white;  */
+}
+
+.modal-inviation-title {
+  display: flex;
+  color: var(--content-color-secondary);
+  font-size: var(--size-14px);
+  font-weight: 500;
+  height: 28px;
+  align-items: center;
+
+  & :nth-child(1) {
+    flex: 1;
+  }
+
+  & :nth-child(2) {
+    width: 220px;
+  }
+}
+
+.team-inviation-content {
+  width: 100%;
+  height: 464px;
+  margin: 32px 0px;
+  display: flex;
+  justify-content: space-between;
+
+  .team-inviation-add {
+    flex: 1;
+    margin-right: 16px;
+    // width: 451px;
+    // height: 464px;
+  }
+
+  .team-inviation-project-list {
+    width: 399px;
+    border: 1px solid var(--border-color-default);
+    box-sizing: border-box;
+    border-radius: var(--border-radius-default);
+    // width: 414px;
+    // height: 464px;
+
+    .team-invitation-project-list-content {
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 420px;
+      color: var(--fn3);
+
+      .team-invitation-project-list-content-item {
+        display: flex;
+        align-items: center;
+        height: 60px;
+        cursor: pointer;
+        margin: 0 8px;
+        padding: 0 22px 0 22px;
+
+        &:hover {
+          background: var(--highlight-background-color-secondary);
+          border-radius: var(--border-radius-default);
+        }
+
+        div,
+        span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          img {
+            // border: solid 1px var(--bg1);
+            border-radius: 50%;
+
+          }
+        }
+
+        &>div:nth-child(2) {
+          flex: 1;
+          margin-left: 10px;
+          text-align: left;
+
+          &>div:nth-child(2) {
+            // color: var(--fn3);
+            font-size: var(--szie-14px);
+            margin: 6px 0 0 0;
+            height: 15px;
+          }
+        }
+
+        &>span:nth-child(2) {
+          margin-left: 8px;
+          // width: 315px;
+          text-align: left;
+          white-space: nowrap;
+        }
+
+        &>span:nth-child(3) {
+          // color: var(--fn3);
+          font-size: var(--szie-14px);
+        }
+
+        &>span:nth-child(4) {
+          margin-left: 16px;
+        }
+
+        &:hover {
+          transition: .3s linear;
+        }
+      }
+
+      .project-list-item-checked {
+        // background: var(--bgr1);
+        border-radius: var(--border-radius-default);
+
+        &:hover {
+          // background: var(--bgr1);
+        }
+      }
+    }
+  }
+
+  .team-inviation-add-operation {
+    display: flex;
+    position: relative;
+
+    .apipost-input-inner-wrapper {
+      height: 33px;
+      margin-right: 8px;
+    }
+
+    .api-input-group {
+      // background: var(--bg10);
+
+      .api-input {
+        // background: var(--bg10);
+      }
+    }
+
+    .apipost-select {
+      width: 86px;
+      height: 24px;
+      font-size: var(--size-12px);
+      position: absolute;
+      right: 52px;
+      top: 4px;
+    }
+  }
+
+  .team-invitation-add-list {
+    // height: 404px;
+    width: 100%;
+    // padding: 8px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-top: 15px;
+    height: calc(100% - 33px);
+
+    .team-invitation-add-list-item {
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+
+      .apipost-input-inner-wrapper {
+        height: 32px;
+      }
+
+      .api-close-btn {
+        position: absolute;
+        right: 8px;
+        top: 4px;
+        cursor: pointer;
+        &:hover{
+          color:var(--content-color-primary);
+          svg{
+            fill:var(--content-color-primary);
+          }
+        }
+      }
+
+      &>span:nth-child(1) {
+        position: relative;
+        flex: 1;
+        text-align: left;
+      }
+
+      .free-span {
+        color: var(--base-color-success);
+        font-size: var(--szie-14px);
+      }
+
+      .need-buy-span {
+        color: var(--error);
+        font-size: var(--szie-14px);
+      }
+
+      .surplus-span {
+        color: var(--content-color-primary);
+      }
+
+      .apipost-select {
+        width: 86px;
+        height: 30px;
+        font-size: var(--size-12px);
+        background-color: var(--background-color-tertiary);
+
+        .api-select-selector-value {
+          color: var(--content-color-primary);
+        }
+      }
+    }
+  }
+
+  .team-inviation-project-list-header {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--content-color-tertiary);
+    font-weight: 600;
+    font-size: var(--szie-14px);
+    padding: 0 30px;
+
+    & :nth-child(2) {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      .apipost-checkbox {
+        margin-left: 8px;
+      }
+    }
+  }
+}
+
+.team-inviation-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  .apipost-select{
+    height:24px;
+  }
+  .team-inviation-link {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--base-color-brand);
+
+    >svg {
+      margin: 0 12px 0 40px;
+    }
+  }
+
+  .team-inviation-footer-l,
+  .team-inviation-footer-r {
+    display: flex;
+    align-items: center;
+  }
+
+  .team-inviation-footer-l {
+    color: var(--fn3);
+
+    &> :nth-child(3)>img {
+      margin-left: 30px;
+      margin-top: -5px;
+    }
+
+    &>div:nth-child(2) {
+      margin-left: 10px;
+    }
+  }
+
+  .team-inviation-footer-r {
+    &> :nth-child(2) {
+      margin-left: 16px;
+    }
+
+    .team-inviation-footer-need-buy-span {
+      display: flex;
+      align-items: center;
+      color: var(--base-color-error);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+
+      .apipost-btn {
+        padding: 0 16px;
+        background-color: var(--base-color-brand);
+        color: var(--content-color-constant);
+      }
+    }
+  }
+}
+
+.pay_add_success_messge {
+  text-align: left;
+  padding: 15px;
+  font-size: var(--size-14px);
+  color: var(--fn3);
+}
+
+.member_modal-Error {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: var(--border-radius-default);
+  color: var(--base-color-error);
+  margin: 0 0 32px 0;
+
+  svg {
+    fill: var(--base-color-error);
+  }
+}
+
+.api-close-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--border-radius-default);
+  background: var(--background-color-tertiary);
+  line-height: 24px;
+  display: inline-block;
+  text-align: center;
+
+  svg {
+    fill: var(--content-color-secondary);
+  }
+
+  &:hover {
+    background: var(--highlight-background-color-tertiary);
+  }
+}

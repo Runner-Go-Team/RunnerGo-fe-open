@@ -1,0 +1,72 @@
+.menu-tree {
+    flex: 1;
+    display: block;
+    overflow: auto;
+    color: var(--content-color-secondary);
+    font-size: var(--size-12px);
+
+    &>div>div {
+        padding-bottom: 200px;
+    }
+
+    .tree-node-selected {
+        background-color: var(--border-line);
+
+        &:hover {
+            background-color: var(--border-line);
+        }
+
+        color:var(--content-color-primary);
+
+        svg {
+            fill: var(--content-color-primary);
+        }
+
+        .apipost-btn {
+            background-color: var(--highlight-background-color-primary);
+        }
+    }
+
+    .apipost-tree-node {
+        overflow: hidden;
+        color: var(--content-color-primary);
+        cursor: pointer;
+        border-radius: 0;
+        padding: 0 !important;
+
+        &-title {
+            // padding-left: 0;
+        }
+
+        svg {
+            fill: var(--content-color-primary);
+        }
+
+        &:hover {
+            // background-color: var(--highlight-background-color-secondary);
+        }
+
+        .tree-node-checkbox {
+            margin-left: 0;
+
+            svg {
+                fill: var(--content-color-primary);
+            }
+        }
+
+        .apipost-btn {
+            background-color: var(--highlight-background-color-primary);
+
+            :hover {
+                background-color: var(--highlight-background-color-tertiary);
+            }
+        }
+
+        .apipost-btn-default:hover,
+        .apipost-btn-default:focus {
+            color: var(--content-color-primary);
+            border-color: 0;
+            background-color: var(--highlight-background-color-tertiary);
+        }
+    }
+}

@@ -1,0 +1,70 @@
+.report-header-list {
+    display: flex;
+    justify-content: space-between;
+
+    svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--font-1);
+    }
+    &-left {
+        display: flex;
+        align-items: center;
+        .textBox {
+            min-width: 216px;
+            max-width: 280px;
+            height: 30px;
+            background-color: var(--bg) !important;
+            border: none !important;
+            border-radius: 2px;
+            margin-right: 8px;
+
+            svg {
+                margin-right: 6px;
+            }
+        }
+        .contrast-btn {
+            height: 30px;
+            background-color: var(--theme-color);
+            border-radius: 2px;
+            color: var(--common-white);
+            margin-left: 8px;
+            font-size: 14px;
+        }
+        .delete-btn {
+            height: 30px;
+            background-color: var(--theme-color);
+            border-radius: 2px;
+            color: var(--common-white);
+            margin-left: 8px;
+            font-size: 14px;
+        }
+
+        .arco-picker {
+            width: 450px;
+            background-color: var(--bg);
+            height: 30px;
+            border-radius: 2px;
+
+            .arco-picker-suffix-icon {
+                svg {
+                    width: 14px !important;
+                    height: 14px !important;
+                }
+            }
+        }
+    }
+    &-right {
+        .createBtn {
+            width: 84px;
+            height: 25px;
+            background-color: var(--log-blue);
+            border-radius: 5px;
+            padding: 12px 8px;
+            color: var(--font-1);
+            svg {
+                margin-right: 4px;
+            }
+        }
+    }
+}

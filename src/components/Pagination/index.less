@@ -1,0 +1,40 @@
+.paging {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    .apipost-btn {
+        background: var(--theme-color);
+        border-radius: 3px;
+        color: #fff;
+        margin: 0 5px;
+    }
+    .apipost-select {
+        margin: 0 5px;
+    }
+    &-content {
+        display: flex;
+        align-items: center;
+
+        &-item {
+            width: 33px;
+            height: 33px;
+            color: var(--font-1);
+            background: var(--bg-1);
+            border-radius: 3px;
+            margin: 0 5px;
+            text-align: center;
+            line-height: 33px;
+            cursor: pointer;
+        }
+        .apipost-input-inner-wrapper {
+            width: 60px;
+            margin: 0 5px;
+            height: 32px;
+        }
+    }
+}
+
+.arco-select:hover .arco-select-view {
+    border-color: var(--theme-color);
+}

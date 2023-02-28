@@ -1,0 +1,33 @@
+.global-config {
+    display: flex;
+    align-items: center;
+    margin-left: 12px;
+    // min-width: 160px;
+    .config-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background-color: var(--border-line);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin-right: 4px;
+
+        svg {
+            width: 12px;
+            height: 12px;
+        }
+    }
+
+    .config-item {
+        svg {
+            fill: var(--content-color-secondary);
+        }
+    }
+    .config-item:hover {
+        svg {
+            fill: var(--font-1);
+        }
+    }
+}

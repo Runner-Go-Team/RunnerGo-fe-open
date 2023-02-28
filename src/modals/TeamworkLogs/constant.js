@@ -1,0 +1,15 @@
+export const actioinType = {
+  share: '分享',
+  share_update: '分享修改',
+  share_delete: '删除分享',
+  add: '新增',
+  update: '修改',
+  'add-update': '变更',
+  delete: '删除',
+  remove: '彻底删除',
+  lock: '锁定',
+  unlock: '解锁',
+  sort: '移动',
+  restore: '恢复',
+  save: '保存',
+};

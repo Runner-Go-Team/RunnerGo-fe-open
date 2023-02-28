@@ -1,0 +1,110 @@
+.case-footer-config {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  .add-controller {
+    margin-bottom: 20px;
+    display: flex;
+
+    .assert,
+    .wait,
+    .condition {
+      min-width: 88px;
+      height: 24px;
+      box-sizing: border-box;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      border-radius: 3px;
+      margin: 0 4px;
+      cursor: pointer;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        margin-right: 6px;
+      }
+
+      span {
+        white-space: nowrap;
+      }
+    }
+
+    .assert {
+      background: #ffefef;
+      border: 1px solid #ac0000;
+      color: #ac0000;
+
+      svg {
+        fill: #ac0000;
+      }
+    }
+
+    .wait {
+      background: #f6fff2;
+      border: 1px solid #068d3c;
+      color: #068d3c;
+
+      svg {
+        fill: #068d3c;
+      }
+    }
+
+    .condition {
+      background: #ffe9dc;
+      border: 1px solid #d75207;
+      color: #d75207;
+
+      svg {
+        fill: #d75207;
+      }
+    }
+  }
+
+  .common-config {
+    // width: 360px;
+    min-width: 288px;
+    height: 41px;
+    padding: 8px 12px;
+    background: var(--bg-3);
+    border: 1px solid var(--bg-4);
+    box-shadow: var(--shadow);
+    border-radius: 3px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+
+    .config-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      color: var(--font-1);
+      cursor: pointer;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--font-1);
+        margin-right: 4px;
+      }
+      span {
+        white-space: nowrap;
+      }
+    }
+
+    .line {
+      height: 20px;
+      width: 0;
+      border: 1px solid var(--select);
+      margin: 0 12px;
+    }
+  }
+}

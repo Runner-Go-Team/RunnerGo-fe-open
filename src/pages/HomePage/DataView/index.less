@@ -1,0 +1,46 @@
+.data-view {
+    background-color: var(--module);
+    width: 31.485rem;
+
+    min-height: 21.145rem;
+    border-radius: 2px;
+    padding: 20px;
+    box-sizing: border-box;
+
+    .title {
+        font-weight: 600;
+        font-size: 18px;
+        color: var(--font-1);
+    }
+
+    &-left {
+        display: flex;
+        flex-direction: column;
+        margin-top: 25px;
+        justify-content: space-between;
+
+        .echart-item {
+
+            .label {
+                font-size: 12px;
+                color: var(--font-1);
+            }
+
+            .echart {
+                width: 7.8125rem !important;
+                height: 7.8125rem !important;
+                margin-top: 20px;
+            }
+        }
+    }
+
+    &-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .echart {
+            height: 11.678rem !important;
+            width: 17.821rem !important;
+        }
+    }
+}

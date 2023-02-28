@@ -1,0 +1,102 @@
+.tReport-detail-info {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+    padding-left: 10px;
+
+    .info-box {
+        padding: 20px;
+        color: var(--font-1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 0;
+        // flex: 1;
+
+        &-left {
+            display: flex;
+            flex-direction: column;
+            margin-right: 55px;
+
+            p {
+                margin-bottom: 10px;
+                white-space: nowrap;
+            }
+        }
+
+        .num-show {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+
+            .num {
+                font-size: 28px;
+                color: var(--font-1);
+            }
+
+            .num-list {
+                display: flex;
+                justify-content: space-between;
+
+                .success {
+                    margin-right: 15px;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+
+                    p {
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        background-color: var(--run-green);
+                        margin-right: 10px;
+                        margin-bottom: 0;
+                    }
+                }
+
+                .fail {
+                    // margin-right: 15px;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+
+                    p {
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        background-color: var(--run-red);
+                        margin-right: 10px;
+                        margin-bottom: 0;
+                    }
+                }
+
+                .not-run {
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+
+                    p {
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 50%;
+                        background-color: #9E9E9E;
+                        margin-right: 10px;
+                        margin-bottom: 0;
+                    }
+                }
+            }
+
+            .label {
+                font-size: 14px;
+                color: var(--font-2);
+            }
+        }
+
+        .line {
+            width: 0;
+            height: 50px;
+            border: 2px solid var(--border-line);
+        }
+    }
+}

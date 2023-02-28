@@ -1,0 +1,89 @@
+#captcha {
+  width: 100%;
+  // height: 42px;
+  & > div {
+    height: 100%;
+  }
+  div {
+    background-image: none;
+  }
+  .geetest_holder {
+    background: transparent;
+    // .geetest_logo {
+    //   background-image: url(../assets/logo/logo.png);
+    //   background-size: 100% 100%;
+    //   pointer-events: none;
+    // }
+    .geetest_btn_click {
+     border-radius:var(--border-radius-default);
+      &:hover {
+        background-image: none;
+      }
+    }
+    .geetest_tip_container {
+      background: #fff;
+      border-radius:var(--border-radius-default);
+      .geetest_tip {
+        color: var(--content-color-secondary);
+      }
+    }
+    .geetest_content {
+     border-radius:var(--border-radius-default);
+      border: 1px solid #E9E9E9;
+      background: transparent;
+      background-image: none;
+    }
+    .geetest_mask {
+      background-color: var(--font-1);
+    }
+    .geetest_box_wrap .geetest_box {
+      border: #F2F2F2 1px solid;
+      background: transparent;
+    }
+    .geetest_bind_box {
+      background: transparent;
+    }
+    .geetest_box_btn {
+      background: var(--font-1);
+      border: 1px solid #E9E9E9;
+    }
+    .geetest_feedback {
+      display: none;
+    }
+    .geetest_box_logo {
+      background-image: url(https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/logo_black.png);
+      background-size: 100% 100%;
+      pointer-events: none;
+      width: 102px;
+      height: 32px;
+    }
+    .geetest_header {
+      background-color: var(--common-white);
+      .geetest_text_tips {
+        color: var(--content-color-secondary);
+      }
+    }
+    .geetest_container {
+      background-color: var(--common-white);
+      // transform: none;
+    }
+    .geetest_footer {
+      padding: 48px 0 0 0;
+      background: var(--common-white);
+      border-top: 1px solid #F2F2F2;
+    }
+  }
+
+  .geetest_btn {
+    padding-bottom: 12%;
+    top: -50%;
+    width: 20%;
+    .geetest_arrow.geetest_arrow_1 {
+      background-image: url(https://static.geetest.com/v4/static/v1.4.7/css/sprite@2x.png);
+    }
+  }
+}
+
+.geetest_logo {
+  display: none !important;
+}

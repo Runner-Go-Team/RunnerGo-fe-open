@@ -1,0 +1,102 @@
+.machine {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    height: 100%;
+    background-color: var(--module);
+    margin-top: 14px;
+
+    .title {
+        color: var(--font-1);
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .search {
+        margin-top: 20px;
+        width: 216px;
+        height: 30px;
+        background-color: var(--bg);
+        border: none;
+
+        svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+        }
+    }
+
+    .table {
+        margin-top: 10px;
+
+        .apipost-table-th {
+            background-color: var(--bg-3);
+        }
+
+        .apipost-table-td {
+            color: var(--font-1);
+            height: 30px;
+            text-align: left;
+        }
+
+        .start-btn,
+        .stop-btn {
+            cursor: pointer;
+        }
+
+        .start-btn {
+            color: var(--sub-color-1);   
+        }
+
+        .stop-btn {
+            color: var(--theme-color);
+        }
+
+        .arco-table-container {
+            border-color: var(--border-line);
+        }
+
+        .arco-table-tr {
+
+            .arco-table-th {
+                background-color: var(--bg);
+                border-color: var(--border-line);
+
+            }
+
+            .arco-table-checkbox {
+                .arco-table-th-item {
+                    margin-left: 0;
+                    padding-left: 0 !important;
+                }
+            }
+
+            .arco-checkbox-indeterminate {
+                .arco-checkbox-mask {
+                    background-color: var(--sub-color-1);
+                }
+            }
+
+            .arco-checkbox-checked {
+                .arco-checkbox-mask {
+                    background-color: var(--sub-color-1);
+                }
+            }
+
+            .arco-table-td {
+                background-color: var(--module);
+                border-color: var(--border-line);
+            }
+        }
+    }
+
+    .paging {
+        margin-top: 20px;
+    }
+
+    .arco-table-border .arco-table-container::before {
+        border-color: var(--border-line);
+        background-color: var(--border-line);
+    }
+
+}

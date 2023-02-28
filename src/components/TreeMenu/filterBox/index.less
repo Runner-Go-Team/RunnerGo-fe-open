@@ -1,0 +1,34 @@
+// @inputbg: #eee;
+@inputbg: #1B1B32;
+
+// 需要换成变量 todo...
+.filter-box {
+    height: 30px;
+    display: flex;
+    align-items: center;
+
+    .textBox {
+        flex: 1;
+        width: 100%;
+        // background-color: fade(@inputbg, 10%);
+        background-color: var(--bg);
+        border-radius: 5px;
+        border: none;
+
+        &:hover {
+            background-color: fade(@inputbg, 20%);
+        }
+
+        .apipost-input {
+            margin-left: 6px;
+        }
+    }
+
+    .btn-location {
+        margin-left: 10px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

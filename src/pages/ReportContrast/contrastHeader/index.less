@@ -1,0 +1,50 @@
+.contrast-header {
+    display: flex;
+    flex-direction: column;
+
+    .title {
+        display: flex;
+        align-items: center;
+
+        .apipost-btn {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            padding: 0;
+            background-color: var(--border-line);
+
+            svg {
+                min-width: 13px;
+                min-height: 13px;
+                fill: var(--font-1);
+            }
+        }
+
+        .apipost-btn:hover {
+        
+            svg {
+                fill: var(--font-1);
+            }
+        }
+
+        svg {
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+            fill: var(--font-3);
+        }
+
+        p {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--font-1);
+        }
+    }
+
+    .name {
+        display: flex;
+        margin-top: 13px;
+        font-size: 16px;
+        color: var(--font-1);
+    }
+}

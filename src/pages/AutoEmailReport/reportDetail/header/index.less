@@ -1,0 +1,92 @@
+.tReport-email-detail-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+    .logo-right {
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+    }
+
+    .title {
+        display: flex;
+        margin-top: 15px;
+        justify-content: center;
+        align-items: center;
+        .svg-right {
+            margin: 0 12px 0 16px;
+            fill: var(--theme-color);
+
+            path {
+                fill: var(--theme-color);
+            }
+        }
+        p {
+            font-size: 16px;
+            align-items: center;
+            color: var(--font-1);
+        }
+    }
+
+    .left {
+        display: flex;
+        flex-direction: column;
+        margin-top: 32px;
+        align-items: center;
+
+        &-top {
+            display: flex;
+            align-items: center;
+
+            .name {
+                color: var(--font-1);
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .status {
+                min-width: 52px;
+                min-height: 21px;
+
+                background-color: var(--select);
+                border-radius: 3px;
+                color: var(--run-green);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-left: 12px;
+            }
+        }
+
+        &-bottom {
+            display: flex;
+            align-items: center;
+            margin-top: 7px;
+
+            .performer {
+                display: flex;
+                align-items: center;
+                margin-left: 4px;
+
+                &-info {
+                    display: flex;
+                    align-items: center;
+                    
+                    .avatar {
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        margin-right: 4px;
+                    }
+                }
+            }
+
+            .desc {
+                margin-left: 16px;
+            }
+        }
+    }
+}

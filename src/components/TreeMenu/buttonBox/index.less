@@ -1,0 +1,47 @@
+.buttons-box {
+    height: 30px;
+    margin: 16px 0 15px 0;
+    display: flex;
+    align-items: center;
+
+    .project-title {
+        flex: 1;
+        width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .button-list {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+
+        &-item {
+            display: flex;
+            align-items: center;
+
+            svg {
+                fill: var(--font-3);
+            }
+    
+            .line {
+                border: 1px solid var(--border-line);
+                height: 18px;
+                margin-left: 18px;
+            }
+
+            .apipost-btn:hover {
+                background-color: var(--select-hover) !important;
+
+                svg {
+                    background: var(--select-hover) !important;
+                }
+            }
+        }
+
+    }
+
+
+
+}

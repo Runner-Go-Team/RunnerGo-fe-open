@@ -1,0 +1,158 @@
+.auto-report {
+    background-color: var(--module);
+    min-height: 26.041rem;
+    border-radius: 2px;
+    padding: 20px;
+    box-sizing: border-box;
+    width: 46.104rem;
+    // height: 100%;
+    // flex: 1;
+
+    .title {
+        font-weight: 600;
+        font-size: 18px;
+        color: var(--font-1);
+    }
+
+    .overview {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &-left {
+            display: flex;
+            flex-direction: column;
+
+            .data-list {
+                display: flex;
+                margin-top: 20px;
+                justify-content: space-between;
+
+                .data-item {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-right: 30px;
+
+                    p:first-child {
+                        font-weight: 600;
+                        font-size: 30px;
+                    }
+
+                    p:last-child {
+                        margin-top: 4px;
+                        font-size: 14px;
+                        white-space: nowrap;
+                    }
+                }
+            }
+
+            .echart-list {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 50px;
+
+                &-item {
+                    display: flex;
+                    align-items: center;
+                    border: 1px solid var(--border-line);
+                    width: 13.854rem;
+                    height: 100px;
+                    margin-right: 20px;
+                    justify-content: space-between;
+                    box-sizing: border-box;
+                    border-radius: 5px;
+
+
+                    .echart {
+                        width: 3.90625rem;
+                        height: 150px !important;
+                    }
+
+                    .label {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        color: var(--font-1);
+                        line-height: 14px;
+                        margin-right: 2.916rem;
+                    }
+                }
+            }
+        }
+
+        &-right {
+            display: flex;
+            align-items: center;
+
+            .echart {
+                width: 8.8125rem !important;
+                height: 8.8125rem !important;
+            }
+        }
+    }
+
+    .list {
+        display: flex;
+        flex-direction: column;
+        margin-top: 40px;
+
+        .title {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--font-1);
+        }
+
+        .list-content {
+            margin-top: 20px;
+
+
+            .list-item {
+                width: 100%;
+                border: 1px solid var(--border-line);
+                padding: 20px 0;
+                box-sizing: border-box;
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+                border-radius: 5px;
+
+                .item-content {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    flex: 1;
+
+                    p:first-child {
+                        color: var(--font-3);
+                    }
+
+                    p:last-child {
+                        color: var(--font-1);
+                        margin-top: 10px;
+                        text-align: center;
+                    }
+
+                    .hide-text {
+                        width: 60px;
+                        max-width: 60px;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+
+                    .status {
+                        background-color: var(--sub-color-2-10);
+                        border: 1px solid var(--sub-color-1);
+                        border-radius: 29px;
+                        color: var(--sub-color-1) !important;
+                        min-width: 56px;
+                        height: 24px;
+                        line-height: 24px;
+                    }
+                }
+            }
+        }
+
+    }
+}

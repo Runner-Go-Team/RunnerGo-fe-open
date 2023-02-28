@@ -1,0 +1,80 @@
+.api_mock_driver {
+    height: 1px;
+    background-color: #0c0c0d;
+    margin: 24px 0;
+}
+
+.mock_modal .apipost-modal-container {
+    width: 798px;
+}
+
+.api_mock_content {
+    max-height: 555px;
+    overflow-y: auto;
+
+    .api_mock_content_title {
+        margin-top: 24px;
+        color: var(--content-color-secondary);
+        text-align: left;
+    }
+
+    ul {
+        li {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: var(--size-12px);
+            text-align: left;
+            line-height: 47px;
+
+            .li-left {
+                width: 260px;
+                background-color: #F2F2F2;
+                border: 1px solid #E9E9E9;
+                color: var(--content-color-secondary);
+                position: relative;
+                padding: 0 0 0 12px;
+                border-radius: var(--border-radius-default);
+
+                .copy {
+                    position: absolute;
+                    right: 15px;
+                    top: 13px;
+                    width: 16px;
+                    height: 16px;
+                    cursor: pointer;
+                    fill: var(--font-2);
+
+                    &:hover {
+                        fill: var(--content-color-secondary);
+                    }
+                }
+            }
+
+            .li-right {
+                width: 468px;
+                line-height: 47px;
+                border: 1px solid #E9E9E9;
+                color: var(--font-2);
+                border-radius: var(--border-radius-default);
+                padding: 0 0 0 12px;
+            }
+        }
+    }
+}
+
+.more_mock {
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--base-color-brand);
+
+    &>span {
+        padding: 0 10px;
+    }
+
+    &>svg {
+        fill: var(--base-color-brand);
+    }
+}

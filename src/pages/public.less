@@ -1,0 +1,31 @@
+.scale-toggle-box {
+    height: 100%;
+    width: 100%;
+    line-height: 200%;
+    flex: 1 1;
+    color: var(--content-color-secondary);
+    // background-color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-writing-mode: vertical-rl;
+    writing-mode: vertical-lr;
+    letter-spacing: 8px;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.06);
+    }
+
+    &.vertical {
+        -webkit-writing-mode: inherit;
+        letter-spacing: 4px;
+    }
+}
+
+// .vertical{
+//   .scale-toggle-box {
+//     // -webkit-writing-mode: inherit;
+//     // writing-mode: inherit;
+//   }
+// }

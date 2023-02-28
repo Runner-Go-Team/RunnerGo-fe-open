@@ -1,0 +1,470 @@
+.left-toolbars {
+  // height: calc(100vh - 50px);
+  // width: 180px;
+  box-sizing: content-box;
+  // border-right: 1px solid var(--border-color-default);
+  position: relative;
+  color: var(--font-1) !important;
+  background-color: var(--bg);
+  position: relative;
+  padding: 14px 16px;
+
+  .settings {
+    padding-top: 14px;
+    border-top: 1px solid var(--border-line);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    .apipost-btn {
+      width: 120px;
+      height: 30px;
+      background-color: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--font-3);
+        margin-right: 5px;
+      }
+    }
+
+    .down-svg {
+      width: 14px !important;
+      height: 14px !important;
+      fill: var(--font-3);
+      margin-left: 36px;
+    }
+
+    .hide-setting-svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--font-3);
+      cursor: pointer;
+    }
+
+    .hide-setting-svg:hover {
+      fill: var(--font-1);
+    }
+
+  }
+
+  .settings:hover {
+    .apipost-btn {
+      background-color: var(--module);
+
+      svg {
+        fill: var(--theme-color);
+      }
+    }
+
+    .down-svg {
+      fill: var(--font-1);
+    }
+  }
+
+
+  .open-icon {
+    position: absolute;
+    bottom: 38px;
+    left: 22px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+  }
+
+  .collapse-btn {
+    width: 24px;
+    height: 24px;
+    background-color: var(--bg-4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -12px;
+    z-index: 1000;
+    cursor: pointer;
+
+    svg {
+      width: 15px;
+      height: 15px;
+      fill: var(--font-2);
+    }
+  }
+
+  .arco-menu {
+    .arco-icon {
+      margin-right: 6px;
+    }
+  }
+
+  .arco-menu-item {
+    background-color: transparent;
+    font-size: 12px;
+    padding-left: 8px !important;
+    height: 30px;
+    margin-bottom: 14px;
+
+    .arco-icon {
+      // margin-right: 6px !important;
+    }
+  }
+
+
+  .arco-menu-selected {
+    color: var(--font-1) !important;
+    background-color: var(--module) !important;
+
+    .sub-menu-title {
+      color: var(--font-1) !important;
+      font-size: 12px;
+    }
+
+    .is-open {
+      svg {
+        margin: 0 !important;
+        path {
+          color: var(--font-1) !important;
+        }
+      }
+    }
+  }
+
+  .arco-menu-inline-header {
+    padding-left: 8px !important;
+
+    .sub-menu-title {
+      color: var(--font-3);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      height: 30px;
+    }
+
+    .arco-icon {
+      // margin-right: 6px;
+      color: var(--font-3);
+    }
+  }
+
+  .sub-item .arco-menu-item-inner {
+    color: var(--font-color) !important;
+  }
+
+  .arco-menu-vertical {
+    .arco-menu-inner {
+      padding: 0;
+    }
+  }
+
+  .arco-menu-item {
+    display: flex;
+    align-items: center;
+    color: var(--font-3);
+
+    svg {
+      fill: var(--font-3);
+      min-width: 16px;
+      width: 16px;
+      min-height: 16px;
+      height: 16px;
+      // margin-right: 4px !important;
+    }
+
+    .arco-icon {
+      color: var(--font-3);
+    }
+  }
+
+  .sub-menu-title {
+    svg {
+      // fill: var(--font-1);
+      width: 16px;
+      height: 16px;
+      // margin-right: 0px !important;
+    }
+  }
+
+  .arco-menu-light .arco-menu-inline-header {
+    background-color: transparent;
+    padding: 0 8px;
+  }
+
+  .arco-menu-collapse {
+    width: 30px;
+  }
+
+  .arco-menu-light .arco-menu-pop-header {
+    background-color: transparent;
+  }
+
+  .arco-menu-light .arco-menu-pop-header:hover {
+    background-color: var(--module);
+  }
+
+  .arco-menu-pop .arco-menu-pop-header {
+    padding-left: 8px !important;
+  }
+
+  .arco-menu-vertical .arco-menu-inline-header {
+    margin-bottom: 14px !important;
+  }
+
+  .arco-menu .arco-menu-inline-header .arco-icon {
+    // margin-right: 6px;
+  }
+  
+  .toolbar-item {
+    width: 180px;
+    height: 60px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    // color: var(--content-color-secondary);
+    // background: var(--background-color-secondary);
+    color: var(--font-color);
+    background-color: var(--bg1);
+
+    &:hover {
+      color: var(--font-1);
+      background-color: var(--select);
+
+      svg {
+        fill: var(--font-1)
+      }
+
+      .item-text {
+        color: var(--font-1);
+      }
+    }
+
+    &.active {
+      color: var(--font-1) !important;
+      background-color: var(--select);
+
+      svg {
+        // fill: var(--content-color-primary)
+      }
+
+      .item-text {
+        color: var(--font-1);
+      }
+    }
+
+    // &.active::after {
+    //     position: absolute;
+    //     content: "";
+    //     height: 100%;
+    //     width: 2px;
+    //     background-color: var(--base-color-brand);
+    //     left: 0;
+    //     top: 0;
+    // }
+
+    .svg-item {
+      width: 16px;
+      height: 16px;
+      fill: var(--font-color);
+    }
+
+
+    .item-text {
+      padding-top: 4px;
+      color: var(--font-color);
+      // color: var(--content-color-primary);
+
+      text-decoration: none;
+    }
+
+    // svg {
+    //     fill: var(--content-color-secondary);
+    //     // fill: var(--content-color-primary);
+    // }
+  }
+
+  .split-line {
+    width: 78px;
+    height: 1px;
+    background-color: var(--border-color-strong);
+  }
+
+  .left-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    bottom: 48px;
+    color: var(--font-1);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    border-radius: 5px;
+    width: 78px;
+    height: 60px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--font-1);
+
+      margin-bottom: 4px;
+    }
+  }
+
+  .left-settings:hover {
+    color: var(--font-1) !important;
+    background-color: var(--select);
+
+    svg {
+      // fill: var(--content-color-primary)
+    }
+
+    .item-text {
+      color: var(--font-1);
+    }
+  }
+
+  .arco-menu-inline-header {
+    background-color: transparent;
+  }
+
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  min-width: 93px;
+  background-color: var(--bg-2);
+  position: absolute;
+  bottom: 65px;
+  left: 75px;
+  background-color: var(--bg-3);
+  z-index: 999;
+  padding: 8px 10px 10px 10px;
+  box-sizing: border-box;
+  border-radius: 5px;
+
+  &-active {
+    color: var(--font-1) !important;
+    background-color: var(--select);
+
+    svg {
+      // fill: var(--content-color-primary)
+    }
+
+    .item-text {
+      color: var(--font-1);
+    }
+  }
+
+  &-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 4px 10px;
+    border-radius: 5px;
+
+    .default {
+      display: flex;
+      color: var(--font-1);
+      cursor: pointer;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        margin-right: 6px;
+        fill: var(--font-1);
+      }
+
+      p {
+        margin-top: 2px;
+        white-space: nowrap;
+      }
+    }
+
+    .drop-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 7px;
+
+      p {
+        margin: 0;
+        margin-top: 7px;
+        white-space: nowrap;
+
+      }
+    }
+
+    .theme {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+      p {
+        flex: none;
+        white-space: nowrap;
+      }
+
+      &-white,
+      &-black {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 2px solid var(--bg-4);
+        margin: 0;
+      }
+
+      &-white {
+        background-color: #fff;
+      }
+
+      &-black {
+        background-color: #000;
+      }
+    }
+  }
+}
+
+.arco-menu-light {
+  background-color: transparent;
+}
+
+.arco-dropdown-menu {
+  background-color: var(--module);
+  border: none;
+  width: 160px;
+
+  .arco-dropdown-open {
+    background-color: var(--select-hover);
+    color: var(--theme-color);
+
+    svg {
+      stroke: var(--theme-color);
+    }
+  }
+}
+
+.settings-drop-list {
+  background-color: var(--module) !important;
+
+  .arco-dropdown-menu-pop {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+}

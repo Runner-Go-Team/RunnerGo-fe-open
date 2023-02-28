@@ -1,0 +1,150 @@
+.events-main-panel {
+  min-height: 42px;
+  padding: 4px;
+  flex: 1;
+  border-radius: var(--border-radius-default);
+  border: 1px solid var(--border-color-default);
+}
+.icon-22x22{
+  width: 22px;
+  height: 22px;
+}
+.is-sorting {
+  .event-main {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: var(--border-radius-default);
+    backdrop-filter: blur(20px);
+  }
+}
+
+.root-node,
+.event-node {
+  display: flex;
+  align-items: center;
+
+  .index-icon {
+    margin: 0 8px 0 0;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    color: var(--content-color-secondary);
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  .indent-panel {
+    height: 100%;
+    width: 24px;
+    margin-right: 8px;
+  }
+
+
+
+  .events-main-wrapper {
+    flex: 1;
+    display: flex;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .script-panel {
+    width: 100%;
+    height: 300px;
+  }
+
+  .request-panel {
+    width: 100%;
+
+    .top,
+    .bottom {
+      height: 300px;
+    }
+  }
+  .icon-22x22{
+    width: 22px;
+    height: 22px;
+  }
+  .event-main {
+    padding: 6px;
+    border-radius: var(--border-radius-default);
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    &.isRunActive {
+      background-color: rgba(255, 0, 0, 0.1);
+    }
+  }
+
+  .sort-panel {
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      cursor: row-resize;
+    }
+  }
+
+  .index-panel {
+    height: 24px;
+    line-height: 24px;
+    border-radius: 3px;
+    margin: 0 4px;
+    padding: 0 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--content-color-secondary);
+  }
+
+  .main-panels {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .ctrl-panel {
+    width: 96px;
+    height: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    >span {
+      border-left: 1px solid #e9e9e9;
+      padding: 0 0 0 4px;
+    }
+
+    .apipost-btn {
+      border: none;
+      border-radius: 3px;
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        max-width: 20px;
+        fill: var(--content-color-secondary);
+      }
+    }
+  }
+}
+
+
+.event-item-panel{
+ // border:1px solid var(--border-color-default);
+  background-color: var(--background-color-primary);
+}
+

@@ -1,0 +1,188 @@
+.case-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 10px;
+    overflow-y: scroll;
+    max-height: calc(100vh - 50px);
+    background-color: var(--module);
+    height: 100%;
+
+    .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &-left {
+            display: flex;
+            align-items: center;
+
+            .title {
+                color: var(--font-1);
+            }
+
+            .explain-svg {
+                width: 12px;
+                height: 12px;
+                margin-left: 4px;
+            }
+        }
+
+        &-right {
+            .apipost-btn {
+                width: 44px;
+                height: 18px;
+                background-color: var(--theme-color);
+                border-radius: 2px;
+                color: var(--common-white);
+
+                svg {
+                    width: 9px;
+                    height: 9px;
+                    min-width: 9px;
+                    min-height: 9px;
+                    fill: var(--common-white);
+                }
+            }
+
+            .cancel-svg {
+                margin-left: 10px;
+                width: 13px;
+                height: 13px;
+                fill: var(--font-1);
+                cursor: pointer;
+            }
+        }
+    }
+
+    .create-case-btn {
+        margin-top: 8px;
+        background-color: var(--theme-10);
+        border-radius: 2px;
+        height: 28px;
+        width: 100%;
+        border: none;
+        color: var(--font-1);
+        font-size: 12px !important;
+    }
+
+    .search-case {
+        width: 100%;
+        height: 22px;
+        background-color: var(--bg-1);
+        border: 1px solid var(--bg-4);
+        border-radius: 5px;
+        margin-top: 12px;
+        font-size: 12px;
+
+        svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--font-3);
+            margin-right: 6px;
+        }
+    }
+
+    &-list {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+
+        .item {
+            height: 28px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-left: 6px;
+            color: var(--font-1);
+
+            &-left {
+                display: flex;
+                align-items: center;
+                .apipost-switch {
+                    width: 20px;
+                    height: 12px;
+                    margin-right: 10px;
+    
+                    .cycle {
+                        width: 8px;
+                        height: 8px;
+                    }
+                }
+
+                .case-name {
+                    color: var(--font-1);
+                    max-width: 120px;
+                    height: 25px;
+                    line-height: 25px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+
+            .apipost-btn {
+                height: 20px !important;
+                width: 20px;
+                padding: 0 !important;
+
+                svg {
+                    width: 12px;
+                    height: 12px;
+                    fill: transparent;
+                }
+            }
+
+            .apipost-btn:hover {
+                background-color: var(--bg-5);
+            }
+        }
+
+        .item:hover {
+            background-color: var(--select-hover);
+            border-radius: 3px;
+            color: var(--font-1);
+
+            .apipost-btn {
+                background-color: var(--border-line);
+                margin-right: 6px;
+
+
+                svg {
+                    fill: var(--font-1);
+                }
+            }
+        }
+
+        .select {
+            background-color: var(--select-hover);
+            border-radius: 2px;
+            color: var(--font-1);
+        }
+
+
+    }
+
+    .drop-content {
+        display: flex;
+        flex-direction: column;
+        padding: 8px 4px;
+        color: var(--font-3);
+        background-color: var(--bg-3);
+
+        &-item {
+            height: 23px;
+            padding: 3px 9px;
+            cursor: pointer;
+        }
+
+        &-item:hover {
+            background-color: var(--bg-5);
+            color: var(--font-1);
+        }
+    }
+}
+
+.apipost-dropdown {
+    z-index: 1000 !important;
+}

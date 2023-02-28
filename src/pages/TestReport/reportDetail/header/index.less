@@ -1,0 +1,99 @@
+.tReport-detail-header {
+    display: flex;
+    justify-content: space-between;
+
+    .left {
+        display: flex;
+        flex-direction: column;
+
+        &-top {
+            display: flex;
+            align-items: center;
+
+            .apipost-btn {
+                width: 24px;
+                height: 24px;
+                background-color: var(--border-line);
+                padding: 0;
+            }
+    
+            .apipost-btn:hover {
+            
+                svg {
+                    fill: var(--font-1);
+                }
+            }
+
+            svg {
+                cursor: pointer;
+                width: 14px;
+                height: 14px;
+                fill: var(--font-3);
+            }
+
+            .name {
+                color: var(--font-1);
+                font-size: 16px;
+                font-weight: 600;
+                margin-left: 8px;
+            }
+
+            .status {
+                min-width: 52px;
+                min-height: 21px;
+
+                background-color: var(--select);
+                border-radius: 3px;
+                color: var(--run-green);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-left: 12px;
+            }
+        }
+
+        &-bottom {
+            display: flex;
+            align-items: center;
+            margin-top: 7px;
+
+            .performer {
+                display: flex;
+                align-items: center;
+                margin-left: 38px;
+
+                &-info {
+                    display: flex;
+                    align-items: center;
+                    
+                    .avatar {
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        margin-right: 4px;
+                    }
+                }
+            }
+
+            .desc {
+                margin-left: 16px;
+            }
+        }
+    }
+
+    .right {
+        
+        .notice {
+            height: 26px;
+            background-color: var(--default-button);
+            border-radius: 3px;
+            min-width: 98px;
+            color: var(--font-1);
+            border: 1px solid var(--theme-color);
+            svg {
+                fill: var(--font-1);
+                margin-right: 5px;
+            }
+        }
+    }
+}

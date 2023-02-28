@@ -1,0 +1,54 @@
+.api_foot_proxy {
+    padding: 8px;
+    font-size: var(--size-12px);
+    line-height: 17px;
+
+    .foot_proxy-title {
+        margin: 0 0 32px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .use_doc {
+            color: var(--base-color-brand);
+        }
+    }
+
+    .proxy-type-box {
+        flex: 1;
+
+        .auto-check {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .proxy-type-box-label {
+        color: var(--content-color-secondary);
+        line-height: 20px;
+        margin: 0 0 8px 0;
+
+        >span {
+            color: var(--base-color-brand);
+        }
+    }
+
+    .proxy-type-ul {
+        margin: 16px 0 0 0;
+        border-top: 1px solid var(--border-color-default);
+
+        li {
+            display: flex;
+            margin: 16px 0 0 0;
+        }
+    }
+
+    .proxy-type-ul-auto {
+        opacity: 0.5;
+        cursor: not-allowed;
+
+        .api-post-radio-inner {
+            cursor: not-allowed;
+        }
+    }
+}

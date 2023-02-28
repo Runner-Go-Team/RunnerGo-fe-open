@@ -1,0 +1,180 @@
+.test-task-config {
+
+    .apipost-modal-container {
+        width: 458px;
+        height: 521px;
+    }
+    .apipost-modal-body {
+        background-color: var(--module);
+    }
+    .apipost-modal-close {
+        display: none;
+    }
+    .top {
+        display: flex;
+        justify-content: space-between;
+        margin: 30px 0;
+
+        .title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--font-1);
+        }
+
+        .close-btn {
+            width: 24px;
+            height: 24px;
+            background-color: var(--theme-color);
+            border-radius: 3px;
+
+            svg {
+                width: 13px;
+                height: 13px;
+                
+                fill: var(--common-white);
+            }
+        }
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+
+        .item {
+            display: flex;
+            margin-bottom: 18px;
+
+            .label {
+                margin-top: 2px;
+            }
+        }
+
+        .time-select {
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+
+            .explain {
+                display: flex;
+                align-items: center;
+                width: 100%;
+
+                &-left {
+                    display: flex;
+                    align-items: center;
+
+                    p {
+                        margin-right: 6px;
+                    }
+
+                    svg {
+                        cursor: pointer;
+                    }
+                }
+
+                &-right {
+                    background-color: var(--bg);
+                    width: 146px;
+                    height: 32px;
+                    border: none;
+                    border-radius: 3px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 6px;
+                    padding-right: 0;
+                    box-sizing: border-box;
+                    margin-right: 20px;
+                    margin-left: 6px;
+
+                    .time-item {
+                        display: flex;
+                        flex-direction: column !important;
+                    }
+
+                    .apipost-select {
+                        height: 30px;
+                        background-color: var(--bg);
+                        border-color: transparent;
+
+                        .apipost-select-view-text {
+                            font-size: 14px;
+                        }
+
+                        .apipost-select-view-suffix {
+                            svg {
+                                width: 8px;
+                                height: 8px;
+                                min-width: 8px;
+                                fill: var(--font-1);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            .select-date {
+                display: flex;
+                margin-top: 15px;
+                width: 100%;
+
+                &-left {
+                    background-color: var(--bg-1);
+                    width: 146px;
+                    height: 32px;
+                    border: 1px solid var(--bg-4);
+                    border-radius: 3px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 6px;
+                    padding-right: 0;
+                    box-sizing: border-box;
+                    margin-right: 20px;
+
+                    .apipost-select {
+                        height: 30px;
+                        background-color: var(--bg-1);
+                        border-color: transparent;
+
+                        .apipost-select-view-text {
+                            font-size: 14px;
+                        }
+
+                        .apipost-select-view-suffix {
+                            svg {
+                                width: 8px;
+                                height: 8px;
+                                min-width: 8px;
+                                fill: var(--font-1);
+                            }
+                        }
+                    }
+                }
+
+                &-right {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+            }
+
+            .time-explain {
+                white-space: normal !important;
+                margin-top: 20px;
+            }
+        }
+    }
+
+    .flex-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .apipost-radio-wrapper {
+            margin-bottom: 8px;
+        }
+    }
+}

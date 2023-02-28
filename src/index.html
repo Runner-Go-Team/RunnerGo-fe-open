@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <!-- <link rel="icon" href="/favicon.ico" /> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="RunnerGo-接口压力测试工具" />
+  <link rel="shortcut icon" type="image/x-icon" href="/qrlogo.png" />
+  <link rel="stylesheet" name="apt-template-link" href="/skins/dark.css" />
+  <link rel="stylesheet" name="apt-font-link" href="/font/font-100.css" />
+  <script src="https://static.geetest.com/v4/gt4.js"></script>
+  <!-- <script src="/js/socket.io.4.4.1.min.js"></script> -->
+  <style type="text/css">
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99999;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-flow: row nowrap;
+      -ms-flex-flow: row nowrap;
+      flex-flow: row nowrap;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      background: none repeat scroll 0 0 #f7f7f7;
+      text-align: center;
+    }
+
+    .preloader img,
+    .preloader svg {
+      margin: 0 auto;
+    }
+
+    /* html {
+      font-size: 19.20px !important;
+    }
+
+    @media only screen and (max-width: 1800px) {
+      html {
+        font-size: 18px !important;
+      }
+    }
+
+    @media only screen and (max-width: 1440px) {
+      html {
+        font-size: 14.40px !important;
+      }
+    } */
+  </style>
+</head>
+
+<body arco-theme="dark">
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root">
+    <div class="preloader">
+      <img src="/loading.gif">
+    </div>
+  </div>
+</body>
+<script>
+  window.addEventListener('resize', () => {
+    const oHtml = document.getElementsByTagName('html')[0];
+    const width = document.body.clientWidth;
+    oHtml.style.fontSize = width / 100 + 'px';
+  });
+  const oHtml = document.getElementsByTagName('html')[0];
+  const width = document.body.clientWidth;
+  oHtml.style.fontSize = width / 100 + 'px';
+</script>
+
+</html>

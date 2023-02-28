@@ -1,0 +1,103 @@
+.preview-wrapper {
+  width: 120ppx;
+  height: 100%;
+  overflow: auto;
+  padding: 32px;
+  background: var(--font-1)FFF;
+  .preview {
+    &-info-wrapper {
+      border-bottom: 1px solid #F2F2F2;
+      padding: 0 0 24px 0;
+      .info-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 0 0 30px;
+        margin: 0 0 8px 0;
+        .title-name {
+          font-size: var(--size-24px);
+          line-height: 34px;
+        }
+      }
+      .info-other {
+        display: flex;
+        align-items: center;
+        color: var(--font-3);
+        padding: 0 0 0 30px;
+        > div {
+          margin: 0 10px 0 0;
+        }
+      }
+    }
+    &-title{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      color: var(--content-color-secondary);
+      margin: 28px 0;
+      font-size: var(--size-16px);
+      .btn-wrapper {
+        display: flex;
+        align-items: center;
+        .apipost-btn {
+          margin: 0 0 0 8px;
+          font-size: var(--size-14px);
+        }
+      }
+    }
+    &-second-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      color: var(--content-color-secondary);
+      margin: 28px 0;
+      font-size: var(--size-14px);
+      .btn-wrapper {
+        display: flex;
+        align-items: center;
+        .apipost-btn {
+          margin: 0 0 0 8px;
+        }
+      }
+    }
+    &-url-wrapper {
+      padding: 0 0 0 30px;
+      .url-msg {
+        padding: 16px;
+        width: 100%;
+        height: 174px;
+        background: #E3E4E5; /* 暗黑模式/3 */
+       border-radius:var(--border-radius-default);
+        line-height: 17px;
+        > div {
+          margin: 0 0 8px 0;
+          .red {
+            color: var(--delete-red);
+          }
+          .green {
+            color: #2BA58F;
+          }
+        }
+      }
+    }
+    &-request {
+      padding: 0 0 0 30px;
+
+    }
+    &-response {
+      padding: 0 0 0 30px;
+    }
+    &-copyright {
+      margin: 24px 0 0 0;
+      text-align: center;
+      span {
+        color: var(--log-blue);
+      }
+    }
+  }
+  .monaco-wrapper {
+    height: 174px;
+  }
+}

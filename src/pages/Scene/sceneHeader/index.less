@@ -1,0 +1,82 @@
+.scene-header {
+    display: flex;
+    justify-content: space-between;
+    height: 57px;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 9px 16px;
+    color: var(--font-1);
+    border-bottom: 1px solid var(--border-line);
+    background-color: var(--module);
+    &-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+
+        .name {
+            font-size: 14px;
+            max-width: 200px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        
+        .desc {
+            margin-top: 8px;
+            color: var(--font-2);
+            max-width: 62vw;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+    &-right {
+        display: flex;
+        align-items: center;
+        svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--font-1);
+            margin-right: 6px;
+        }
+        .config {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            white-space: nowrap;
+            min-width: 84px;
+            background-color: var(--border-line);
+            border-radius: 3px;
+            height: 25px;
+        }
+        .saveBtn {
+            min-width: 60px;
+            height: 25px;
+            padding: 8px;
+            background-color: rgba(64, 82, 236, 0.2);
+            border: 1px solid var(--theme-color);
+            color: var(--font-1);
+            margin-left: 8px;
+        }
+        .stopBtn, .runBtn {
+            // width: 84px;
+            height: 25px;
+            padding: 8px;
+            background-color: rgba(76, 203, 126, 0.2);
+            border: 1px solid var(--sub-color-1);
+            color: var(--font-1);
+            margin-left: 8px;
+        }
+        
+        .stopBtn {
+            background-color: rgba(237, 120, 71, 0.1);
+            border: 1px solid var(--sub-color-4);
+            border-radius: 3px;
+            svg {
+                width: 14px;
+                height: 14px;
+            }
+        }
+    }
+}

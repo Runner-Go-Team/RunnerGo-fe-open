@@ -1,0 +1,98 @@
+.global-mini-test {
+  position: fixed;
+  z-index: 50;
+  left: 20px;
+  bottom: 20px;
+  width: 279px;
+  height: 150px;
+  filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.1));
+  border-radius: 10px;
+  padding: 11px;
+  box-sizing: border-box;
+  height: 150px;
+  background-color: var(--background-color-primary);
+  border-radius: var(--border-radius-default);
+  border:var(--border-color-default) 1px solid;
+
+  .mini-test-header {
+    height: 32px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .text {
+      flex: 1;
+      color: var(--content-color-secondary);
+      font-size: var(--size-16px);
+      font-weight: 600;
+      align-items: center;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 0;
+    }
+
+    .btn-list {
+      width: 78px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .btn {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--border-radius-default);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        &.btn-stop {
+          background-color: var(--base-color-brand);
+
+          svg {
+            fill: var(--content-color-constant);
+          }
+        }
+
+        &.btn-hide {
+          background-color: var(--background-color-tertiary);
+          svg{
+            fill: var(--content-color-secondary);
+          }
+          &:hover {
+            svg{
+              fill: var(--content-color-primary);
+            }
+            background-color: var(--highlight-background-color-secondary);
+          }
+        }
+      }
+
+    }
+  }
+
+  .progress-panel {
+    margin-top: 18px;
+    border-top: 1px solid var(--border-color-default);
+
+    .progress-title {
+      padding-top: 18px;
+    }
+
+    .progress-bg {
+      height: 14px;
+      margin-top: 16px;
+      border-radius: 7px;
+      background-color: rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      display: flex;
+
+      .bar {
+        background: linear-gradient(90deg, #3DC16A 0%, #26D5AB 99.77%);
+        box-shadow: 0px 4px 8px rgba(77, 232, 158, 0.25);
+      }
+    }
+  }
+
+}

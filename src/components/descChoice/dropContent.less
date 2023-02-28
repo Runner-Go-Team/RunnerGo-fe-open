@@ -1,0 +1,28 @@
+.params-desc-wrapper {
+  max-height: 200px;
+  overflow: auto;
+}
+.params-desc-item{
+  max-width: 240px;
+  min-width: 100px;
+  box-sizing: border-box;
+  list-style: none;
+  margin: 0;
+  font-variant: tabular-nums;
+  -webkit-font-feature-settings: "tnum";
+  font-feature-settings: "tnum";
+  padding: 0;
+  color: var(--content-color-secondary);
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 8px;
+  word-break: keep-all;
+  overflow: hidden;
+  &:hover{
+    background-color: var(--highlight-background-color-primary);
+    color: var(--content-color-primary);
+  }
+}

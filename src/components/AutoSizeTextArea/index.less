@@ -1,0 +1,33 @@
+.auto-size-textbox {
+  width: 100%;
+  flex: 1;
+  height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid transparent;
+  text-align: left;
+  padding: 0 8px;
+  line-height: 24px;
+  font-size: 12px;
+  align-items: start;
+  justify-content: start;
+  display: flex;
+  color: var(--content-color-primary);
+
+  &.edit-mode {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    // border: 1px solid var(--border-color-default);
+    background: var(--background-color-primary);
+    // max-height:initial;
+    z-index: 199;
+    height: auto;
+  }
+
+  &:empty:before {
+    content: attr(placeholder);
+    color: var(--content-color-tertiary);
+  }
+}

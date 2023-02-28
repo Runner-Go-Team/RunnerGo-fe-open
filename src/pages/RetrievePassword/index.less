@@ -1,0 +1,148 @@
+.retrieve-password {
+    display: flex;
+    flex-direction: column;
+
+    .title {
+        font-weight: 700;
+        font-family: 'Roboto';
+        font-size: 46px;
+        line-height: 54px;
+        color: #000;
+    }
+
+    .config {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 51px;
+        margin-bottom: 18px;
+
+        .arco-select {
+            width: 88px;
+            height: 32px;
+        }
+    }
+
+    .item {
+        margin-bottom: 24px;
+        display: flex;
+        flex-direction: row !important;
+        justify-content: space-between;
+        width: 31.25rem;
+
+        &-checkbox {
+            display: flex;
+
+            .agreement {
+                margin-left: 7px;
+                font-size: 14px;
+
+                span {
+                    margin: 0 2px;
+                    color: var(--theme-color);
+                    cursor: pointer;
+                }
+            }
+
+            .auto_login {
+                margin-left: 7px;
+                font-size: 14px;
+            }
+        }
+
+        .arco-input {
+            width: 100%;
+            height: 60px;
+            border: 1px solid #ECECEC;
+            border-radius: 5px;
+            background-color: transparent !important;
+        }
+
+        .arco-input:focus {
+            background-color: transparent !important;
+        }
+
+        .pwd-input {
+            border: none;
+        }
+
+        .arco-input-group-wrapper {
+            border: 1px solid #ECECEC;
+            border-radius: 5px;
+
+            .arco-input-inner-wrapper {
+                background-color: transparent;
+                border-radius: 5px;
+                // border: none;
+            }
+
+            .arco-input {
+                border: none;
+            }
+        }
+
+        .arco-btn {
+            width: 100%;
+            height: 60px;
+            border-radius: 5px;
+            color: var(--common-white);
+            background-color: var(--theme-color);
+        }
+
+        .arco-btn:hover {
+            background-color: var(--theme-color);
+            color: var(--common-white);
+        }
+
+        .pwd-login {
+            color: var(--font-2);
+        }
+
+
+        #captcha {
+            width: 100%;
+        }
+
+        .phone-code {
+            width: 130px;
+            height: 100%;
+            background-color: var(--theme-color);
+            color: var(--common-white);
+            border-radius: 5px;
+        }
+
+        .input-error {
+            border: 1px solid var(--run-red);
+            background-color: rgba(192, 60, 60, 0.05);
+        }
+
+        .text-error {
+            margin-top: 10px;
+            color: var(--run-red);
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        .to-login-text {
+            text-align: center;
+            color: var(--theme-color);
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .input-item {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            .geetest_captcha {
+                display: none;
+            }
+        }
+
+
+    }
+
+    .item-checkbox {
+        justify-content: flex-start;
+    }
+}

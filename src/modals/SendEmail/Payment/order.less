@@ -1,0 +1,108 @@
+.order_create {
+  height: calc(100% - 64px);
+  width: calc(100% - 60px);
+  min-width: 1240px;
+  position: absolute;
+  .api_order_pay {
+    width: 870px;
+    height: 340px;
+    // border: 1px solid red;
+    padding-top: 38px;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    left: 50%;
+    top: calc(50% - 64px);
+    transform: translate(-50%, -50%);
+    .api_order_pay_l {
+      height: 100%;
+      width: 329px;
+      // border: 1px solid blue;
+      display: flex;
+      flex-direction: column;
+      // justify-content: space-between;
+      position: relative;
+      .api_order_pay_l_Qrcode {
+        // width: 100%;
+        // height: 318px;
+        // border: 1px solid green;
+        margin: 0 0 32px 0;
+        padding: 0 60px;
+        svg {
+          width: 251px;
+          height: 251px;
+        }
+      }
+
+      .api_order_pay_l_icon_group {
+        width: 104px;
+        height: 30px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 0 auto;
+        & > svg:nth-child(1) {
+          width: 28px;
+        }
+
+        & > svg:nth-child(2) {
+          width: 30px;
+        }
+
+        & > svg:nth-child(3) {
+          width: 20px;
+        }
+      }
+    }
+
+    .api_order_pay_middle_line {
+      height: 316px;
+      width: 1px;
+      background-color: var(--bg1);
+      position: absolute;
+      left: 50%;
+      top: 0;
+    }
+
+    .api_order_pay_r {
+      width: 282px;
+      height: 262px;
+      text-align: left;
+      font-size: var(--size-16px);
+      color: var(--fn1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      & > p:nth-child(1) {
+        font-weight: 600;
+        font-size: var(--size-24px);
+      }
+
+      & > p:nth-child(2) {
+      }
+
+      & > p > span:nth-child(2) {
+        font-weight: 600;
+        font-size: var(--size-14px);
+        color: var(--error);
+      }
+      & > p > span:nth-child(3) {
+        font-weight: 600;
+        font-size: var(--size-24px);
+        color: var(--error);
+      }
+
+      & > p:nth-child(3) {
+      }
+
+      & > p:nth-child(4),
+      & > p:nth-child(5) {
+      }
+
+      & > p > span:nth-child(1) {
+        color: #666;
+        vertical-align: middle;
+      }
+    }
+  }
+}

@@ -1,0 +1,347 @@
+.tReport-email-detail-result {
+    // margin-top: 14px;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--module);
+    border-radius: 10px;
+    padding: 12px 24px;
+    box-sizing: border-box;
+    display: flex;
+
+
+
+    .not-data {
+        color: var(--font-1);
+        height: 50px;
+        padding-left: 6px;
+    }
+
+    .hide-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--font-1);
+        font-size: 14px;
+        height: 100%;
+
+        p {
+            width: 14px;
+        }
+    }
+
+    .success {
+        color: var(--run-green);
+        width: 12px;
+        height: 12px;
+
+        path {
+            fill: var(--run-green) !important;
+        }
+    }
+
+    .fail {
+        color: var(--run-red);
+        width: 12px;
+        height: 12px;
+
+        path {
+            fill: var(--run-red) !important;
+        }
+    }
+
+    .not-run {
+        color: var(--avatar-grey);
+
+        path {
+            fill: var(--avatar-grey) !important;
+        }
+    }
+
+    .scene-result {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+
+        .title {
+            color: var(--font-1);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        &-detail {
+            background-color: var(--bg);
+            padding: 16px 12px;
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+            height: 100%;
+
+            .item-hover {
+                background-color: var(--module);
+                color: var(--font-1);
+            }
+
+            .item {
+                display: flex;
+                padding: 8px 11px 8px 5px;
+                width: 100%;
+                cursor: pointer;
+
+                .name {
+                    margin-left: 4px;
+                    color: var(--font-3);
+                    white-space: nowrap;
+                    width: 40px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .progress {
+                    margin-left: 4px;
+                    background-color: var(--run-red);
+                    border-radius: 7px;
+                    width: 74px;
+                    height: 8px;
+                    position: relative;
+
+                    &-success {
+                        position: absolute;
+                        border-radius: 7px;
+                        height: 8px;
+                        background-color: var(--run-green);
+                        left: 0;
+                        top: 0;
+                    }
+                }
+
+                .num {
+                    margin-left: 4px;
+
+                }
+            }
+        }
+    }
+
+    .api-result {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+
+        .title {
+            color: var(--font-1);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .arco-collapse-item-header-title {
+            width: 100%;
+        }
+
+        .arco-collapse-item-header {
+            background-color: var(--module);
+            border: none;
+        }
+
+        .arco-collapse-item-content-box {
+            padding: 0;
+        }
+
+        .arco-collapse-item-content {
+            background-color: var(--bg);
+        }
+
+        .collapse-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .collapse-list {
+            background-color: var(--bg);
+            padding: 12px 9px;
+            box-sizing: border-box;
+        }
+
+        .arco-collapse-border {
+            border: none;
+        }
+
+        .item-hover {
+            background-color: var(--select-hover);
+        }
+
+        &-item {
+            display: flex;
+            justify-content: space-between;
+            color: var(--font-1);
+            background-color: var(--bg);
+            padding: 12px 25px;
+            cursor: pointer;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 100%;
+
+            .item-left {
+                display: flex;
+                align-items: center;
+
+                .name {
+                    margin: 0 6px;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    max-width: 80px;
+                    overflow: hidden;
+                }
+
+                .method {
+                    color: var(--theme-color);
+                }
+
+                .url {
+                    margin-left: 6px;
+                    width: 15vw;
+                    max-width: 15vw;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+
+            .item-right {
+                display: flex;
+                align-items: center;
+
+                .time {
+                    margin: 0 6px;
+                }
+
+                .code {
+                    color: var(--run-green);
+                }
+            }
+        }
+    }
+
+    .api-detail {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        width: 100%;
+
+        .title {
+            color: var(--font-1);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        &-container {
+            background-color: var(--bg);
+            padding: 16px 12px;
+
+            .assert {
+                display: flex;
+                flex-direction: column;
+
+                .label {
+                    color: var(--font-1);
+                    font-weight: 600;
+                    margin-bottom: 5px;
+                }
+
+                &-container {
+                    display: flex;
+                    flex-direction: column;
+                    margin-top: 4px;
+
+                    &-item {
+                        padding: 8px;
+                        height: 33px;
+                        width: 100%;
+                    }
+
+                    .success {
+                        background: rgba(60, 192, 113, 0.1);
+                        border-radius: 3px;
+                        color: var(--run-green);
+                    }
+
+                    .fail {
+                        background: rgba(255, 76, 76, 0.1);
+                        border-radius: 3px;
+                        color: #AC0000;
+                    }
+
+
+                }
+            }
+
+            .detail {
+                display: flex;
+                flex-direction: column;
+                margin-top: 10px;
+
+                .label {
+                    color: var(--font-1);
+                    font-weight: 600;
+                    margin-bottom: 5px;
+                }
+
+                .request {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    margin-top: 4px;
+
+                    &-item {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 1px;
+
+                        &-left,
+                        &-right {
+                            width: 49%;
+                            background-color: var(--bg-3);
+                            min-height: 29px;
+                            padding: 6px;
+                        }
+                    }
+                }
+
+                .req {
+                    width: 100%;
+                    height: 120px;
+
+                    &-header {
+                        overflow-y: scroll;
+                        padding: 20px 10px;
+                    }
+
+                    &-body {
+                        height: 100%;
+                    }
+                }
+
+
+                .res {
+                    width: 100%;
+                    height: 120px;
+
+                    &-header {
+                        overflow-y: scroll;
+                        padding: 20px 10px;
+                    }
+
+                    &-body {
+                        height: 100%;
+                    }
+                }
+            }
+        }
+    }
+}

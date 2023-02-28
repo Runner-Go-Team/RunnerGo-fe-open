@@ -1,0 +1,151 @@
+.simpleUpload {
+  display: none;
+}
+.ProseMirror{
+  color: var(--content-color-secondary);
+}
+
+.SimpleMDE_modal {
+  width: 100%;
+  height: calc(100% - 30px);
+  position: relative;
+  transform: scale(1);
+}
+.CodeMirror {
+  height: auto !important;
+  position: absolute;
+  width: 100%;
+  top: 50px;
+  bottom: 0;
+  line-height: 1.5;
+}
+.CodeMirror-scroll {
+  // mde 显示不全
+  min-height: auto !important;
+}
+.EasyMDEContainer .editor-toolbar,
+.fullscreen .editor-toolbar {
+  height: 50px;
+  padding: 10px;
+  
+}
+.EasyMDEContainer,
+.fullscreen {
+  .CodeMirror {
+    height: 250px;
+    background-color: var(--background-color-primary1) !important;
+    color: var(--content-color-secondary);
+    border: var(--bd1);
+    line-height: 1.5;
+  }
+
+  .editor-toolbar i.separator {
+    border-left: 1px solid var(--border-color-default);
+    border-right: none;
+  }
+
+  .CodeMirror-cursor {
+    border-left: 1px solid var(--bg5);
+  }
+
+  .editor-preview {
+    background-color: var(--bg3);
+    color: var(--content-color-secondary);
+  }
+
+  .editor-preview-side {
+    border: none;
+    border-left: 1px solid var(--border-color-default);
+    border-radius: 0 0 5px 0;
+  }
+
+  .editor-toolbar {
+    border: none;
+    // color: var(--content-color-secondary);
+    background-color: var(--bg2) !important;
+    border-bottom: 1px solid var(--border-color-default);
+  }
+}
+
+.toastui-editor-main-container, .toastui-editor-contents *{
+  color:var(--content-color-primary)!important;
+}
+
+.toastui-editor-main .toastui-editor-md-splitter{
+  background-color: var(--border-color-default)!important;
+}
+.toastui-editor-defaultUI-toolbar{
+  border-bottom: 1px solid var(--border-color-default)!important;
+}
+
+/*ApiPost自带编辑器预览样式*/
+.editor-preview {
+  line-height: 2;
+  a {
+    color: var(--content-color-primary)!important;
+  }
+  strong {
+    font-weight: bold;
+  }
+  em {
+    font-style: italic;
+  }
+  h1 {
+    font-size: 24px !important;
+    font-weight: 600;
+  }
+  h2 {
+    font-size: 22px !important;
+    font-weight: 600;
+  }
+  h3 {
+    font-size: 20px !important;
+    font-weight: 600;
+  }
+  h4 {
+    font-size: 18px !important;
+    font-weight: 600;
+  }
+  h5 {
+    font-size: 16px !important;
+    font-weight: 600;
+  }
+  h6 {
+    font-size: 14px !important;
+    font-weight: 600;
+  }
+  ol {
+    padding-left: 20px !important;
+    li {
+      list-style: decimal;
+    }
+  }
+  ul {
+    padding-left: 20px !important;
+    li {
+      list-style: initial;
+    }
+  }
+  blockquote {
+    border-left: #ccc 3px solid;
+    color: var(--fn3);
+    p {
+      background-color: var(--background-color-secondary);
+      padding: 8px;
+    }
+  }
+  del {
+    text-decoration: line-through;
+  }
+  table {
+    width: 100%;
+  }
+  pre {
+    background-color: var(--background-color-secondary)!important;
+    code {
+      font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+    }
+  }
+}
+

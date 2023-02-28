@@ -1,0 +1,42 @@
+.scene-box {
+    display: flex;
+    // justify-content: center;
+    align-items: center;
+    // justify-content: space-between !important;
+    margin-top: 16px;
+    width: 100%;
+    &-item {
+        display: flex;
+        // width: 82px;
+        height: 30px;
+        align-items: center;
+        justify-content: center;
+        // flex: 1;
+        cursor: pointer;
+        svg {
+            // width: 16px;
+            // height: 16px;
+            fill: var(--content-color-secondary);
+            margin-right: 4px;
+        }
+
+        p {
+            font-size: 12px !important;
+            white-space: nowrap;
+        }
+        .line {
+            // margin: 0 4px;
+            margin-left: 4px;
+            height: 18px;
+            width: 1px;
+            background-color: var(--bg-4);
+        }
+    }
+    &-item:hover {
+        color: var(--font-1);
+
+        svg {
+            fill: var(--font-1);
+        }
+    }
+}

@@ -1,0 +1,105 @@
+.report-content {
+    min-height: 783px;
+    // height: 1500px;
+    // overflow: auto !important;
+    border-radius: 5px;
+    padding: 8px;
+    color: var(--font-1);
+    margin-bottom: 50px;
+
+    .apipost-table-container {
+        margin-top: 32px;
+    }
+
+    .apipost-table-th {
+        background-color: var(--bg-3);
+    }
+
+    .apipost-table-td {
+        color: var(--font-1);
+        height: 30px;
+    }
+
+    &-top {
+        margin-top: 24px;
+
+        .top-type {
+            span:last-child {
+                // margin-left: 16px;
+            }
+        }
+
+        .top-mode {
+            margin-top: 16px;
+        }
+    }
+
+    .echarts-list {
+        display: flex;
+        margin-top: 32px;
+        flex-wrap: wrap;
+
+        .echarts {
+            // flex: 1;
+            width: 22%;
+            margin: 0 12px;
+            margin-bottom: 32px;
+        }
+    }
+
+    .report-result,
+    .report-desc {
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+
+        .title {
+            display: flex;
+            align-items: center;
+
+            .line {
+                width: 3px;
+                height: 15px;
+                background-color: var(--theme-color);
+            }
+
+            .label {
+                font-size: 14px;
+                color: var(--font-1);
+                margin-left: 6px;
+            }
+
+            .apipost-btn {
+                margin-left: 10px;
+                background-color: var(--theme-color);
+                color: var(--common-white);
+            }
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            padding-left: 9px;
+            margin-top: 14px;
+
+            p {
+                margin-bottom: 10px;
+            }
+        }
+
+        .desc {
+            padding-left: 9px;
+        }
+    }
+
+    .report-desc {
+        margin-top: 26px;
+
+        .apipost-textarea-wrapper {
+            width: 100%;
+            border: 1px solid var(--bg-4);
+            border-radius: 5px;
+            margin-top: 4px;
+        }
+    }
+}
