@@ -130,7 +130,6 @@ export const sceneReducer = (state = initialState, action) => {
         edges: action.payload,
       }
     case `${NAMESPACE}/${actionTypes.updateType}`:
-      console.log(action.payload);
       return {
         ...state,
         type: action.payload,
@@ -206,7 +205,6 @@ export const sceneReducer = (state = initialState, action) => {
         id_now: action.payload,
       }
     case `${NAMESPACE}/${actionTypes.updateApiRes}`:
-      console.log('!!!!!', action.payload);
       return {
         ...state,
         run_api_res: action.payload,

@@ -116,12 +116,10 @@ const PresetConfig = () => {
         };
         fetchPresetList(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data: { preinstall_list, total } } = res;
                 if (preinstall_list && preinstall_list.length === 0 && currentPage > 1) {
                     pageChange(currentPage - 1, pageSize);
                 }
-                console.log(preinstall_list, preinstall_list ? preinstall_list : []);
                 setTotalData(preinstall_list ? preinstall_list : []);
                 setTableData(preinstall_list ? preinstall_list.map(item => {
                     const { mode_conf, task_type, task_mode, control_mode } = item;
@@ -154,7 +152,6 @@ const PresetConfig = () => {
                         </div>
                     }
                 }) : []);
-                console.log(total);
                 setTotal(total);
             }
         })
@@ -195,7 +192,6 @@ const PresetConfig = () => {
                 fetchDeletePreset(params).subscribe({
                     next: (res) => {
                         const { code } = res;
-                        console.log(code);
                         if (code === 0) {
                             Message('success', t('message.deleteSuccess'));
                             getTableData();

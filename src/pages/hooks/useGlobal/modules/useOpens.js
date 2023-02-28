@@ -514,7 +514,6 @@ const useOpens = () => {
                         }
                     },
                     err: (err) => {
-                        // console.log(err);
                     }
                 })
                     ;
@@ -546,7 +545,7 @@ const useOpens = () => {
     };
 
     const updateTargetId = async (id) => {
-        // console.log('updateTargetId', id);
+
         // const uuid = localStorage.getItem('uuid');
         // User.update(uuid, { 'workspace.CURRENT_TARGET_ID': id }).then(() => {
         const team_id = localStorage.getItem('team_id');
@@ -1047,7 +1046,6 @@ const useOpens = () => {
     }
 
     const sendApi = (id) => {
-        console.log(id, open_api_now);
         const params = {
             target_id: id ? id : open_api_now,
             team_id: localStorage.getItem('team_id'),

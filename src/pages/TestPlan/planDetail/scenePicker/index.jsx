@@ -58,7 +58,6 @@ const ScenePicker = (props) => {
   const { filteredTreeList } = useListData({ filterParams });
 
   const getApiDataItems = async (sceneDatas, ckdkeys) => {
-    console.log(sceneDatas, checkedApiKeys);
     // step1.深克隆，防止串数据
     const treeData = cloneDeep(sceneDatas);
 
@@ -90,7 +89,6 @@ const ScenePicker = (props) => {
       const sortedList = sortBy(nodeList, ['sort']);
       for (const nodeItem of sortedList) {
         if (checkedData[nodeItem.target_id] === true && ['scene', 'group'].includes(nodeItem.target_type)) {
-          console.log(nodeItem);
           apiIds.push({
             id: nodeItem.target_id,
             name: nodeItem.name,
@@ -135,7 +133,6 @@ const ScenePicker = (props) => {
                 desc: _.description,
                 type: _.target_type
               });
-              console.log(_);
               fn(_.parent_id);
             }
           }
@@ -147,7 +144,6 @@ const ScenePicker = (props) => {
 
     Bus.$emit('importSceneList', _dataList.map(item => item.id), id, 'auto_plan', (scene_id_list, code) => {
 
-      console.log('------------------');
 
       dispatch({
         type: 'scene/updateOpenName',

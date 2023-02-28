@@ -51,11 +51,9 @@ const CustomEdge = (props) => {
         }
     }
 
-    console.log(edgePath);
 
     const handleContextMenu = (e) => {
         e.preventDefault();
-        console.log(e);
 
         const x = e.clientX;
         const y = e.clientY;

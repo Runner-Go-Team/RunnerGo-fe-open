@@ -393,9 +393,7 @@ const PlanList = () => {
                                 payload: null,
                             })
                             // let planMap = JSON.parse(localStorage.getItem('planMap') || '{}');
-                            // console.log(planMap);
                             // if (planMap[plan_id]) {
-                            //     console.log(planMap[plan_id]);
                             //     Bus.$emit('addOpenPlanScene', { target_id: planMap[plan_id] }, id_apis_plan, node_config_plan)
                             // }
                             navigate(`/plan/detail/${plan_id}`);
@@ -444,7 +442,6 @@ const PlanList = () => {
                     }
                 }
                 onChange={(a, sort, filter, c) => {
-                    console.log(a, sort, c, filter);
                     if (!filter.hasOwnProperty('task_mode')) {
                         setTaskMode('');
                     } else {
@@ -467,7 +464,6 @@ const PlanList = () => {
                             setSort(sort.direction === 'ascend' ? 4 : 3);
                         }
                     } else {
-                        console.log(123123123);
                         setSort(0);
                     }
                 }}

@@ -51,10 +51,8 @@ const TReportDetailResult = (props) => {
     useEffect(() => {
         if (Object.entries(apiResult || {}).length > 0 && Object.entries(checkScene || {}).length > 0) {
             const { scene_id } = checkScene;
-            console.log(scene_id, apiResult[scene_id]);
             setCheckCase(apiResult[scene_id]);
             setFilterCase(apiResult[scene_id] || []);
-            console.log(apiResult[scene_id]);
             if (apiResult[scene_id]) {
                 setCheckApi(apiResult[scene_id].length > 0 ? apiResult[scene_id][0] : []);
                 if (Object.entries(apiResult[scene_id][0] || {}).length > 0 && apiResult[scene_id][0].api_list) {
@@ -148,12 +146,10 @@ const TReportDetailResult = (props) => {
             'failed': <SvgFailed className='fail' />,
             'not_run': <SvgNotRun className='not-run' />
         }
-        console.log(state);
         return (
             <div className={`api-result-item ${checkDetail.event_id === event_id ? 'item-hover' : ''}`} onClick={() => {
                 // checkApi(item);
                 setCheckDetail(item);
-                console.log(item);
             }}>
                 <div className="item-left">
                     {
@@ -180,7 +176,6 @@ const TReportDetailResult = (props) => {
     const [resTab, setResTab] = useState('1');
     const [editorDom, setEditorDom] = useState(null);
     const currentRef = useRef();
-    console.log(checkDetail, checkDetail, checkDetail);
 
 
     const handleSetEditor = (editor) => {
@@ -218,7 +213,6 @@ const TReportDetailResult = (props) => {
                                     sceneResultNow.map(item => (
                                         <div className={`item ${item.scene_id === checkScene.scene_id ? 'item-hover' : ''}`} onClick={() => {
                                             setCheckScene(item);
-                                            console.log(item);
                                         }}>
                                             {
                                                 item.state === 1 ? <SvgSuccess className="success" /> : <SvgFailed className="fail" />
@@ -243,7 +237,6 @@ const TReportDetailResult = (props) => {
             <div className="api-result">
                 <p className="title">{t('autoReport.caseResult')}</p>
                 <Tabs defaultActiveId="1" onChange={(e) => {
-                    console.log(e);
                     setCaseTab(e);
                     if (e === '1') {
                         setFilterCase(checkCase || []);

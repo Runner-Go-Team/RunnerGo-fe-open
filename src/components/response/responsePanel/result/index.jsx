@@ -34,8 +34,6 @@ const RealTimeResult = (props) => {
 
   const data = tempData[type];
 
-  console.log(tempData, type, data);
-
   const tabsList = [
     {
       title: t('btn.beautify'),

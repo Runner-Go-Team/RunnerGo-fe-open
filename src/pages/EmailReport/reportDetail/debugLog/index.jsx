@@ -65,7 +65,6 @@ const DebugLog = (props) => {
                 setLog(_data);
             },
             err: (err) => {
-                console.log(err);
             }
         })
     }

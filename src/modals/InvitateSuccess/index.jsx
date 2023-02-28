@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 const InvitateSuccess = (props) => {
     const { addLength, unRegister, unEmail, onCancel } = props;
     const { t } = useTranslation();
-    console.log(addLength, unRegister, unEmail);
     return (
         <Modal
         className='invitate-result'

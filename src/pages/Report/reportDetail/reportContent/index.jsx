@@ -699,35 +699,27 @@ const ReportContent = (props) => {
         }
         // const e1 = document.querySelector('.e1');
         // e1.addEventListener('mouseout', function () {
-        //     console.log('asdkasdkaskldjkalsd');
         // })
         // const e2 = document.querySelector('.e2');
         // e2.addEventListener('mouseout', function () {
-        //     console.log('asdkasdkaskldjkalsd');
         // })
         // const e3 = document.querySelector('.e3');
         // e3.addEventListener('mouseout', function () {
-        //     console.log('asdkasdkaskldjkalsd');
         // })
         // const e4 = document.querySelector('.e4');
         // e4.addEventListener('mouseout', function() {
-        //     console.log('asdkasdkaskldjkalsd');
         // })
         // const e5 = document.querySelector('.e5');
         // e5.addEventListener('mouseout', function() {
-        //     console.log('asdkasdkaskldjkalsd');
         // })
         // const e6 = document.querySelector('.e6');
         // e6.addEventListener('mouseout', function() {
-        //     console.log('asdkasdkaskldjkalsd');
         // })
         // const e7 = document.querySelector('.e7');
         // e7.addEventListener('mouseout', function() {
-        //     console.log('asdkasdkaskldjkalsd');
         // })
         // const e8 = document.querySelector('.e8');
         // e8.addEventListener('mouseout', function() {
-        //     console.log('asdkasdkaskldjkalsd');
         // })
     }, [echartsRef1]);
 
@@ -745,7 +737,6 @@ const ReportContent = (props) => {
                 dataIndex: tooltipX,
             });
             // echartsRef1.current.echarts.on('click', () => {
-            //     console.log(123123123123);
             // })
             const dom2 = echartsRef2.current.ele;
             const res2 = echartsRef2.current.echarts.getInstanceByDom(dom2 ? dom2 : {});
@@ -874,7 +865,6 @@ const ReportContent = (props) => {
         }
         setConfigData([...configData, {
             duration: <Input value={duration} onChange={(e) => {
-                console.log(e);
                 if (!e || `${parseInt(e)}` === `NaN`) {
                     duration = 0;
                     return;

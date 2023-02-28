@@ -79,7 +79,6 @@ const FindPassword = () => {
     }, [params_mobile]);
 
     useEffect(() => {
-        console.log(vcodeObj, captchaObj);
         if (Object.entries(vcodeObj).length > 0) {
             if (phone.trim().length > 0 && !phoneError) {
                 setShowPhoneCode(true);
@@ -194,7 +193,6 @@ const FindPassword = () => {
     }
 
     const checkPassword = () => {
-        console.log(newPwd);
         if (newPwd.trim().length === 0) {
             Message('error', t('modal.currentPwdEmpty'));
             setPasswordError(true);

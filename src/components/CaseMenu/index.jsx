@@ -65,7 +65,6 @@ const CaseMenu = (props) => {
 
             fetchCaseList(params).subscribe({
                 next: (res) => {
-                    console.log(res);
                     const { code, data: { case_assemble_list } } = res;
                     if (code === 0) {
                         setCaseList(case_assemble_list);
@@ -546,7 +545,6 @@ const CaseMenu = (props) => {
                                         item,
                                         (state, editItem) => {
                                             // 1: 编辑, 2: 删除
-                                            console.log(state, editItem);
                                             if (state === 1) {
                                                 setEditCase(editItem);
                                                 setShowCreate(true);

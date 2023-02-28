@@ -130,7 +130,6 @@ const TeamList = (props) => {
         })
     }
     const outTeam = (confirmTeam, userId) => {
-        console.log(confirmTeam, userId);
         // return;
         const { team_id: quit_id } = confirmTeam;
         // 判断当前团队是否是该用户的私有团队
@@ -154,7 +153,6 @@ const TeamList = (props) => {
                 if (code === 0) {
                     Message('success', t('message.quitSuccess'));
                     const myTeam = _teamList.find(item => item.type === 1 && item.created_user_id === userId);
-                    console.log(quit_id, team_id, data);
                     if (quit_id === team_id) {
                         const settings = JSON.parse(localStorage.getItem('settings'));
                         settings.settings.current_team_id = data.team_id;
@@ -192,7 +190,6 @@ const TeamList = (props) => {
                     const { code, data: { teams } } = res;
                     if (code === 0) {
                         let dataList = [];
-                        // console.log(userInfo);
                         dataList = teams.map((item, index) => {
                             const { name, created_time_sec, team_id } = item;
                             return {
@@ -225,7 +222,6 @@ const TeamList = (props) => {
                         teams.length && teams.forEach((data) => {
                             teamData[data.team_id] = data;
                         });
-                        console.log(teamData);
                         dispatch({
                             type: 'teams/updateTeamData',
                             payload: teamData,

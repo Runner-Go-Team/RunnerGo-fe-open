@@ -367,7 +367,6 @@ const Box = (props) => {
 
                 }}>{t('scene.copyApi')}</p>
                 <p onClick={() => {
-                    console.log(from, id_now, id);
                     if (from === 'scene') {
                         dispatch({
                             type: 'scene/updateDeleteNode',

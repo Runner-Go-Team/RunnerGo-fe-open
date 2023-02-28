@@ -103,22 +103,6 @@ const Box = (props) => {
     const running_scene_plan = useSelector((store) => store.plan.running_scene);
     const select_box_plan = useSelector((store) => store.plan.select_box);
 
-    console.log(run_res_scene, run_res_plan);
-
-    // 这样写, store.plan里有任何值更新, 都会刷新组件
-    // const {
-    //     nodes: nodes_plan,
-    //     id_apis: id_apis_plan,
-    //     node_config: node_config_plan,
-    //     open_plan_scene: open_scene_plan,
-    //     run_res: run_res_plan,
-    //     edges: edges_plan,
-    //     init_scene: init_scene_plan,
-    //     to_loading: to_loading_plan,
-    //     success_edge: success_edge_plan,
-    //     failed_edge: failed_edge_plan,
-    //     running_scene: running_scene_plan,
-    // } = useSelector((store) => store.plan);
 
     const nodes = from === 'scene' ? nodes_scene : nodes_plan;
     const id_apis = useSelector((store) => store.case.id_apis);
@@ -164,7 +148,6 @@ const Box = (props) => {
     useEffect(() => {
         const my_config = node_config[id];
         if (my_config) {
-            console.log(my_config);
             const { weight, error_threshold, response_threshold, request_threshold, percent_age, mode } = my_config;
             weight && setWeight(weight);
             error_threshold && setError(error_threshold);
@@ -180,7 +163,6 @@ const Box = (props) => {
     }, [init_scene]);
 
     useEffect(() => {
-        console.log(run_res);
         if (run_res) {
             const now_res = run_res.filter(item => item.event_id === id)[0];
             if (now_res) {
@@ -309,7 +291,6 @@ const Box = (props) => {
                     // style={{ zIndex: 1050 }}
                     >
                         <div ><SvgMore className='more-svg' onClick={(e) => {
-                            console.log('showMore');
                             e.preventDefault();
                             e.stopPropagation();
                             setSelectBox(true);
@@ -448,7 +429,6 @@ const Box = (props) => {
     };
 
     const onTargetChange = (type, value) => {
-        console.log(type, value);
         Bus.$emit('updateNodeConfig', type, value, id, node_config, from);
     }
 
@@ -477,7 +457,6 @@ const Box = (props) => {
         let _box = document.querySelector('.selectBox');
         let _drawer = document.querySelector('.api-config-drawer');
 
-        // console.log(e, e.target, e.target.classList, [...e.target.classList]);
         if (_box && !_box.contains(e.target) && _drawer && !_drawer.contains(e.target) && ![...e.target.classList].includes('drawer-save-btn') && ![...e.target.classList].includes('drawer-close-btn')) {
 
             setSelectBox(false);
@@ -559,7 +538,6 @@ const Box = (props) => {
                             setMode(parseInt(e));
                             onTargetChange('mode', parseInt(e));
 
-                            console.log(e);
                             setPercent(90);
                         }}
                     >

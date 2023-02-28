@@ -80,7 +80,6 @@ const TestTaskConfig = (props) => {
             setTimeText(`自${start}起, 每天的${start_time}该场景将自动执行一次, 直至${end}结束`);
         } else if (frequency === 2) {
             let week = new Date(taskExecTime * 1000).getDay();
-            console.log(week);
             let weekList = {
                 0: '周日',
                 1: '周一',
@@ -105,11 +104,9 @@ const TestTaskConfig = (props) => {
     const save = () => {
         if (taskType === 2) {
             if (frequency === 0 && taskExecTime === 0) {
-                console.log(123);
                 Message('error', t('message.taskConfigEmpty'));
                 return;
             } else if (frequency !== 0 && (taskExecTime === 0 || taskCloseTime === 0)) {
-                console.log(456);
                 Message('error', t('message.taskConfigEmpty'));
                 return;
             }
@@ -132,7 +129,6 @@ const TestTaskConfig = (props) => {
         };
         fetchSaveConfig(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { code } = res;
                 if (code === 0) {
                     Message('success', t('message.saveSuccess'));

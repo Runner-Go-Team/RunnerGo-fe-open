@@ -248,7 +248,6 @@ const SceneBox = (props) => {
     const [flowInstance, setFlowInstance] = useState(null);
 
     const onInit = (reactFlowInstance) => {
-        console.log('flow loaded:', reactFlowInstance);
         setFlowInstance(reactFlowInstance);
     };
 
@@ -331,7 +330,6 @@ const SceneBox = (props) => {
                         payload: true
                     })
                 }
-                console.log(_params, eds);
                 return addEdge(_params, eds)
             })
         } else {
@@ -361,7 +359,6 @@ const SceneBox = (props) => {
 
     //     for (let i = 0; i < edges.length; i++) {
     //         if (edges[i].source === target && (edges.findIndex(item => item.target === source) !== -1)) {
-    //             console.log(source, target, edges[i], edges.findIndex(item => item.target === source), edges);
     //             return false;
     //         }
     //         if (edges[i].target === source) {
@@ -1143,10 +1140,7 @@ const SceneBox = (props) => {
         const flow = document.getElementsByClassName('react-flow')[0];
 
         const mousemove = (e) => {
-            // console.log(e);
-            // console.log(svgMouse);
             const { pageX, pageY, offsetX, offsetY } = e;
-            // console.log(offsetX, offsetY);
             if (add_new === 'api' || add_new === 'wait_controller' || add_new === 'condition_controller') {
                 setShowMouse(true);
 
@@ -1158,7 +1152,6 @@ const SceneBox = (props) => {
 
         const click = (e) => {
             const { offsetX, offsetY, clientX, clientY } = e;
-            // console.log(offsetX, offsetY);
             const reactFlowBounds = refContainer.current.getBoundingClientRect();
 
             const position = flowInstance.project({
@@ -1406,7 +1399,6 @@ const SceneBox = (props) => {
                     setX(x);
                     setY(y);
                     setZoom(zoom);
-                    console.log(viewport);
 
                     if (from === 'scene') {
                         dispatch({
@@ -1520,7 +1512,6 @@ const SceneBox = (props) => {
                     }
                 }}
                 onPaneMouseMove={(e) => {
-                    console.log(e);
                 }}
             // fitView
             >

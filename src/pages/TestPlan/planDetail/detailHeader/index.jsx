@@ -68,7 +68,6 @@ const TPlanDetailHeader = (props) => {
         };
         fetchTPlanDetail(query).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data } = res;
                 const { status } = data;
                 if (status === 1 && auto_plan_task_t) {

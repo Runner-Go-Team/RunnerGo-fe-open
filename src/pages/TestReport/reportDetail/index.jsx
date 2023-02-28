@@ -37,7 +37,6 @@ const TestReportDetail = () => {
         };
         fetchReportInfo(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data: {
                     plan_name,
                     avatar,

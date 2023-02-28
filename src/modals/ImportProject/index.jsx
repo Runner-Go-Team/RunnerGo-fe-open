@@ -42,7 +42,6 @@ const ImportProject = (props) => {
         //     }
         //   },
         //   error(err) {
-        //     console.log(err);
         //   },
         // });
     }, []);
@@ -53,7 +52,6 @@ const ImportProject = (props) => {
         }
         setLoading(true);
         if (tabType === 'hand') {
-            console.log('setLoading, setLoading, setLoading!');
 
             manualImportRef?.current?.manualImportSubmit();
         } else if (tabType === 'auto') {
@@ -73,7 +71,6 @@ const ImportProject = (props) => {
     const manualImportRef = useRef(null);
     const autoImportRef = useRef(null);
 
-    console.log(loading, loading, loading);
 
     const getFooter = () => {
         // if (projectData === null) {

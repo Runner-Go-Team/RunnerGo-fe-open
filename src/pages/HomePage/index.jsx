@@ -45,7 +45,6 @@ const HomePage = () => {
         };
         fetchGetIndex(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data: { team_name, api_manage_data, scene_manage_data, case_add_seven_data, team_overview, auto_plan_data, stress_plan_data
                 } } = res;
                 setTeamName(team_name);

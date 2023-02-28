@@ -305,7 +305,6 @@ const useProject = () => {
             //     type: 'apis/updateApiDatas',
             //     payload: targets
             // })
-            console.log(targets);
             const tempApiList = {};
             for (let i = 0; i < targets.length; i++) {
                 tempApiList[targets[i].target_id] = targets[i];
@@ -340,7 +339,6 @@ const useProject = () => {
                     }
                     const apis = cloneDeep(apiDatas);
                     const _apis = Object.assign(apis, tempApiList);
-                    console.log(_apis);
                     dispatch({
                         type: 'apis/updateApiDatas',
                         payload: _apis
@@ -411,7 +409,6 @@ const useProject = () => {
         global$
             .pipe(
                 filter((d) => {
-                    console.log('ddddddddddd', d);
                     return d.action === 'RELOAD_LOCAL_AUTO_PLAN';
                 }),
                 map((d) => {
@@ -424,7 +421,6 @@ const useProject = () => {
                 concatMap((e) => getAutoPlanList$(e.id)),
                 // tap(e => console.log(e)),
                 tap(e => {
-                    console.log('---------------', e);
                     const { data: { targets } } = e;
                     const tempPlanList = {};
                     if (targets instanceof Array) {

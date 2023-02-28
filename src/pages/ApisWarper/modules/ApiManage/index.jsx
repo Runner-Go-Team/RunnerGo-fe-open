@@ -28,10 +28,8 @@ const ApiManage = (props) => {
     const [codeVisible, setCodeVisible] = useState(false);
     const [saveId, setSaveId] = useState(null);
 
-    console.log(showAssert, showAssert, showAssert);
 
     useEffect(() => {
-        console.log(0);
         setSaveId(null);
     }, []);
 

@@ -137,7 +137,6 @@ const initialState = {
           planMenu: action.payload,
         }
       case `${NAMESPACE}/${actionTypes.updateOpenScene}`:
-        console.log(action.payload, action.payload, action.payload);
         return {
           ...state,
           open_plan_scene: action.payload,
@@ -253,7 +252,6 @@ const initialState = {
           select_plan: action.payload,
         }
       case `${NAMESPACE}/${actionTypes.updateOpenFirst}`:
-        console.log(action.payload)
         return {
           ...state,
           open_first: action.payload

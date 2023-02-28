@@ -37,7 +37,6 @@ const TPlanConfig = () => {
             setTimeText(`自${start}起, 每天的${start_time}该场景将自动执行一次, 直至${end}结束`);
         } else if (frequency === 2) {
             let week = new Date(taskExecTime * 1000).getDay();
-            console.log(week);
             let weekList = {
                 0: '周日',
                 1: '周一',

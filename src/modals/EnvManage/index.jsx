@@ -31,7 +31,6 @@ const EnvManage = (props) => {
     }, [searchName]);
 
     useEffect(() => {
-        console.log(select, select, select);
         setSelectId(select);
     }, [select]);
 
@@ -42,7 +41,6 @@ const EnvManage = (props) => {
         };
         fetchEnvList(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data } = res;
                 setEnvList(data);
             }
@@ -54,7 +52,6 @@ const EnvManage = (props) => {
             let envNow = envList.find(item => item.id === selectId);
 
 
-            console.log(selectId, envList, envNow);
             if (selectId === 0) {
                 setServiceList([{ name: '', content: '' }])
             } else if (envNow && envNow.service_list) {
@@ -66,9 +63,7 @@ const EnvManage = (props) => {
         } else {
             setServiceList([{ name: '', content: '' }])
         }
-        console.log(serviceList);
     }, [selectId, envList]);
-    console.log(serviceList);
 
     const handleChange = (rowData, rowIndex, newVal) => {
         const newList = [...serviceList];

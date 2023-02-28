@@ -75,8 +75,6 @@ const CaseList = (props) => {
     const id_apis_auto_plan = useSelector((store) => store.auto_plan.id_apis);
     const node_config_auto_plan = useSelector((store) => store.auto_plan.node_config);
 
-    console.log(open_info_scene, open_info_auto_plan, from);
-
     const open_info_list = {
         'scene': open_info_scene,
         'auto_plan': open_info_auto_plan
@@ -86,7 +84,7 @@ const CaseList = (props) => {
 
 
     const closeCase = () => {
-        console.log(is_changed, open_info);
+
         if (is_changed) {
             Modal.confirm({
                 title: t('modal.tips'),
@@ -241,7 +239,7 @@ const CaseList = (props) => {
     const open_scene = useSelector((store) => store.auto_plan.open_plan_scene);
 
     const showCase = () => {
-        console.log(from);
+
         if (style) {
             closeCase();
         } else {

@@ -10,7 +10,7 @@ const Textarea = Input.Textarea;
 
 const OAuth1 = (props) => {
   const { value, type, handleAttrChange } = props;
-  console.log(value)
+
   const [isRSA, setIsRSA] = useState(true);
   const [moreVisible, setMoreVisible] = useState(true);
   const { t } = useTranslation();

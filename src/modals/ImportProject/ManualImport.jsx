@@ -38,7 +38,6 @@ const ManualImport = (props, ref) => {
   }));
 
   const handleModuleJson = async (moduleJson) => {
-    console.log(moduleJson);
     let _apis = [];
 
     const formatApi = (item) => {
@@ -99,7 +98,6 @@ const ManualImport = (props, ref) => {
 
     const fullJson = Module2ApiPostFull(moduleJson);
     const { apis } = fullJson;
-    console.log(apis);
 
     apis.forEach(item => {
       const { request, target_id, parent_id } = item;
@@ -240,7 +238,6 @@ const ManualImport = (props, ref) => {
         project.team_id = CURRENT_TEAM_ID;
         project.create_dtime = dayjs().unix();
         if (project && isObject(project)) {
-          console.log('导入项目', project);
           //  保存项目
           await Bus.$asyncEmit('saveProject', project);
         }
@@ -257,16 +254,13 @@ const ManualImport = (props, ref) => {
           if (newApis.length > 50) {
             const chunkArray = spliceIntoChunks(newApis, 50);
             for (const items of chunkArray) {
-              console.log('导入项目-chunkapis', items);
               await Bus.$asyncEmit('bulkAddCollection', items, project_id, false);
             }
           } else {
-            console.log('导入项目-apis', newApis);
             await Bus.$asyncEmit('bulkAddCollection', newApis, project_id, false);
           }
         }
         if (env && isArray(env) && env.length > 0) {
-          console.log('导入项目-env', env);
           env.forEach((item) => {
             item.project_id = project_id;
             item.id = `${project_id}/${item.env_id}`;
@@ -327,7 +321,6 @@ const ManualImport = (props, ref) => {
         const { apis } = apiPostJson;
         let newApis = [];
         apipostTree2apipostArray(newApis, apis);
-        console.log('newApis', newApis);
         newApis.forEach(item => {
           const { request, target_id, parent_id } = item;
 
@@ -463,7 +456,6 @@ const ManualImport = (props, ref) => {
           const newProject = mergeWith(getBaseProject(), project, customizer);
           newProject.team_id = CURRENT_TEAM_ID;
           if (newProject && isObject(newProject)) {
-            console.log('导入项目', newProject);
             //  保存项目
             if (
               isArray(newProject?.details?.markList) &&
@@ -481,16 +473,13 @@ const ManualImport = (props, ref) => {
             if (newApis.length > 50) {
               const chunkArray = spliceIntoChunks(newApis, 50);
               for (const items of chunkArray) {
-                console.log('导入项目-chunkapis', items);
                 await Bus.$asyncEmit('bulkAddCollection', items, newProject?.project_id, false);
               }
             } else {
-              console.log('导入项目-apis', newApis);
               await Bus.$asyncEmit('bulkAddCollection', newApis, newProject?.project_id, false);
             }
           }
           if (envs && isArray(envs) && envs.length > 0) {
-            console.log('导入项目-env', envs);
             envs.forEach((item) => {
               if (!['-1', '-2'].includes(item?.env_id)) {
                 item.env_id = uuidv4();
@@ -518,7 +507,6 @@ const ManualImport = (props, ref) => {
         Message('error', '您的文件格式错误，请重新选择');
       }
     } catch (error) {
-      console.log(error);
       throw new Error(`转换出错${error}`);
     }
   };
@@ -557,7 +545,6 @@ const ManualImport = (props, ref) => {
                   if (result?.message) throw new Error(result?.message);
                 }
                 moduleJson = result.data;
-                console.log(moduleJson);
                 break;
               case 'swagger':
                 converter = new Swagger2Apipost();
@@ -600,14 +587,12 @@ const ManualImport = (props, ref) => {
                 moduleJson = convertResult.data;
                 break;
               case 'apipost':
-                console.log('jsonObj', jsonObj);
                 await handleApipostJson(jsonObj);
                 return;
                 break;
               default:
                 break;
             }
-            console.log('moduleJson', moduleJson);
             await handleModuleJson(moduleJson);
             // value.target.value = '';
           } catch (error) {
@@ -627,7 +612,6 @@ const ManualImport = (props, ref) => {
         Message('error', t('message.importFileFormatError'));
       }
     } finally {
-      console.log('关闭finally');
       setLoading(false);
     }
   };
@@ -665,7 +649,6 @@ const ManualImport = (props, ref) => {
             </div>
             {
               uploadFile ? '' : <Upload limit={1} showFilesList={false} onChange={(files, fileList) => {
-                console.log(files, fileList);
                 setUploadFile(files[0].originFile);
               }} >
                 <Button className='upload-btn' preFix={<SvgAdd />}>{t('scene.addFile')}</Button>

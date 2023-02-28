@@ -37,7 +37,6 @@ const Query = (props) => {
     const newList = [...parameter];
     if (newList.length > 0) {
       newList.splice(index, 1);
-      console.log(newList);
       onChange('query', [...newList]);
     }
   };

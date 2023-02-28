@@ -11,7 +11,6 @@ export const getAutoPlanList$ = (plan_id) => {
     };
     return from(fetchSceneList(params).pipe(
         tap((res) => {
-            console.log(res);
             // return res;
         })
     ))

@@ -17,7 +17,6 @@ const handleMenuItemClick = ({ module, action, target_id, props, open_scene, fro
 
 export const handleShowContextMenu = (props, e, params) => {
 
-    console.log(props, e, params);
     let target_id = null;
     if (params) {
         target_id = params;

@@ -244,7 +244,6 @@ const SceneConfig = (props) => {
                 description
             };
         });
-        console.log(variables);
         const params = {
             team_id: localStorage.getItem('team_id'),
             scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
@@ -303,8 +302,6 @@ const SceneConfig = (props) => {
             const text = reader.result;
 
             const testData = str2testData(text);
-            console.log(text);
-            console.log(testData);
 
             setPreviewData(testData.length > 0 ? testData : text);
             setFileType(testData.length > 0 ? 'csv' : 'txt');
@@ -317,7 +314,6 @@ const SceneConfig = (props) => {
     const downloadFile = async (name, url) => {
 
         const result = await fetch(url);
-        console.log(result);
         const file = await result.blob();
         let a = document.createElement('a');
         let _url = window.URL.createObjectURL(file);
@@ -342,7 +338,6 @@ const SceneConfig = (props) => {
                         <div className='file-list-item'>
                             <div className='file-list-item-left'>
                                 <Switch checked={item.status === 1} onChange={(e) => {
-                                    console.log(item.status, e);
                                     const params = {
                                         id: item.id,
                                         status: e ? 1 : 2

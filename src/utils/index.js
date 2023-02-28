@@ -45,7 +45,6 @@ export const copyStringToClipboard = (str, showMessage = true) => {
         copy(str);
     } catch (error) {
         showMessage && Message('error', i18next.t('message.copyError'));
-        console.log(error);
     }
 };
 
@@ -656,8 +655,6 @@ export const GetUrlQuery = (uri) => {
 };
 
 export const GetUrlQueryToArray = (url) => {
-    console.log(url);
-    console.log(ATools.getUrlQueryArray(url));
     return ATools.getUrlQueryArray(url);
 };
 
@@ -990,24 +987,20 @@ export const getFocus = (elem) => {
 export const str2testData = (_str) => {
     let returnList = [];
     let jsonObj;
-    console.log('_str', _str);
     if (!isJSON(_str)) {
         jsonObj = _str.split(/((\r\n)|[\r\n])+/gi);
-        console.log('jsonObj', jsonObj);
         let testDataheader = [];
         for (const x in jsonObj) {
             if (typeof jsonObj[x] === 'string' && jsonObj[x].length > 0) {
                 const row = `${jsonObj[x]}`;
                 if (_.trim(row).length > 0) {
                     const kv = jsonObj[x].split(',');
-                    console.log('kv', kv);
                     if (x == 0) {
                         testDataheader = kv;
                     } else {
                         const obj = {};
                         for (let index = 0; index < testDataheader.length; index++) {
                             const name = String(testDataheader[index]);
-                            console.log('name', name);
                             if (!obj[name]) {
                                 try {
                                     if (kv[index]) {
@@ -1019,13 +1012,9 @@ export const str2testData = (_str) => {
                                     obj[name] = '';
                                 }
                             }
-                            console.log('obj', obj);
-                            console.log('obj[name]', obj[name]);
                         }
                         returnList.push(obj);
                     }
-                    console.log(testDataheader);
-                    console.log(returnList);
                 }
             }
         }
@@ -1040,7 +1029,6 @@ export const str2testData = (_str) => {
             returnList.push(jsonObj);
         }
     }
-    console.log(returnList);
     return returnList;
 };
 

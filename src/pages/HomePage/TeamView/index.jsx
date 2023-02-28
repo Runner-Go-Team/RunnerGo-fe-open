@@ -29,7 +29,6 @@ const TeamView = (props) => {
             let arr3 = [];
             let arr4 = [];
             let _team_list = [];
-            console.log(team_list);
             _team_list = team_list.filter(item => item.auto_plan_exec_num || item.auto_plan_total_num || item.stress_plan_exec_num || item.stress_plan_total_num);
 
             _team_list.forEach(item => {
@@ -40,7 +39,6 @@ const TeamView = (props) => {
                 arr4.push(stress_plan_total_num - stress_plan_exec_num);
                 xData.push(team_name);
             })
-            console.log(arr1, arr2, arr3, arr4, xData);
 
             setXData(xData);
             setData1(arr1);

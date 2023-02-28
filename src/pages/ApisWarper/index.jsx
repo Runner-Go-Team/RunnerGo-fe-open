@@ -63,7 +63,6 @@ const Apis = (props) => {
 
     // 删除tabItem
     const handleRemoveTab = (id, api_now) => {
-        console.log(open_api_now);
         id && Bus.$emit('removeOpenItem', id, api_now);
         // newID && Bus.$emit('updateTargetId', newID);
     };

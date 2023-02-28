@@ -84,7 +84,6 @@ const CustomEdge = (props) => {
 
     const handleContextMenu = (e) => {
         e.preventDefault();
-        console.log(e);
         // 450 100 scene
         // 500 200 plan auto_plan
         // 670 200 case

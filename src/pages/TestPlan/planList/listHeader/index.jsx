@@ -49,7 +49,6 @@ const TPlanListHeader = (props) => {
         }
     }, [theme]);
 
-    console.log('selectPlan', selectPlan);
 
     const [canDelete, setCanDelete] = useState(true);
     useEffect(() => {

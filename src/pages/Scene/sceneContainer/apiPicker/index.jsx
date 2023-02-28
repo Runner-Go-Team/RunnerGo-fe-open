@@ -168,7 +168,6 @@ const ApiPicker = (props) => {
   };
 
   const renderTreeNode = (nodeItem, { indent, nodeTitle, checkbox }) => {
-    console.log(nodeTitle)
     return (
       <div className="tree-node-inner">
         {indent}

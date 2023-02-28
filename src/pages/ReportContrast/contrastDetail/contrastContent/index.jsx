@@ -190,7 +190,6 @@ const ContrastContent = (props) => {
 
     useEffect(() => {
         if (list2 && list2.length) {
-            console.log(list2);
             setData2(list2);
         }
     }, [list2]);
@@ -271,7 +270,6 @@ const ContrastContent = (props) => {
                 item.ninety_nine_list = ninetyNine;
             })
             setData3(list3);
-            console.log(list3);
         }
     }, [list3]);
 
@@ -384,7 +382,6 @@ const ContrastContent = (props) => {
     const theme = useSelector((store) => store.user.theme);
 
     const getOption = (name, data, unit) => {
-        console.log(name, data);
         let temp = 0;
         let option = {
             title: {
@@ -422,7 +419,6 @@ const ContrastContent = (props) => {
                 axisLabel: {
                     color: theme === 'dark' ? '#fff' : '#000',
                     formatter: function (value, index) {
-                        console.log(value);
                         if (`${value}`.length > 4) {
                             return `${value}`.substr(0, 4) + '...'
                         } else {
@@ -469,13 +465,11 @@ const ContrastContent = (props) => {
                 echart_title.style.position = 'relative';
                 echart_title.style.top = '0';
             }
-            console.log(echart_container.getBoundingClientRect().top)
         })
     }, []);
 
     let list = [t('report.avgList'), t('report.qpsNum'), t('report.concurrency'), t('report.errNum'), t('report.50%List'), t('report.90%List'), t('report.95%List'), t('report.99%List')];
 
-    console.log(column1, data1);
 
     const widthList = {
         2: '42vw',

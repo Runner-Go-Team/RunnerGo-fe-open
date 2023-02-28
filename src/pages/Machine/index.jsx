@@ -84,7 +84,6 @@ const Machine = () => {
 
         fetchGetMachine(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data: { machine_list, total } } = res;
                 setTableData(machine_list.map(item => {
                     const { cpu_usage, mem_usage, disk_usage, status, server_type, id } = item;

@@ -56,11 +56,9 @@ const ApiTabs = (props) => {
                 (a, b, index) => (b.id === id ? index : a),
                 -1
             );
-            console.log('tabIndex', tabIndex);
             if (tabIndex === -1) {
                 return;
             }
-            console.log(id, mergedActiveId);
             if (id === mergedActiveId) {
                 if (tabIndex < apiList.length - 1) {
                     // 如果tabindex不是最后一个，则把下一个设为选中态
@@ -69,11 +67,9 @@ const ApiTabs = (props) => {
                     // 前一个设为选中态
                     newActiveId = apiList.find((d, index) => index === tabIndex - 1)?.id || '';
                 }
-                console.log(newActiveId);
                 setActiveId(newActiveId);
                 onChange(newActiveId);
             }
-            console.log(newList);
             setApiList([...newList]);
         }
     };

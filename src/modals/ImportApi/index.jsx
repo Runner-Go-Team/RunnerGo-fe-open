@@ -18,7 +18,6 @@ const ImportApi = (props) => {
       Message('error', convertResult.message || '');
     } else {
         const newApi = APTools.har2apipost(convertResult.data);
-        console.log(newApi);
       }
     } 
   return (

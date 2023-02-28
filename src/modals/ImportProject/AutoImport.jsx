@@ -32,7 +32,6 @@ const AutoImport = (props, ref) => {
       Message('error', '数据源URL必填');
       return;
     }
-    console.log('保存');
     const param = cloneDeep(importObj);
     // param.auto_import_id = uuidv4(); // 添加主键
     param.uuid = localStorage.getItem('uuid') || '-1'; // 用户id
@@ -81,14 +80,12 @@ const AutoImport = (props, ref) => {
     //   if (isArray(autoImports) && autoImports.length > 0 && isObject(autoImports[0])) {
     //     defalutImportObj = autoImports[0];
     //   }
-    //   console.log('初始化设置默认', defalutImportObj);
     //   setImportObj(defalutImportObj);
     };
     init();
   }, []);
 
   const folderSelect = () => {
-    console.log(apiFolders, "apiFolders渲染");
     return (
       <>
         <Select
@@ -155,7 +152,6 @@ const AutoImport = (props, ref) => {
               <RadioGroup
                 value="openApi"
                 onChange={(val) => {
-                  console.log(val);
                 }}
               >
                 {DATA_SOURCES.map((item) => (

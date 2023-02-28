@@ -144,7 +144,6 @@ const StressReport = (props) => {
                 },
                 borderColor: theme === 'dark' ? '#27272B' : '#F2F2F2',
                 // formatter: (value, index) => {
-                //     console.log(value, value, value);
                 //     return `${value.value}%`;
                 // }
             },

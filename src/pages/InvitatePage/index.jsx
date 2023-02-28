@@ -27,7 +27,6 @@ const InvitatePage = () => {
         };
         fetchGetInvitate(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { code, data } = res;
                 if (code === 0) {
                     const { invite_user_name, team_name } = data;
@@ -48,7 +47,6 @@ const InvitatePage = () => {
             };
             fetchAcceptInvitate(params).subscribe({
                 next: (res) => {
-                    console.log(res);
                     const { code } = res;
                     if (code === 0) {
                         getUserConfig$().subscribe({

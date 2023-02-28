@@ -37,10 +37,8 @@ const useGlobal = (props) => {
         useEffect(() => {
             const token = localStorage.getItem('kunpeng-token');
             // const uuid = localStorage.getItem('uuid')
-            console.log(token);
             // 项目初始化
             if (token) {
-                console.log(token);
                 global$.next({
                     action: 'INIT_APPLICATION',
                 });

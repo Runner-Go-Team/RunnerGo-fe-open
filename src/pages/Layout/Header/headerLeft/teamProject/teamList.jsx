@@ -63,7 +63,6 @@ const TeamList = (props) => {
       pro
   );
 
-  console.log(teamList);
 
   const filterdTeamList = Object.values(teamList || '{}').filter(
     (team) =>
@@ -140,7 +139,6 @@ const TeamList = (props) => {
       }
     })
   };
-  console.log(filterdTeamList);
 
   return (
     <div className='team_content'>

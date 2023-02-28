@@ -27,8 +27,6 @@ const ApisContent = (props) => {
     useEffect(() => {
         refContainer.current = null;
         const resizeObserver = new ResizeObserver((entries, observer) => {
-            // console.log(entries);
-            console.log(refWrapper.current);
             for (const entry of entries) {
                 const { width, height } = entry.contentRect;
                 if (refContainer.current === null) {
@@ -58,7 +56,6 @@ const ApisContent = (props) => {
     const refWrapper = useRef(null);
 
     const handleLayoutsChange = (newLayouts) => {
-        console.log(newLayouts);
         // 水平方向
         if (APIS_TAB_DIRECTION > 0) {
             if (newLayouts[0].width < MIN_CONTENT_SIZE) {

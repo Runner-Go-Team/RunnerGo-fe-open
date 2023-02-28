@@ -319,7 +319,7 @@ const WaitController = (props) => {
     }
 
     useEffect(() => {
-        console.log(select_box, id, selectBox);
+
         if (select_box === id && selectBox === false) {
 
             setSelectBox(true);

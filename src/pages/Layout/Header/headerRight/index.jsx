@@ -161,9 +161,7 @@ const HeaderRight = () => {
                 addLength && setAddLength(addLength);
                 unRegister && setUnRegister(unRegister);
                 unEmail && setUnEmail(unEmail);
-                console.log(addLength, unRegister, unEmail);
                 if (addLength || unRegister || unEmail) {
-                    console.log(addLength, unRegister, unEmail);
                     setShowInvitate(true);
                 }
             }} />}

@@ -77,9 +77,6 @@ const PressMonitor = (props) => {
                 item[0] = item[0] * 1000;
             }
         })
-        // console.log(name, data, data.map(item => {
-        //     return [item[0], item[2]]
-        // }));
         let option = {
             title: {
                 text: percentArr.includes(name) ? `${name}（%）` : `${name}（kb）`,
@@ -97,7 +94,6 @@ const PressMonitor = (props) => {
                     return [pt[0], '10%'];
                 },
                 // formatter: (value, index) => {
-                //     console.log(value, index);
                 //     if (percentArr.includes(name)) {
                 //         return `${value[0].value[1]}%`;
                 //     } else {

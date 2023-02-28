@@ -132,7 +132,6 @@ const ReportList = () => {
         };
         fetchReportList(query).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data: { reports, total } } = res;
                 if (reports && reports.length === 0 && currentPage > 1) {
                     pageChange(currentPage - 1, pageSize);
@@ -144,7 +143,6 @@ const ReportList = () => {
                     // if (status === 1) {
                     //     bool = true;
                     // }
-                    console.log(run_time_sec);
                     return {
                         ...item,
                         plan_name:

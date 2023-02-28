@@ -64,7 +64,6 @@ class WebSocket2 {
           if (that.WEB_SOCKET == null) {
             that.WEB_SOCKET = new WebSocket(url);
             that.WEB_SOCKET.onopen = function () {
-              // console.log('连接成功，发送ping');
               that.WEB_SOCKET.send(localStorage.getItem('uuid') || 'PING');
               that.PingStart();
               that.reset().PongStart(); // 打开心跳检测
@@ -147,7 +146,6 @@ class WebSocket2 {
     that.serverTimeoutObj = setTimeout(function () {
       // 如果超过一定时间还没重置，说明后端主动断开了
       if (that.WEB_SOCKET != null) {
-        // console.log('服务器30秒没有响应，关闭连接');
         that.WEB_SOCKET.close();
       }
     }, that.pongTime);

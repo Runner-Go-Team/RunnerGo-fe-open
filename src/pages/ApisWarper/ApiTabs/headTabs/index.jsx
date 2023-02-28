@@ -55,7 +55,6 @@ const HeadTabs = (props) => {
                     Bus.$emit('saveTargetById', {
                         id: item.id,
                         callback: (code, id) => {
-                            console.log(id);
                             onRemoveTabItem(id, id);
                         },
                     }, {}, (code) => {
@@ -73,15 +72,11 @@ const HeadTabs = (props) => {
     };
 
     const handleItemSortEnd = (params) => {
-        console.log(params, tabItemList);
         const { oldIndex, newIndex } = params;
         const tempList = cloneDeep(tabItemList);
         const sourceData = tempList[oldIndex];
-        console.log(sourceData, oldIndex, newIndex);
         tempList.splice(oldIndex, 1);
-        console.log(tempList);
         tempList.splice(newIndex, 0, sourceData);
-        console.log(tempList);
 
         const newOpenApiData = {};
 
@@ -90,7 +85,6 @@ const HeadTabs = (props) => {
                 newOpenApiData[item.id] = item?.data;
             });
         }
-        console.log(newOpenApiData);
         dispatch({
             type: 'opens/coverOpenApis',
             payload: newOpenApiData,

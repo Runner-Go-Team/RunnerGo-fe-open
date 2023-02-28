@@ -48,7 +48,6 @@ const useOpenTabs = () => {
                         Bus.$emit('removeOpenItem', id);
                     } else {
                         // 取消
-                        console.log('取消', id);
                         dispatch({
                             type: 'opens/updateOpenApiNow',
                             payload: `${Number(id)}` !== 'NaN' ? Number(id) : id
@@ -226,7 +225,6 @@ const useOpenTabs = () => {
     };
     // 保存所有标签
     const saveAllTarget = async () => {
-        console.log(open_apis);
         if (Object.entries(open_apis).length > 0) {
             for (const key in open_apis) {
                 if (open_apis[key].is_changed > 0) {

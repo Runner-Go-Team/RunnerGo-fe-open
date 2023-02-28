@@ -103,7 +103,6 @@ const SceneHeader = (props) => {
         'case': open_scene_case
     }
     const open_scene = open_scene_list[from];
-    console.log(open_scene_scene, open_scene_plan, open_scene_auto_plan, open_scene_case, from);
     const init_scene_list = {
         'scene': init_scene_scene,
         'plan': init_scene_plan,
@@ -593,7 +592,6 @@ const SceneHeader = (props) => {
                                     Message('success', t('message.stopSuccess'));
                                 })
                             } else {
-                                console.log(open_scene, open_scene, open_scene);
                                 Bus.$emit('stopScene', open_scene.scene_id ? open_scene.scene_id : open_scene.target_id, from, () => {
                                     Message('success', t('message.stopSuccess'));
                                 })

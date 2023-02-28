@@ -110,7 +110,6 @@ const PreviewPreset = (props) => {
         };
         fetchPresetList(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data: { preinstall_list, total } } = res;
                 setTableData(preinstall_list.map(item => {
                     const { mode_conf, task_type, task_mode, control_mode } = item;
@@ -139,7 +138,6 @@ const PreviewPreset = (props) => {
                         </div>
                     }
                 }));
-                console.log(total);
                 setTotal(total);
             }
         })

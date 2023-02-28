@@ -251,7 +251,6 @@ export const plansReducer = (state = initialState, action) => {
         select_plan: action.payload,
       }
     case `${NAMESPACE}/${actionTypes.updateOpenFirst}`:
-      console.log(action.payload)
       return {
         ...state,
         open_first: action.payload

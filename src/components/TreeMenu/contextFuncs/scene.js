@@ -26,7 +26,6 @@ export const createChildFolder = ({ params, showModal, action }) => {
 export const modifyFolder = async ({target_id}, props, a, from) => {
     // const folder = await Collection.get(params.target_id);
     // if (!isUndefined(folder) && isPlainObject(folder)) {
-    console.log(from);
     let from_list = {
         'scene': 1,
         'plan': 2,

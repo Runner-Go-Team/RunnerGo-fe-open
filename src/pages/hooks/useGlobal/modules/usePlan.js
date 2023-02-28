@@ -114,7 +114,6 @@ const usePlan = () => {
 
 
     const addOpenAutoPlanScene = (id, id_apis, node_config) => {
-        console.log(id_apis, node_config);
         // dispatch({
         //     type: 'plan/updateOpenScene',
         //     payload: {},
@@ -123,7 +122,6 @@ const usePlan = () => {
         //     type: 'plan/updateOpenScene',
         //     payload: null,
         // })
-        console.log(id);
         dispatch({
             type: 'auto_plan/updateRunRes',
             payload: null,
@@ -168,10 +166,8 @@ const usePlan = () => {
         fetchSceneFlowDetail(query).subscribe({
             next: (res) => {
                 const { data } = res;
-                console.log(data, target_id);
                 if (data && data.nodes && data.nodes.length > 0) {
                     const { nodes } = data;
-                    console.log(nodes);
                     const idList = [];
                     const apiList = [];
                     const configList = [];
@@ -222,7 +218,6 @@ const usePlan = () => {
                     Bus.$emit('addNewAutoPlanApi', idList, id_apis, node_config, apiList, configList);
                 }
 
-                console.log('-----', data);
 
                 dispatch({
                     type: 'auto_plan/updateOpenScene',
@@ -241,7 +236,6 @@ const usePlan = () => {
         //     type: 'plan/updateOpenScene',
         //     payload: null,
         // })
-        console.log(id);
         dispatch({
             type: 'plan/updateRunRes',
             payload: null,
@@ -286,10 +280,8 @@ const usePlan = () => {
         fetchSceneFlowDetail(query).subscribe({
             next: (res) => {
                 const { data } = res;
-                console.log(data, target_id);
                 if (data && data.nodes && data.nodes.length > 0) {
                     const { nodes } = data;
-                    console.log(nodes);
                     const idList = [];
                     const apiList = [];
                     const configList = [];
@@ -340,7 +332,6 @@ const usePlan = () => {
                     Bus.$emit('addNewPlanApi', idList, id_apis, node_config, apiList, configList, 'plan');
                 }
 
-                console.log('-----', data);
 
                 dispatch({
                     type: 'plan/updateOpenScene',
@@ -525,7 +516,6 @@ const usePlan = () => {
             next: (res) => {
                 const { code } = res;
                 if (code === 0) {
-                    console.log(callback, callback, callback);
                     callback && callback();
                 }
             }
@@ -932,7 +922,6 @@ const usePlan = () => {
     };
 
     const importSceneList = (ids, plan_id, from, callback) => {
-        console.log(ids);
         let from_list = {
             'plan': 2,
             'auto_plan': 3
@@ -1066,7 +1055,6 @@ const usePlan = () => {
                 const { code, data: { targets } } = res;
                 // 1. 添加nodes节点
                 // 2. 添加id_apis映射
-                console.log(targets);
                 if (from === 'plan') {
                     dispatch({
                         type: 'plan/updateImportNode',
@@ -1144,7 +1132,6 @@ const usePlan = () => {
             team_id: localStorage.getItem('team_id'),
             plan_ids: [plan_id],
         };
-        console.log(params);
         fetchStopPlan(params).subscribe({
             next: (res) => {
                 const { code } = res;

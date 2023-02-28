@@ -38,7 +38,7 @@ const Assert = (props) => {
             ...rowData,
             ...newVal,
         };
-        console.log(rowData, rowIndex, newVal);
+
         onChange('assert', [...newList]);
     }
 

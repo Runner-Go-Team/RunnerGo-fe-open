@@ -118,7 +118,6 @@ const ImportApi1 = (props) => {
                 {renderPrefix(nodeItem)}
                 {nodeTitle}
                 <Button onClick={() => {
-                    console.log(checkedApiKeys);
                     const { data: { target_id } } = nodeItem;
                     const _rightList = cloneDeep(rightList);
                     _rightList.forEach((item, index) => {
@@ -140,11 +139,9 @@ const ImportApi1 = (props) => {
     }
 
     const handleCheckAll = (val, project_name) => {
-        console.log(val);
         if (val === 'checked') {
             // const checkKeys = isObject(treeList) ? Object.keys(treeList) : [];
             const checkKeys = treeList.map(item => item.target_id)
-            console.log(checkKeys);
             setCheckedApiKeys(checkKeys);
             // const _rightList = cloneDeep(rightList);
             // rightList.forEach(item => {
@@ -466,9 +463,7 @@ const ImportApi1 = (props) => {
     const teamList = ['team-1', 'team-2', 'team-3'];
 
     const setNowList = (id) => {
-        console.log(id);
         const list = _treeList.find(item => item.id === id).project;
-        console.log(list, _treeList);
         setLeftList(list);
     }
 
@@ -476,11 +471,9 @@ const ImportApi1 = (props) => {
         setNowList(teamList[0]);
         teamList.length > 0 && setTeamNow(teamList[0])
         let apis = [];
-        console.log(_treeList[0].project);
         _treeList[0].project.forEach(item => {
             apis = apis.concat(item.list);
         });
-        console.log(apis);
         setApis(apis);
         let checkMap = {};
         _treeList.forEach(item => {
@@ -490,12 +483,10 @@ const ImportApi1 = (props) => {
                 checkMap[item.id][elem.id] = 'uncheck';
             })
         });
-        console.log(checkMap);
         setCheckAllMap(checkMap);
     }, []);
 
     const selectNodeItem = (e, project_name) => {
-        console.log(e, project_name, leftList);
         setCheckedApiKeys(e);
         const _leftList = cloneDeep(leftList);
         _leftList.forEach(item => {
@@ -504,10 +495,8 @@ const ImportApi1 = (props) => {
             }
         });
         setLeftList(_leftList);
-        console.log(_leftList);
         // const projectList = leftList.find(item => item.name === project_name).list;
         const selectItem = [];
-        console.log(apis);
         apis.forEach(item => {
             if (e.includes(item.target_id)) {
                 selectItem.push(item);
@@ -584,7 +573,6 @@ const ImportApi1 = (props) => {
                                             onCheck={(e) => selectNodeItem(e, item.name)}
                                             onNodeClick={handleNodeClick}
                                             onCheckAll={(val) => {
-                                                console.log(val);
                                                 const _checkAllMap = cloneDeep(checkAllMap);
                                                 if (_checkAllMap[team_now][item.id] !== val) {
                                                     _checkAllMap[team_now][item.id] = val;
@@ -594,7 +582,6 @@ const ImportApi1 = (props) => {
                                                 // if (_leftList[index].checkAll !== val) {
                                                 //     _leftList[index].checkAll = val;
                                                 //     // setCheckAll(val)
-                                                //     console.log(_leftList);
                                                 //     setLeftList(_leftList);
                                                 // }
                                             }}

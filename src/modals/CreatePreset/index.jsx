@@ -104,7 +104,6 @@ const CreatePreset = (props) => {
                     task_exec_time
                 }
             } = configDetail;
-            console.log(task_mode);
 
             setId(id);
             setConfName(conf_name);
@@ -422,7 +421,6 @@ const CreatePreset = (props) => {
             }
         }
     }, [start_concurrency, step, step_run_time, max_concurrency, duration, round_num, concurrency]);
-    console.log(123123);
 
     const saveConfig = () => {
         if (!conf_name.trim()) {
@@ -510,7 +508,6 @@ const CreatePreset = (props) => {
 
         fetchSavePreset(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { code } = res;
 
                 if (code === 0) {
@@ -520,8 +517,6 @@ const CreatePreset = (props) => {
             }
         })
     }
-
-    console.log(x_echart, y_echart);
 
     return (
         <div>

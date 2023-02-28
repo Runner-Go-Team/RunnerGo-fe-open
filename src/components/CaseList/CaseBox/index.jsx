@@ -508,11 +508,10 @@ const CaseBox = (props) => {
     const [showMouse, setShowMouse] = useState(false);
     const [position, setPosition] = useState([]);
 
-    console.log('type_now', type_now);
 
     useEffect(() => {
         const [action, type] = type_now;
-        console.log(type_now);
+
         const id = v4();
         if (action === 'add' && type === 'api') {
             const apiList = nodes.filter(item => item.type === 'api');
@@ -670,9 +669,9 @@ const CaseBox = (props) => {
     const [x, setX] = useState(0);
     const [y, setY] = useState(0);
 
-    console.log(add_new);
+
     if (add_new === 'api' || add_new === 'wait_controller' || add_new === 'condition_controller') {
-        console.log(add_new, svgMouse);
+
         svgMouse && (svgMouse.style.display = 'block')
     }  else if (!add_new) {
         svgMouse && (svgMouse.style.display = 'none')
@@ -681,13 +680,12 @@ const CaseBox = (props) => {
     useEffect(() => {
 
         const flow = document.getElementsByClassName('case-react-flow')[0];
-        console.log(flow);
+
 
         const mousemove = (e) => {
-            // console.log(e);
-            // console.log(svgMouse);
+
             const { pageX, pageY, offsetX, offsetY } = e;
-            // console.log(offsetX, offsetY);
+
             if (add_new === 'api' || add_new === 'wait_controller' || add_new === 'condition_controller') {
 
                 svgMouse.style.top = offsetY + 35 + 'px';

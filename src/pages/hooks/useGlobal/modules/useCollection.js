@@ -34,7 +34,6 @@ const useCollection = () => {
         }
     };
     const getSort = () => {
-        console.log(apiDatas);
         if (Object.values(apiDatas).length === 0) {
             return 1;
         }

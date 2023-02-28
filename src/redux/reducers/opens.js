@@ -75,7 +75,6 @@ export const opensReducer = (state = initialState, action) => {
         open_apis: _data,
       };
     case `${NAMESPACE}/${actionTypes.coverOpenApis}`:
-      console.log(action.payload);
       return {
         ...state,
         open_apis: action.payload,
@@ -151,7 +150,6 @@ export const opensReducer = (state = initialState, action) => {
         apipostHeaders: action.payload,
       };
     case `${NAMESPACE}/${actionTypes.updateOpenApiNow}`:
-      console.log(action.payload);
       return {
         ...state,
         open_api_now: action.payload,
@@ -168,7 +166,6 @@ export const opensReducer = (state = initialState, action) => {
           _apis[i].is_changed = -1;
         }
       }
-      console.log(_apis);
       // _apis[action.payload].is_changed = -1;
       return {
         ...state,

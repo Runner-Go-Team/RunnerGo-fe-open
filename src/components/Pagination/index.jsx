@@ -27,8 +27,7 @@ const Pagination = (props) => {
         } else {
             let num = Math.ceil(total / pageSize);
             const numArr = new Array(num).fill(0);
-            console.log(total, pageSize, pageNum)
-            console.log(num);
+
             setPageNum(numArr);
             setMaxPage(num);
         }

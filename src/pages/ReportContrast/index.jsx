@@ -30,7 +30,6 @@ const ReportContrast = () => {
                 setList1(report_base_data);
                 setList2(report_collect_data);
                 setList3(report_detail_all_data);   
-                console.log(report_collect_data, report_base_data, report_detail_all_data);
             }
         })
     }, []);

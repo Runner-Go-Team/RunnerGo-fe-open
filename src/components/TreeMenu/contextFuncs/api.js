@@ -15,11 +15,6 @@ export const shareApi = ({ props, params, showModal }) => {
 
 export const copyApi = async ({ target_id }) => {
     Bus.$emit('copyApi', target_id);
-    return;
-    const localData = await getFullData(params);
-    const cpyiedData = getCoverData(localData);
-    console.log(params, cpyiedData);
-    copyStringToClipboard(JSON.stringify(cpyiedData));
 };
 
 export const cloneApi = ({ target_id }) => {

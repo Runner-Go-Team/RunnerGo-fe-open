@@ -350,7 +350,6 @@ const InvitationModal = (props) => {
           }
         })
       } else if (from === 'plan') {
-        console.log(addList, oldList);
         params = {
           team_id: localStorage.getItem('team_id'),
           plan_id,
@@ -370,7 +369,6 @@ const InvitationModal = (props) => {
           }
         })
       } else if (from === 'auto_report') {
-        console.log('auto_report');
         params = {
           team_id: localStorage.getItem('team_id'),
           report_id: plan_id,
@@ -570,7 +568,6 @@ const InvitationModal = (props) => {
                         fetchGetLink(params).subscribe({
                           next: (res) => {
                             const { code, data: { url } } = res;
-                            console.log(url);
                             if (code === 0) {
                               copyStringToClipboard(
                                 url,

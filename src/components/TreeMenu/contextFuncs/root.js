@@ -24,7 +24,6 @@ const getChildMaxSort = async (parent_id) => {
 };
 
 export const pasteToRoot = (props) => {
-    console.log(props);
     // const targetParentId = '0';
     // const targetProjectId = props.project_id;
     getClipboardText().then(async (text) => {
@@ -61,7 +60,6 @@ export const pasteToRoot = (props) => {
             }
         }
         Message('success', '粘贴成功！');
-        console.log(copyUseFulList, targetProjectId)
         // Bus.$emit('bulkAddCollection', copyUseFulList, targetProjectId);
     });
 };

@@ -48,9 +48,6 @@ const MenuTrees = (props, treeRef) => {
         type,
         getSceneName
     } = props;
-    console.log('filteredTreeList', filteredTreeList);
-    console.log(filteredTreeList.filter(item => item.parent_id === "0"))
-    console.log(filteredTreeList.filter(item => item.parent_id === "23054"))
     const dispatch = useDispatch();
     const apiData = useSelector((d) => d.apis.apiDatas);
     const sceneData = useSelector((d) => d.scene.sceneDatas);
@@ -81,7 +78,7 @@ const MenuTrees = (props, treeRef) => {
         'auto_plan': autoPlanData
     }
     const treeData = treeDataList[type];
-    console.log(treeData);
+
     const CURRENT_TARGET_ID = useSelector((store) => store?.workspace?.CURRENT_TARGET_ID);
     const CURRENT_PROJECT_ID = useSelector((store) => store?.workspace?.CURRENT_PROJECT_ID);
     const open_api_now = useSelector((store) => store.opens.open_api_now);
@@ -410,7 +407,6 @@ const MenuTrees = (props, treeRef) => {
     }, [filteredTreeList, open_first]);
 
     const renderTreeNode = (nodeItem, { indent, nodeTitle }) => {
-        console.log(nodeTitle);
         return (
             <MenuTreeNode>
                 <DragNode

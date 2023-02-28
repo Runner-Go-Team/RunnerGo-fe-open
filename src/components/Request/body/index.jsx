@@ -222,7 +222,7 @@ const Body = (props) => {
                     const reader = new FileReader();
                     reader.readAsDataURL(item);
                     reader.onload = function (e) {
-                      console.log(e);
+
                       fileBase64.push(e?.target?.result);
                       handleChange(rowData, rowIndex, {
                         value: val,

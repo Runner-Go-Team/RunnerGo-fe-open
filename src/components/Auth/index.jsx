@@ -21,7 +21,7 @@ const PERFIXNAME = 'apipost-auth';
 const Authen = (props) => {
   const { value = {}, onChange = () => undefined } = props;
   const { t } = useTranslation();
-  console.log(value);
+
   useEffect(() => {
     let isDifferent = false;
     const newValue = {};

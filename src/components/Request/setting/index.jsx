@@ -63,9 +63,7 @@ const Setting = (props) => {
             <div className="item">
                 <p className="label">{t('apis.reqTimeout')}：</p>
                 <Input value={reqTimeout} onChange={(e) => {
-                    console.log(e, parseInt(e));
                     if (`${parseInt(e)}` === 'NaN' || (parseInt(e) < 0)) {
-                        console.log(parseInt(e));
                         onChange('http_api_setup', {
                             ...parameter,
                             read_time_out: 0,

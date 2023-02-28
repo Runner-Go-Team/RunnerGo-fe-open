@@ -122,9 +122,7 @@ const ProjectMember = (props) => {
                 if (code === 0) {
                     Message('success', t('message.quitSuccess'));
                     const _teamList = Object.values(teamList);
-                    console.log(_teamList, userId);
                     const myTeam = _teamList.find(item => item.type === 1 && item.created_user_id === userId);
-                    console.log(myTeam);
                     const settings = JSON.parse(localStorage.getItem('settings'));
                     settings.settings.current_team_id = myTeam.team_id;
                     localStorage.setItem('team_id', myTeam.team_id);
@@ -180,7 +178,6 @@ const ProjectMember = (props) => {
     }
 
     const fetchData = (res) => {
-        console.log(res);
         const { data: { user: { user_id, role_id } } } = res;
         setUserId(user_id);
         setRoleId(role_id);
@@ -193,7 +190,6 @@ const ProjectMember = (props) => {
                     const { code, data: { members } } = res;
                     if (code === 0) {
                         let dataList = [];
-                        console.log(userInfo);
 
                         dataList = members.map((item, index) => {
                             const { avatar, email, nickname, join_time_sec, invite_user_name } = item;
@@ -310,7 +306,6 @@ const ProjectMember = (props) => {
     }
     useEffect(() => {
         getUserInfo().pipe(tap(fetchData)).subscribe();
-        console.log(teamList);
         // fetchData();
     }, [])
     const columns = [
@@ -372,10 +367,8 @@ const ProjectMember = (props) => {
                 addLength && setAddLength(addLength);
                 unRegister && setUnRegister(unRegister);
                 unEmail && setUnEmail(unEmail);
-                console.log(addLength, unRegister, unEmail);
                 getUserInfo().pipe(tap(fetchData)).subscribe();
                 if (addLength || unRegister || unEmail) {
-                    console.log(addLength, unRegister, unEmail);
                     setShowInvitate(true);
                 }
             }} />}

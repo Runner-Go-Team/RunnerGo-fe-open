@@ -117,18 +117,15 @@ const LeftToolbar = () => {
                     defaultOpenKeys={openKeys}
                     collapse={!collapseStatus}
                     onClickMenuItem={(k, e, kp) => {
-                        console.log(k, e, kp);
                         setSelectKey([k]);
 
                     }}
                     onClickSubMenu={(k, ok, kp) => {
-                        console.log(k, ok, kp)
                         setOpenKeys(ok);
                         sessionStorage.setItem('leftBarOpen', JSON.stringify(ok));
 
                     }}
                     onCollapseChange={(e) => {
-                        console.log(e);
                     }}
                 >
                     <Link to="/index">

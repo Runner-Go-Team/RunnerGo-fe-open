@@ -84,7 +84,7 @@ const MarkDown = (props) => {
         .querySelector('.toastui-editor-md-preview')
         ?.addEventListener('click', (e) => LinkMark(e));
     } catch (error) {
-      console.log(error);
+
     }
     return () => {
       try {
@@ -92,7 +92,7 @@ const MarkDown = (props) => {
           .querySelector('.toastui-editor-md-preview')
           ?.removeEventListener('click', (e) => LinkMark(e));
       } catch (error) {
-        console.log(error);
+
       }
     };
   }, []);

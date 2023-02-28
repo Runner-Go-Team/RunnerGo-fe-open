@@ -840,7 +840,6 @@ const useScene = () => {
 
         // const _open_scene = cloneDeep(open_scene);
         // _open_scene.nodes = [..._open_scene.nodes, _from_node];
-        // console.log(_open_scene, _from_node);
 
 
         if (from === 'scene') {
@@ -934,7 +933,6 @@ const useScene = () => {
 
                                 if (data.scenes) {
                                     const { scenes } = data;
-                                    console.log(scenes, scenes, scenes);
 
                                     if (from === 'scene') {
                                         dispatch({
@@ -1116,7 +1114,6 @@ const useScene = () => {
     };
 
     const stopScene = (scene_id, from, callback) => {
-        console.log(scene_id, scene_id, scene_id)
         const params = {
             scene_id: scene_id,
             team_id: localStorage.getItem('team_id')

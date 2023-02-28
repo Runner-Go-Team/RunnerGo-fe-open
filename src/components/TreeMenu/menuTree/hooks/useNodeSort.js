@@ -122,10 +122,6 @@ const useNodeSort = (props) => {
             })),
         };
 
-        // console.log(data, targetList);
-        // return;
-        // const { target_id, sort, parent_id: _parent_id } = targetList[0];
-
 
 
         of('')

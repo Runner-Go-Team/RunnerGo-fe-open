@@ -43,8 +43,6 @@ const ResPonsePanel = (props) => {
 
   const open_api_now = useSelector((store) => store.opens.open_api_now);
 
-  console.log(run_res_scene, run_res_scene, run_res_scene);
-
   const run_res_list = {
     'scene': run_res_scene,
     'plan': run_res_plan,
@@ -99,8 +97,6 @@ const ResPonsePanel = (props) => {
     }
     return '';
   };
-
-  console.log(response_data, scene_result);
 
   const defaultList = [
     {

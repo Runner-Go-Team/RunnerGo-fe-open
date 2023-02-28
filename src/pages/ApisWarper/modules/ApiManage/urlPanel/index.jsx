@@ -28,7 +28,6 @@ const SubMenu = Menu.SubMenu;
 const MenuItem = Menu.Item;
 const ApiURLPanel = (props) => {
     const { data, onChange, tempData, from = 'apis' } = props;
-    console.log(data);
     const { t } = useTranslation();
     const { apiSend } = useApi();
     const { id } = useParams();
@@ -78,7 +77,6 @@ const ApiURLPanel = (props) => {
     const res_now = res_list[from];
 
     useEffect(() => {
-        console.log(open_res);
         if (res_now && res_now.status === 'finish') {
             setBtnName(t('btn.send'));
         }
@@ -233,7 +231,6 @@ const ApiURLPanel = (props) => {
                                                 item.service_list &&
                                                 item.service_list.map(elem => (
                                                     <MenuItem className='services-item' onClick={() => {
-                                                        console.log(elem);
                                                         onChange('pre_url', elem.content);
                                                         onChange('env_service_id', elem.id);
                                                         setPopupVisible(false);
@@ -325,7 +322,6 @@ const ApiURLPanel = (props) => {
                                     trigger="click"
                                     popupVisible={popupVisible}
                                     onVisibleChange={(visible) => {
-                                        console.log(visible, visible);
                                         setPopupVisible(visible);
                                     }}
                                     droplist={<DropEnv1 />}

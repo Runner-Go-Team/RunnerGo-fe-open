@@ -24,12 +24,11 @@ const Regular = (props) => {
     const { t } = useTranslation();
 
     const handleTableDelete = (index) => {
-        console.log(index);
         const newList = [...parameter];
         if (newList.length > 0) {
-            console.log(parameter);
+
             newList.splice(index, 1);
-            console.log(newList);
+
             onChange('regex', [...newList]);
         }
     };
@@ -69,7 +68,6 @@ const Regular = (props) => {
                     value={rowData ? rowData.type : 1}
                     placeholder={t('placeholder.plsSelect')}
                     onChange={(e) => {
-                        console.log(e, text, rowData, rowIndex);
                         handleChange(rowData, rowIndex, { type: e });
                     }}
                 >

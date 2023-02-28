@@ -115,7 +115,6 @@ export const pasteToCurrent = ({ props, params }) => {
 };
 export const pasteFolderToRoot = ({ props }) => { };
 export const deleteFolder = async ({ target_id }, props, open_scene, from, plan_id) => {
-    console.log(from);
     // deleteMultiData(target_id);
     Modal.confirm({
         title: i18next.t('modal.look'),

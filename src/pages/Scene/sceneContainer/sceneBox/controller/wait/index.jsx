@@ -154,7 +154,6 @@ const WaitController = (props) => {
 
     useEffect(() => {
         const my_config = node_config[id];
-        console.log(node_config, from, id, my_config);
 
         if (my_config) {
             const { wait_ms } = my_config;
@@ -395,7 +394,6 @@ const WaitController = (props) => {
     }
 
     useEffect(() => {
-        console.log(select_box, id, selectBox);
         if (select_box === id && selectBox === false) {
 
             setSelectBox(true);

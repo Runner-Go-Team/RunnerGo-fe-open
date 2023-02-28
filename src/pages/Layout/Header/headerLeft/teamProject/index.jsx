@@ -32,7 +32,6 @@ const TeamProject = () => {
     const [teamExpirationDate, setTeamExpirationDate] = useState(0);
     const { t } = useTranslation();
 
-    console.log('current team id', currentTeamId);
 
     const currentTeamName = useMemo(() => {
         // let teamName = '离线团队';

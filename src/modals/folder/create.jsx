@@ -305,7 +305,6 @@ const CreateFolder = (props) => {
     const folderSelect = () => {
         // let newFolders = apiFolders.filter(i => i?.status == 1);
         let newFolders = apiFolders;
-        // console.log(apiFolders, newFolders);
         if (isPlainObject(folder)) {
             const res = [];
             res.push(folder);

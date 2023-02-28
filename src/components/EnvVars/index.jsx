@@ -88,7 +88,7 @@ const EnvVar = (props) => {
             varsList.push(obj[k]);
           }
         } catch (error) {
-          console.log(error);
+
         }
       });
     });

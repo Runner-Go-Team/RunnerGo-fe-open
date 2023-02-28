@@ -27,7 +27,6 @@ const useCase = () => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const addNewCaseApi = (id, api, config) => {
-        console.log('------', id, api, config);
         let ids = isArray(id) ? id : [id];
         let apis = isArray(api) ? api : [api];
         let configs = isArray(config) ? config : [config];
@@ -346,7 +345,6 @@ const useCase = () => {
     }
 
     const saveCase = (callback) => {
-        console.log(open_info, nodes, node_config);
         const { scene_id, case_id } = open_info;
         const get_pre = (id, edges) => {
             const pre_list = [];
@@ -540,11 +538,9 @@ const useCase = () => {
                     fetchGetSceneRes(query).subscribe({
                         next: (res) => {
                             const { data } = res;
-                            console.log(data);
 
                             if (data.scenes) {
                                 const { scenes } = data;
-                                console.log(scenes);
 
                                 dispatch({
                                     type: 'case/updateRunRes',

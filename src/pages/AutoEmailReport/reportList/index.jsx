@@ -136,7 +136,6 @@ const TestReportList = () => {
         };
         fetchReportList(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data: { auto_plan_report_list, total } } = res;
                 setTotal(total);
                 // let bool = false;

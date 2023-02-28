@@ -130,7 +130,6 @@ const ReportHeader = (props) => {
     };
 
     const stopReport = () => {
-        console.log(123);
         const params = {
             team_id: parseInt(sessionStorage.getItem('team_id')),
             report_ids: [parseInt(report_id ? report_id : JSON.parse(contrast)[select_plan].report_id)],
@@ -139,7 +138,6 @@ const ReportHeader = (props) => {
         fetchStopReport(params).subscribe({
             next: (res) => {
                 const { code } = res;
-                console.log(code);
                 if (code === 0) {
                     Message('success', t('message.stopSuccess'));
                 } else {

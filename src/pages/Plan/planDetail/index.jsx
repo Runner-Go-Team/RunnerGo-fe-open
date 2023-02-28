@@ -71,7 +71,6 @@ const PlanDetail = () => {
 
         // const open_plan = JSON.parse(localStorage.getItem('open_plan') || '{}');
         // if (open_plan && open_plan[id]) {
-        //     console.log(open_plan, open_plan_scene, id)
         //     if (open_plan_scene) {
         //         if (`${open_plan_scene.scene_id}` !== `${open_plan[id]}`) {
         //             Bus.$emit('addOpenPlanScene', { target_id: open_plan[id] })
@@ -191,7 +190,6 @@ const PlanDetail = () => {
 
     const [planDetail, setPlanDetail] = useState({});
 
-    console.log(hide_config, hide_config, hide_config);
 
     return (
         <div className='plan-detail'>

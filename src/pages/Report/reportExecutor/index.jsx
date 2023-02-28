@@ -50,7 +50,6 @@ const ReportExecutor = (props) => {
     
     const DropContent = () => {
         const list = [t('report.debugList.0'), t('report.debugList.1'), t('report.debugList.2'), t('report.debugList.3')];
-        console.log(debugName, list);
         return (
             <div className='drop-debug'>
                 { list.map(item => <p className={`${debugName === item ? 'select' : ''}`} onClick={() => {

@@ -41,7 +41,6 @@ const Apis = (props) => {
     const { temp_apis, websockets, open_api_now } = opens;
 
     const onTargetChange = (id, type, value, extension) => {
-        console.log(id, type, value, extension, '---------');
         // 统一修改
         if (open_api_now !== id) {
             dispatch({

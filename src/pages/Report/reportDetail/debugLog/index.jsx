@@ -56,7 +56,6 @@ const DebugLog = (props) => {
         fetchDebugLog(query).subscribe({
             next: (res) => {
                 const { data } = res;
-                console.log(data);
                 setLog(JSON.stringify(data));
                 // let _data = [];
                 // data && data.forEach(item => {
@@ -71,7 +70,6 @@ const DebugLog = (props) => {
                 // setLog(_data);
             },
             err: (err) => {
-                console.log(err);
             }
         })
     }
@@ -79,7 +77,6 @@ const DebugLog = (props) => {
     const [editorDom, setEditorDom] = useState(null);
     const { mode: language, value: editValue } = EditFormat(log);
     const currentRef = useRef();
-    console.log(language, editValue);
 
     const handleSetEditor = (editor) => {
         setEditorDom(editor);

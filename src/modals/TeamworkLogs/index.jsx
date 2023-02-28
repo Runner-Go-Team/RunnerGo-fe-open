@@ -128,7 +128,6 @@ const TeamworkLogs = (props) => {
             if (max === 0) max = 1;
             setMaxPage(max);
             operations.forEach(item => {
-              // console.log(item);
               const itemData = {
                 ...item,
                 time: dayjs(item.created_time_sec * 1000).format('YYYY-MM-DD'),

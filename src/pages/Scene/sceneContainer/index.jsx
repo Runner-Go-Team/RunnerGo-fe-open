@@ -78,7 +78,6 @@ const SceneContainer = (props) => {
     const scene_result = run_res && run_res.filter(item => item.event_id === (id_now_list[from]))[0];
     const response_data = response_list[from];
 
-    console.log(scene_result, response_data);
 
 
     useEffect(() => {

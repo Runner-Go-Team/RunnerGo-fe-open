@@ -136,7 +136,6 @@ const TestReportList = () => {
         };
         fetchReportList(params).subscribe({
             next: (res) => {
-                console.log(res);
                 const { data: { auto_plan_report_list, total } } = res;
                 if (auto_plan_report_list && auto_plan_report_list.length === 0 && currentPage > 1) {
                     pageChange(currentPage - 1, pageSize);

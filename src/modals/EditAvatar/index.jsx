@@ -57,7 +57,6 @@ const EditAvatar = (props) => {
 
         // const res = await axios.post(`${RD_FileURL}/api/upload`, formData);
         // const url = `${RD_FileURL}/${res.data[0].filename}`;
-        // console.log(res.data[0].filename);
 
 
         const client = new OSS(OSS_Config);
@@ -65,7 +64,6 @@ const EditAvatar = (props) => {
             `kunpeng/avatar/${v4()}.${nameType}`,
             files[0].originFile,
         )
-        console.log(url);
         setAvatarNow(url);
     };
 

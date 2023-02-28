@@ -20,7 +20,6 @@ import InvitationModal from '@modals/ProjectInvitation';
 import SvgSuccess from '@assets/logo/success';
 
 const ReportHeader = (props) => {
-    console.log(props);
     const { data: { plan_name, scene_name }, status, plan_id } = props;
     const { t } = useTranslation();
     const [showSendEmail, setSendEmail] = useState(false);
@@ -132,7 +131,6 @@ const ReportHeader = (props) => {
     };
 
     const stopReport = () => {
-        console.log(123);
         const params = {
             plan_id,
             team_id: localStorage.getItem('team_id'),
@@ -142,7 +140,6 @@ const ReportHeader = (props) => {
         fetchStopReport(params).subscribe({
             next: (res) => {
                 const { code } = res;
-                console.log(code);
                 if (code === 0) {
                     Message('success', t('message.stopSuccess'));
                 } else {
