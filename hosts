@@ -1,1 +1,0 @@
-172.17.101.188  ansible_ssh_user=apipost023 ansible_ssh_port=2345  ansible_become_user=root   ansible_become=true
