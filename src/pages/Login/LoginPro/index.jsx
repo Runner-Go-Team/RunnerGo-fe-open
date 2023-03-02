@@ -80,7 +80,7 @@ const LoginPro = () => {
                     if (code === 0) {
                         const { expire_time_sec, team_id, token } = data;
                         localStorage.setItem('expire_time_sec', expire_time_sec * 1000);
-                        localStorage.setItem('kunpeng-token', token);
+                        localStorage.setItem('runnergo-token', token);
                         localStorage.setItem('team_id', team_id);
                         dispatch({
                             type: 'user/updateTeamId',

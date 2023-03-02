@@ -271,7 +271,7 @@ const WaitController = (props) => {
                         type: 'plan/updateFailedEdge',
                         payload: failed_edge,
                     })
-                } else if (from ==='auto_plan') {
+                } else if (from === 'auto_plan') {
                     dispatch({
                         type: 'auto_plan/updateFailedEdge',
                         payload: failed_edge,
@@ -510,8 +510,13 @@ const WaitController = (props) => {
                 <div className='controller-wait-main'>
                     <div className='item'>
                         <InputNumber value={wait_ms} onChange={(e) => {
-                            onTargetChange('wait_ms', parseInt(e));
-                            setWait(e);
+                            if (parseInt(e) > 20000) {
+                                onTargetChange('wait_ms', 20000);
+                                setWait(20000);
+                            } else {
+                                onTargetChange('wait_ms', parseInt(e));
+                                setWait(e);
+                            }
                         }} />
                         <p>ms</p>
                     </div>

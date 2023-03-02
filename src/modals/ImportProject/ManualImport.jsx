@@ -225,6 +225,8 @@ const ManualImport = (props, ref) => {
           });
           onCancel();
           Message("success", t('message.importSuccess'))
+        } else {
+          setLoading(false);
         }
       }
     })
@@ -447,6 +449,8 @@ const ManualImport = (props, ref) => {
               });
               onCancel();
               Message("success", t('message.importSuccess'))
+            } else {
+              setLoading(false);
             }
           }
         })
@@ -517,6 +521,7 @@ const ManualImport = (props, ref) => {
     try {
       if (fileType === 'swaggerUrl') {
         if (swaggerUrl === '') {
+          setLoading(false);
           throw new Error('请输入您需要导入的地址');
         }
         const converter = new Swagger2Apipost();
@@ -527,6 +532,7 @@ const ManualImport = (props, ref) => {
         handleModuleJson(convertResult.data);
       } else {
         if (uploadFile === null) {
+          setLoading(false);
           throw new Error('请先选择您需要导入的文件');
         }
         const reader = new FileReader();
@@ -534,6 +540,7 @@ const ManualImport = (props, ref) => {
           try {
             const text = String(reader.result) || '';
             if (!isJSON(text)) {
+              setLoading(false);
               throw new Error('您的文件格式有误，请重新选择');
             }
             const jsonObj = JSON.parse(text);
@@ -596,11 +603,8 @@ const ManualImport = (props, ref) => {
             await handleModuleJson(moduleJson);
             // value.target.value = '';
           } catch (error) {
-            if (error?.message) {
-              Message('error', t('message.importFileFormatError'));
-            } else {
-              Message('error', t('message.importFileFormatError'));
-            }
+            Message('error', t('message.importFileFormatError'));
+            setLoading(false);
           }
         };
         reader.readAsText(uploadFile);
@@ -612,11 +616,11 @@ const ManualImport = (props, ref) => {
         Message('error', t('message.importFileFormatError'));
       }
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
   return (
-    <Spin loading={loading} tip="正在导入。。。">
+    <Spin loading={loading} tip="正在导入...">
       <div className="apipost-import-modal">
         <div className='import-tips'>
           <SvgTips />

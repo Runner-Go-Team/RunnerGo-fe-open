@@ -42,7 +42,18 @@ const TPlanDetailHeader = (props) => {
 
     useEffect(() => {
         getReportDetail();
-    }, [plan_id]);
+
+        auto_plan_task_t = setInterval(() => {
+            getReportDetail();
+        }, 1000);
+
+        console.log(auto_plan_task_t);
+
+        return () => {
+            console.log(auto_plan_task_t);
+            clearInterval(auto_plan_task_t);
+        }
+    }, [plan_id, auto_plan_task_t]);
 
     useEffect(() => {
         getEmailList();
@@ -70,24 +81,13 @@ const TPlanDetailHeader = (props) => {
             next: (res) => {
                 const { data } = res;
                 const { status } = data;
-                if (status === 1 && auto_plan_task_t) {
-                    clearInterval(auto_plan_task_t);
-                } else if (status === 2 && !auto_plan_task_t) {
-                    auto_plan_task_t = setInterval(() => {
-                        getReportDetail();
-                    }, 1000);
-                }
+
                 setPlanDetail(data);
                 onGetDetail(data);
             }
         })
     }
 
-    useEffect(() => {
-        return () => {
-            clearInterval(auto_plan_task_t);
-        }
-    }, []);
 
     const statusList = {
         '1': t('plan.notRun'),
@@ -345,11 +345,6 @@ const TPlanDetailHeader = (props) => {
                                         if (code === 0) {
                                             const { task_type } = data;
 
-                                            getReportDetail();
-
-                                            auto_plan_task_t = setInterval(() => {
-                                                getReportDetail();
-                                            }, 1000);
                                             if (task_type === 1) {
                                                 Message('success', t('message.runSuccess'))
                                                 navigate('/Treport/list');
@@ -366,11 +361,7 @@ const TPlanDetailHeader = (props) => {
                                     Bus.$emit('runAutoPlan', plan_id, (code, data) => {
                                         if (code === 0) {
                                             const { task_type } = data;
-                                            getReportDetail();
 
-                                            auto_plan_task_t = setInterval(() => {
-                                                getReportDetail();
-                                            }, 1000);
                                             if (task_type === 1) {
                                                 Message('success', t('message.runSuccess'))
                                                 navigate('/Treport/list');

@@ -97,7 +97,7 @@ const InfoManage = (props) => {
     };
 
     const quitLogin = () => {
-        localStorage.removeItem('kunpeng-token');
+        localStorage.removeItem('runnergo-token');
         localStorage.removeItem('expire_time_sec');
         localStorage.removeItem('team_id');
         localStorage.removeItem('settings');

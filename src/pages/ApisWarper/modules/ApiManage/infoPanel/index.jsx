@@ -60,7 +60,7 @@ const ApiInfoPanel = (props) => {
 
     Mousetrap.bindGlobal(['command+s', 'ctrl+s'], () => {
         if (location.hash.split('/')[1] === 'apis') {
-            saveApi();
+            saveApi(data.parent_id ? data.parent_id : '');
         }
         return false;
     });
@@ -160,7 +160,7 @@ const ApiInfoPanel = (props) => {
 
                 <div className='info-panel-right'>
                     <ButtonGroup>
-                        <Button className="save-btn" onClick={() => saveApi()}><SvgSave /> {t('btn.save')}</Button>
+                        <Button className="save-btn" onClick={() => saveApi(data.parent_id ? data.parent_id : '')}><SvgSave /> {t('btn.save')}</Button>
 
                         <Dropdown
                             ref={refDropdown}
@@ -171,7 +171,7 @@ const ApiInfoPanel = (props) => {
                                         className="drop-item"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            saveApi();
+                                            saveApi(data.parent_id ? data.parent_id : '');
                                             refDropdown.current.setPopupVisible(false);
                                         }}
                                     >

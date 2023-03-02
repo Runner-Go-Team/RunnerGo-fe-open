@@ -35,7 +35,7 @@ const useGlobal = (props) => {
     useCase(),
         usePlan(),
         useEffect(() => {
-            const token = localStorage.getItem('kunpeng-token');
+            const token = localStorage.getItem('runnergo-token');
             // const uuid = localStorage.getItem('uuid')
             // 项目初始化
             if (token) {

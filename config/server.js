@@ -1,8 +1,8 @@
 // 后端接口地址
 export const RD_BaseURL = {
-    development: 'https://manager.runnergo.cc',
-    test: 'https://manager.runnergo.cc',
-    production: 'https://manager.runnergo.cc',
+    development: 'your development BE url',
+    test: 'your test BE url',
+    production: 'your production BE url',
 };
 
 // 后端文件存储地址

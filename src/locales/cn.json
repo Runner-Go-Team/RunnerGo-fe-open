@@ -1,7 +1,7 @@
 {
     "sign": {
-        "title": "性能测试平台",
-        "slogn": "预见未来, 轻松上线",
+        "title": "RunnerGo全栈测试平台",
+        "slogn": "为研发赋能，让测试更简单",
         "email_register": "邮箱注册",
         "email_login": "邮箱登录",
         "phone_login": "手机号登录",
@@ -59,7 +59,8 @@
         "bindPhoneTips": "绑定手机号, 领取15天免费试用 + 5000VUM 新人大礼包!",
         "wxLoginTitle": "微信登录/注册",
         "plsInputPwd": "请输入6-20位密码",
-        "confirmPwdError": "输入的密码不匹配"
+        "confirmPwdError": "输入的密码不匹配",
+        "newUserReward": "新用户注册免费使用15天!"
     },
     "collectInfoModal": {
         "welcomeTitle": "欢迎使用RunnerGo",
@@ -402,7 +403,8 @@
         "collectInfoSuccess": "感谢您的反馈!",
         "wxCodeTimeOver": "微信验证过期",
         "inputPhoneBefore": "请先输入手机号",
-        "setOssConfig": "请前往config文件夹配置OSS服务!"
+        "setOssConfig": "请前往config文件夹配置OSS服务!",
+        "maxConcurrencyLessStart": "最大并发数不能小于起始并发数"
     },
     "modal": {
         "bindNow": "立即绑定",
@@ -600,7 +602,10 @@
         "changeBindWx1": "该手机号已绑定过其它微信, 是否要换绑当前微信?",
         "changeBindWx2": "绑定当前微信后, 将无法用原来绑定的微信进入该团队",
         "confirmChangeWx": "确认换绑",
-        "runPlanValidModal": "该团队的服务已过期, 如需执行计划, 请先为团队续费。如果遇到问题, 可以"
+        "runPlanValidModal": "该团队的服务已过期, 如需执行计划, 请先为团队续费。如果遇到问题, 可以",
+        "serviceName": "服务名",
+        "domain": "域名",
+        "handle": "操作"
     },
     "column": {
         "teamManage": {

@@ -81,7 +81,7 @@ const EnvManage = (props) => {
 
     const column = [
         {
-            title: '服务名',
+            title: t('modal.serviceName'),
             dataIndex: 'name',
             render: (text, rowData, rowIndex) => {
                 return (
@@ -95,7 +95,7 @@ const EnvManage = (props) => {
             }
         },
         {
-            title: '域名',
+            title: t('modal.domain'),
             dataIndex: 'content',
             render: (text, rowData, rowIndex) => {
                 return (
@@ -109,34 +109,16 @@ const EnvManage = (props) => {
             }
         },
         {
-            title: '操作',
+            title: t('modal.handle'),
             dataIndex: 'handle',
             width: 60,
             render: (text, rowData, rowIndex) => {
                 return <div className="delete-svg">
-                    <SvgDelete onClick={() => deleteService(rowIndex)} />
+                    <SvgDelete onClick={debounce(() => deleteService(rowIndex), 1000)} />
                 </div>
             }
         }
     ];
-
-    // const data = [
-    //     {
-    //         name: '服务一',
-    //         creator: 'https://demo-apipost.cn/api',
-    //         handle: '操作'
-    //     },
-    //     {
-    //         name: '服务二',
-    //         creator: 'https://demo-apipost.cn/api',
-    //         handle: '操作'
-    //     },
-    //     {
-    //         name: '服务三',
-    //         creator: 'https://demo-apipost.cn/api',
-    //         handle: '操作'
-    //     }
-    // ];
 
     const saveEnv = () => {
         if (envName.trim().length === 0) {
@@ -291,7 +273,7 @@ const EnvManage = (props) => {
                             <Input className="env-name-input" placeholder={t('placeholder.envName')} value={envName} onChange={(e) => setEnvName(e)} />
                         </div>
                         <div className="list-top-right">
-                            <Button className="delete-btn" onClick={() => deleteEnv()}>{t('btn.delete')}</Button>
+                            <Button className="delete-btn" disabled={envList.length === 0  || !selectId} onClick={debounce(() => deleteEnv(), 1000)}>{t('btn.delete')}</Button>
                             <Button className="save-btn" onClick={() => saveEnv()}>{t('btn.save')}</Button>
                         </div>
                     </div>

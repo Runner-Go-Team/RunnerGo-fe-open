@@ -80,7 +80,7 @@ const TeamList = (props) => {
                             className="dissmiss-modal-code"
                             content={
                                 <div>
-                                    <img src="https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/images/wx-customer-service.jpg" />
+                                    <img src="your custom qrcode oss url" />
                                 </div>
                             }
                         >

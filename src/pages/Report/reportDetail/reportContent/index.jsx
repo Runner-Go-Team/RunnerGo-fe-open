@@ -837,6 +837,10 @@ const ReportContent = (props) => {
                     Message('error', t('message.taskConfigEmpty'));
                     return;
                 }
+                if (max_concurrency < start_concurrency) {
+                    Message('error', t('message.maxConcurrencyLessStart'));
+                    return;
+                }
             }
             const params = {
                 report_id: report_id,

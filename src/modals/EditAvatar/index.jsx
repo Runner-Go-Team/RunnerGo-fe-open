@@ -22,10 +22,12 @@ const EditAvatar = (props) => {
     const [avatarNow, setAvatarNow] = useState('');
     const userInfo = useSelector((store) => store.user.userInfo);
     const dispatch = useDispatch();
+
+    // 默认头像三个, 建议使用oss地址
     const defaultAvatar = [
-        "https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/avatar/default1.png",
-        "https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/avatar/default2.png",
-        "https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/avatar/default3.png"
+        "your avatar oss url 1",
+        "your avatar oss url 2",
+        "your avatar oss url 3"
     ];
 
     useEffect(() => {
@@ -61,7 +63,8 @@ const EditAvatar = (props) => {
 
         const client = new OSS(OSS_Config);
         const { name: res_name, url } = await client.put(
-            `kunpeng/avatar/${v4()}.${nameType}`,
+            // `kunpeng/avatar/${v4()}.${nameType}`,
+            "your oss bucket url",
             files[0].originFile,
         )
         setAvatarNow(url);

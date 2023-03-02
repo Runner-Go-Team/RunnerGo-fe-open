@@ -117,7 +117,7 @@ const TeamList = (props) => {
                     className="check-team-valid-modal"
                     content={
                       <div>
-                        <img style={{ width: '150px', height: '150px' }} src="https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/qrcode/tuanduiguoqi.png" />
+                        <img style={{ width: '150px', height: '150px' }} src="your qrcode oss url" />
                       </div>
                     }
                   >

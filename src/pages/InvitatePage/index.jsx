@@ -38,7 +38,7 @@ const InvitatePage = () => {
     }, [invite_verify_code]);
 
     const acceptInvitate = () => {
-        const token = localStorage.getItem('kunpeng-token');
+        const token = localStorage.getItem('runnergo-token');
         const expire_time_sec = localStorage.getItem('expire_time_sec');
         const isExpire = new Date().getTime() > parseInt(expire_time_sec || 0);
         if (token && !isExpire) {

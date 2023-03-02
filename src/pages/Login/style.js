@@ -12,7 +12,7 @@ export const LoginWrapper = styled.div`
     height: 100%;
     min-height: 100vh;
 
-    background-image: url("https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/left-bar.png");
+    background-image: url("your qrcode oss url");
     background-repeat: no-repeat;
     background-size: 100%;
 

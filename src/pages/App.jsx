@@ -37,7 +37,7 @@ const App = () => {
         }
 
         if (invite_verify_code) {
-            localStorage.removeItem('kunpeng-token');
+            localStorage.removeItem('runnergo-token');
             localStorage.removeItem('expire_time_sec');
             localStorage.removeItem('team_id');
             localStorage.removeItem('settings');

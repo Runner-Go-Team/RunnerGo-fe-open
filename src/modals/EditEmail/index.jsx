@@ -52,7 +52,7 @@ const EditEmail = (props) => {
                     onCancel();
                     Message('success', t('message.updateSuccess'));
 
-                    localStorage.removeItem('kunpeng-token');
+                    localStorage.removeItem('runnergo-token');
                     localStorage.removeItem('expire_time_sec');
                     localStorage.removeItem('team_id');
                     localStorage.removeItem('settings');

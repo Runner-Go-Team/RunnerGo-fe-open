@@ -203,8 +203,6 @@ const TestPlanList = () => {
                                     Bus.$emit('deleteTPlan', plan_id, (code) => {
                                         if (code === 0) {
                                             Message('success', t('message.deleteSuccess'));
-                                        } else {
-                                            Message('error', t('message.deleteError'));
                                         }
                                     })
                                 }
@@ -369,35 +367,6 @@ const TestPlanList = () => {
         size !== pageSize && setPageSize(size);
     }
 
-    const renderRow = (tableData, renderRowItem) => {
-        return (
-            <tbody>
-                {tableData.map((tableRowData, rowIndex) => {
-                    const rowComp = React.cloneElement(renderRowItem(tableRowData, rowIndex), {
-                        key: rowIndex,
-                        onDoubleClick(tableRowData) {
-                            const { plan_id } = tableData[rowIndex];
-
-                            dispatch({
-                                type: 'plan/updateOpenPlan',
-                                payload: tableData[rowIndex]
-                            })
-                            dispatch({
-                                type: 'plan/updateOpenScene',
-                                payload: null,
-                            })
-                            // let planMap = JSON.parse(localStorage.getItem('planMap') || '{}');
-                            // if (planMap[plan_id]) {
-                            //     Bus.$emit('addOpenPlanScene', { target_id: planMap[plan_id] }, id_apis_plan, node_config_plan)
-                            // }
-                            navigate(`/plan/detail/${plan_id}`);
-                        },
-                    });
-                    return rowComp;
-                })}
-            </tbody>
-        );
-    };
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [selectPlan, setSelectPlan] = useState([]);

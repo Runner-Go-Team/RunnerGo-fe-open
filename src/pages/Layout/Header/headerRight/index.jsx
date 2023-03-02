@@ -104,7 +104,7 @@ const HeaderRight = () => {
                             <div onClick={() => {
                                 refDropdown.current.setPopupVisible(false);
                             }}>
-                                <Tooltip content={<img style={{ width: '200px', height: '200px' }} src="https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/qrcode/qiyezhuanshukefu.png" />}>
+                                <Tooltip content={<img style={{ width: '200px', height: '200px' }} src="your qrcode oss url" />}>
                                     <div className='person-drop-item'>
                                         <SvgCustomer />
                                         <span>{t('header.customer')}</span>
@@ -125,7 +125,7 @@ const HeaderRight = () => {
     };
 
     const loginOut = () => {
-        localStorage.removeItem('kunpeng-token');
+        localStorage.removeItem('runnergo-token');
         localStorage.removeItem('expire_time_sec');
         localStorage.removeItem('team_id');
         localStorage.removeItem('settings');

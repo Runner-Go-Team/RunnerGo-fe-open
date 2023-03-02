@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import LeftBar from './LeftBar';
 import { LoginWrapper } from './style';
 
 
@@ -37,8 +38,7 @@ const Login = (props) => {
     return (
         <LoginWrapper>
             {
-                leftShow && <div className='left'>
-            </div>
+                leftShow && <LeftBar />
             }
             <div className='right'>
                 { children }

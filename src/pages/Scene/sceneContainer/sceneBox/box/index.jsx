@@ -319,51 +319,33 @@ const Box = (props) => {
                     refDropdown.current.setPopupVisible(false);
                 }}>{t('scene.editApi')}</p>
                 <p onClick={() => {
-                    const params = {
-                        team_id: localStorage.getItem('team_id')
-                    };
-
-                    fetchTeamPackage(params).subscribe({
-                        next: (res) => {
-                            const { data: { max_api_num }, code } = res;
-
-                            if (code === 0) {
-                                const length = (nodes || []).filter(item => item.type === 'api').length;
-
-                                if (length >= max_api_num) {
-                                    Message('error', t('message.maxApiNow'));
-                                } else {
-                                    if (from === 'case') {
-                                        Bus.$emit('cloneCaseNode', id);
-                                    } else {
-                                        Bus.$emit('cloneNode', id, nodes, node_config, id_apis, open_scene, from);
-                                    }
-                                    if (from === 'scene') {
-                                        dispatch({
-                                            type: 'scene/updateIsChanged',
-                                            payload: true
-                                        })
-                                    } else if (from === 'plan') {
-                                        dispatch({
-                                            type: 'plan/updateIsChanged',
-                                            payload: true
-                                        })
-                                    } else if (from === 'auto_plan') {
-                                        dispatch({
-                                            type: 'auto_plan/updateIsChanged',
-                                            payload: true
-                                        })
-                                    } else if (from === 'case') {
-                                        dispatch({
-                                            type: 'case/updateIsChanged',
-                                            payload: true
-                                        })
-                                    }
-                                    refDropdown.current.setPopupVisible(false);
-                                }
-                            }
-                        }
-                    })
+                    if (from === 'case') {
+                        Bus.$emit('cloneCaseNode', id);
+                    } else {
+                        Bus.$emit('cloneNode', id, nodes, node_config, id_apis, open_scene, from);
+                    }
+                    if (from === 'scene') {
+                        dispatch({
+                            type: 'scene/updateIsChanged',
+                            payload: true
+                        })
+                    } else if (from === 'plan') {
+                        dispatch({
+                            type: 'plan/updateIsChanged',
+                            payload: true
+                        })
+                    } else if (from === 'auto_plan') {
+                        dispatch({
+                            type: 'auto_plan/updateIsChanged',
+                            payload: true
+                        })
+                    } else if (from === 'case') {
+                        dispatch({
+                            type: 'case/updateIsChanged',
+                            payload: true
+                        })
+                    }
+                    refDropdown.current.setPopupVisible(false);
 
                 }}>{t('scene.copyApi')}</p>
                 <p onClick={() => {
@@ -574,7 +556,7 @@ const Box = (props) => {
 
                             const api_now = cloneDeep(id_apis[id]);
                             api_now.id = id;
-            
+
                             if (from === 'scene') {
                                 dispatch({
                                     type: 'scene/updateApiNow',

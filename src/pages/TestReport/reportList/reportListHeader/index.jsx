@@ -105,30 +105,12 @@ const TReportListHeader = (props) => {
                 />
 
                 {
-                    selectReport.length > 0 && (!canDelete ?
-                        <Tooltip
-                            bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'}
-                            className='tooltip-diy'
-                            content={!canDelete ? t('plan.cantDelete') : ''}
-                        >
-                            <Button
-                                className='delete-btn'
-                                style={{ backgroundColor: !canDelete ? 'var(--bg-4)' : '', color: !canDelete ? 'var(--font-1)' : '' }}
-                                disabled={!canDelete}
-                                onClick={() => toDelete()}
-                            >
-                                {t('btn.delete')}
-                            </Button>
-                        </Tooltip>
-                        :
-                        <Button
-                            className='delete-btn'
-                            disabled={!canDelete}
-                            onClick={() => toDelete()}
-                        >
-                            {t('btn.delete')}
-                        </Button>
-                    )
+                    selectReport.length > 0 ? <Button
+                        className='delete-btn'
+                        onClick={() => toDelete()}
+                    >
+                        {t('btn.delete')}
+                    </Button> : null
                 }
             </div>
             {/* <div className='report-header-right'>

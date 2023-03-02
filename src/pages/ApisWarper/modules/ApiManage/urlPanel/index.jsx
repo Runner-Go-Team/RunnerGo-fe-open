@@ -168,6 +168,22 @@ const ApiURLPanel = (props) => {
         })
     }
 
+    const deleteEnv = (id) => {
+        const params = {
+            id,
+            team_id: localStorage.getItem('team_id')
+        };
+        fetchDeleteEnv(params).subscribe({
+            next: (res) => {
+                const { code } = res;
+                if (code === 0) {
+                    Message('success', t('message.deleteSuccess'));
+                    getEnvList();
+                }
+            }
+        })
+    }
+
     const DropEnv1 = () => {
         return (
             <div className='drop-env'>
@@ -210,21 +226,7 @@ const ApiURLPanel = (props) => {
                                                     setShowEnv(true);
                                                     setSelectId(item.id);
                                                 }} />
-                                                <SvgDelete onClick={() => {
-                                                    const params = {
-                                                        id: item.id,
-                                                        team_id: localStorage.getItem('team_id')
-                                                    };
-                                                    fetchDeleteEnv(params).subscribe({
-                                                        next: (res) => {
-                                                            const { code } = res;
-                                                            if (code === 0) {
-                                                                Message('success', t('message.deleteSuccess'));
-                                                                getEnvList();
-                                                            }
-                                                        }
-                                                    })
-                                                }} />
+                                                <SvgDelete onClick={debounce(() => deleteEnv(item.id), 1000)} />
                                             </div>
                                         </div>}>
                                             {
@@ -262,21 +264,7 @@ const ApiURLPanel = (props) => {
                                             setShowEnv(true);
                                             setSelectId(item.id);
                                         }} />
-                                        <SvgDelete onClick={() => {
-                                            const params = {
-                                                id: item.id,
-                                                team_id: localStorage.getItem('team_id')
-                                            };
-                                            fetchDeleteEnv(params).subscribe({
-                                                next: (res) => {
-                                                    const { code } = res;
-                                                    if (code === 0) {
-                                                        Message('success', t('message.deleteSuccess'));
-                                                        getEnvList();
-                                                    }
-                                                }
-                                            })
-                                        }} />
+                                        <SvgDelete onClick={debounce(() => deleteEnv(item.id), 1000)} />
                                     </div>
                                 </div>
                             })
@@ -291,7 +279,10 @@ const ApiURLPanel = (props) => {
     return (
         <>
             {
-                showEnv && <EnvManage onCancel={() => setShowEnv(false)} select={selectId} />
+                showEnv && <EnvManage onCancel={() => {
+                    setShowEnv(false);
+                    getEnvList();
+                }} select={selectId} />
             }
             <div className="api-url-panel" style={{ paddingLeft: from === 'apis' ? '16px' : '' }}>
                 <div className="api-url-panel-group">
@@ -319,7 +310,6 @@ const ApiURLPanel = (props) => {
                                 <Dropdown
                                     ref={refDropdown}
                                     placement="br"
-                                    trigger="click"
                                     popupVisible={popupVisible}
                                     onVisibleChange={(visible) => {
                                         setPopupVisible(visible);

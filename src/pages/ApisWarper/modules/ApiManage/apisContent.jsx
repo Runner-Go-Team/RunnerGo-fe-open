@@ -36,9 +36,12 @@ const ApisContent = (props) => {
                             1: { flex: 1, width: 0 },
                         });
                     } else {
-                        setContentLayouts({
+                        setContentLayouts(height > 0 ? {
                             0: { height: height / 2 },
-                            1: { height: height / 2,  },
+                            1: { height: height / 2,},
+                        } : {
+                            0: { height: 300 },
+                            1: { flex: 1 },
                         });
                     }
                 }

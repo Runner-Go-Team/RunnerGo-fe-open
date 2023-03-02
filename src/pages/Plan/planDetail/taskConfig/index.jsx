@@ -507,6 +507,11 @@ const TaskConfig = (props) => {
                 Message('error', t('message.taskConfigEmpty'));
                 return;
             }
+
+            if (max_concurrency < start_concurrency) {
+                Message('error', t('message.maxConcurrencyLessStart'));
+                return;
+            }
         }
 
         for (let i in task_config.mode_conf) {

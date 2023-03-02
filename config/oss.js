@@ -1,8 +1,8 @@
 export const OSS_Config = {
-    region: '',
-    accessKeyId: '',
-    accessKeySecret: '',
-    bucket: '',
+    region: 'Your Region',
+    accessKeyId: 'Your AccessKeyId',
+    accessKeySecret: 'Your AccessKeySecret',
+    bucket: 'Your Bucket',
 }
 
 export default {

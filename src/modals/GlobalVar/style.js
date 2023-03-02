@@ -5,6 +5,7 @@ export const GlobalVarModal = css`
         width: 800px;
         height: 730px;
         max-height: 80%;
+        padding-bottom: 58px;
     }
     .apipost-table {
         margin-bottom: 30px;

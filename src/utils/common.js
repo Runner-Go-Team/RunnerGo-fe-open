@@ -5,9 +5,9 @@ import parseUrl from 'url-parse';
 import { isUndefined, isArray, isFunction, isNumber } from 'lodash';
 
 export const isLogin = () => {
-    const token = localStorage.getItem('kunpeng-token');
+    const token = localStorage.getItem('runnergo-token');
     const expire_time_sec = localStorage.getItem('expire_time_sec');
-    const isExpire = new Date().getTime() < expire_time_sec;
+    const isExpire = new Date().getTime() < expire_time_sec; 
     return (
         isString(token) && token !== 'NOLOGIN' && token.length > 0 && isExpire
     );

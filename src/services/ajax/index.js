@@ -28,7 +28,7 @@ export const rxAjax = (
         method,
         url: `${RD_BASE_URL}${url}`,
         headers: {
-            Authorization: localStorage.getItem('kunpeng-token') ? localStorage.getItem('kunpeng-token') : "",
+            Authorization: localStorage.getItem('runnergo-token') ? localStorage.getItem('runnergo-token') : "",
             CurrentTeamID: localStorage.getItem('team_id') ? localStorage.getItem('team_id') : "0"
         },
         body: params,
@@ -80,7 +80,7 @@ export const rxAjax = (
                 }
 
                 if (resp.response.code === 20003 || resp.response.code === 10006) {
-                    localStorage.removeItem('kunpeng-token');
+                    localStorage.removeItem('runnergo-token');
                     localStorage.removeItem('expire_time_sec');
                     localStorage.removeItem('team_id');
                     localStorage.removeItem('settings');
