@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Input, Select, Button, Message } from 'adesign-react';
+import { Input, Select, Button, Message, Modal } from 'adesign-react';
 import {
     Down as SvgDown,
     Search as SvgSearch,
@@ -137,7 +137,7 @@ const ApiURLPanel = (props) => {
         'auto_plan': node_config_auto_plan
     }
     const node_config = node_config_list[from];
-    
+
     const refDropdown = useRef(null);
     const [saveId, setSaveId] = useState(null);
     const [searchEnv, setSearchEnv] = useState('');
@@ -169,18 +169,29 @@ const ApiURLPanel = (props) => {
     }
 
     const deleteEnv = (id) => {
-        const params = {
-            id,
-            team_id: localStorage.getItem('team_id')
-        };
-        fetchDeleteEnv(params).subscribe({
-            next: (res) => {
-                const { code } = res;
-                if (code === 0) {
-                    Message('success', t('message.deleteSuccess'));
-                    getEnvList();
+        setPopupVisible(false);
+        const deleteEnvFn = () => {
+            const params = {
+                id,
+                team_id: localStorage.getItem('team_id')
+            };
+            fetchDeleteEnv(params).subscribe({
+                next: (res) => {
+                    const { code } = res;
+                    if (code === 0) {
+                        Message('success', t('message.deleteSuccess'));
+                        getEnvList();
+                    }
                 }
-            }
+            })
+        }
+
+        Modal.confirm({
+            title: t('modal.look'),
+            content: t('modal.deleteEnv'),
+            okText: t('btn.ok'),
+            cancelText: t('btn.cancel'),
+            onOk: debounce(() => deleteEnvFn(), 300)
         })
     }
 
@@ -190,6 +201,7 @@ const ApiURLPanel = (props) => {
                 <Button onClick={() => {
                     setShowEnv(true);
                     setSelectId(0);
+                    setPopupVisible(false);
                 }}>{t('btn.createEnv')}</Button>
                 <Input
                     className="textBox"
@@ -226,7 +238,7 @@ const ApiURLPanel = (props) => {
                                                     setShowEnv(true);
                                                     setSelectId(item.id);
                                                 }} />
-                                                <SvgDelete onClick={debounce(() => deleteEnv(item.id), 1000)} />
+                                                <SvgDelete onClick={() => deleteEnv(item.id)} />
                                             </div>
                                         </div>}>
                                             {
@@ -264,7 +276,7 @@ const ApiURLPanel = (props) => {
                                             setShowEnv(true);
                                             setSelectId(item.id);
                                         }} />
-                                        <SvgDelete onClick={debounce(() => deleteEnv(item.id), 1000)} />
+                                        <SvgDelete onClick={() => deleteEnv(item.id)} />
                                     </div>
                                 </div>
                             })
@@ -339,7 +351,7 @@ const ApiURLPanel = (props) => {
                         style={{ marginRight: from === 'apis' ? '16px' : '' }}
                         disabled={btnName === t('btn.sending')}
                         onClick={() => {
-                            
+
                             if (from === 'scene') {
                                 Bus.$emit('saveScene', () => {
                                     setBtnName(t('btn.sending'));

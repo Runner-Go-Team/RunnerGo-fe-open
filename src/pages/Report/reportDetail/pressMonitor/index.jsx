@@ -8,6 +8,8 @@ import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import qs from 'qs';
 import { useTranslation } from 'react-i18next';
+import { Explain as SvgExplain } from 'adesign-react/icons';
+
 
 const PressMonitor = (props) => {
     const { status, tab } = props;
@@ -57,10 +59,12 @@ const PressMonitor = (props) => {
         };
         fetchMachine(query).subscribe({
             next: (res) => {
-                const { data: { start_time_sec, end_time_sec, metrics } } = res;
-                setStartTime(start_time_sec);
-                setEndTime(end_time_sec);
-                setMetrics(metrics);
+                const { data: { start_time_sec, end_time_sec, metrics }, code } = res;
+                if (code === 0) {
+                    setStartTime(start_time_sec);
+                    setEndTime(end_time_sec);
+                    setMetrics(metrics);
+                }
             }
         });
     }
@@ -198,6 +202,10 @@ const PressMonitor = (props) => {
 
     return (
         <div className='press-monitor'>
+            <div className='monitor-tips'>
+                <SvgExplain />
+                <p>{t('report.pressMonitorTips')}</p>
+            </div>
             {
                 metrics && metrics.length > 0 && metrics.map(item => (
                     <div className='machine-info'>

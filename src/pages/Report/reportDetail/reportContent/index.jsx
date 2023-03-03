@@ -923,9 +923,19 @@ const ReportContent = (props) => {
                     round_num = parseInt(e);
                 }
             }} />,
-            created_time_sec: <Button className='update-task-config-btn' onClick={debounce(saveConfig, 500)}>{t('report.configRun')}</Button>
+            created_time_sec: <Button className='update-task-config-btn' onClick={debounce(() => saveConfig(), 500)}>{t('report.configRun')}</Button>
         }])
     };
+
+    useEffect(() => {
+        if (status === 2) {
+            if (typeof configData[configData.length - 1].created_time_sec !== 'string') {
+                let _configData = [...configData];
+                _configData.splice(configData.length - 1, 1);
+                setConfigData(_configData);
+            }
+        }
+    }, [configData, status]);
 
     const updateDesc = () => {
         const params = {

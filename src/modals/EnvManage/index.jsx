@@ -253,7 +253,7 @@ const EnvManage = (props) => {
                         prefix={<SvgSearch />}
                         value={searchName}
                         placeholder={t('placeholder.searchEnv')}
-                        onChange={getSearchName}
+                        onChange={(e) => setSearchName(e)}
                     />
                     <div className="env-menu">
                         {

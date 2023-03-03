@@ -83,7 +83,7 @@ const ReportDetail = (props) => {
 				const item = dataList.length > 0 ? dataList[0].rps_list : [];
 				const time = item.length > 1 ? item[item.length - 1].time_stamp - item[0].time_stamp : 0;
 				// setRunTime(time);
-				onRunTime(time);
+				onRunTime(time > 0 ? time : 1);
 				if (end) {
 					// onStatus('已完成')
 					clearInterval(report_detail_t);

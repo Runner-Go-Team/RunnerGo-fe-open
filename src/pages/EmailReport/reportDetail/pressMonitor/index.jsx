@@ -7,10 +7,13 @@ import { fetchEmailMachine } from '@services/report';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import qs from 'qs';
+import { Explain as SvgExplain } from 'adesign-react/icons';
+import { useTranslation } from 'react-i18next';
 
 const PressMonitor = (props) => {
     const { status } = props;
 
+    const { t } = useTranslation();
     let base = +new Date(1988, 9, 3);
     let oneDay = 24 * 3600 * 1000;
     let _data = [[base, Math.random() * 300]];
@@ -55,10 +58,12 @@ const PressMonitor = (props) => {
         };
         fetchEmailMachine(query).subscribe({
             next: (res) => {
-                const { data: { start_time_sec, end_time_sec, metrics } } = res;
-                setStartTime(start_time_sec);
-                setEndTime(end_time_sec);
-                setMetrics(metrics);
+                const { data: { start_time_sec, end_time_sec, metrics }, code } = res;
+                if (code === 0) {
+                    setStartTime(start_time_sec);
+                    setEndTime(end_time_sec);
+                    setMetrics(metrics);
+                }
             }
         });
     }
@@ -188,6 +193,10 @@ const PressMonitor = (props) => {
 
     return (
         <div className='press-monitor'>
+            <div className='monitor-tips'>
+                <SvgExplain />
+                <p>{t('report.pressMonitorTips')}</p>
+            </div>
             {
                 metrics.length > 0 && metrics.map(item => (
                     <div className='machine-info'>

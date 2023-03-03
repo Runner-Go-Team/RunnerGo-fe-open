@@ -409,6 +409,8 @@ const ReportContent = (props) => {
         return option;
     };
 
+    const explainList = ["Max(ms): 最大响应时间", "Min(ms): 最小响应时间", "Avg(ms): 平均响应时长", "90%: 响应时间90%线", "95%: 响应时间95%线", "99%: 响应时间99%线", "RPS: 每秒应答数", "SRPS: 每秒应答成功数", "TPS: 每秒事务数", "STPS: 每秒成功事务数"];
+
     return (
         <div className='report-content'>
             <div className='report-content-top'>
@@ -430,18 +432,30 @@ const ReportContent = (props) => {
                 columns={configColumn}
                 data={configData}
             />
-            <Table
-                style={{ marginTop: '32px' }}
-                border={{
-                    wrapper: true,
-                    cell: true,
-                }}
-                scroll={{
-                    x: 1737,
-                }}
-                pagination={false}
-                columns={columns1}
-                data={tableData1} />
+            <div className='report-detail-config'>
+                <div className='table-explain'>
+                    {
+                        explainList.map(item => (
+                            <p className='text'>
+                                <p className='circle' style={{ marginLeft: 0 }}></p>
+                                {item}
+                            </p>
+                        ))
+                    }
+                </div>
+                <Table
+                    style={{ maxWidth: 'calc(100vw - 48px)' }}
+                    border={{
+                        wrapper: true,
+                        cell: true,
+                    }}
+                    scroll={{
+                        x: 1737,
+                    }}
+                    pagination={false}
+                    columns={columns1}
+                    data={tableData1} />
+            </div>
             <div className='echarts-list'>
                 <ReactEcharts className='echarts' option={getOption(t('report.avgList'), avgList, t('report.unitMs'))} />
                 <ReactEcharts className='echarts' option={getOption(t('report.qpsNum'), rpsList, t('report.unitNumber'))} />
