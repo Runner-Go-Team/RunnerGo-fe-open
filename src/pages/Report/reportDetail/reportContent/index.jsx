@@ -961,7 +961,7 @@ const ReportContent = (props) => {
 
     const [editDesc, setEditDesc] = useState(false);
 
-    const explainList = ["Max(ms): 最大响应时间", "Min(ms): 最小响应时间", "Avg(ms): 平均响应时长", "90%: 响应时间90%线", "95%: 响应时间95%线", "99%: 响应时间99%线", "RPS: 每秒请求数", "SRPS: 每秒成功请求数", "TPS: 每秒事务数", "STPS: 每秒成功事务数"];
+    const explainList = ["Max(ms): 最大响应时间", "Min(ms): 最小响应时间", "Avg(ms): 平均响应时长", "90%: 响应时间90%线", "95%: 响应时间95%线", "99%: 响应时间99%线", "RPS: 每秒应答数", "SRPS: 每秒应答成功数", "TPS: 每秒事务数", "STPS: 每秒成功事务数"];
 
     return (
         <div className='report-content'>
