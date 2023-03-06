@@ -6,7 +6,7 @@
 
 ```shell
     # 克隆代码
-    git clone https://gitee.com/Runner-Go-Team/RunnerGo-fe-open.git
+    git clone https://github.com/Runner-Go-Team/RunnerGo-fe-open.git
     # 切换目录
     cd RunnerGo-fe-open
     # 下载依赖
