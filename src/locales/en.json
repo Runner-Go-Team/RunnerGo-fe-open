@@ -41,8 +41,29 @@
         "findByEmail": "Email retrieval",
         "phone": "Phone",
         "emailNotRegister": "This mailbox is not registered, please register first",
-        "pwdFormatError": "Incorrect password format"
-
+        "pwdFormatError": "Incorrect password format",
+        "nickname": "nickname",
+        "welcomeTitle": "Welcome to RunnerGo",
+        "type": {
+            "0": "Sign in",
+            "1": "logon"
+        },
+        "pwdError": "Password error",
+        "loginAndRegister": "Login/Registration",
+        "setPassword": "Set Password",
+        "phoneTipShow1": "Please provide",
+        "phoneTipShow2": "Set a password within 6-20 bits",
+        "plsWxScan": "Please login/register for RunnerGo using WeChat scanning code",
+        "wxAgree": "Scanning the code to log in/register indicates that you have read and agree",
+        "bindPhone": "Bind phone number",
+        "bindPhoneTips": "Bind your phone number and receive a 15 day free trial+5000VUM rookie gift pack!",
+        "wxLoginTitle": "WeChat login/registration",
+        "plsInputPwd": "Please enter a 6-20 digit password",
+        "confirmPwdError": "The passwords entered do not match",
+        "newUserReward": "Get 5000 VUM for free using Enterprise Edition - Pass",
+        "toWebSite1": "Welcome to",
+        "runnergoWebSite": "RunnerGo official website",
+        "toWebSite2": "Learn more"
     },
     "header": {
         "import": "import",

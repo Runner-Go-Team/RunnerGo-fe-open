@@ -60,7 +60,10 @@
         "wxLoginTitle": "微信登录/注册",
         "plsInputPwd": "请输入6-20位密码",
         "confirmPwdError": "输入的密码不匹配",
-        "newUserReward": "新用户注册免费使用15天!"
+        "newUserReward": "使用企业版-Sass可免费获取5000VUM",
+        "toWebSite1": "欢迎进入",
+        "runnergoWebSite": "RunnerGo官网",
+        "toWebSite2": "了解更多"
     },
     "collectInfoModal": {
         "welcomeTitle": "欢迎使用RunnerGo",

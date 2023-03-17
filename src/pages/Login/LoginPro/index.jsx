@@ -138,8 +138,8 @@ const LoginPro = () => {
             Message('error', t('message.emailEmpty'));
             setEmailError(true);
             setEmailErrorText(t('message.emailEmpty'));
-            // 考虑团队名称的长度限制, 邮箱最大长度限制25位
-        } else if (!EamilReg(email) || email.trim().length > 25) {
+            // 常规限制邮箱长度小于100位
+        } else if (!EamilReg(email) || email.trim().length > 100) {
             Message('error', t('message.emailFormatError'));
             setEmailError(true);
             setEmailErrorText(t('message.emailFormatError'));

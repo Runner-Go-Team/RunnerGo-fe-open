@@ -1,4 +1,4 @@
-export const INPUTTYPELIST = ['Text', 'File'];
+export const INPUTTYPELIST = ['Text', 'File', 'FileUrl'];
 
 export const HEADERTYPELIST = [
   'Boolean',

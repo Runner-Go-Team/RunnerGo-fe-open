@@ -20,6 +20,11 @@ const LeftBar = () => {
             <div className="container">
                 <p className="title">{ t('sign.title') }</p>
                 <p className="tips-show">{ t('sign.newUserReward') }</p>
+                <p className="to-website">
+                    <span>{ t('sign.toWebSite1') }</span>
+                    <a href=" https://www.runnergo.com/enterprise/" target="_blank"> { t('sign.runnergoWebSite') } </a>
+                    <span>{ t('sign.toWebSite2') }</span>
+                </p>
             </div>
 
             <div className="right-bottom-container">

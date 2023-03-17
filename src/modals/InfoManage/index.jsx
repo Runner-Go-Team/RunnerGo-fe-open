@@ -126,7 +126,7 @@ const InfoManage = (props) => {
                     <div className='container'>
                         <p className='edit-name-title'>{t('modal.editName')}</p>
                         <Input
-                            maxLength={30}
+                            maxLength={26}
                             className={nameError ? 'input-error' : ''}
                             placeholder={t('placeholder.nickname')}
                             value={nickName}
@@ -140,7 +140,9 @@ const InfoManage = (props) => {
                                 } else {
                                     setNameError(false);
                                 }
-                                if (nickName.trim().length < 2 || nickName.trim().length > 20) {
+
+                                // 配合首次注册的团队名称的长度，xxxx 的团队, 昵称长度改为2-26位
+                                if (nickName.trim().length < 2 || nickName.trim().length > 26) {
                                     setNameError(true);
                                     return;
                                 } else {
