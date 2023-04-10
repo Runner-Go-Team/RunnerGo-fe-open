@@ -929,7 +929,7 @@ const ReportContent = (props) => {
 
     useEffect(() => {
         if (status === 2) {
-            if (typeof configData[configData.length - 1].created_time_sec !== 'string') {
+            if (configData.length > 0 && typeof configData[configData.length - 1].created_time_sec !== 'string') {
                 let _configData = [...configData];
                 _configData.splice(configData.length - 1, 1);
                 setConfigData(_configData);

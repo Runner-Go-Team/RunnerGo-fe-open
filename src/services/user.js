@@ -124,6 +124,10 @@ export const fetchEmailIsExist = (
 export const fetchEmailHasRegister = (
   params
 ) => ajax('post', '/management/api/v1/auth/check_email_is_register', 'json', false, params);
+// 注册登录二合一
+export const fetchRegisterAndLogin = (
+  params
+) => ajax('post', '/management/api/register_or_login', 'json', false, params);
 
 
 // 获取微信二维码

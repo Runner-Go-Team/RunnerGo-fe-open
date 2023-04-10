@@ -64,6 +64,7 @@ export const VarNameStyle = css`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    white-space: nowrap;
 
     svg {
         width: 16px;

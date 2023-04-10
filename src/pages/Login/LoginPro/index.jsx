@@ -93,10 +93,10 @@ const LoginPro = () => {
                             action: 'INIT_APPLICATION',
                         });
                     }
+
                 }
             })
         } else if (type === 1) {
-
             if (passwordError) {
                 return;
             }
@@ -165,6 +165,7 @@ const LoginPro = () => {
                     })} onClick={() => {
                         type !== 1 && setType(1);
                     }}>{t('sign.type.1')}</p>
+
                 </div>
 
                 <Select

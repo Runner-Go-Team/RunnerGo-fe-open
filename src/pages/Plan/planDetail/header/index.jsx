@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './index.less';
-import { Button, Input, Message, Modal, Dropdown } from 'adesign-react';
+import { Button, Message, Modal, Dropdown } from 'adesign-react';
 import {
     Left as SvgLeft,
     Save as SvgSave,
     CaretRight as SvgCareRight
 } from 'adesign-react/icons';
 import avatar from '@assets/logo/avatar.png';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import TaskConfig from '../taskConfig';
 import { cloneDeep } from 'lodash';
@@ -20,21 +20,29 @@ import SvgStop from '@assets/icons/Stop';
 import { useTranslation } from 'react-i18next';
 import InvitationModal from '@modals/ProjectInvitation';
 import { fetchEmailList } from '@services/plan';
-import { Tooltip } from '@arco-design/web-react';
+import { Tooltip, Input } from '@arco-design/web-react';
+
+let plan_task_t = null;
 
 const DetailHeader = (props) => {
     const { onGetDetail } = props;
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [preSet, setPreSet] = useState(false);
     const [mode_conf, setModeConf] = useState({});
 
     const task_config = useSelector((store) => store.plan.task_config);
     const email_list = useSelector((store) => store.plan.email_list);
+    const plan_detail = useSelector((store) => store.plan.plan_detail);
+    const is_open = useSelector((store) => store.websocket.is_open);
+
     const { id: plan_id } = useParams();
     const [planDetail, setPlanDetail] = useState({});
     const [showEmail, setShowEmail] = useState(false);
     const [emailList, setEmailList] = useState([]);
+    const [planName, setPlanName] = useState('');
+    const [planDesc, setPlanDesc] = useState('');
 
     const taskList = {
         '0': '-',
@@ -43,15 +51,51 @@ const DetailHeader = (props) => {
         '3': t('plan.taskList.mixTask')
     };
 
-    let plan_task_t = null;
 
     useEffect(() => {
-        getReportDetail();
-    }, [plan_id]);
+        if (is_open) {
+            getReportDetail();
+        }
+    }, [plan_id, is_open]);
 
     useEffect(() => {
         getEmailList();
     }, [email_list]);
+
+    useEffect(() => {
+        if (plan_detail) {
+            console.log(plan_detail);
+            const { plan } = plan_detail;
+
+            const { status, plan_name, remark } = plan;
+            setPlanName(plan_name);
+            setPlanDesc(remark);
+            let setIntervalList = window.setIntervalList;
+
+            if (status === 1 && plan_task_t) {
+                if (setIntervalList) {
+                    let _index = setIntervalList.findIndex(item => item === plan_task_t);
+                    setIntervalList.splice(_index, 1);
+                    window.setIntervalList = setIntervalList;
+                }
+
+                clearInterval(plan_task_t);
+            } else if (status === 2 && !plan_task_t) {
+                plan_task_t = setInterval(() => {
+                    getReportDetail();
+                }, 1000);
+
+                if (setIntervalList) {
+                    setIntervalList.push(plan_task_t);
+                } else {
+                    setIntervalList = [plan_task_t];
+                }
+                window.setIntervalList = setIntervalList;
+            }
+            setPlanDetail(plan);
+            onGetDetail(plan);
+        }
+    }, [plan_detail]);
 
     const getEmailList = () => {
         const query = {
@@ -71,32 +115,24 @@ const DetailHeader = (props) => {
             team_id: localStorage.getItem('team_id'),
             plan_id,
         };
-        fetchPlanDetail(query).subscribe({
-            next: (res) => {
-                const { data: { plan } } = res;
-                const { status } = plan;
-                if (status === 1 && plan_task_t) {
-                    clearInterval(plan_task_t);
-                } else if (status === 2 && !plan_task_t) {
-                    plan_task_t = setInterval(() => {
-                        getReportDetail();
-                    }, 1000);
-                }
-                setPlanDetail(plan);
-                onGetDetail(plan);
-            }
-        })
+
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "stress_plan_detail",
+            param: JSON.stringify(query)
+        }))
     }
 
     useEffect(() => {
         return () => {
+            let setIntervalList = window.setIntervalList;
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === plan_task_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
+            }
             clearInterval(plan_task_t);
         }
     }, []);
-
-    const savePreSet = (e) => {
-
-    }
 
     const statusList = {
         '1': t('plan.notRun'),
@@ -124,8 +160,8 @@ const DetailHeader = (props) => {
         }
         let params = {
             team_id: localStorage.getItem('team_id'),
-            plan_name: planDetail.plan_name,
-            remark: planDetail.remark,
+            plan_name: planName,
+            remark: planDesc,
             task_type: planDetail.task_type,
             plan_id,
         };
@@ -154,10 +190,10 @@ const DetailHeader = (props) => {
                             <p className='name'>
                                 {t('plan.planManage')} /
                                 <Tooltip
-                                    content={planDetail.plan_name}
+                                    content={planName}
                                 >
                                     <div style={{ marginLeft: '8px' }}>
-                                        <Input disabled={planDetail.status === 2} value={planDetail.plan_name} onBlur={(e) => changePlanInfo('plan_name', e.target.value)} />
+                                        <Input maxLength={30} disabled={planDetail.status === 2} value={planName} onBlur={(e) => changePlanInfo('plan_name', e.target.value)} onChange={(e) => setPlanName(e)} />
                                     </div>
                                 </Tooltip>
                             </p>
@@ -182,7 +218,7 @@ const DetailHeader = (props) => {
                             </div>
                             <div className='item'>
                                 {t('plan.planDesc')}:
-                                <Input disabled={planDetail.status === 2} value={planDetail.remark} onBlur={(e) => changePlanInfo('remark', e.target.value)} />
+                                <Input maxLength={50} disabled={planDetail.status === 2} value={planDesc} onBlur={(e) => changePlanInfo('remark', e.target.value)} onChange={(e) => setPlanDesc(e)} />
                             </div>
                         </div>
                     </div>
@@ -206,6 +242,13 @@ const DetailHeader = (props) => {
                                                 plan_task_t = setInterval(() => {
                                                     getReportDetail();
                                                 }, 1000);
+                                                let setIntervalList = window.setIntervalList;
+                                                if (setIntervalList) {
+                                                    setIntervalList.push(plan_task_t);
+                                                } else {
+                                                    setIntervalList = [plan_task_t];
+                                                }
+                                                window.setIntervalList = setIntervalList;
                                                 if (planDetail.task_type === 1) {
                                                     Message('success', t('message.runSuccess'))
                                                     navigate('/report/list');
@@ -227,6 +270,13 @@ const DetailHeader = (props) => {
                                             plan_task_t = setInterval(() => {
                                                 getReportDetail();
                                             }, 1000);
+                                            let setIntervalList = window.setIntervalList;
+                                            if (setIntervalList) {
+                                                setIntervalList.push(plan_task_t);
+                                            } else {
+                                                setIntervalList = [plan_task_t];
+                                            }
+                                            window.setIntervalList = setIntervalList;
                                             if (planDetail.task_type === 1) {
                                                 Message('success', t('message.runSuccess'))
                                                 navigate('/report/list');

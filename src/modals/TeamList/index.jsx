@@ -80,7 +80,7 @@ const TeamList = (props) => {
                             className="dissmiss-modal-code"
                             content={
                                 <div>
-                                    <img src="your custom qrcode oss url" />
+                                    <img src="https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/images/wx-customer-service.jpg" />
                                 </div>
                             }
                         >
@@ -102,6 +102,18 @@ const TeamList = (props) => {
 
                         const { code, data } = res;
                         if (code === 0) {
+
+                            // 将解散团队的消息通知给websocket服务端
+                            const _params = {
+                                team_id: delete_id,
+                            }
+
+                            Bus.$emit('sendWsMessage', JSON.stringify({
+                                route_url: "disband_team_notice",
+                                param: JSON.stringify(_params)
+                            }))
+
+
                             if (delete_id === team_id) {
                                 const settings = JSON.parse(localStorage.getItem('settings'));
                                 settings.settings.current_team_id = data.team_id;

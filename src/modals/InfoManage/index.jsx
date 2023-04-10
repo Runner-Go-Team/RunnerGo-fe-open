@@ -6,15 +6,18 @@ import './index.less';
 import avatar from '@assets/logo/avatar.png'
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import EditAvatar from '../EditAvatar';
 import EditPwd from '../EditPwd';
 import EditEmail from '../EditEmail';
 import { fetchUpdateName, fetchUpdatePwd, fetchCheckPassword } from '@services/user';
 import { Tooltip } from '@arco-design/web-react';
 import SvgClose from '@assets/logo/close';
+import Bus from '@utils/eventBus';
 
 const InfoManage = (props) => {
     const { onCancel } = props;
+    const navigate = useNavigate();
     const userInfo = useSelector((store) => store.user.userInfo);
     const [nickName, setNickName] = useState('');
     const [oldPwd, setOldPwd] = useState('');
@@ -97,6 +100,7 @@ const InfoManage = (props) => {
     };
 
     const quitLogin = () => {
+        Bus.$emit('closeWs');
         localStorage.removeItem('runnergo-token');
         localStorage.removeItem('expire_time_sec');
         localStorage.removeItem('team_id');
@@ -105,7 +109,6 @@ const InfoManage = (props) => {
         localStorage.removeItem('open_scene');
         localStorage.removeItem('open_plan');
         localStorage.removeItem("package_info");
-        // localStorage.clear();
         navigate('/login');
         Message('success', t('message.quitSuccess'));
     }

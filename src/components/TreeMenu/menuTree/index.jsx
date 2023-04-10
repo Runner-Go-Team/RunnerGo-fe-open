@@ -104,19 +104,19 @@ const MenuTrees = (props, treeRef) => {
 
 
 
-    const is_changed_scene = useSelector((store) => store.scene.is_changed);
-    const is_changed_plan = useSelector((store) => store.plan.is_changed);
-    const is_changed_auto_plan = useSelector((store) => store.auto_plan.is_changed);
-    const is_changed_case = useSelector((store) => store.case.is_changed);
+    const running_scene_scene = useSelector((store) => store.scene.running_scene);
+    const running_scene_plan = useSelector((store) => store.plan.running_scene);
+    const running_scene_auto_plan = useSelector((store) => store.auto_plan.running_scene);
+    const running_scene_case = useSelector((store) => store.case.running_scene);
 
-    const is_changed_list = {
-        'scene': is_changed_scene,
-        'plan': is_changed_plan,
-        'auto_plan': is_changed_auto_plan,
-        'case': is_changed_case
+    const running_scene_list = {
+        'scene': running_scene_scene,
+        'plan': running_scene_plan,
+        'auto_plan': running_scene_auto_plan,
+        'case': running_scene_case
     };
 
-    const is_changed = is_changed_list[type];
+    const running_scene = running_scene_list[type];
     const { id } = useParams();
 
 
@@ -165,6 +165,11 @@ const MenuTrees = (props, treeRef) => {
         //     action: 'pasteToCurrent',
         //     // tips: `${ctrl} + V`,
         // },
+        {
+            type: 'createApi',
+            title: t('apis.createApi'),
+            action: 'createApi'
+        },
         {
             type: 'modifyFolder',
             title: t('apis.editFolder'),
@@ -396,7 +401,7 @@ const MenuTrees = (props, treeRef) => {
                         type: 'scene/updateOpenDesc',
                         payload: filteredTreeList[0].description
                     })
-                    Bus.$emit('addOpenAutoPlanScene', scene_data[0], id_apis_auto_plan, node_config_auto_plan);
+                    Bus.$emit('addOpenAutoPlanScene', scene_data[0]);
                     dispatch({
                         type: 'auto_plan/updateOpenInfo',
                         payload: scene_data[0]
@@ -424,19 +429,33 @@ const MenuTrees = (props, treeRef) => {
                             <MenuStatus value={nodeItem} markObj={markObj}></MenuStatus>
                         )} */}
                         {/* {nodeItem?.is_example > 0 && <Example value={nodeItem}></Example>} */}
-                        {/* <Button
+                        <Button
                             className="btn-more"
                             size="mini"
                             onClick={(e) => {
                                 handleShowContextMenu(
-                                    { ...props, project_id: CURRENT_PROJECT_ID },
+                                    {
+                                        ...props,
+                                        project_id: CURRENT_PROJECT_ID,
+                                        open_scene,
+                                        from: type,
+                                        plan_id: id,
+                                        running_scene,
+                                        menu: {
+                                            api,
+                                            folder,
+                                            scene,
+                                            group,
+                                            root
+                                        }
+                                    },
                                     e,
                                     nodeItem.data,
                                 );
                             }}
                         >
                             <SvgMore width="12px" height="12px" />
-                        </Button> */}
+                        </Button>
                     </div>
                 </DragNode>
             </MenuTreeNode>
@@ -540,6 +559,7 @@ const MenuTrees = (props, treeRef) => {
                     open_scene,
                     from: type,
                     plan_id: id,
+                    running_scene,
                     menu: {
                         api,
                         folder,
@@ -577,7 +597,7 @@ const MenuTrees = (props, treeRef) => {
                     }
 
                     if (type !== 'apis' && val.target_type !== 'group') {
-         
+
                     }
                     if (val?.target_type == 'folder' || val.target_type === 'group') {
 
@@ -588,567 +608,74 @@ const MenuTrees = (props, treeRef) => {
                             if (open_scene_scene && (open_scene_scene.target_id || open_scene_scene.scene_id) === val.target_id) {
                                 return;
                             }
-                            if (is_changed_case) {
-                                Modal.confirm({
-                                    title: t('modal.tips'),
-                                    content: t('modal.caseNotSave'),
-                                    okText: t('btn.save'),
-                                    cancelText: t('btn.cancel'),
-                                    diyText: t('btn.notSave'),
-                                    onOk: () => {
-                                        // 保存当前场景
-                                        Bus.$emit('saveCase', () => {
-                                            Message('success', t('message.saveSuccess'));
-                                            clearCase();
-                                            if (is_changed) {
-                                                Modal.confirm({
-                                                    title: t('modal.tips'),
-                                                    content: t('modal.sceneNotSave'),
-                                                    okText: t('btn.save'),
-                                                    cancelText: t('btn.cancel'),
-                                                    diyText: t('btn.notSave'),
-                                                    onOk: () => {
-                                                        // 保存当前场景
-                                                        Bus.$emit('saveScene', () => {
-                                                            Message('success', t('message.saveSuccess'));
-                                                            localStorage.setItem('open_scene', JSON.stringify(val));
-                                                            Bus.$emit('addOpenScene', val);
-                                                            dispatch({
-                                                                type: 'scene/updateOpenInfo',
-                                                                payload: val
-                                                            })
-                                                            dispatch({
-                                                                type: 'scene/updateIsChanged',
-                                                                payload: false
-                                                            })
-                                                            dispatch({
-                                                                type: 'scene/updateOpenName',
-                                                                payload: val.name,
-                                                            })
-                                                            dispatch({
-                                                                type: 'scene/updateOpenDesc',
-                                                                payload: val.description
-                                                            })
-                                                        });
-                                                    },
-                                                    onCancel: () => {
-                                                        // 取消弹窗
 
-                                                    },
-                                                    onDiy: () => {
-                                                        // 不保存, 直接跳转
-                                                        localStorage.setItem('open_scene', JSON.stringify(val));
+                            clearCase();
+                            Bus.$emit('clearFetchSceneState');
+                            Bus.$emit('clearFetchCaseState');
+                            localStorage.setItem('open_scene', JSON.stringify(val));
+                            Bus.$emit('addOpenScene', val);
+                            dispatch({
+                                type: 'scene/updateOpenInfo',
+                                payload: val
+                            })
+                            dispatch({
+                                type: 'scene/updateIsChanged',
+                                payload: false
+                            })
+                            dispatch({
+                                type: 'scene/updateOpenName',
+                                payload: val.name,
+                            })
+                            dispatch({
+                                type: 'scene/updateOpenDesc',
+                                payload: val.description
+                            })
 
-                                                        Bus.$emit('addOpenScene', val);
-                                                        dispatch({
-                                                            type: 'scene/updateOpenInfo',
-                                                            payload: val
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateIsChanged',
-                                                            payload: false
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateOpenName',
-                                                            payload: val.name,
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateOpenDesc',
-                                                            payload: val.description
-                                                        })
-                                                    }
-                                                })
-                                            } else {
-                                                localStorage.setItem('open_scene', JSON.stringify(val));
-                                                Bus.$emit('addOpenScene', val);
-                                                dispatch({
-                                                    type: 'scene/updateOpenInfo',
-                                                    payload: val
-                                                })
-                                                dispatch({
-                                                    type: 'scene/updateOpenName',
-                                                    payload: val.name,
-                                                })
-                                                dispatch({
-                                                    type: 'scene/updateOpenDesc',
-                                                    payload: val.description
-                                                })
-                                            }
-                                        });
-
-                                    },
-                                    onCancel: () => {
-                                        // 取消弹窗
-
-                                    },
-                                    onDiy: () => {
-
-                                        // 不保存, 直接跳转
-         
-                                        clearCase();
-                                        if (is_changed) {
-                                            Modal.confirm({
-                                                title: t('modal.tips'),
-                                                content: t('modal.sceneNotSave'),
-                                                okText: t('btn.save'),
-                                                cancelText: t('btn.cancel'),
-                                                diyText: t('btn.notSave'),
-                                                onOk: () => {
-                                                    // 保存当前场景
-                                                    Bus.$emit('saveScene', () => {
-                                                        Message('success', t('message.saveSuccess'));
-                                                        localStorage.setItem('open_scene', JSON.stringify(val));
-                                                        Bus.$emit('addOpenScene', val);
-                                                        dispatch({
-                                                            type: 'scene/updateOpenInfo',
-                                                            payload: val
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateIsChanged',
-                                                            payload: false
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateOpenName',
-                                                            payload: val.name,
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateOpenDesc',
-                                                            payload: val.description
-                                                        })
-                                                    });
-                                                },
-                                                onCancel: () => {
-                                                    // 取消弹窗
-            
-                                                },
-                                                onDiy: () => {
-                                                    // 不保存, 直接跳转
-                                                    localStorage.setItem('open_scene', JSON.stringify(val));
-            
-                                                    Bus.$emit('addOpenScene', val);
-                                                    dispatch({
-                                                        type: 'scene/updateOpenInfo',
-                                                        payload: val
-                                                    })
-                                                    dispatch({
-                                                        type: 'scene/updateIsChanged',
-                                                        payload: false
-                                                    })
-                                                    dispatch({
-                                                        type: 'scene/updateOpenName',
-                                                        payload: val.name,
-                                                    })
-                                                    dispatch({
-                                                        type: 'scene/updateOpenDesc',
-                                                        payload: val.description
-                                                    })
-                                                }
-                                            })
-                                        } else {
-                                            localStorage.setItem('open_scene', JSON.stringify(val));
-                                            Bus.$emit('addOpenScene', val);
-                                            dispatch({
-                                                type: 'scene/updateOpenInfo',
-                                                payload: val
-                                            })
-                                            dispatch({
-                                                type: 'scene/updateOpenName',
-                                                payload: val.name,
-                                            })
-                                            dispatch({
-                                                type: 'scene/updateOpenDesc',
-                                                payload: val.description
-                                            })
-                                        }
-                                    }
-                                })
-                            } else {
-                                clearCase();
-                                if (is_changed) {
-                                    Modal.confirm({
-                                        title: t('modal.tips'),
-                                        content: t('modal.sceneNotSave'),
-                                        okText: t('btn.save'),
-                                        cancelText: t('btn.cancel'),
-                                        diyText: t('btn.notSave'),
-                                        onOk: () => {
-                                            // 保存当前场景
-                                            Bus.$emit('saveScene', () => {
-                                                Message('success', t('message.saveSuccess'));
-                                                localStorage.setItem('open_scene', JSON.stringify(val));
-                                                Bus.$emit('addOpenScene', val);
-                                                dispatch({
-                                                    type: 'scene/updateOpenInfo',
-                                                    payload: val
-                                                })
-                                                dispatch({
-                                                    type: 'scene/updateIsChanged',
-                                                    payload: false
-                                                })
-                                                dispatch({
-                                                    type: 'scene/updateOpenName',
-                                                    payload: val.name,
-                                                })
-                                                dispatch({
-                                                    type: 'scene/updateOpenDesc',
-                                                    payload: val.description
-                                                })
-                                            });
-                                        },
-                                        onCancel: () => {
-                                            // 取消弹窗
-
-                                        },
-                                        onDiy: () => {
-                                            // 不保存, 直接跳转
-                                            localStorage.setItem('open_scene', JSON.stringify(val));
-
-                                            Bus.$emit('addOpenScene', val);
-                                            dispatch({
-                                                type: 'scene/updateOpenInfo',
-                                                payload: val
-                                            })
-                                            dispatch({
-                                                type: 'scene/updateIsChanged',
-                                                payload: false
-                                            })
-                                            dispatch({
-                                                type: 'scene/updateOpenName',
-                                                payload: val.name,
-                                            })
-                                            dispatch({
-                                                type: 'scene/updateOpenDesc',
-                                                payload: val.description
-                                            })
-                                        }
-                                    })
-                                } else {
-                                    localStorage.setItem('open_scene', JSON.stringify(val));
-                                    Bus.$emit('addOpenScene', val);
-                                    dispatch({
-                                        type: 'scene/updateOpenInfo',
-                                        payload: val
-                                    })
-                                    dispatch({
-                                        type: 'scene/updateOpenName',
-                                        payload: val.name,
-                                    })
-                                    dispatch({
-                                        type: 'scene/updateOpenDesc',
-                                        payload: val.description
-                                    })
-                                }
-                            }
 
                         } else if (type === 'plan') {
                             if (open_plan_scene && (open_plan_scene.target_id || open_plan_scene.scene_id) === val.target_id) {
                                 return;
                             }
-                            // clearCase();
-                            if (is_changed) {
-                                Modal.confirm({
-                                    title: t('modal.tips'),
-                                    content: t('modal.sceneNotSave'),
-                                    okText: t('btn.save'),
-                                    cancelText: t('btn.cancel'),
-                                    diyText: t('btn.notSave'),
-                                    onOk: () => {
-                                        // 保存当前场景
-                                        Bus.$emit('saveScenePlan', nodes_plan, edges_plan, id_apis_plan, node_config_plan, open_scene, id, 'plan', () => {
-                                            Message('success', t('message.saveSuccess'));
-                                            Bus.$emit('addOpenPlanScene', val, id_apis_plan, node_config_plan);
-                                            dispatch({
-                                                type: 'plan/updateIsChanged',
-                                                payload: false
-                                            })
-                                            dispatch({
-                                                type: 'plan/updateOpenName',
-                                                payload: val.name,
-                                            })
-                                            dispatch({
-                                                type: 'plan/updateOpenDesc',
-                                                payload: val.description
-                                            })
-                                        });
-                                    },
-                                    onCancel: () => {
-                                        // 取消弹窗
-                                    },
-                                    onDiy: () => {
-                                        // 不保存, 直接跳转
-                                        Bus.$emit('addOpenPlanScene', val, id_apis_plan, node_config_plan);
-                                        dispatch({
-                                            type: 'plan/updateIsChanged',
-                                            payload: false
-                                        })
-                                        dispatch({
-                                            type: 'plan/updateOpenName',
-                                            payload: val.name,
-                                        })
-                                        dispatch({
-                                            type: 'plan/updateOpenDesc',
-                                            payload: val.description
-                                        })
-                                    }
-                                })
-                            } else {
-                                Bus.$emit('addOpenPlanScene', val, id_apis_plan, node_config_plan);
-                                dispatch({
-                                    type: 'plan/updateOpenName',
-                                    payload: val.name,
-                                })
-                                dispatch({
-                                    type: 'plan/updateOpenDesc',
-                                    payload: val.description
-                                })
-                            }
 
+                            Bus.$emit('clearFetchSceneState');
+                            Bus.$emit('addOpenPlanScene', val, id_apis_plan, node_config_plan);
+                            dispatch({
+                                type: 'plan/updateIsChanged',
+                                payload: false
+                            })
+                            dispatch({
+                                type: 'plan/updateOpenName',
+                                payload: val.name,
+                            })
+                            dispatch({
+                                type: 'plan/updateOpenDesc',
+                                payload: val.description
+                            })
                         } else if (type === 'auto_plan') {
                             if (auto_plan_scene && (auto_plan_scene.target_id || auto_plan_scene.scene_id) === val.target_id) {
                                 return;
                             }
-                            if (is_changed_case) {
-                                Modal.confirm({
-                                    title: t('modal.tips'),
-                                    content: t('modal.caseNotSave'),
-                                    okText: t('btn.save'),
-                                    cancelText: t('btn.cancel'),
-                                    diyText: t('btn.notSave'),
-                                    onOk: () => {
-                                        // 保存当前场景
-                                        Bus.$emit('saveCase', () => {
-                                            Message('success', t('message.saveSuccess'));
-                                            clearCase();
-                                            if (is_changed) {
-                                                Modal.confirm({
-                                                    title: t('modal.tips'),
-                                                    content: t('modal.caseNotSave'),
-                                                    okText: t('btn.save'),
-                                                    cancelText: t('btn.cancel'),
-                                                    diyText: t('btn.notSave'),
-                                                    onOk: () => {
-                                                        // 保存当前场景
-                                                        Bus.$emit('saveSceneAutoPlan', nodes_auto_plan, edges_auto_plan, id_apis_auto_plan, node_config_auto_plan, open_scene, id, () => {
-                                                            Message('success', t('message.saveSuccess'));
-                                                            Bus.$emit('addOpenAutoPlanScene', val, id_apis_auto_plan, node_config_auto_plan);
-                                                            dispatch({
-                                                                type: 'auto_plan/updateOpenInfo',
-                                                                payload: val
-                                                            })
-                                                            dispatch({
-                                                                type: 'auto_plan/updateIsChanged',
-                                                                payload: false
-                                                            })
-                                                            dispatch({
-                                                                type: 'scene/updateOpenName',
-                                                                payload: val.name,
-                                                            })
-                                                            dispatch({
-                                                                type: 'scene/updateOpenDesc',
-                                                                payload: val.description
-                                                            })
-                                                        });
-                
-                                                    },
-                                                    onCancel: () => {
-                                                        // 取消弹窗
-                
-                                                    },
-                                                    onDiy: () => {
-                                                        // 不保存, 直接跳转
-                                                        Bus.$emit('addOpenAutoPlanScene', val, id_apis_auto_plan, node_config_auto_plan);
-                                                        dispatch({
-                                                            type: 'auto_plan/updateOpenInfo',
-                                                            payload: val
-                                                        })
-                                                        dispatch({
-                                                            type: 'auto_plan/updateIsChanged',
-                                                            payload: false
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateOpenName',
-                                                            payload: val.name,
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateOpenDesc',
-                                                            payload: val.description
-                                                        })
-                                                    }
-                                                })
-                                            } else {
-                                                Bus.$emit('addOpenAutoPlanScene', val, id_apis_auto_plan, node_config_auto_plan);
-                                                dispatch({
-                                                    type: 'auto_plan/updateOpenInfo',
-                                                    payload: val
-                                                })
-                                                dispatch({
-                                                    type: 'scene/updateOpenName',
-                                                    payload: val.name,
-                                                })
-                                                dispatch({
-                                                    type: 'scene/updateOpenDesc',
-                                                    payload: val.description
-                                                })
-                                            }
-                                        });
 
-                                    },
-                                    onCancel: () => {
-                                        // 取消弹窗
+                            Bus.$emit('clearFetchSceneState');
+                            Bus.$emit('clearFetchCaseState');
+                            Bus.$emit('addOpenAutoPlanScene', val);
+                            dispatch({
+                                type: 'auto_plan/updateOpenInfo',
+                                payload: val
+                            })
+                            dispatch({
+                                type: 'auto_plan/updateIsChanged',
+                                payload: false
+                            })
+                            dispatch({
+                                type: 'scene/updateOpenName',
+                                payload: val.name,
+                            })
+                            dispatch({
+                                type: 'scene/updateOpenDesc',
+                                payload: val.description
+                            })
 
-                                    },
-                                    onDiy: () => {
-
-                                        // 不保存, 直接跳转
-
-                                        clearCase();
-                                        if (is_changed) {
-                                            Modal.confirm({
-                                                title: t('modal.tips'),
-                                                content: t('modal.caseNotSave'),
-                                                okText: t('btn.save'),
-                                                cancelText: t('btn.cancel'),
-                                                diyText: t('btn.notSave'),
-                                                onOk: () => {
-                                                    // 保存当前场景
-                                                    Bus.$emit('saveSceneAutoPlan', nodes_auto_plan, edges_auto_plan, id_apis_auto_plan, node_config_auto_plan, open_scene, id, () => {
-                                                        Message('success', t('message.saveSuccess'));
-                                                        Bus.$emit('addOpenAutoPlanScene', val, id_apis_auto_plan, node_config_auto_plan);
-                                                        dispatch({
-                                                            type: 'auto_plan/updateOpenInfo',
-                                                            payload: val
-                                                        })
-                                                        dispatch({
-                                                            type: 'auto_plan/updateIsChanged',
-                                                            payload: false
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateOpenName',
-                                                            payload: val.name,
-                                                        })
-                                                        dispatch({
-                                                            type: 'scene/updateOpenDesc',
-                                                            payload: val.description
-                                                        })
-                                                    });
-            
-                                                },
-                                                onCancel: () => {
-                                                    // 取消弹窗
-            
-                                                },
-                                                onDiy: () => {
-                                                    // 不保存, 直接跳转
-                                                    Bus.$emit('addOpenAutoPlanScene', val, id_apis_auto_plan, node_config_auto_plan);
-                                                    dispatch({
-                                                        type: 'auto_plan/updateOpenInfo',
-                                                        payload: val
-                                                    })
-                                                    dispatch({
-                                                        type: 'auto_plan/updateIsChanged',
-                                                        payload: false
-                                                    })
-                                                    dispatch({
-                                                        type: 'scene/updateOpenName',
-                                                        payload: val.name,
-                                                    })
-                                                    dispatch({
-                                                        type: 'scene/updateOpenDesc',
-                                                        payload: val.description
-                                                    })
-                                                }
-                                            })
-                                        } else {
-                                            Bus.$emit('addOpenAutoPlanScene', val, id_apis_auto_plan, node_config_auto_plan);
-                                            dispatch({
-                                                type: 'auto_plan/updateOpenInfo',
-                                                payload: val
-                                            })
-                                            dispatch({
-                                                type: 'scene/updateOpenName',
-                                                payload: val.name,
-                                            })
-                                            dispatch({
-                                                type: 'scene/updateOpenDesc',
-                                                payload: val.description
-                                            })
-                                        }
-                                    }
-                                })
-                            } else {
-                                clearCase();
-                                if (is_changed) {
-                                    Modal.confirm({
-                                        title: t('modal.tips'),
-                                        content: t('modal.caseNotSave'),
-                                        okText: t('btn.save'),
-                                        cancelText: t('btn.cancel'),
-                                        diyText: t('btn.notSave'),
-                                        onOk: () => {
-                                            // 保存当前场景
-                                            Bus.$emit('saveSceneAutoPlan', nodes_auto_plan, edges_auto_plan, id_apis_auto_plan, node_config_auto_plan, open_scene, id, () => {
-                                                Message('success', t('message.saveSuccess'));
-                                                Bus.$emit('addOpenAutoPlanScene', val, id_apis_auto_plan, node_config_auto_plan);
-                                                dispatch({
-                                                    type: 'auto_plan/updateOpenInfo',
-                                                    payload: val
-                                                })
-                                                dispatch({
-                                                    type: 'auto_plan/updateIsChanged',
-                                                    payload: false
-                                                })
-                                                dispatch({
-                                                    type: 'scene/updateOpenName',
-                                                    payload: val.name,
-                                                })
-                                                dispatch({
-                                                    type: 'scene/updateOpenDesc',
-                                                    payload: val.description
-                                                })
-                                            });
-    
-                                        },
-                                        onCancel: () => {
-                                            // 取消弹窗
-    
-                                        },
-                                        onDiy: () => {
-                                            // 不保存, 直接跳转
-                                            Bus.$emit('addOpenAutoPlanScene', val, id_apis_auto_plan, node_config_auto_plan);
-                                            dispatch({
-                                                type: 'auto_plan/updateOpenInfo',
-                                                payload: val
-                                            })
-                                            dispatch({
-                                                type: 'auto_plan/updateIsChanged',
-                                                payload: false
-                                            })
-                                            dispatch({
-                                                type: 'scene/updateOpenName',
-                                                payload: val.name,
-                                            })
-                                            dispatch({
-                                                type: 'scene/updateOpenDesc',
-                                                payload: val.description
-                                            })
-                                        }
-                                    })
-                                } else {
-                                    Bus.$emit('addOpenAutoPlanScene', val, id_apis_auto_plan, node_config_auto_plan);
-                                    dispatch({
-                                        type: 'auto_plan/updateOpenInfo',
-                                        payload: val
-                                    })
-                                    dispatch({
-                                        type: 'scene/updateOpenName',
-                                        payload: val.name,
-                                    })
-                                    dispatch({
-                                        type: 'scene/updateOpenDesc',
-                                        payload: val.description
-                                    })
-                                }
-                            }
 
                         }
                     }

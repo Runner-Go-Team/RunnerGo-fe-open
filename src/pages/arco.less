@@ -1,0 +1,339 @@
+// arco组件库样式修改集
+
+// 表格table
+.arco-table-th .arco-table-th-item {
+    padding-left: 16px !important;
+
+    .arco-table-cell-with-sorter {
+        padding-left: 0 !important;
+    }
+}
+
+.arco-table-th-item-title,
+.arco-table-cell {
+    user-select: text !important;
+    -moz-user-select: text !important;
+    -webkit-user-select: text !important;
+    -ms-user-select: text !important;
+
+    .ellipsis {
+        user-select: text !important;
+        -moz-user-select: text !important;
+        -webkit-user-select: text !important;
+        -ms-user-select: text !important;
+    }
+}
+
+.arco-table-filters-popup {
+    background-color: var(--bg);
+    border: none;
+
+    .arco-table-filters-btn {
+        border-top-color: var(--border-line);
+    }
+}
+
+.arco-table-filters-open {
+    background-color: var(--module);
+}
+
+.arco-table-filters-btn {
+    height: auto;
+    padding: 12px;
+    line-height: 12px;
+
+    .arco-btn {
+        width: 54px;
+    }
+}
+
+.arco-table-th-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.arco-table-tr {
+    .arco-table-checkbox {
+        .arco-table-th-item {
+            margin-left: 0;
+            padding-left: 0 !important;
+        }
+    }
+}
+
+.arco-table-td {
+    padding: 6px 8px !important;
+    padding-left: 16px !important;
+}
+
+.arco-table-filters:hover,
+.arco-table-filters-open {
+    background-color: var(--module);
+}
+
+
+// 分页pagination
+.arco-pagination {
+    display: flex;
+    justify-content: center;
+
+    .arco-pagination-item-active {
+        color: var(--theme-color) !important;
+        background-color: var(--theme-10) !important;
+        border: 1px solid var(--theme-color) !important;
+        border-radius: 4px !important;
+    }
+
+    .arco-pagination-item {
+        border-radius: 4px;
+    }
+
+    .arco-select-view {
+        background-color: transparent !important;
+        border: 1px solid var(--border-line) !important;
+        border-radius: 5px !important;
+    }
+
+    .arco-input {
+        background-color: transparent !important;
+        border: 1px solid var(--border-line) !important;
+    }
+}
+
+
+// 图标icon
+.arco-icon-hover::before {
+    border-radius: 3px;
+}
+
+
+// 弹窗modal
+.arco-modal {
+    border-radius: 5px !important;
+}
+
+.arco-modal-mask {
+    background-color: var(--background-modal-backdrop) !important;
+}
+
+
+.arco-modal-close-icon {
+    top: 32px !important;
+    right: 32px !important;
+}
+
+.arco-modal-content {
+    padding: 32px;
+}
+
+
+// 下拉式dropdown
+.arco-dropdown-menu-pop {
+    background-color: var(--bg) !important;
+    padding: 8px !important;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25) !important;
+    border-radius: 5px !important;
+}
+
+.arco-dropdown-menu-item:hover,
+.arco-dropdown-menu-pop-header:hover {
+    background-color: var(--module);
+    color: var(--theme-color);
+    border-radius: 2px;
+}
+
+
+// 复选框checkbox
+.arco-checkbox-mask {
+    background-color: transparent;
+}
+
+
+// 日期选择器picker
+.arco-picker-range-container {
+    background-color: var(--bg);
+    border: none;
+}
+
+.arco-picker-cell-today::after {
+    background-color: var(--theme-color);
+}
+
+.arco-picker {
+    background-color: var(--bg);
+    border-radius: 2px;
+
+    .arco-picker-suffix-icon {
+        svg {
+            width: 14px !important;
+            height: 14px !important;
+        }
+    }
+}
+
+.arco-picker-container {
+    background-color: var(--bg);
+    border-color: var(--border-line);
+}
+
+.arco-picker-header-icon-hidden {
+    background-color: transparent !important;
+}
+
+.arco-picker-header-icon {
+    background-color: var(--module);
+}
+
+.arco-picker-header {
+    border-color: var(--border-line);
+}
+
+.arco-picker-footer-btn-wrapper {
+    border-color: var(--border-line);
+}
+
+.arco-picker-btn-select-time {
+    background-color: transparent !important;
+}
+
+.arco-picker-btn-select-time span {
+    color: var(--theme-color) !important;
+}
+
+.arco-picker-focused {
+    border-color: var(--theme-color) !important;
+}
+
+
+
+// 按钮button
+.arco-btn-primary:not(.arco-btn-disabled) {
+    background-color: var(--theme-color);
+}
+
+.arco-btn {
+    background-color: var(--theme-color);
+    color: var(--common-white);
+}
+
+
+// 下拉框select
+.arco-select.arco-select-focused .arco-select-view {
+    border-color: var(--theme-color);
+}
+
+.arco-select-popup {
+    border: none !important;
+    padding: 8px !important;
+    box-shadow: none !important;
+}
+
+.arco-select-popup,
+.arco-select-option {
+    background-color: var(--bg) !important;
+}
+
+.arco-select-option-hover {
+    background-color: var(--module) !important;
+}
+
+.arco-select-option:hover {
+    background-color: var(--module) !important;
+}
+
+
+// 文本域textarea
+.arco-textarea:focus {
+    border-color: var(--theme-color) !important;
+}
+
+.arco-textarea {
+    border-radius: 5px;
+    background-color: var(--bg-2);
+}
+
+
+.arco-textarea:hover {
+    background-color: var(--select-hover) !important;
+}
+
+
+// 输入框input
+.arco-input:focus {
+    border-color: var(--theme-color) !important;
+}
+
+.arco-input {
+    border-radius: 5px;
+}
+
+.acro-input-inner-wrapper-focus {
+    border-color: var(--theme-color) !important;
+}
+
+.arco-input:hover {
+    background-color: var(--select-hover);
+}
+
+
+// 折叠collapse
+.arco-collapse-item {
+    border-color: var(--border-line);
+}
+
+
+// 提示框tooltip
+.arco-tooltip-content {
+    background-color: var(--select-hover) !important;
+    border: none !important;
+    color: var(--font-1) !important;
+}
+
+.arco-tooltip-arrow {
+    background-color: var(--select-hover) !important;
+    border: none !important;
+}
+
+
+// 单选框radio
+.arco-radio-checked .arco-radio-mask {
+    background-color: var(--theme-color) !important;
+    border-color: var(--theme-color) !important;
+}
+
+
+// 弹出层trigger
+.arco-trigger {
+    z-index: 8888;
+}
+
+
+// 菜单menu
+
+.arco-menu-light .arco-menu-inline-header.arco-menu-selected .arco-icon {
+    color: var(--theme-color) !important;
+}
+
+.arco-menu-item .arco-menu-selected {
+    color: var(--theme-color) !important;
+}
+
+.arco-menu-light .arco-menu-item.arco-menu-selected .arco-icon,
+.arco-menu-light .arco-menu-group-title.arco-menu-selected .arco-icon,
+.arco-menu-light .arco-menu-pop-header.arco-menu-selected .arco-icon,
+.arco-menu-light .arco-menu-inline-header.arco-menu-selected .arco-icon {
+    color: var(--theme-color) !important;
+}
+
+.arco-menu-inline-header .arco-menu-selected {
+
+    .sub-menu-title {
+        color: var(--theme-color) !important;
+    }
+}
+
+.arco-menu-selected {
+    color: var(--theme-color) !important;
+}
+

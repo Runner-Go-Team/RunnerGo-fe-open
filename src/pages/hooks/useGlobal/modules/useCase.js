@@ -12,6 +12,8 @@ import { v4 } from 'uuid';
 import { Message } from 'adesign-react';
 import { useTranslation } from 'react-i18next';
 
+let case_t = null;
+
 const useCase = () => {
     const id_apis = useSelector((store) => store.case.id_apis);
     const node_config = useSelector((store) => store.case.node_config);
@@ -22,11 +24,9 @@ const useCase = () => {
     const open_info = useSelector((store) => store.case.open_info);
     const refresh = useSelector((store) => store.case.refresh);
 
-    let case_t = null;
-
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    const addNewCaseApi = (id, api, config) => {
+    const addNewCaseApi = (id, api, config, callback) => {
         let ids = isArray(id) ? id : [id];
         let apis = isArray(api) ? api : [api];
         let configs = isArray(config) ? config : [config];
@@ -77,6 +77,9 @@ const useCase = () => {
                 payload: new_config,
             })
         }
+
+
+        callback && callback();
     };
 
     const addNewCaseControl = (id) => {
@@ -107,7 +110,7 @@ const useCase = () => {
         })
     };
 
-    const updateCaseApi = (data) => {
+    const updateCaseApi = (data, callback) => {
         const { id, pathExpression, value } = data;
 
         set(id_apis[id], pathExpression, value);
@@ -200,19 +203,32 @@ const useCase = () => {
             type: 'case/updateApiNow',
             payload: _api_now
         });
-    };
-
-    const saveCaseApi = (callback) => {
-        const _id_apis = cloneDeep(id_apis);
-        api_now.is_changed = false;
-        const id = api_now.id;
-        delete api_now['id'];
-        _id_apis[id] = api_now;
 
         dispatch({
             type: 'case/updateIdApis',
-            payload: _id_apis,
+            payload: id_apis
         });
+
+        dispatch({
+            type: 'scene/updateRefreshBox',
+            payload: v4()
+        })
+
+
+        callback && callback();
+    };
+
+    const saveCaseApi = (callback) => {
+        // const _id_apis = cloneDeep(id_apis);
+        // api_now.is_changed = false;
+        // const id = api_now.id;
+        // delete api_now['id'];
+        // _id_apis[id] = api_now;
+
+        // dispatch({
+        //     type: 'case/updateIdApis',
+        //     payload: _id_apis,
+        // });
 
         callback && callback();
     };
@@ -344,11 +360,24 @@ const useCase = () => {
         // }, 100);
     }
 
+    // function getNodesByLevel(nodes, edges) {
+    //     let arr = [];
+    //     while (nodes.length > 0) {
+    //         let currentLayer = nodes.filter(node => !edges.some(edge => edge.target === node.id));
+    //         arr.push(currentLayer);
+    //         currentLayer.forEach(node => {
+    //             edges = edges.filter(edge => edge.source !== node.id);
+    //         });
+    //         nodes = nodes.filter(node => !currentLayer.includes(node));
+    //     }
+    //     return arr;
+    // }
+
     const saveCase = (callback) => {
         const { scene_id, case_id } = open_info;
         const get_pre = (id, edges) => {
             const pre_list = [];
-            edges.forEach(item => {
+            edges && edges.forEach(item => {
                 if (item.target === id) {
                     pre_list.push(item.source);
                 }
@@ -359,7 +388,7 @@ const useCase = () => {
 
         const get_next = (id, edges) => {
             const next_list = [];
-            edges.forEach(item => {
+            edges && edges.forEach(item => {
                 if (item.source === id) {
                     next_list.push(item.target);
                 }
@@ -395,19 +424,27 @@ const useCase = () => {
             version: 1,
             nodes: _nodes,
             edges,
+            // nodes_round: getNodesByLevel(_nodes, edges ? edges : [])
         };
-        // callback && callback();
 
-        // return;
+        console.log(params);
 
-        fetchSaveFlow(params).subscribe({
-            next: (res) => {
-                const { code } = res;
-                if (code === 0) {
-                    callback && callback();
-                }
-            }
-        })
+
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "save_case_flow",
+            param: JSON.stringify(params)
+        }))
+
+        callback && callback();
+
+        // fetchSaveFlow(params).subscribe({
+        //     next: (res) => {
+        //         const { code } = res;
+        //         if (code === 0) {
+        //             callback && callback();
+        //         }
+        //     }
+        // })
     }
 
     const addOpenCase = (id) => {
@@ -482,6 +519,7 @@ const useCase = () => {
                             compare,
                             val,
                             remark,
+                            is_hide
                         } = item;
                         const config = {
                             weight,
@@ -494,7 +532,8 @@ const useCase = () => {
                             var: _var,
                             compare,
                             val,
-                            remark
+                            remark,
+                            is_hide
                         };
                         if (api) {
                             api.id = id;
@@ -713,6 +752,14 @@ const useCase = () => {
         })
     }
 
+    const clearFetchCaseState = () => {
+        clearInterval(case_t);
+        dispatch({
+            type: 'case/updateRunStatus',
+            payload: 'finish',
+        })
+    }
+
 
 
     useEventBus('addNewCaseApi', addNewCaseApi, [id_apis, node_config]);
@@ -728,6 +775,7 @@ const useCase = () => {
     useEventBus('stopCase', stopCase, [open_case]);
     useEventBus('cloneCase', cloneCase);
     useEventBus('deleteCase', deleteCase);
+    useEventBus('clearFetchCaseState', clearFetchCaseState);
 
 };
 

@@ -9,6 +9,7 @@ import LogoRight from '@assets/logo/info_right';
 import SvgClose from '@assets/logo/close';
 import { EamilReg } from '@utils';
 import { useDispatch, useSelector } from 'react-redux';
+import Bus from '@utils/eventBus';
 
 
 
@@ -51,7 +52,7 @@ const EditEmail = (props) => {
                     })
                     onCancel();
                     Message('success', t('message.updateSuccess'));
-
+                    Bus.$emit('closeWs');
                     localStorage.removeItem('runnergo-token');
                     localStorage.removeItem('expire_time_sec');
                     localStorage.removeItem('team_id');
@@ -94,6 +95,7 @@ const EditEmail = (props) => {
                         <Input
                             className={(emailErr || emailEmpty) ? 'input-error' : 'input-item'}
                             placeholder={t('placeholder.email')}
+                            maxLength={30}
                             value={email}
                             onChange={(e) => {
                                 setEmail(e);

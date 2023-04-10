@@ -204,7 +204,7 @@ const SceneHeader = (props) => {
             })
             dispatch({
                 type: 'scene/updateRunningScene',
-                payload: scene_id,
+                payload: scene_id ? scene_id : target_id,
             })
             dispatch({
                 type: 'scene/updateToLoading',
@@ -243,7 +243,7 @@ const SceneHeader = (props) => {
             })
             dispatch({
                 type: 'plan/updateRunningScene',
-                payload: scene_id,
+                payload: scene_id ? scene_id : target_id,
             })
             dispatch({
                 type: 'plan/updateToLoading',
@@ -278,7 +278,7 @@ const SceneHeader = (props) => {
             })
             dispatch({
                 type: 'auto_plan/updateRunningScene',
-                payload: scene_id,
+                payload: scene_id ? scene_id : target_id,
             })
             dispatch({
                 type: 'auto_plan/updateToLoading',
@@ -309,7 +309,7 @@ const SceneHeader = (props) => {
             })
             dispatch({
                 type: 'case/updateRunningScene',
-                payload: scene_id,
+                payload: scene_id ? scene_id : target_id,
             })
             dispatch({
                 type: 'case/updateToLoading',
@@ -334,48 +334,37 @@ const SceneHeader = (props) => {
                 })
             }, 200);
         }
-        const _callback = () => {
-            if (from === 'case') {
-                Bus.$emit('runCase');
-            } else {
-                Bus.$emit('runScene', scene_id ? scene_id : target_id, nodes.length, from);
-            }
+
+        if (from === 'case') {
+            Bus.$emit('runCase');
+        } else {
+            Bus.$emit('runScene', scene_id ? scene_id : target_id, nodes.length, from);
         }
-        saveScene(_callback);
+
+
+        // const _callback = () => {
+        //     if (from === 'case') {
+        //         Bus.$emit('runCase');
+        //     } else {
+        //         Bus.$emit('runScene', scene_id ? scene_id : target_id, nodes.length, from);
+        //     }
+        // }
+        // saveScene(_callback);
     };
-
-
-    useEffect(() => {
-        return () => {
-            // saveScene();
-        }
-    }, [nodes, edges, node_config, id_apis, open_scene])
 
 
     const saveScene = (callback) => {
         if (from === 'scene') {
-            dispatch({
-                type: 'scene/updateIsChanged',
-                payload: false
-            })
+         
             Bus.$emit('saveScene', callback);
         } else if (from === 'plan') {
-            dispatch({
-                type: 'plan/updateIsChanged',
-                payload: false
-            })
+         
             Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan', callback);
         } else if (from === 'auto_plan') {
-            dispatch({
-                type: 'auto_plan/updateIsChanged',
-                payload: false
-            })
-            Bus.$emit('saveSceneAutoPlan', nodes, edges, id_apis, node_config, open_scene, id, callback);
+        
+            Bus.$emit('saveSceneAutoPlan');
         } else if (from === 'case') {
-            dispatch({
-                type: 'case/updateIsChanged',
-                payload: false
-            })
+      
             const open_scene = open === 'auto_plan' ? open_scene_auto_plan : open_scene_scene;
             Bus.$emit('saveCase', callback);
         }
@@ -425,6 +414,7 @@ const SceneHeader = (props) => {
         if (nodes.length === 0) {
             return;
         }
+
         const result = formatData(nodes, edges);
         result.forEach((item, index) => {
             // const rootY = item[0].position.y;
@@ -445,14 +435,10 @@ const SceneHeader = (props) => {
         if (from === 'scene') {
             dispatch({
                 type: 'scene/updateNodes',
-                payload: _result
+                payload: newNodes
             });
             dispatch({
                 type: 'scene/updateBeautify',
-                payload: true
-            })
-            dispatch({
-                type: 'scene/updateIsChanged',
                 payload: true
             })
         } else if (from === 'plan') {
@@ -538,7 +524,7 @@ const SceneHeader = (props) => {
                 </Tooltip>
                 {
                     show_case && Object.entries(open_case || {}).length > 0 ?
-                        open_case_desc ? <Tooltip color='var(--select-hover)'  content={open_case_desc}>
+                        open_case_desc ? <Tooltip color='var(--select-hover)' content={open_case_desc}>
                             {
                                 open_case_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem' : '51.25rem' }}>
                                     {open_case_desc ? <span>{t('case.caseDesc')}：</span> : ''}
@@ -548,15 +534,15 @@ const SceneHeader = (props) => {
                         </Tooltip>
                             : <>
                                 {
-                                    open_case_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem'  : '51.25rem' }}>
+                                    open_case_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem' : '51.25rem' }}>
                                         {open_case_desc ? <span>{t('case.caseDesc')}：</span> : ''}
                                         {open_case_desc}
                                     </p> : ''
                                 }
                             </>
-                        : open_scene_desc ? <Tooltip color='var(--select-hover)'  content={open_scene_desc}>
+                        : open_scene_desc ? <Tooltip color='var(--select-hover)' content={open_scene_desc}>
                             {
-                                open_scene_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem'  : '51.25rem' }}>
+                                open_scene_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem' : '51.25rem' }}>
                                     {open_scene_desc ? <span>{t('scene.sceneDesc')}：</span> : ''}
                                     {open_scene_desc}
                                 </p> : ''
@@ -564,7 +550,7 @@ const SceneHeader = (props) => {
                         </Tooltip>
                             : <>
                                 {
-                                    open_scene_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem'  : '51.25rem' }}>
+                                    open_scene_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem' : '51.25rem' }}>
                                         {open_scene_desc ? <span>{t('scene.sceneDesc')}：</span> : ''}
                                         {open_scene_desc}
                                     </p> : ''
@@ -597,7 +583,7 @@ const SceneHeader = (props) => {
                                 })
                             }
                         }}>{t('btn.stopRun')}</Button>
-                        : <Button className='runBtn' disabled={run_status === 'running'} preFix={<SvgCaretRight />} onClick={() => runScene()}>{from === 'scene' ? t('btn.run') : (from === 'case' ? t('case.runCase') : t('btn.runScene'))}</Button>
+                        : <Button className='runBtn' disabled={run_status === 'running'} preFix={<SvgCaretRight />} onClick={() => runScene()}>{ from === 'case' ? t('case.runCase') : t('btn.runScene') }</Button>
                 }
             </div>
             {showSceneConfig && <SceneConfig from={from} onCancel={() => setSceneConfig(false)} />}

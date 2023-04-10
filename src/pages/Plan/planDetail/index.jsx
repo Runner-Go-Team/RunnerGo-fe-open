@@ -43,6 +43,7 @@ const PlanDetail = () => {
 
     const hide_config = useSelector((store) => store.plan.hide_config);
 
+
     // const node_config = useSelector((store) => store.plan.node_config);
 
     const [apiName, setApiName] = useState(api_now ? api_now.name : '新建接口');
@@ -67,20 +68,6 @@ const PlanDetail = () => {
     const scene_result = run_res && run_res.filter(item => item.event_id === (id_plan_now))[0];
     const response_data = response_list['plan'];
 
-    useEffect(() => {
-
-        // const open_plan = JSON.parse(localStorage.getItem('open_plan') || '{}');
-        // if (open_plan && open_plan[id]) {
-        //     if (open_plan_scene) {
-        //         if (`${open_plan_scene.scene_id}` !== `${open_plan[id]}`) {
-        //             Bus.$emit('addOpenPlanScene', { target_id: open_plan[id] })
-        //         }
-        //     } else {
-        //         Bus.$emit('addOpenPlanScene', { target_id: open_plan[id] })
-        //     }
-        // }
-    }, [open_plan_scene]);
-
 
     useEffect(() => {
         if (apiConfig !== configApi) {
@@ -92,6 +79,10 @@ const PlanDetail = () => {
         return () => {
             dispatch({
                 type: 'plan/updateApiConfig',
+                payload: false
+            })
+            dispatch({
+                type: 'plan/updateHideConfig',
                 payload: false
             })
         }
@@ -107,23 +98,25 @@ const PlanDetail = () => {
             id: api_now.id,
             pathExpression: getPathExpressionObj(type),
             value,
-        }, id_apis);
+        }, id_apis, closeApiConfig);
     };
 
-    const closeApiConfig = () => {
-        Bus.$emit('savePlanApi', api_now, () => {
+    const closeApiConfig = (close) => {
+        Bus.$emit('savePlanApi', id_apis, api_now, () => {
             // setDrawer(false)
             Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_plan_scene, id, 'plan', () => {
-                dispatch({
-                    type: 'plan/updateApiConfig',
-                    payload: false
-                })
-                dispatch({
-                    type: 'plan/updateApiRes',
-                    payload: null
-                })
+                if (close) {
+                    dispatch({
+                        type: 'plan/updateApiConfig',
+                        payload: false
+                    })
+                    dispatch({
+                        type: 'plan/updateApiRes',
+                        payload: null
+                    })
+                }
             })
-        }, id_apis);
+        });
     };
 
     const DrawerHeader = () => {
@@ -134,7 +127,7 @@ const PlanDetail = () => {
                         if (apiName.trim().length === 0) {
                             Message('error', t('message.apiNameEmpty'));
                         } else {
-                            closeApiConfig();
+                            closeApiConfig(true);
                         }
                     })} >
                         {/* <SvgClose width="16px" height="16px" /> */}
@@ -189,7 +182,15 @@ const PlanDetail = () => {
     };
 
     const [planDetail, setPlanDetail] = useState({});
+    const [layout, setLayout] = useState({});
 
+    useEffect(() => {
+        if (Object.entries(open_plan_scene || {}).length > 0 && !hide_config) {
+            setLayout({ 0: { width: 325 }, 1: { flex: 1 }, 2: { width: 384 } });
+        } else {
+            setLayout({ 0: { width: 325 }, 1: { width: 0, flex: 1 } });
+        }
+    }, [hide_config, open_plan_scene])
 
     return (
         <div className='plan-detail'>
@@ -229,7 +230,8 @@ const PlanDetail = () => {
                     style={{ marginTop: '2px' }}
                     realTimeRender
                     className={ApisWrapper}
-                    defaultLayouts={(Object.entries(open_plan_scene || {}).length > 0 || hide_config) ? { 0: { width: 325 }, 1: { width: 871, flex: 1 }, 2: { width: 354 } } : { 0: { width: 325 }, 1: { width: 0, flex: 1 } }}
+                    defaultLayouts={layout}
+                    layouts={layout}
                 >
 
                     <ScaleItem className="left-menus" minWidth={325} maxWidth={350}>

@@ -113,6 +113,7 @@ const ApiInfoPanel = (props) => {
         }
     }
 
+
     return (
         <>
             {modalType === 'description' && (
@@ -171,7 +172,7 @@ const ApiInfoPanel = (props) => {
                                         className="drop-item"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            saveApi(data.parent_id ? data.parent_id : '');
+                                            saveApi();
                                             refDropdown.current.setPopupVisible(false);
                                         }}
                                     >
@@ -185,6 +186,7 @@ const ApiInfoPanel = (props) => {
                                                 {...item}
                                                 value={item.target_id}
                                                 onClick={() => {
+                                                    console.log(item.target_id);
                                                     saveApi(item.target_id);
                                                     refDropdown.current.setPopupVisible(false);
                                                 }}

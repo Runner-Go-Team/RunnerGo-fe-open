@@ -19,6 +19,9 @@ import { useTranslation } from 'react-i18next';
 
 import { Table, Pagination } from '@arco-design/web-react';
 import { useSelector } from 'react-redux';
+import Bus from '@utils/eventBus';
+
+let report_t = null;
 
 const ReportList = () => {
     const navigate = useNavigate();
@@ -29,16 +32,17 @@ const ReportList = () => {
     const [currentPage, setCurrentPage] = useState(parseInt(sessionStorage.getItem('report_page')) || 1);
     const [pageSize, setPageSize] = useState(parseInt(localStorage.getItem('report_pagesize')) || 10);
 
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
-    const [taskType, setTaskType] = useState('');
-    const [taskMode, setTaskMode] = useState('');
-    const [status, setStatus] = useState('');
+    const [startTime, setStartTime] = useState(0);
+    const [endTime, setEndTime] = useState(0);
+    const [taskType, setTaskType] = useState(0);
+    const [taskMode, setTaskMode] = useState(0);
+    const [status, setStatus] = useState(0);
     const [sort, setSort] = useState(0);
 
     const language = useSelector((d) => d.user.language);
     const theme = useSelector((d) => d.user.theme);
     const refreshList = useSelector((d) => d.report.refreshList);
+    const report_list = useSelector((d) => d.report.report_list);
 
     const modeList = {
         '1': t('plan.modeList.1'),
@@ -103,7 +107,6 @@ const ReportList = () => {
         });
     }
 
-    let report_t = null;
 
     useEffect(() => {
         getReportData();
@@ -112,10 +115,63 @@ const ReportList = () => {
         }
         report_t = setInterval(getReportData, 1000);
 
+        let setIntervalList = window.setIntervalList;
+        if (setIntervalList) {
+            setIntervalList.push(report_t);
+        } else {
+            setIntervalList = [report_t];
+        }
+        window.setIntervalList = setIntervalList;
+
         return () => {
+            let setIntervalList = window.setIntervalList;
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === report_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
+            }
             clearInterval(report_t);
         }
     }, [refreshList, keyword, currentPage, pageSize, startTime, endTime, taskType, taskMode, status, sort, language]);
+
+
+    useEffect(() => {
+        if (report_list) {
+            const { reports, total } = report_list;
+            if (reports && reports.length === 0 && currentPage > 1) {
+                pageChange(currentPage - 1, pageSize);
+            }
+            setTotal(total);
+            const list = reports ? reports.map(item => {
+                const { task_type, task_mode, status, run_time_sec, last_time_sec, report_id, plan_name, scene_name, run_user_name } = item;
+                return {
+                    ...item,
+                    plan_name:
+                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{plan_name}</div>}>
+                            <div className='ellipsis'>{plan_name}</div>
+                        </Tooltip>,
+                    scene_name:
+                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{scene_name}</div>}>
+                            <div className='ellipsis'>{scene_name}</div>
+                        </Tooltip>,
+                    run_user_name:
+                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{run_user_name}</div>}>
+                            <div className='ellipsis'>{run_user_name}</div>
+                        </Tooltip>,
+
+                    task_mode: modeList[task_mode],
+                    status: statusList[status],
+                    canDelete: status === 2,
+                    task_type: taskList[task_type],
+                    run_time_sec: dayjs(run_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                    last_time_sec: status === 1 ? '-' : dayjs(last_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                    handle: <HandleContent report_id={report_id} />
+                }
+            }) : [];
+
+            setReportList(list);
+        }
+    }, [report_list, currentPage, pageSize]);
 
     const getReportData = () => {
         const query = {
@@ -130,49 +186,10 @@ const ReportList = () => {
             status,
             sort
         };
-        fetchReportList(query).subscribe({
-            next: (res) => {
-                const { data: { reports, total } } = res;
-                if (reports && reports.length === 0 && currentPage > 1) {
-                    pageChange(currentPage - 1, pageSize);
-                }
-                setTotal(total);
-                // let bool = false;
-                const list = reports ? reports.map(item => {
-                    const { task_type, task_mode, status, run_time_sec, last_time_sec, report_id, plan_name, scene_name, run_user_name } = item;
-                    // if (status === 1) {
-                    //     bool = true;
-                    // }
-                    return {
-                        ...item,
-                        plan_name:
-                            <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{plan_name}</div>}>
-                                <div className='ellipsis'>{plan_name}</div>
-                            </Tooltip>,
-                        scene_name:
-                            <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{scene_name}</div>}>
-                                <div className='ellipsis'>{scene_name}</div>
-                            </Tooltip>,
-                        run_user_name:
-                            <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{run_user_name}</div>}>
-                                <div className='ellipsis'>{run_user_name}</div>
-                            </Tooltip>,
-                        task_mode: modeList[task_mode],
-                        status: statusList[status],
-                        canDelete: status === 2,
-                        task_type: taskList[task_type],
-                        run_time_sec: dayjs(run_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                        last_time_sec: status === 1 ? '-' : dayjs(last_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                        handle: <HandleContent report_id={report_id} />
-                    }
-                }) : [];
-                // if (!bool) {
-                //     report_t && clearInterval(report_t);
-                // }
-
-                setReportList(list);
-            }
-        })
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "stress_report_list",
+            param: JSON.stringify(query)
+        }))
     }
 
     const columns = [
@@ -370,17 +387,17 @@ const ReportList = () => {
                 }
                 onChange={(a, sort, filter, c) => {
                     if (!filter.hasOwnProperty('task_mode')) {
-                        setTaskMode('');
+                        setTaskMode(0);
                     } else {
                         setTaskMode(filter.task_mode[0]);
                     }
                     if (!filter.hasOwnProperty('task_type')) {
-                        setTaskType('');
+                        setTaskType(0);
                     } else {
                         setTaskType(filter.task_type[0]);
                     }
                     if (!filter.hasOwnProperty('status')) {
-                        setStatus('');
+                        setStatus(0);
                     } else {
                         setStatus(filter.status[0]);
                     }

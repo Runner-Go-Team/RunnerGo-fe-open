@@ -112,7 +112,7 @@ export const pasteToCurrent = ({ props, params }) => {
     });
 };
 export const pasteFolderToRoot = ({ props }) => { };
-export const deleteFolder = async ({ target_id }, props, open_scene, from, plan_id) => {
+export const deleteFolder = async ({ target_id }, props, open_scene, from, plan_id, running_scene) => {
     // deleteMultiData(target_id);
     Modal.confirm({
         title: i18next.t('modal.look'),
@@ -120,30 +120,9 @@ export const deleteFolder = async ({ target_id }, props, open_scene, from, plan_
         okText: i18next.t('btn.ok'),
         cancelText: i18next.t('btn.cancel'),
         onOk: () => {
-            Bus.$emit('deleteScene', target_id, open_scene, from, plan_id, (code) => {
+            Bus.$emit('deleteScene', target_id, open_scene, from, plan_id, running_scene, (code) => {
                 if (code === 0) {
                     Message('success', i18next.t('message.deleteSuccess'));
-                    if (from === 'scene') {
-                        dispatch({
-                            type: 'scene/updateIsChanged',
-                            payload: true
-                        })
-                    } else if (from === 'plan') {
-                        dispatch({
-                            type: 'plan/updateIsChanged',
-                            payload: true
-                        })
-                    } else if (from === 'auto_plan') {
-                        dispatch({
-                            type: 'auto_plan/updateIsChanged',
-                            payload: true
-                        })
-                    } else if (from === 'case') {
-                        dispatch({
-                            type: 'case/updateIsChanged',
-                            payload: true
-                        })
-                    }
                 }
             })
         }

@@ -60,6 +60,11 @@ const initialState = {
   hide_drop: false, // 隐藏所有下拉框
 
   hide_config: false, //隐藏任务配置
+
+  plan_list: null, // 列表的计划
+
+
+  plan_detail: null, //计划详情顶部的基本信息
 };
 
 // action名称
@@ -109,7 +114,11 @@ const actionTypes = {
   updateHideDrop: 'updateHideDrop',
   updateOpenName: 'updateOpenName',
   updateOpenDesc: 'updateOpenDesc',
-  updateHideConfig: 'updateHideConfig'
+  updateHideConfig: 'updateHideConfig',
+
+  updatePlanList: 'updatePlanList',
+  updatePlanDetail: 'updatePlanDetail'
+
 
 }
 
@@ -299,6 +308,17 @@ export const plansReducer = (state = initialState, action) => {
       return {
         ...state,
         hide_config: action.payload
+      }
+
+    case `${NAMESPACE}/${actionTypes.updatePlanList}`:
+      return {
+        ...state,
+        plan_list: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updatePlanDetail}`:
+      return {
+        ...state,
+        plan_detail: action.payload
       }
     default:
       return state;

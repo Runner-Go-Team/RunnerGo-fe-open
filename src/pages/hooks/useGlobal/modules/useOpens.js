@@ -49,7 +49,6 @@ const useOpens = () => {
     const open_res = useSelector((store) => store?.opens.open_res);
 
     const apiDatas = useSelector((store) => store.apis.apiDatas);
-    const { desktop_proxy } = useSelector((store) => store?.desktopProxy);
     const workspace = useSelector((store) => store?.workspace);
     const { CURRENT_PROJECT_ID, CURRENT_TARGET_ID } = workspace;
 
@@ -1133,6 +1132,36 @@ const useOpens = () => {
         fetchDeleteApi({ target_id: target_id }).subscribe({
             next: (res) => {
                 if (res.code === 0) {
+                    let _open_apis = cloneDeep(open_apis);
+                    let localApi = JSON.parse(localStorage.getItem(`project_current:${localStorage.getItem('team_id')}`)).open_navs;
+                    console.log(localApi);
+                    for (let i in _open_apis) {
+                        if (_open_apis[i].parent_id === target_id) {
+                            delete _open_apis[i];
+                            let index = localApi.indexOf(i);
+                            localApi.splice(index, 1);
+                            console.log(open_api_now, i);
+                            if (open_api_now === i) {
+                                let newId = '';
+                                console.log(index);
+                                if (index > 0) {
+                                    newId = localApi[index - 1];
+                                } else {
+                                    newId = localApi[index + 1];
+                                }
+                                console.log(newId);
+                                dispatch({
+                                    type: 'opens/updateOpenApiNow',
+                                    payload: newId,
+                                })
+                            }
+                        }
+                    }
+                    dispatch({
+                        type: 'opens/coverOpenApis',
+                        payload: _open_apis
+                    })
+                    localStorage.setItem(`project_current:${localStorage.getItem('team_id')}`, JSON.stringify({ open_navs: localApi }));
                     callback && callback();
                 }
             }
@@ -1272,7 +1301,7 @@ const useOpens = () => {
 
     useEventBus('stopSend', stopSend);
 
-    useEventBus('toDeleteFolder', toDeleteFolder, [apiDatas]);
+    useEventBus('toDeleteFolder', toDeleteFolder, [apiDatas, open_api_now]);
 
     useEventBus('copyApi', copyApi, [open_apis]);
 

@@ -1,5 +1,7 @@
 const NAMESPACE = 'scene';
 
+import { v4 } from 'uuid';
+
 const initialState = {
   sceneDatas: {}, // 场景管理菜单列表
   open_scene: null, // 打开的场景
@@ -53,6 +55,8 @@ const initialState = {
 
 
   hide_drop: false, // 隐藏所有下拉框
+
+  refresh_box: v4(),
 };
 
 // action名称
@@ -97,7 +101,9 @@ const actionTypes = {
   updateOpenInfo: 'updateOpenInfo',
   updateIsChanged: 'updateIsChanged',
 
-  updateHideDrop: 'updateHideDrop'
+  updateHideDrop: 'updateHideDrop',
+
+  updateRefreshBox: 'updateRefreshBox'
 };
 
 export const sceneReducer = (state = initialState, action) => {
@@ -278,6 +284,11 @@ export const sceneReducer = (state = initialState, action) => {
       return {
         ...state,
         hide_drop: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateRefreshBox}`:
+      return {
+        ...state,
+        refresh_box: action.payload
       }
     default:
       return state;

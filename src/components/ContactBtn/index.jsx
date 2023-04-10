@@ -4,8 +4,7 @@ import { Dropdown, Button } from 'adesign-react';
 import { useTranslation } from 'react-i18next';
 
 const ContactBtn = (props) => {
-    // 推广二维码
-    const { url = "your qrcode" } = props;
+    const { url = "https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/images/wx-customer-service.jpg" } = props;
     const { t } = useTranslation();
     return (
         <div className="contact-btn">

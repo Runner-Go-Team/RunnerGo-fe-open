@@ -36,11 +36,23 @@ export const OSS_Config = {
 
 在根目录的config文件夹中的server文件中
 
+**http**
+
 ```js
     const RD_BaseURL = {
         development: '开发环境地址',
         test: '测试环境地址',
         production: '线上环境地址',
+    };
+```
+
+**websocket**
+
+```js
+    const RD_websocketUrl = {
+        development: '开发环境地址',
+        test: '测试环境地址',
+        production: '线上环境地址'
     };
 ```
 

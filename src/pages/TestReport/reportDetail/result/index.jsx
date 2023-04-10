@@ -88,6 +88,25 @@ const TReportDetailResult = (props) => {
                     let _result = [];
 
                     item.api_list.forEach(elem => {
+                        if (elem.status === 'success') {
+                            _result.push(elem);
+                        }
+                    })
+
+                    if (_result.length > 0) {
+                        result.push({
+                            ...item,
+                            api_list: _result
+                        })
+                    }
+                })
+                setFilterCase(result);
+            } else if (caseTab === '4') {
+                let result = [];
+                apiResult[scene_id].forEach(item => {
+                    let _result = [];
+
+                    item.api_list.forEach(elem => {
                         if (elem.status === 'not_run') {
                             _result.push(elem);
                         }
@@ -351,10 +370,15 @@ const TReportDetailResult = (props) => {
                                             reqTab === "1"
                                                 ?
                                                 <div className="req-header">
-                                                    {
-                                                        Object.entries(checkDetail || {}).length > 0 &&
-                                                        checkDetail.request_header
-                                                    }
+                                                    <MonacoEditor
+                                                        width="100%"
+                                                        ref={currentRef}
+                                                        language={EditFormat(checkDetail.request_header).language || 'json'}
+                                                        options={{ minimap: { enabled: false } }}
+                                                        editorDidMount={handleSetEditor}
+                                                        showCheck={false}
+                                                        value={EditFormat(checkDetail.request_header).value === 'undefined' ? '' : EditFormat(checkDetail.request_header).value}
+                                                    />
                                                 </div>
                                                 :
                                                 <div className="req-body">
@@ -380,10 +404,15 @@ const TReportDetailResult = (props) => {
                                             resTab === "1"
                                                 ?
                                                 <div className="res-header">
-                                                    {
-                                                        Object.entries(checkDetail || {}).length > 0 &&
-                                                        checkDetail.response_header
-                                                    }
+                                                    <MonacoEditor
+                                                        width="100%"
+                                                        ref={currentRef}
+                                                        language={EditFormat(checkDetail.response_header).language || 'json'}
+                                                        options={{ minimap: { enabled: false } }}
+                                                        editorDidMount={handleSetEditor}
+                                                        showCheck={false}
+                                                        value={EditFormat(checkDetail.response_header).value === 'undefined' ? '' : EditFormat(checkDetail.response_header).value}
+                                                    />
                                                 </div>
                                                 :
                                                 <div className="res-body">

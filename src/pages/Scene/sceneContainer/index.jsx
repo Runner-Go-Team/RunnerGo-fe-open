@@ -15,13 +15,14 @@ import { useTranslation } from 'react-i18next';
 
 
 import SvgClose from '@assets/logo/close';
+import { debounce } from 'lodash';
 
 const SceneContainer = (props) => {
     const { from, onChange } = props;
     const apiConfig_scene = useSelector((store) => store.scene.showApiConfig);
     const apiConfig_case = useSelector((store) => store.case.showApiConfig);
     const apiConfig = from == 'scene' ? apiConfig_scene : apiConfig_case;
-    const id_apis = useSelector((store) => store.scene.id_apis);
+    // const id_apis = useSelector((store) => store.scene.id_apis);
     const api_now_scene = useSelector((store) => store.scene.api_now);
     const api_now_case = useSelector((store) => store.case.api_now);
     const show_assert = useSelector((store) => store.case.show_assert);
@@ -72,12 +73,11 @@ const SceneContainer = (props) => {
         'plan': id_plan_now,
         'auto_plan': id_auto_plan_now,
         'case': id_case_now
-      };
-    
+    };
+
 
     const scene_result = run_res && run_res.filter(item => item.event_id === (id_now_list[from]))[0];
     const response_data = response_list[from];
-
 
 
     useEffect(() => {
@@ -88,47 +88,61 @@ const SceneContainer = (props) => {
         setApiName(api_now.name)
     }, [api_now]);
 
-    const closeApiConfig = () => {
+    const closeApiConfig = (close) => {
         if (from === 'scene') {
-            Bus.$emit('saveSceneApi', api_now, id_apis, () => {
+            Bus.$emit('saveSceneApi', () => {
                 // setDrawer(false)
-                Bus.$emit('saveScene', () => {
-                    dispatch({
-                        type: 'scene/updateApiConfig',
-                        payload: false
-                    })
-                })
+                if (close) {
 
-                dispatch({
-                    type: 'scene/updateApiRes',
-                    payload: null
+                    dispatch({
+                        type: 'scene/updateApiRes',
+                        payload: null
+                    })
+                }
+
+                Bus.$emit('saveScene', () => {
+                    if (close) {
+                        dispatch({
+                            type: 'scene/updateApiConfig',
+                            payload: false
+                        })
+                    }
                 })
             });
         } else if (from === 'case') {
             Bus.$emit('saveCaseApi', () => {
                 // setDrawer(false)
-                Bus.$emit('saveCase', () => {
-                    dispatch({
-                        type: 'case/updateApiConfig',
-                        payload: false
-                    })
-                })
+                if (close) {
 
-                dispatch({
-                    type: 'case/updateApiRes',
-                    payload: null
+                    dispatch({
+                        type: 'case/updateApiRes',
+                        payload: null
+                    })
+                }
+
+                Bus.$emit('saveCase', () => {
+                    if (close) {
+                        dispatch({
+                            type: 'case/updateApiConfig',
+                            payload: false
+                        })
+                    }
                 })
             });
         } else if (from === 'plan') {
-            dispatch({
-                type: 'plan/updateApiRes',
-                payload: null
-            })
+            if (close) {
+                dispatch({
+                    type: 'plan/updateApiRes',
+                    payload: null
+                })
+            }
         } else if (from === 'auto_plan') {
-            dispatch({
-                type: 'auto_plan/updateApiRes',
-                payload: null
-            })
+            if (close) {
+                dispatch({
+                    type: 'auto_plan/updateApiRes',
+                    payload: null
+                })
+            }
         }
     };
 
@@ -140,7 +154,7 @@ const SceneContainer = (props) => {
                         if (apiName.trim().length === 0) {
                             Message('error', t('message.apiNameEmpty'));
                         } else {
-                            closeApiConfig();
+                            closeApiConfig(true);
                         }
                     })} >
                         {/* <SvgClose width="16px" height="16px" /> */}
@@ -160,12 +174,13 @@ const SceneContainer = (props) => {
                         });
                     }}>保存</Button> */}
                     {
-                        (response_data || scene_result) ? <p>{ t('scene.runTime') }：{ response_data ? response_data.response_time : (scene_result ? scene_result.response_time : '') }</p> : <></>
+                        (response_data || scene_result) ? <p>{t('scene.runTime')}：{response_data ? response_data.response_time : (scene_result ? scene_result.response_time : '')}</p> : <></>
                     }
                 </div>
             </div>
         )
     };
+
 
     const onTargetChange = (type, value) => {
         if (from === 'scene') {
@@ -173,13 +188,13 @@ const SceneContainer = (props) => {
                 id: api_now.id,
                 pathExpression: getPathExpressionObj(type),
                 value,
-            }, id_apis);
+            }, closeApiConfig);
         } else if (from === 'case') {
             Bus.$emit('updateCaseApi', {
                 id: api_now.id,
                 pathExpression: getPathExpressionObj(type),
                 value,
-            });
+            }, closeApiConfig);
         }
     }
 

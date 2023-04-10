@@ -151,10 +151,11 @@ const ScenePicker = (props) => {
       })
       dispatch({
         type: 'scene/updateOpenDesc',
-        payload: scene_id_list[0].desc
+        payload: scene_id_list[0].description
       })
 
-      Bus.$emit('addOpenAutoPlanScene', { target_id: scene_id_list[0].target_id }, id_apis_auto_plan, node_config_auto_plan);
+      Bus.$emit('addOpenAutoPlanScene', { target_id: scene_id_list[0].target_id });
+
       dispatch({
         type: 'auto_plan/updateOpenInfo',
         payload: { target_id: scene_id_list[0].id }

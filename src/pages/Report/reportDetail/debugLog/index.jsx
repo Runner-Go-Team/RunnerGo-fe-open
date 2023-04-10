@@ -8,6 +8,9 @@ import { useTranslation } from 'react-i18next';
 import MonacoEditor from '@components/MonacoEditor';
 import { EditFormat } from '@utils';
 import { Explain as SvgExplain } from 'adesign-react/icons';
+import Bus from '@utils/eventBus';
+
+let debug_t = null;
 
 const DebugLog = (props) => {
     const { stopDebug, end, status, tab, plan_id } = props;
@@ -16,28 +19,41 @@ const DebugLog = (props) => {
     const { id: report_id, contrast } = qs.parse(search.slice(1));
     const [log, setLog] = useState([]);
     const select_plan = useSelector((store) => (store.plan.select_plan));
+    const debug_list = useSelector((store) => store.report.debug_list);
     const { t } = useTranslation();
 
-    let debug_t = null;
-
-
     useEffect(() => {
+        let setIntervalList = window.setIntervalList;
+
         if (report_id && plan_id !== 0) {
             getDebug();
             if (end && tab !== '2') {
+                if (setIntervalList) {
+                    let _index = setIntervalList.findIndex(item => item === debug_t);
+                    setIntervalList.splice(_index, 1);
+                    window.setIntervalList = setIntervalList;
+                }
+
                 clearInterval(debug_t);
             } else {
                 debug_t = setInterval(getDebug, 1000);
+
+                if (setIntervalList) {
+                    setIntervalList.push(debug_t);
+                } else {
+                    setIntervalList = [debug_t];
+                }
+                window.setIntervalList = setIntervalList;
             }
-            // if (stopDebug === 'stop' && t) {
-            //     clearInterval(t);
-            // } else {
-            //     t && clearInterval(t);
-            //     stopDebug !== 'stop' && (t = setInterval(getDebug, 1000));
-            // }
-            return () => {
-                clearInterval(debug_t);
+        }
+
+        return () => {
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === debug_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
             }
+            clearInterval(debug_t);
         }
     }, [end, tab, plan_id]);
 
@@ -47,31 +63,23 @@ const DebugLog = (props) => {
         }
     }, [select_plan]);
 
+    useEffect(() => {
+        if (debug_list) {
+            setLog(JSON.stringify(debug_list));
+        }
+    }, [debug_list]);
+
     const getDebug = () => {
         const query = {
             report_id: report_id ? report_id : JSON.parse(contrast)[select_plan].report_id,
             team_id: localStorage.getItem('team_id'),
             plan_id,
         };
-        fetchDebugLog(query).subscribe({
-            next: (res) => {
-                const { data } = res;
-                setLog(JSON.stringify(data));
-                // let _data = [];
-                // data && data.forEach(item => {
-                //     const { request_body, request_header, response_body, response_header, type } = item;
-                //     if (type === 'api') {
-                //         _data.push(`请求头: ${request_header}`);
-                //         _data.push(`请求体: ${request_body}`);
-                //         _data.push(`响应头: ${response_header}`);
-                //         _data.push(`响应体: ${response_body}`);
-                //     }
-                // })
-                // setLog(_data);
-            },
-            err: (err) => {
-            }
-        })
+        
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "stress_report_debug",
+            param: JSON.stringify(query)
+        }))
     }
 
     const [editorDom, setEditorDom] = useState(null);

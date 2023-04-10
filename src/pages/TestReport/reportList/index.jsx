@@ -20,6 +20,9 @@ import { useTranslation } from 'react-i18next';
 import { Table, Pagination } from '@arco-design/web-react';
 import { useSelector } from 'react-redux';
 
+import Bus from '@utils/eventBus';
+
+let report_t = null;
 
 const TestReportList = () => {
     const navigate = useNavigate();
@@ -40,6 +43,7 @@ const TestReportList = () => {
     const language = useSelector((d) => d.user.language);
     const theme = useSelector((d) => d.user.theme);
     const refreshList = useSelector((store) => store.auto_report.refreshList);
+    const auto_report_list = useSelector((store) => store.auto_report.auto_report_list);
 
     const modeList = {
         '1': t('autoReport.taskMode.1'),
@@ -108,19 +112,75 @@ const TestReportList = () => {
         });
     }
 
-    let report_t = null;
-
     useEffect(() => {
         getReportData();
+        let setIntervalList = window.setIntervalList;
+
         if (report_t) {
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === report_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
+            }
             clearInterval(report_t);
         }
         report_t = setInterval(getReportData, 1000);
 
+        if (setIntervalList) {
+            setIntervalList.push(report_t);
+        } else {
+            setIntervalList = [report_t];
+        }
+        window.setIntervalList = setIntervalList;
+
         return () => {
+
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === report_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
+            }
+
             clearInterval(report_t);
         }
     }, [keyword, currentPage, pageSize, startTime, endTime, taskType, status, sort, language]);
+
+
+    useEffect(() => {
+        if (auto_report_list) {
+            const { auto_plan_report_list, total } = auto_report_list;
+            if (auto_plan_report_list && auto_plan_report_list.length === 0 && currentPage > 1) {
+                pageChange(currentPage - 1, pageSize);
+            }
+            setTotal(total);
+            const list = auto_plan_report_list ? auto_plan_report_list.map(item => {
+                const { task_type, status, start_time_sec, end_time_sec, report_id, plan_name, run_user_name, task_mode, test_case_run_order, scene_run_order } = item;
+
+                return {
+                    ...item,
+                    plan_name:
+                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{plan_name}</div>}>
+                            <div className='ellipsis'>{plan_name}</div>
+                        </Tooltip>,
+                    run_user_name:
+                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{run_user_name}</div>}>
+                            <div className='ellipsis'>{run_user_name}</div>
+                        </Tooltip>,
+                    status: statusList[status],
+                    canDelete: status === 2,
+                    task_type: taskList[task_type],
+                    task_mode: modeList[task_mode],
+                    scene_run_order: sceneRunList[scene_run_order],
+                    test_case_run_order: caseRunList[test_case_run_order],
+                    start_time_sec: dayjs(start_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                    end_time_sec: status === 1 ? '-' : dayjs(end_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                    handle: <HandleContent report_id={report_id} />
+                }
+            }) : [];
+
+            setReportList(list);
+        }
+    }, [auto_report_list, currentPage, pageSize]);
 
     const getReportData = () => {
         const params = {
@@ -134,45 +194,11 @@ const TestReportList = () => {
             status,
             sort
         };
-        fetchReportList(params).subscribe({
-            next: (res) => {
-                const { data: { auto_plan_report_list, total } } = res;
-                if (auto_plan_report_list && auto_plan_report_list.length === 0 && currentPage > 1) {
-                    pageChange(currentPage - 1, pageSize);
-                }
-                setTotal(total);
-                // let bool = false;
-                const list = auto_plan_report_list ? auto_plan_report_list.map(item => {
-                    const { task_type, status, start_time_sec, end_time_sec, report_id, plan_name, run_user_name, task_mode, test_case_run_order, scene_run_order } = item;
 
-                    return {
-                        ...item,
-                        plan_name:
-                            <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{plan_name}</div>}>
-                                <div className='ellipsis'>{plan_name}</div>
-                            </Tooltip>,
-                        run_user_name:
-                            <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{run_user_name}</div>}>
-                                <div className='ellipsis'>{run_user_name}</div>
-                            </Tooltip>,
-                        status: statusList[status],
-                        canDelete: status === 2,
-                        task_type: taskList[task_type],
-                        task_mode: modeList[task_mode],
-                        scene_run_order: sceneRunList[scene_run_order],
-                        test_case_run_order: caseRunList[test_case_run_order],
-                        start_time_sec: dayjs(start_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                        end_time_sec: status === 1 ? '-' : dayjs(end_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                        handle: <HandleContent report_id={report_id} />
-                    }
-                }) : [];
-                // if (!bool) {
-                //     report_t && clearInterval(report_t);
-                // }
-
-                setReportList(list);
-            }
-        })
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "auto_report_list",
+            param: JSON.stringify(params)
+        }))
     }
 
     const columns = [

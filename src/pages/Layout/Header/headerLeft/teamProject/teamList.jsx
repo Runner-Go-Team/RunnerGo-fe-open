@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '@arco-design/web-react';
 import cn from 'classnames';
+import Bus from '@utils/eventBus';
 const { Collapse, CollapseItem } = CollapseComponent;
 
 const TeamList = (props) => {
@@ -105,6 +106,18 @@ const TeamList = (props) => {
             type: 'dashboard/updateRefresh',
             payload: !refresh
           })
+
+          // 告知websocket服务, 切换团队了
+          const params = {
+            team_id,
+            token: localStorage.getItem('runnergo-token')
+          }
+
+          Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "user_switch_team",
+            param: JSON.stringify(params)
+          }))
+
         } else if (code === 20032) {
           Modal.confirm({
             title: t('modal.teamValid'),
@@ -117,7 +130,7 @@ const TeamList = (props) => {
                     className="check-team-valid-modal"
                     content={
                       <div>
-                        <img style={{ width: '150px', height: '150px' }} src="your qrcode oss url" />
+                        <img style={{ width: '150px', height: '150px' }} src="https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/qrcode/tuanduiguoqi.png" />
                       </div>
                     }
                   >

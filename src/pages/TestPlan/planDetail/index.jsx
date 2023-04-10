@@ -108,21 +108,23 @@ const TestPlanDetail = () => {
             id: api_now.id,
             pathExpression: getPathExpressionObj(type),
             value,
-        }, id_apis);
+        }, closeApiConfig);
     };
 
-    const closeApiConfig = () => {
-        Bus.$emit('saveAutoPlanApi', api_now, () => {
+    const closeApiConfig = (close) => {
+        Bus.$emit('saveAutoPlanApi', () => {
             // setDrawer(false)
             Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_plan_scene, id, 'auto_plan', () => {
-                dispatch({
-                    type: 'auto_plan/updateApiConfig',
-                    payload: false
-                })
-                dispatch({
-                    type: 'auto_plan/updateApiRes',
-                    payload: null
-                })
+                if (close) {
+                    dispatch({
+                        type: 'auto_plan/updateApiConfig',
+                        payload: false
+                    })
+                    dispatch({
+                        type: 'auto_plan/updateApiRes',
+                        payload: null
+                    })
+                }
             })
         }, id_apis);
     };
@@ -135,7 +137,7 @@ const TestPlanDetail = () => {
                         if (apiName.trim().length === 0) {
                             Message('error', t('message.apiNameEmpty'));
                         } else {
-                            closeApiConfig();
+                            closeApiConfig(true);
                         }
                     })} >
                         {/* <SvgClose width="16px" height="16px" /> */}

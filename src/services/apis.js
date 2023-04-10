@@ -54,6 +54,14 @@ export const fetchChangeSort = (
 export const fetchImportApi = (
     params
 ) => ajax('post', '/management/api/v1/target/save_import_api', 'json', false, params);
+// 获取apipost项目接口
+export const fetchApipostApi = (
+    params
+) => ajax('post', '/management/api/get_sync_data_list', 'json', false, params);
+// 确认同步apipost接口
+export const fetchAsyncData = (
+    params
+) => ajax('post', '/management/api/do_sync_data', 'json', false, params);
 
 
 

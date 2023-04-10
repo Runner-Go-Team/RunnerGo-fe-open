@@ -6,11 +6,16 @@ import { Search as SvgSearch } from 'adesign-react/icons';
 import { useTranslation } from 'react-i18next';
 import { fetchGetMachine, fetchUpdateMachine } from '@services/machine';
 import { debounce } from 'lodash';
+import { useSelector } from 'react-redux';
 import SvgEmpty from '@assets/img/empty';
+import Bus from '@utils/eventBus';
+
+let machine_t = null;
 
 const Machine = () => {
     const { t } = useTranslation();
 
+    const _machine_list = useSelector((store) => store.machine.machine_list);
     const column = [
         {
             title: t('column.machine.machineID'),
@@ -61,6 +66,24 @@ const Machine = () => {
         }
     ];
 
+    useEffect(() => {
+        if (_machine_list) {
+            const { machine_list, total } = _machine_list;
+            setTableData(machine_list.map(item => {
+                const { cpu_usage, mem_usage, disk_usage, status, server_type, id } = item;
+                return {
+                    ...item,
+                    cpu_usage: `${cpu_usage}%`,
+                    mem_usage: `${mem_usage}%`,
+                    disk_usage: `${disk_usage}%`,
+                    server_type: serverTypeList[server_type],
+                    handle: status === 1 ? <p className='stop-btn' onClick={() => updateMachine(id, 2)}>{t('btn.machineStop')}</p> : <p className='start-btn' onClick={() => updateMachine(id, 1)}>{t('btn.machineStart')}</p>
+                }
+            }));
+            setTotal(total);
+        }
+    }, [_machine_list]);
+
 
     const [tableData, setTableData] = useState([]);
     const [total, setTotal] = useState(0);
@@ -82,34 +105,34 @@ const Machine = () => {
             name: searchWord
         };
 
-        fetchGetMachine(params).subscribe({
-            next: (res) => {
-                const { data: { machine_list, total } } = res;
-                setTableData(machine_list.map(item => {
-                    const { cpu_usage, mem_usage, disk_usage, status, server_type, id } = item;
-                    return {
-                        ...item,
-                        cpu_usage: `${cpu_usage}%`,
-                        mem_usage: `${mem_usage}%`,
-                        disk_usage: `${disk_usage}%`,
-                        server_type: serverTypeList[server_type],
-                        handle: status === 1 ? <p className='stop-btn' onClick={() => updateMachine(id, 2)}>{t('btn.machineStop')}</p> : <p className='start-btn' onClick={() => updateMachine(id, 1)}>{t('btn.machineStart')}</p>
-                    }
-                }));
-                setTotal(total);
-            }
-        })
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "stress_machine_list",
+            param: JSON.stringify(params)
+        }))
     }
 
     let machine_t = null;
 
     useEffect(() => {
+        let setIntervalList = window.setIntervalList;
+
         getTableData();
         machine_t = setInterval(() => {
             getTableData();
         }, 5000);
+        if (setIntervalList) {
+            setIntervalList.push(machine_t);
+        } else {
+            setIntervalList = [machine_t];
+        }
+        window.setIntervalList = setIntervalList;
 
         return () => {
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === machine_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
+            }
             clearInterval(machine_t);
         }
     }, [currentPage, pageSize, searchWord, sort]);
@@ -183,7 +206,7 @@ const Machine = () => {
                     total={total}
                     showJumper
                     sizeCanChange
-                    pageSize={pageSize} 
+                    pageSize={pageSize}
                     current={currentPage}
                     sizeOptions={[5, 10, 15, 20]}
                     onChange={(page, pageSize) => pageChange(page, pageSize)}

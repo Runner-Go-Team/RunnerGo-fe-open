@@ -14,7 +14,6 @@ const useOpenTabs = () => {
     const dispatch = useDispatch();
     const opens = useSelector((store) => store?.opens);
     const workspace = useSelector((store) => store?.workspace);
-    const { desktop_proxy } = useSelector((store) => store?.desktopProxy);
     const { open_apis, open_api_now } = opens;
     const { CURRENT_PROJECT_ID } = workspace;
 

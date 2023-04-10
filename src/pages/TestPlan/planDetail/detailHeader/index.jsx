@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './index.less';
-import { Button, Input, Message, Modal, Tooltip, Dropdown } from 'adesign-react';
+import { Button, Message, Modal, Tooltip, Dropdown } from 'adesign-react';
 import {
     Left as SvgLeft,
     Save as SvgSave,
@@ -12,7 +12,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 // import TaskConfig from '../taskConfig';
 import { cloneDeep } from 'lodash';
 import Bus from '@utils/eventBus';
-import { fetchTPlanDetail, fetchUpdateTPlan } from '@services/auto_plan';
+import { fetchUpdateTPlan } from '@services/auto_plan';
 import dayjs from 'dayjs';
 import SvgSendEmail from '@assets/icons/SendEmail';
 import SvgStop from '@assets/icons/Stop';
@@ -22,6 +22,9 @@ import InvitationModal from '@modals/ProjectInvitation';
 import { fetchEmailList } from '@services/plan';
 import { fetchTPlanEmailList } from '@services/auto_plan';
 import TestTaskConfig from '@modals/TestTaskConfig';
+import { Input } from '@arco-design/web-react';
+
+let auto_plan_task_t = null;
 
 const TPlanDetailHeader = (props) => {
     const { onGetDetail } = props;
@@ -29,31 +32,40 @@ const TPlanDetailHeader = (props) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [preSet, setPreSet] = useState(false);
+    const [mode, setMode] = useState(1);
     const [mode_conf, setModeConf] = useState({});
+    const [task_type, setTaskType] = useState(1);
+    const [cron_expr, setCronExpr] = useState('');
+    const open_plan = useSelector((store) => store.auto_plan.open_plan);
     const task_config = useSelector((store) => store.auto_plan.task_config);
     const email_list = useSelector((store) => store.auto_plan.email_list);
+    const auto_plan_detail = useSelector((store) => store.auto_plan.auto_plan_detail);
+    const is_open = useSelector((store) => store.websocket.is_open);
+
     const { id: plan_id } = useParams();
     const [planDetail, setPlanDetail] = useState({});
     const [showEmail, setShowEmail] = useState(false);
     const [emailList, setEmailList] = useState([]);
-
-    let auto_plan_task_t = null;
+    const [planName, setPlanName] = useState('');
+    const [planDesc, setPlanDesc] = useState('');
 
 
     useEffect(() => {
-        getReportDetail();
+        if (is_open) {
+            getReportDetail();
+        }
+        return () => {
+            clearInterval(auto_plan_task_t);
+        }
+    }, [is_open]);
 
+
+    const loopFetchGet = () => {
+        clearInterval(auto_plan_task_t);
         auto_plan_task_t = setInterval(() => {
             getReportDetail();
         }, 1000);
-
-        console.log(auto_plan_task_t);
-
-        return () => {
-            console.log(auto_plan_task_t);
-            clearInterval(auto_plan_task_t);
-        }
-    }, [plan_id, auto_plan_task_t]);
+    }
 
     useEffect(() => {
         getEmailList();
@@ -72,20 +84,32 @@ const TPlanDetailHeader = (props) => {
         })
     }
 
+    useEffect(() => {
+        if (auto_plan_detail) {
+            const { status, plan_name, remark } = auto_plan_detail;
+
+            setPlanName(plan_name);
+            setPlanDesc(remark);
+            setPlanDetail(auto_plan_detail);
+            onGetDetail(auto_plan_detail);
+
+            if (status === 1) {
+                clearInterval(auto_plan_task_t);
+            } else if (status === 2) {
+                loopFetchGet();
+            }
+        }
+    }, [auto_plan_detail]);
+
     const getReportDetail = () => {
         const query = {
             team_id: localStorage.getItem('team_id'),
             plan_id,
         };
-        fetchTPlanDetail(query).subscribe({
-            next: (res) => {
-                const { data } = res;
-                const { status } = data;
-
-                setPlanDetail(data);
-                onGetDetail(data);
-            }
-        })
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "auto_plan_detail",
+            param: JSON.stringify(query)
+        }))
     }
 
 
@@ -94,7 +118,6 @@ const TPlanDetailHeader = (props) => {
         '2': <p style={{ color: 'var(--run-green)' }}>{t('plan.running')}</p>,
     }
 
-
     const changePlanInfo = (type, value) => {
         if (value.trim().length === 0 && type === 'plan_name') {
             Message('error', t('message.PlanNameEmpty'));
@@ -102,8 +125,8 @@ const TPlanDetailHeader = (props) => {
         }
         let params = {
             team_id: localStorage.getItem('team_id'),
-            plan_name: planDetail.plan_name,
-            remark: planDetail.remark,
+            plan_name: planName,
+            remark: planDesc,
             plan_id,
         };
         params[type] = value;
@@ -135,153 +158,7 @@ const TPlanDetailHeader = (props) => {
             <div className='detail-header'>
                 <div className='detail-header-left'>
                     <Button onClick={() => {
-                        if (is_changed_case) {
-                            Modal.confirm({
-                                title: t('modal.tips'),
-                                content: t('modal.caseNotSave'),
-                                okText: t('btn.save'),
-                                cancelText: t('btn.cancel'),
-                                diyText: t('btn.notSave'),
-                                onOk: () => {
-                                    // 保存当前场景
-                                    Bus.$emit('saveCase', () => {
-                                        Message('success', t('message.saveSuccess'));
-
-                                        dispatch({
-                                            type: 'case/updateIsChanged',
-                                            payload: false
-                                        })
-
-                                        dispatch({
-                                            type: 'case/updateRunRes',
-                                            payload: null,
-                                        })
-                                        dispatch({
-                                            type: 'case/updateRunningScene',
-                                            payload: '',
-                                        })
-                                        dispatch({
-                                            type: 'case/updateNodes',
-                                            payload: [],
-                                        });
-                                        dispatch({
-                                            type: 'case/updateEdges',
-                                            payload: [],
-                                        })
-                                        dispatch({
-                                            type: 'case/updateCloneNode',
-                                            payload: [],
-                                        })
-                                        dispatch({
-                                            type: 'case/updateSuccessEdge',
-                                            payload: [],
-                                        });
-                                        dispatch({
-                                            type: 'case/updateFailedEdge',
-                                            payload: [],
-                                        });
-                                        dispatch({
-                                            type: 'case/updateApiConfig',
-                                            payload: false,
-                                        })
-                                        dispatch({
-                                            type: 'case/updateBeautify',
-                                            payload: false
-                                        })
-                                        if (is_changed) {
-                                            Modal.confirm({
-                                                title: t('modal.tips'),
-                                                content: t('modal.caseNotSave'),
-                                                okText: t('btn.save'),
-                                                cancelText: t('btn.cancel'),
-                                                diyText: t('btn.notSave'),
-                                                onOk: () => {
-                                                    // 保存当前场景
-                                                    Bus.$emit('saveSceneAutoPlan', nodes_auto_plan, edges_auto_plan, id_apis_auto_plan, node_config_auto_plan, open_scene, plan_id, () => {
-                                                        Message('success', t('message.saveSuccess'));
-                                                        navigate('/Tplan/list');
-                                                    });
-
-                                                },
-                                                onCancel: () => {
-                                                    // 取消弹窗
-
-                                                },
-                                                onDiy: () => {
-                                                    navigate('/Tplan/list');
-                                                }
-                                            })
-                                        } else {
-                                            navigate('/Tplan/list');
-                                        }
-                                    });
-
-                                },
-                                onCancel: () => {
-                                    // 取消弹窗
-
-                                },
-                                onDiy: () => {
-
-                                    // 不保存, 直接跳转
-                                    if (is_changed) {
-                                        Modal.confirm({
-                                            title: t('modal.tips'),
-                                            content: t('modal.caseNotSave'),
-                                            okText: t('btn.save'),
-                                            cancelText: t('btn.cancel'),
-                                            diyText: t('btn.notSave'),
-                                            onOk: () => {
-                                                // 保存当前场景
-                                                Bus.$emit('saveSceneAutoPlan', nodes_auto_plan, edges_auto_plan, id_apis_auto_plan, node_config_auto_plan, open_scene, plan_id, () => {
-                                                    Message('success', t('message.saveSuccess'));
-                                                    navigate('/Tplan/list');
-                                                });
-
-                                            },
-                                            onCancel: () => {
-                                                // 取消弹窗
-
-                                            },
-                                            onDiy: () => {
-                                                // 不保存, 直接跳转
-                                                navigate('/Tplan/list');
-                                            }
-                                        })
-                                    } else {
-                                        navigate('/Tplan/list');
-                                    }
-                                }
-                            })
-                        } else {
-                            if (is_changed) {
-                                Modal.confirm({
-                                    title: t('modal.tips'),
-                                    content: t('modal.caseNotSave'),
-                                    okText: t('btn.save'),
-                                    cancelText: t('btn.cancel'),
-                                    diyText: t('btn.notSave'),
-                                    onOk: () => {
-                                        // 保存当前场景
-                                        Bus.$emit('saveSceneAutoPlan', nodes_auto_plan, edges_auto_plan, id_apis_auto_plan, node_config_auto_plan, open_scene, plan_id, () => {
-                                            Message('success', t('message.saveSuccess'));
-                                            navigate('/Tplan/list');
-                                        });
-
-                                    },
-                                    onCancel: () => {
-                                        // 取消弹窗
-
-                                    },
-                                    onDiy: () => {
-                                        // 不保存, 直接跳转
-                                        navigate('/Tplan/list');
-                                    }
-                                })
-                            } else {
-                                navigate('/Tplan/list');
-                            }
-                        }
+                        navigate('/Tplan/list');
                     }} >
                         <SvgLeft />
                     </Button>
@@ -294,7 +171,7 @@ const TPlanDetailHeader = (props) => {
                                     content={<div>{planDetail.plan_name}</div>}
                                 >
                                     <div style={{ marginLeft: '8px' }}>
-                                        <Input disabled={planDetail.status === 2} value={planDetail.plan_name} onBlur={(e) => changePlanInfo('plan_name', e.target.value)} />
+                                        <Input maxLength={30} disabled={planDetail.status === 2} value={planDetail.plan_name} onBlur={(e) => changePlanInfo('plan_name', e.target.value)} onChange={(e) => setPlanName(e)} />
                                     </div>
                                 </Tooltip>
                             </p>
@@ -316,7 +193,7 @@ const TPlanDetailHeader = (props) => {
                             </div>
                             <div className='item'>
                                 {t('plan.planDesc')}:
-                                <Input disabled={planDetail.status === 2} value={planDetail.remark} onBlur={(e) => changePlanInfo('remark', e.target.value)} />
+                                <Input maxLength={50} disabled={planDetail.status === 2} value={planDetail.remark} onBlur={(e) => changePlanInfo('remark', e.target.value)} onChange={(e) => setPlanDesc(e)} />
                             </div>
                         </div>
                     </div>
@@ -366,6 +243,7 @@ const TPlanDetailHeader = (props) => {
                                                 Message('success', t('message.runSuccess'))
                                                 navigate('/Treport/list');
                                             } else if (task_type === 2) {
+                                                getReportDetail();
                                                 Message('success', t('message.runTiming'));
                                             }
                                         }
@@ -390,7 +268,6 @@ const TPlanDetailHeader = (props) => {
             {
                 showTaskConfig && <TestTaskConfig plan_id={plan_id} onCancel={() => setTaskConfig(false)} />
             }
-
         </>
     )
 };

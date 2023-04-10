@@ -17,152 +17,54 @@ import { useParams } from 'react-router-dom';
 import { global$ } from '../global';
 import { v4 } from 'uuid';
 
-const usePlan = () => {
+const useAutoPlan = () => {
     const dispatch = useDispatch();
+    const nodes = useSelector((store) => store.auto_plan.nodes);
+    const edges = useSelector((store) => store.auto_plan.edges);
+    const id_apis = useSelector((store) => store.auto_plan.id_apis);
+    const node_config = useSelector((store) => store.auto_plan.node_config);
+    const open_plan_scene = useSelector((store) => store.auto_plan.open_plan_scene);
+    const api_now = useSelector((store) => store.auto_plan.api_now);
 
-    const savePreConfig = ({ task_type, mode, cron_expr, mode_conf }, callback, plan_id) => {
-        const params = {
-            team_id: localStorage.getItem('team_id'),
-            task_type,
-            mode,
-            cron_expr,
-            mode_conf,
-            plan_id
-        };
-
-        fetchCreatePre(params).subscribe({
-            next: (res) => {
-
-                callback && callback();
-            }
-        })
-    };
-
-    const createPlan = ({ name, remark, taskType }, callback) => {
-        const params = {
-            team_id: localStorage.getItem('team_id'),
-            plan_name: name,
-            remark,
-            task_type: taskType
-        };
-
-        fetchCreatePlan(params).subscribe({
-            next: (res) => {
-                const { code, data: { plan_id } } = res;
-
-                if (code === 0) {
-                    dispatch({
-                        type: 'plan/updateRefreshList',
-                        payload: true
-                    })
-                }
-                callback && callback(code, plan_id);
-            }
-        })
-    }
-
-    const createTPlan = ({ name, remark }, callback) => {
-        const params = {
-            team_id: localStorage.getItem('team_id'),
-            plan_name: name,
-            remark,
-        };
-
-        fetchCreateTPlan(params).subscribe({
-            next: (res) => {
-                const { code, data: { plan_id } } = res;
-
-                callback && callback(code, plan_id);
-            }
-        })
-    }
-
-    const deletePlan = (id, callback) => {
-        const params = {
-            team_id: localStorage.getItem('team_id'),
-            plan_id: id,
-        };
-        fetchDeletePlan(params).subscribe({
-            next: (res) => {
-                const { code } = res;
-                if (code === 0) {
-                    dispatch({
-                        type: 'plan/updateRefreshList',
-                        payload: true
-                    })
-                }
-                callback && callback(code);
-            }
-        })
-    };
-
-    const deleteTPlan = (id, callback) => {
-        const params = {
-            team_id: localStorage.getItem('team_id'),
-            plan_id: id,
-        };
-        fetchDeleteTPlan(params).subscribe({
-            next: (res) => {
-                const { code } = res;
-                if (code === 0) {
-                    dispatch({
-                        type: 'plan/updateRefreshList',
-                        payload: true
-                    })
-                }
-                callback && callback(code);
-            }
-        })
-    };
-
-
-    const addOpenPlanScene = (id, id_apis, node_config) => {
-        // dispatch({
-        //     type: 'plan/updateOpenScene',
-        //     payload: {},
-        // })
-        // dispatch({
-        //     type: 'plan/updateOpenScene',
-        //     payload: null,
-        // })
+    const addOpenAutoPlanScene = (id) => {
         dispatch({
-            type: 'plan/updateRunRes',
+            type: 'auto_plan/updateRunRes',
             payload: null,
         })
         dispatch({
-            type: 'plan/updateRunningScene',
+            type: 'auto_plan/updateRunningScene',
             payload: ''
         })
         dispatch({
-            type: 'plan/updateNodes',
+            type: 'auto_plan/updateNodes',
             payload: [],
         });
         dispatch({
-            type: 'plan/updateEdges',
+            type: 'auto_plan/updateEdges',
             payload: [],
         });
         dispatch({
-            type: 'plan/updateCloneNode',
+            type: 'auto_plan/updateCloneNode',
             payload: [],
         });
         dispatch({
-            type: 'plan/updateSuccessEdge',
+            type: 'auto_plan/updateSuccessEdge',
             payload: [],
         });
         dispatch({
-            type: 'plan/updateFailedEdge',
+            type: 'auto_plan/updateFailedEdge',
             payload: [],
         });
         dispatch({
-            type: 'plan/updateApiConfig',
+            type: 'auto_plan/updateApiConfig',
             payload: false,
         })
         dispatch({
-            type: 'plan/updateBeautify',
+            type: 'auto_plan/updateBeautify',
             payload: false
-        }) 
+        })
         dispatch({
-            type: 'plan/updateRunStatus',
+            type: 'auto_plan/updateRunStatus',
             payload: 'finish',
         })
         const { target_id } = id;
@@ -224,20 +126,19 @@ const usePlan = () => {
                         idList.push(id);
 
                     });
-                    Bus.$emit('addNewPlanApi', idList, id_apis, node_config, apiList, configList, 'plan');
+                    Bus.$emit('addNewAutoPlanApi', idList, apiList, configList);
                 }
 
 
                 dispatch({
-                    type: 'plan/updateOpenScene',
+                    type: 'auto_plan/updateOpenScene',
                     payload: data || { target_id, },
                 })
             }
         })
     };
 
-
-    const addNewPlanApi = (id, id_apis, node_config, api = {}, config = {}, from, callback) => {
+    const addNewAutoPlanApi = (id, api = {}, config = {}, callback) => {
 
         let newApi = cloneDeep(api);
 
@@ -266,38 +167,24 @@ const usePlan = () => {
 
             new_apis[newApi.id] = newApi;
 
-            if (from === 'scene') {
-                dispatch({
-                    type: 'scene/updateIdApis',
-                    payload: new_apis,
-                })
-            } else {
-                dispatch({
-                    type: 'plan/updateIdApis',
-                    payload: new_apis,
-                })
-            }
+            dispatch({
+                type: 'auto_plan/updateIdApis',
+                payload: new_apis,
+            })
         }
 
         for (let i = 0; i < _config.length; i++) {
 
             new_nodes[_id[i]] = _config[i];
 
-            if (from === 'scene') {
-                dispatch({
-                    type: 'scene/updateNodeConfig',
-                    payload: new_nodes,
-                })
-            } else {
-                dispatch({
-                    type: 'plan/updateNodeConfig',
-                    payload: new_nodes,
-                })
-            }
+            dispatch({
+                type: 'auto_plan/updateNodeConfig',
+                payload: new_nodes,
+            })
 
         }
 
-        callback && callback(new_apis, new_nodes);
+        callback && callback();
     };
 
     // function getNodesByLevel(nodes, edges) {
@@ -313,7 +200,7 @@ const usePlan = () => {
     //     return arr;
     // }
 
-    const saveScenePlan = (nodes, edges, id_apis, node_config, open_scene, id, from, callback) => {
+    const saveSceneAutoPlan = (id) => {
         const get_pre = (id, edges) => {
             const pre_list = [];
             edges && edges.forEach(item => {
@@ -357,80 +244,50 @@ const usePlan = () => {
             }
         }) : null;
 
-        const from_list = {
-            'scene': 1,
-            'plan': 2,
-            'auto_plan': 3,
-            'case': 4
-        }
-
         const params = {
-            scene_id: open_scene.target_id ? open_scene.target_id : open_scene.scene_id,
+            scene_id: open_plan_scene.target_id ? open_plan_scene.target_id : open_plan_scene.scene_id,
             team_id: localStorage.getItem('team_id'),
             version: 1,
             nodes: _nodes,
             edges,
-            source: 2,
+            source: 3,
             plan_id: id,
             // nodes_round: getNodesByLevel(_nodes, edges ? edges : [])
             // multi_level_nodes: JSON.stringify(formatSceneData(nodes, edges))
             // songsong: formatSceneData(nodes, edges),
         };
 
-        console.log(params);
-
         Bus.$emit('sendWsMessage', JSON.stringify({
             route_url: "save_scene_flow",
             param: JSON.stringify(params)
         }))
 
+        // fetchCreateSceneFlow(params).subscribe({
+        //     next: (res) => {
+        //         const { code } = res;
+        //         if (code === 0) {
+        //             callback && callback();
+        //         }
+        //     }
+        // })
+    };
+
+    const saveAutoPlanApi = (callback) => {
+        // const _id_apis = cloneDeep(id_apis);
+        // api_now.is_changed = false;
+        // const id = api_now.id;
+        // delete api_now['id'];
+        // _id_apis[id] = api_now;
+
+        // dispatch({
+        //     type: 'auto_plan/updateIdApis',
+        //     payload: _id_apis,
+        // });
+
         callback && callback();
     };
 
-
-    const copyPlan = (data, callback) => {
-        const { name, remark } = data;
-        // 1. 创建计划
-        // 2. 查询原计划的菜单列表
-        // 3. 遍历查询每个目录/场景详情
-        // 4. 遍历创建每个目录/场景
-        // 5. 遍历查询每个场景流程详情
-        // 6. 遍历创建每个场景流程详情
-        // 7. 创建任务配置
-
-        const params = {
-            name,
-            remark,
-            team_id: localStorage.getItem('team_id'),
-        };
-        fetchCreatePlan(params).pipe(
-            concatMap((res) => {
-                const { data: { plan_id } } = res;
-                const query = {
-                    page: 1,
-                    size: 100,
-                    team_id: localStorage.getItem('team_id'),
-                    source: 2,
-                    plan_id,
-                };
-
-                return getSceneList$(query, 'plan');
-            }),
-            concatMap((res) => {
-                const { data: { targets } } = res;
-                targets.forEach(item => {
-                    const _item = cloneDeep(item);
-                    delete _item['target_id'];
-                    delete _item['created_user_id'];
-                    delete _item['recent_user_id'];
-
-
-                })
-            })
-        ).subscribe();
-    };
-
-    const updatePlanApi = (data, id_apis, callback) => {
+    const updateAutoPlanApi = (data, callback) => {
         const { id, pathExpression, value } = data;
 
         set(id_apis[id], pathExpression, value);
@@ -522,24 +379,34 @@ const usePlan = () => {
         let _api_now = cloneDeep(id_apis[id]);
         _api_now.id = id;
         dispatch({
-            type: 'plan/updateApiNow',
+            type: 'auto_plan/updateApiNow',
             payload: _api_now
         });
-
         dispatch({
-            type: 'plan/updateIdApis',
+            type: 'auto_plan/updateIdApis',
             payload: id_apis
         });
-
         dispatch({
             type: 'scene/updateRefreshBox',
             payload: v4()
         })
 
+
         callback && callback();
     }
 
-    const dragUpdatePlan = ({ ids, targetList, id }) => {
+
+    const addNewAutoPlanControl = (id) => {
+        const new_nodes = cloneDeep(node_config);
+        new_nodes[id] = {};
+
+        dispatch({
+            type: 'auto_plan/updateNodeConfig',
+            payload: new_nodes,
+        })
+    };
+
+    const dragUpdateAutoPlan = ({ ids, targetList, id }) => {
 
 
         const _ids = cloneDeep(ids);
@@ -568,143 +435,50 @@ const usePlan = () => {
         fetchChangeSort(params).subscribe({
             next: (res) => {
                 global$.next({
-                    action: 'RELOAD_LOCAL_PLAN',
+                    action: 'RELOAD_LOCAL_AUTO_PLAN',
                     id,
                 });
             }
         });
+        return;
     };
 
-    const importSceneList = (ids, plan_id, from, callback) => {
-        let from_list = {
-            'plan': 2,
-            'auto_plan': 3
-        }
+    const runAutoPlan = (id, callback) => {
+        console.log(id);
         const params = {
             team_id: localStorage.getItem('team_id'),
-            plan_id,
-            target_id_list: ids,
-            source: from_list[from]
+            plan_id: id
         };
-
-        fetchImportScene(params).subscribe({
+        fetchRunAutoPlan(params).subscribe({
             next: (res) => {
-                const { code, data: { scenes } } = res;
-                if (code === 0) {
-                    if (from === 'plan') {
-                        global$.next({
-                            action: 'RELOAD_LOCAL_PLAN',
-                            id: plan_id,
-                        });
-                    } else if (from === 'auto_plan') {
-                        global$.next({
-                            action: 'RELOAD_LOCAL_AUTO_PLAN',
-                            id: plan_id,
-                        });
-                    }
-                    callback && callback(scenes, code);
-                }
+                const { code, data } = res;
+                callback && callback(code, data);
             }
         })
-    };
+    }
 
-    const addNewPlanControl = (id, node_config = {}) => {
-        const new_nodes = cloneDeep(node_config);
-        new_nodes[id] = {};
-
-        dispatch({
-            type: 'plan/updateNodeConfig',
-            payload: new_nodes,
-        })
-    };
-
-    const importSceneApi = (ids, from) => {
-        const query = {
-            team_id: localStorage.getItem('team_id'),
-            target_ids: ids,
-        };
-        fetchApiDetail(QueryString.stringify(query, { indices: false })).subscribe({
-            next: (res) => {
-                const { code, data: { targets } } = res;
-                // 1. 添加nodes节点
-                // 2. 添加id_apis映射
-                if (from === 'plan') {
-                    dispatch({
-                        type: 'plan/updateImportNode',
-                        payload: targets,
-                    })                    
-                } else if (from === 'auto_plan') {
-                    dispatch({
-                        type: 'auto_plan/updateImportNode',
-                        payload: targets,
-                    })
-                }
-
-            }
-        })
-    };
-
-    const savePlanApi = (id_apis, api_now, callback) => {
-        // const _id_apis = cloneDeep(id_apis);
-        // api_now.is_changed = false;
-        // const id = api_now.id;
-        // delete api_now['id'];
-        // _id_apis[id] = api_now;
-
-        // dispatch({
-        //     type: 'plan/updateIdApis',
-        //     payload: _id_apis,
-        // });
-
-        callback && callback();
-    };
-
-
-
-    const runPlan = (plan_id, callback) => {
+    const stopAutoPlan = (id, callback) => {
         const params = {
-            plan_id,
             team_id: localStorage.getItem('team_id'),
+            plan_id: id
         };
-        fetchRunPlan(params).subscribe({
+        fetchStopAutoPlan(params).subscribe({
             next: (res) => {
                 const { code } = res;
                 callback && callback(code);
             }
         })
-    };
+    }
 
-
-    const stopPlan = (plan_id, callback) => {
-        const params = {
-            team_id: localStorage.getItem('team_id'),
-            plan_ids: [plan_id],
-        };
-        fetchStopPlan(params).subscribe({
-            next: (res) => {
-                const { code } = res;
-                callback && callback(code);
-            }
-        })
-    };
-
-    useEventBus('savePreConfig', savePreConfig);
-    useEventBus('createPlan', createPlan);
-    useEventBus('createTPlan', createTPlan);
-    useEventBus('deletePlan', deletePlan);
-    useEventBus('deleteTPlan', deleteTPlan);
-    useEventBus('addOpenPlanScene', addOpenPlanScene);
-    useEventBus('addNewPlanApi', addNewPlanApi);
-    useEventBus('saveScenePlan', saveScenePlan);
-    useEventBus('copyPlan', copyPlan);
-    useEventBus('dragUpdatePlan', dragUpdatePlan);
-    useEventBus('importSceneList', importSceneList);
-    useEventBus('addNewPlanControl', addNewPlanControl);
-    useEventBus('importSceneApi', importSceneApi);
-    useEventBus('savePlanApi', savePlanApi);
-    useEventBus('updatePlanApi', updatePlanApi);
-    useEventBus('runPlan', runPlan);
-    useEventBus('stopPlan', stopPlan);
+    useEventBus('addOpenAutoPlanScene', addOpenAutoPlanScene, [id_apis, node_config]);
+    useEventBus('addNewAutoPlanApi', addNewAutoPlanApi, [id_apis, node_config]);
+    useEventBus('saveSceneAutoPlan', saveSceneAutoPlan, [nodes, edges, id_apis, node_config, open_plan_scene]);
+    useEventBus('saveAutoPlanApi', saveAutoPlanApi, [api_now, id_apis]);
+    useEventBus('updateAutoPlanApi', updateAutoPlanApi, [id_apis]);
+    useEventBus('addNewAutoPlanControl', addNewAutoPlanControl, [node_config]);
+    useEventBus('dragUpdateAutoPlan', dragUpdateAutoPlan);
+    useEventBus('runAutoPlan', runAutoPlan);
+    useEventBus('stopAutoPlan', stopAutoPlan);
 };
 
-export default usePlan;
+export default useAutoPlan;

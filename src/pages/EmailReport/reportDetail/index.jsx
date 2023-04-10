@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 
 const { Tabs, TabPan } = TabComponent;
 
+let report_detail_t = null;
 
 const ReportDetail = (props) => {
 	const { data: configData, stopDebug, onStatus, status, onRunTime, plan_id } = props;
@@ -27,7 +28,6 @@ const ReportDetail = (props) => {
 	// const [runTime, setRunTime] = useState(0);
 	const select_plan = useSelector((store) =>(store.plan.select_plan));
 	
-	let report_detail_t = null;
 
     useEffect(() => {
 		if (report_id) {

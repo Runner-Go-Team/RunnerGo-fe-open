@@ -6,22 +6,23 @@ import { isArray, isString, isUndefined, isFunction } from 'lodash';
 import contextMenus from '../contextMenus';
 import contextFuncs from '../contextFuncs';
 
-const handleMenuItemClick = ({ module, action, target_id, props, open_scene, from, plan_id }) => {
+const handleMenuItemClick = ({ module, action, target_id, props, open_scene, from, plan_id, running_scene }) => {
     const funcModule = contextFuncs[module][action];
     if (isFunction(funcModule) === false) {
         Message('error', '无效操作');
         return;
     }
-    funcModule(target_id, props, open_scene, from, plan_id);
+    funcModule(target_id, props, open_scene, from, plan_id, running_scene);
 };
 
 export const handleShowContextMenu = (props, e, params) => {
+    console.log(props, e, params);
 
     let target_id = null;
     if (params) {
         target_id = params;
     }
-    const { open_scene, from, plan_id, menu } = props;
+    const { open_scene, from, plan_id, menu, running_scene } = props;
 
     let module = '';
     if (isUndefined(params)) {
@@ -39,6 +40,7 @@ export const handleShowContextMenu = (props, e, params) => {
     }
     const contextMenuRef = React.createRef(null);
     const menuList = menu?.[module];
+    console.log(menu, menuList);
 
     const HoverMenu = (
         <div>
@@ -47,7 +49,7 @@ export const handleShowContextMenu = (props, e, params) => {
                     if (action === '') {
                         return;
                     }
-                    handleMenuItemClick.call(null, { module, action, target_id, props, open_scene, from, plan_id });
+                    handleMenuItemClick.call(null, { module, action, target_id, props, open_scene, from, plan_id, running_scene });
                     contextMenuRef?.current?.hideMenu();
                 }}
                 style={{ width: 170 }}

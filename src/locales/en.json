@@ -218,7 +218,9 @@
         "getCode": "Get code",
         "nextStep": "Next step (1/2)",
         "next": "Next step",
-        "contactMe": "contact us"
+        "contactMe": "contact us",
+        "estimateVum": "Estimated VUM",
+        "asyncApipostApi": "Async Apipost Api"
     },
     "message": {
         "saveSuccess": "Saving succeeded!",
@@ -325,7 +327,7 @@
         "sendError": "Send failed!",
         "copyClipboard": "Successfully copied content to clipboard",
         "varRepeat": "Variable name duplication!",
-        "apiWeight": "Api weight range is 0-100!",
+        "apiWeight": "Api weight range is 1-100!",
         "lineError": "The input number can only be greater than or equal to 50 and less than 100",
         "shiftDelFolder": "Are you sure you want to delete this directory completely? Will not be recoverable",
         "restoreFolder": "Are you sure you want to restore the directory?",
@@ -368,7 +370,13 @@
         "emptyData": "There are required items not filled in!",
         "submitSuccess": "Submitted successfully!",
         "plsInputTrueEmail": "Please enter the correct mailbox format!",
-        "apiNameEmpty": "Interface name cannot be empty"
+        "apiNameEmpty": "Interface name cannot be empty",
+        "cloneSuccess": "Clone succeeded!",
+        "runningSceneCanNotDelete": "The current scene is running, and cannot be deleted!",
+        "runningSceneCanNotHandle": "Not editable during debugging!",
+        "userLogout": "Your account has been logged in elsewhere, and RunnerGo does not support multi-platform login. If it is not your own operation, please change your password in a timely manner",
+        "asyncSuccess": "Sync successful!",
+        "selectEmpty": "You have not selected any content!"
     },
     "modal": {
         "look": "Be careful",

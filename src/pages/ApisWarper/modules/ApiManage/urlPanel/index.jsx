@@ -9,7 +9,6 @@ import {
 } from 'adesign-react/icons';
 import { API_METHODS } from '@constants/methods';
 import isFunction from 'lodash/isFunction';
-import useApi from '../../../hooks/useApi';
 import UrlInput from './urlInput';
 import { useSelector, useDispatch } from 'react-redux';
 import Bus from '@utils/eventBus';
@@ -29,7 +28,6 @@ const MenuItem = Menu.Item;
 const ApiURLPanel = (props) => {
     const { data, onChange, tempData, from = 'apis' } = props;
     const { t } = useTranslation();
-    const { apiSend } = useApi();
     const { id } = useParams();
     const [btnName, setBtnName] = useState(t('btn.send'));
     const [showEnv, setShowEnv] = useState(false);

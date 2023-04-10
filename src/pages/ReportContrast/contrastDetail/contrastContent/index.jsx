@@ -412,6 +412,7 @@ const ContrastContent = (props) => {
                 data: data[0] ? data[0].x_data : [],
                 axisLabel: {
                     color: theme === 'dark' ? '#fff' : '#000',
+                    rotate: 30
                 },
             },
             yAxis: {

@@ -14,6 +14,11 @@ export const FOLDER_MENUS = [
     //     // tips: `${ctrl} + V`,
     // },
     {
+        type: 'createApi',
+        title: i18next.t('apis.createApi'),
+        action: 'createApi'
+    },
+    {
         type: 'modifyFolder',
         title: i18next.t('apis.editFolder'),
         action: 'modifyFolder',

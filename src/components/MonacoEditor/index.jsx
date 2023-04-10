@@ -62,6 +62,7 @@ const MonacoEditor = (props) => {
     editorDidMount = undefined,
     ref,
     lineNumbers = 'on', // 关闭编辑器行号
+    showCheck = true // 是否校验并提示数据格式问题
   } = props;
 
 
@@ -97,10 +98,15 @@ const MonacoEditor = (props) => {
   loader.config({ paths: { vs: fileurl } });
 
   const JeditorDidMount = (editorJ) => {
+    editorJ.trigger('anyString', 'editor.action.formatDocument'); // 自动格式化代码
     seteditor(editorJ);
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      validate: false,
+      validate: showCheck,
+      allowComments: true,
+      comments: true,
+      trailingCommas: true,
     });
+
   };
   const mEditor = useMemo(() => {
     return (

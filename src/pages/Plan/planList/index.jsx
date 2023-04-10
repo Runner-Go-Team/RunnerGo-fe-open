@@ -25,6 +25,8 @@ import SvgStop from '@assets/icons/Stop';
 
 import { DatePicker, Table, Pagination } from '@arco-design/web-react';
 
+let plan_t = null;
+
 const PlanList = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -34,9 +36,9 @@ const PlanList = () => {
     const [pageSize, setPageSize] = useState(parseInt(localStorage.getItem('plan_pagesize')) || 10);
     const [currentPage, setCurrentPage] = useState(parseInt(sessionStorage.getItem('plan_page')) || 1);
 
-    const [taskType, setTaskType] = useState('');
-    const [taskMode, setTaskMode] = useState('');
-    const [status, setStatus] = useState('');
+    const [taskType, setTaskType] = useState(0);
+    const [taskMode, setTaskMode] = useState(0);
+    const [status, setStatus] = useState(0);
     const [sort, setSort] = useState(0);
 
     const [startTime, setStartTime] = useState(0);
@@ -44,6 +46,8 @@ const PlanList = () => {
 
     const dispatch = useDispatch();
     const refreshList = useSelector((store) => store.plan.refreshList);
+
+    const plan_list = useSelector((store) => store.plan.plan_list);
 
     const language = useSelector((d) => d.user.language);
     const theme = useSelector((d) => d.user.theme);
@@ -156,7 +160,7 @@ const PlanList = () => {
                                     id: plan_id,
                                 });
                                 navigate(`/plan/detail/${plan_id}`);
-                            }, 100);
+                            }, 200);
                         }} />
                     </div>
                 </Tooltip>
@@ -196,7 +200,6 @@ const PlanList = () => {
         )
     }
 
-    let plan_t = null;
     useEffect(() => {
         getPlanList();
         if (plan_t) {
@@ -204,10 +207,64 @@ const PlanList = () => {
         }
         plan_t = setInterval(getPlanList, 1000);
 
+        let setIntervalList = window.setIntervalList;
+        if (setIntervalList) {
+            setIntervalList.push(plan_t);
+        } else {
+            setIntervalList = [plan_t];
+        }
+        window.setIntervalList = setIntervalList;
+
         return () => {
+            let setIntervalList = window.setIntervalList;
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === plan_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
+            }
             clearInterval(plan_t);
         }
     }, [refreshList, keyword, currentPage, pageSize, startTime, endTime, taskMode, taskType, status, sort, language]);
+
+
+    useEffect(() => {
+        if (plan_list) {
+            const { plans, total } = plan_list;
+            if (plans && plans.length === 0 && currentPage > 1) {
+                pageChange(currentPage - 1, pageSize);
+            }
+            setTotal(total);
+
+            const planList = plans ? plans.map(item => {
+                const { task_type, task_mode, status, created_time_sec, updated_time_sec, plan_name, created_user_name, remark } = item;
+
+                return {
+                    ...item,
+                    plan_name:
+                        <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{plan_name}</div>}>
+                            <div className='ellipsis'>{plan_name}</div>
+                        </Tooltip>,
+                    created_user_name:
+                        <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{created_user_name}</div>}>
+                            <div className='ellipsis'>{created_user_name}</div>
+                        </Tooltip>,
+                    remark:
+                        <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{remark}</div>}>
+                            <div className='ellipsis'>{remark}</div>
+                        </Tooltip>,
+                    task_type: taskList[task_type],
+                    task_mode: modeList[task_mode],
+                    status: statusList[status],
+                    canDelete: status === 1,
+                    created_time_sec: dayjs(created_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                    updated_time_sec: dayjs(updated_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                    handle: <HandleContent data={item} />
+                }
+            }) : [];
+            setPlanList(planList);
+        }
+    }, [plan_list, currentPage, pageSize])
+
 
     const getPlanList = () => {
         const query = {
@@ -222,49 +279,11 @@ const PlanList = () => {
             status,
             sort
         };
-        fetchPlanList(query).subscribe({
-            next: (res) => {
-                const { data: { plans, total } } = res;
-                if (plans && plans.length === 0 && currentPage > 1) {
-                    pageChange(currentPage - 1, pageSize);
-                }
-                setTotal(total);
-                // let bool = false;
-                const planList = plans ? plans.map(item => {
-                    const { task_type, task_mode, status, created_time_sec, updated_time_sec, plan_name, created_user_name, remark } = item;
-                    // if (status === 1) {
-                    //     bool = true;
-                    // }
-                    return {
-                        ...item,
-                        plan_name:
-                            <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{plan_name}</div>}>
-                                <div className='ellipsis'>{plan_name}</div>
-                            </Tooltip>,
-                        created_user_name:
-                            <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{created_user_name}</div>}>
-                                <div className='ellipsis'>{created_user_name}</div>
-                            </Tooltip>,
-                        remark:
-                            <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{remark}</div>}>
-                                <div className='ellipsis'>{remark}</div>
-                            </Tooltip>,
-                        task_type: taskList[task_type],
-                        task_mode: modeList[task_mode],
-                        status: statusList[status],
-                        canDelete: status === 1,
-                        created_time_sec: dayjs(created_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                        updated_time_sec: dayjs(updated_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                        handle: <HandleContent data={item} />
-                    }
-                }) : [];
-                // if (!bool) {
-                //     plan_t && clearInterval(plan_t);
-                // }
-                setPlanList(planList);
 
-            }
-        })
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "stress_plan_list",
+            param: JSON.stringify(query)
+        }))
     }
 
 
@@ -443,17 +462,17 @@ const PlanList = () => {
                 }
                 onChange={(a, sort, filter, c) => {
                     if (!filter.hasOwnProperty('task_mode')) {
-                        setTaskMode('');
+                        setTaskMode(0);
                     } else {
                         setTaskMode(filter.task_mode[0]);
                     }
                     if (!filter.hasOwnProperty('task_type')) {
-                        setTaskType('');
+                        setTaskType(0);
                     } else {
                         setTaskType(filter.task_type[0]);
                     }
                     if (!filter.hasOwnProperty('status')) {
-                        setStatus('');
+                        setStatus(0);
                     } else {
                         setStatus(filter.status[0]);
                     }
@@ -498,7 +517,7 @@ const PlanList = () => {
                                     id: plan_id,
                                 });
                                 navigate(`/plan/detail/${plan_id}`);
-                            }, 100);
+                            }, 200);
                         },
                     };
                 }}

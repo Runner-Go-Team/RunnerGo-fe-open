@@ -9,7 +9,6 @@ import envsReducer from './envs';
 import opensReducer from './opens';
 import consoleReducer from './console';
 import workspaceReducer from './workspace';
-import desktopProxyReducer from './desktopProxy';
 import conflictReducer from './conflict';
 import runnerReducer from './runner';
 import plansReducer from './plan';
@@ -19,6 +18,9 @@ import tPlansReducer from './auto_plan';
 import caseReducer from './case';
 import reportReducer from './report';
 import autoReportReducer from './auto_report';
+import webSocketReducer from './websocket';
+import machineReducer from './machine';
+
 
 const reducers = combineReducers({
     apis: apisReducer,
@@ -29,7 +31,6 @@ const reducers = combineReducers({
     envs: envsReducer,
     opens: opensReducer,
     workspace: workspaceReducer,
-    desktopProxy: desktopProxyReducer,
     conflict: conflictReducer,
     console: consoleReducer,
     runner: runnerReducer,
@@ -39,7 +40,9 @@ const reducers = combineReducers({
     auto_plan: tPlansReducer,
     case: caseReducer,
     report: reportReducer,
-    auto_report: autoReportReducer
+    auto_report: autoReportReducer,
+    websocket: webSocketReducer,
+    machine: machineReducer
 });
 
 export default reducers;

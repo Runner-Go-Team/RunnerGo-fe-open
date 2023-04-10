@@ -8,8 +8,8 @@ import { fetchFolderDetail } from '@services/apis';
 import { global$ } from '@hooks/useGlobal/global';
 import i18next from 'i18next';
 
-export const createApi = ({ params, props }) => {
-    Bus.$emit('addOpenItem', { type: 'api', pid: params.target_id });
+export const createApi = ({ target_id }) => {
+    Bus.$emit('addOpenItem', { type: 'api', pid: target_id });
 };
 export const createText = ({ props, params }) => {
     Bus.$emit('addOpenItem', { type: 'doc', pid: params.target_id });

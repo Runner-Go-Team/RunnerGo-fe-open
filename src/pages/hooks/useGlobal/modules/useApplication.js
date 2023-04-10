@@ -26,6 +26,7 @@ import Bus, { useEventBus } from '@utils/eventBus';
 import { useNavigate } from 'react-router-dom';
 import { getSceneList$ } from '@rxUtils/scene';
 import { getAutoPlanList$ } from '@rxUtils/auto_plan';
+import { RD_WEBSOCKET_URL } from '@config';
 
 import { fetchDashBoardInfo, fetchRunningPlan } from '@services/dashboard';
 import { fetchApiList } from '@services/apis';
@@ -42,6 +43,7 @@ const useProject = () => {
     const userInfo = useSelector((store) => store.user.userInfo);
     const apiDatas = useSelector((store) => store.apis.apiDatas);
     const location = useLocation();
+    const ws = useSelector((store) => store.websocket.ws);
     // const userData = useSelector((store) => store.dashboard.userData);
 
     // 展示团队列表
@@ -116,6 +118,37 @@ const useProject = () => {
         }
     };
 
+    // 推送websocket消息
+    const sendWsMessage = (data) => {
+        if (ws) {
+            if (ws.WEB_SOCKET.readyState === WebSocket.OPEN) {
+                ws.Send(data);
+            } else {
+                ws.reconnect(`${RD_WEBSOCKET_URL}/websocket/index`);
+            }
+        }
+    }
+
+    // 因为某些原因, 断开websocket连接
+    const closeWs = () => {
+        console.log(ws);
+        if (ws) {
+            ws.close();
+        }
+    }
+
+    // 初始化websocket连接
+    const initWebSocket = () => {
+        const webSocket2 = new WebSocket2();
+        webSocket2.connect(`${RD_WEBSOCKET_URL}/websocket/index`);
+
+        dispatch({
+            type: 'websocket/updateWs',
+            payload: webSocket2
+        })
+    }
+
+
     // 应用程序初始化 第一次打开应用程序
     const handleInitApplication = () => {
 
@@ -172,6 +205,7 @@ const useProject = () => {
                 // getPackageInfo();
                 getTeamMemberList();
                 Bus.$emit('getTeamList');
+                Bus.$emit('initWebSocket');
                 Bus.$emit('reloadOpens');
                 const team_id = localStorage.getItem('team_id');
                 return of(team_id).pipe(
@@ -355,6 +389,9 @@ const useProject = () => {
     useEventBus('getTeamList', getTeamList);
     useEventBus('getRunningPlan', getRunningPlan);
     useEventBus('getUserConfig', getUserConfig);
+    useEventBus('sendWsMessage', sendWsMessage, [ws]);
+    useEventBus('closeWs', closeWs, [ws]);
+    useEventBus('initWebSocket', initWebSocket);
 
     useEffect(() => {
 

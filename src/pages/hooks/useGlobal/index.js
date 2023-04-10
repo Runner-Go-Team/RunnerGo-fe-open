@@ -5,7 +5,6 @@ import useEnvs from './modules/useEnvs';
 import useOpens from './modules/useOpens';
 import useOpenTabs from './modules/useOpenTabs';
 import useAutoImport from './modules/useAutoImport';
-import useDesktopProxy from './modules/useDesktopProxy';
 import useDescription from './modules/useDescription';
 import useWebsocket from './modules/useWebsocket';
 import useUser from './modules/useUser';
@@ -13,6 +12,7 @@ import useApplication from './modules/useApplication';
 import useScene from './modules/useScene';
 import usePlan from './modules/usePlan';
 import useCase from './modules/useCase';
+import useAutoPlan from './modules/useAutoPlan';
 import { global$ } from './global';
 // import { useLocation } from 'react-router-dom';
 
@@ -28,12 +28,12 @@ const useGlobal = (props) => {
     useOpens();
     useOpenTabs();
     useAutoImport();
-    useDesktopProxy();
     useDescription();
     useWebsocket();
     useScene(),
     useCase(),
-        usePlan(),
+    useAutoPlan(),
+    usePlan(),
         useEffect(() => {
             const token = localStorage.getItem('runnergo-token');
             // const uuid = localStorage.getItem('uuid')

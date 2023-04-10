@@ -353,6 +353,10 @@ const CreateScene = (props) => {
                     Message('error', t('message.SceneNameEmpty'));
                     return;
                 }
+                dispatch({
+                    type: 'plan/updateHideConfig',
+                    payload: false
+                })
                 if (isPlainObject(scene)) {
                     Bus.$emit(
                         'updateSceneItem',
@@ -483,8 +487,9 @@ const CreateScene = (props) => {
                                         type: 'auto_plan/updateOpenInfo',
                                         payload: data
                                     })
-                                    Bus.$emit('addOpenAutoPlanScene', data, id_apis_auto_plan, node_config_auto_plan);
+                                    Bus.$emit('addOpenAutoPlanScene', data);
                                 }
+                                Bus.$emit('clearFetchSceneState');
                                 onCancel();
                             }
                         }

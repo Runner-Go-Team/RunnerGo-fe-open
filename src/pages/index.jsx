@@ -10,6 +10,8 @@ import './reset.less';
 import './index.less';
 import './public.less';
 import './geetest.less';
+import './apipost.less';
+import './arco.less';
 import '../locales';
 
 import App from './App';

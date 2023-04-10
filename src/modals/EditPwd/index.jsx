@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Input } from '@arco-design/web-react';
 import LogoRight from '@assets/logo/info_right';
 import SvgClose from '@assets/logo/close';
+import Bus from '@utils/eventBus';
 
 
 
@@ -52,6 +53,7 @@ const EditPwd = (props) => {
                 const { code } = res;
                 if (code === 0) {
                     Message('success', t('message.updateSuccess'));
+                    Bus.$emit('closeWs');
                     localStorage.removeItem('runnergo-token');
                     localStorage.removeItem('expire_time_sec');
                     localStorage.removeItem('team_id');
@@ -67,9 +69,9 @@ const EditPwd = (props) => {
     }
 
     useEffect(() => {
-        if (newPwd.trim().length > 0 && 
-            confirmPwd.trim().length > 0 && 
-            newPwd === confirmPwd && 
+        if (newPwd.trim().length > 0 &&
+            confirmPwd.trim().length > 0 &&
+            newPwd === confirmPwd &&
             !newPwdError && !newEmpty && !confirmEmpty && !confirmEmpty) {
             setSubmitState(false);
         } else {

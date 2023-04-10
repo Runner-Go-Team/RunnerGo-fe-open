@@ -4,6 +4,7 @@ import { Button } from 'adesign-react';
 import { Left as SvgLeft } from 'adesign-react/icons';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Tooltip } from '@arco-design/web-react';
 
 const ContrastHeader = (props) => {
     const { name } = props;
@@ -15,11 +16,15 @@ const ContrastHeader = (props) => {
                 <Button onClick={() => navigate('/report/list')}>
                     <SvgLeft />
                 </Button>
-                <p>{ t('report.contrastReport') }</p>
+                <p>{t('report.contrastReport')}</p>
             </div>
             <div className="name">
                 {
-                    name.map((item, index) => <p>{ item }&nbsp; { index !== name.length - 1 && '|' } &nbsp;</p>)
+                    name.map((item, index) => <div className="name-item">
+                        <Tooltip content={item}>
+                            <p className="label">{item}</p>
+                        </Tooltip>
+                        &nbsp; {index !== name.length - 1 && '|'} &nbsp;</div>)
                 }
             </div>
         </div>

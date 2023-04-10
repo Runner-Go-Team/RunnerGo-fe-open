@@ -14,7 +14,6 @@ import i18next from 'i18next';
 import { getUserConfig$ } from '@rxUtils/user';
 import { global$ } from '@hooks/useGlobal/global';
 
-
 export const rxAjax = (
     method = 'GET',
     url,
@@ -89,6 +88,7 @@ export const rxAjax = (
                     localStorage.removeItem('open_plan');
                     localStorage.removeItem("package_info");
                     window.location.href = '/#/login';
+                    Bus.$emit('closeWs');
                 }
 
                 catchError((error) => {

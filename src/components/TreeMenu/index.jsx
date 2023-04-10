@@ -7,6 +7,8 @@ import useListData from './menuTree/hooks/useListData';
 import useSceneData from './menuTree/hooks/useSceneData';
 import usePlanData from './menuTree/hooks/usePlanData';
 import useAutoPlanData from './menuTree/hooks/useAutoPlanData';
+import { Button } from 'adesign-react';
+import { useTranslation } from 'react-i18next';
 
 
 import FilterBox from './filterBox';
@@ -19,11 +21,13 @@ import { MenuWrapper } from './style';
 
 const TreeMenu = (props) => {
     const { type = 'apis', getSceneName, onChange, taskType } = props;
+    const { t } = useTranslation();
     const [filterParams, setFilterParams] = useState({ key: '', status: 'all' }); // 接口过滤参数
     const [selectedKeys, setSelectedKeys] = useState([]);
     const [modalType, setModalType] = useState('');
     const [modalProps, setModalProps] = useState(undefined);
     const [showRecycle, setShowRecycle] = useState(false);
+
     const treeRef = useRef(null);
 
     const listDataParam = useListData({ filterParams, selectedKeys });
@@ -75,9 +79,9 @@ const TreeMenu = (props) => {
                 type={type}
                 // getSceneName={getSceneName}
             />
-            { type === 'apis' && <RecycleBin /> }
+            {/* { type === 'apis' && <RecycleBin /> } */}
         </MenuWrapper>
     )
 };
 
-export default TreeMenu;
+export default TreeMenu; 

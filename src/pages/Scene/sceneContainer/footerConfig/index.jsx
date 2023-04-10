@@ -55,6 +55,19 @@ const FooterConfig = (props) => {
 
     const init_scene = init_list[from];
 
+    const run_status_scene = useSelector((store) => store.scene.run_status);
+    const run_status_case = useSelector((store) => store.case.run_status);
+    const run_status_plan = useSelector((store) => store.plan.run_status);
+    const run_status_auto_plan = useSelector((store) => store.auto_plan.run_status);
+
+    const run_status_list = {
+        'scene': run_status_scene,
+        'plan': run_status_plan,
+        'auto_plan': run_status_auto_plan,
+        'case': run_status_case
+    }
+    const run_status = run_status_list[from];
+
     const initScene = () => {
         if (from === 'scene') {
             dispatch({
@@ -163,6 +176,11 @@ const FooterConfig = (props) => {
         <div className='footer-config'>
             {showControl && <div className='add-controller'>
                 <div className='wait' onClick={() => {
+                    if (run_status === 'running') {
+                        Message('error', t('message.runningSceneCanNotHandle'));
+                        return;
+                    }
+
                     if (from === 'scene') {
                         dispatch({
                             type: 'scene/updateAddNew',
@@ -190,6 +208,11 @@ const FooterConfig = (props) => {
                     <span>{t('scene.waitControl')}</span>
                 </div>
                 <div className='condition' onClick={() => {
+                    if (run_status === 'running') {
+                        Message('error', t('message.runningSceneCanNotHandle'));
+                        return;
+                    }
+
                     if (from === 'scene') {
                         dispatch({
                             type: 'scene/updateAddNew',
@@ -220,6 +243,11 @@ const FooterConfig = (props) => {
             }
             <div className='common-config' style={{ 'min-width': from === 'plan' ? '360px' : '288px' }}>
                 <div className='config-item' onClick={() => {
+                    if (run_status === 'running') {
+                        Message('error', t('message.runningSceneCanNotHandle'));
+                        return;
+                    }
+
                     if (from === 'scene') {
                         dispatch({
                             type: 'scene/updateAddNew',
@@ -248,12 +276,27 @@ const FooterConfig = (props) => {
                     <span>{t('scene.createApi')}</span>
                 </div>
                 <span className='line'></span>
-                <div className='config-item' onClick={() => setShowControl(!showControl)}>
+                <div className='config-item' onClick={() => {
+                    if (run_status === 'running') {
+                        Message('error', t('message.runningSceneCanNotHandle'));
+                        return;
+                    }
+
+                    setShowControl(!showControl);
+                }}>
                     <SvgAdd />
                     <span>{t('scene.createControl')}</span>
                 </div>
                 <span className='line'></span>
-                <div className='config-item' onClick={() => onChange('api', true)}>
+                <div className='config-item' onClick={() => {
+                    if (run_status === 'running') {
+                        Message('error', t('message.runningSceneCanNotHandle'));
+                        return;
+                    }
+                    initScene();
+
+                    onChange('api', true);
+                }}>
                     <SvgDownload />
                     <span>{t('scene.importApi')}</span>
                 </div>

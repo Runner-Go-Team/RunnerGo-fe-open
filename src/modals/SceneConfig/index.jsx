@@ -213,7 +213,6 @@ const SceneConfig = (props) => {
 
         const client = new OSS(OSS_Config);
         const { name: res_name, url } = await client.put(
-            // `kunpeng/test/${v4()}.${nameType}`,
             "your oss bucket url",
             files[0].originFile,
         )

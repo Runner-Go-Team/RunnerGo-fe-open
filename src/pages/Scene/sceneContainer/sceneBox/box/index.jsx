@@ -9,7 +9,6 @@ import {
 import {
     Button,
     Collapse as Col,
-    Input,
     // Select,
     Dropdown,
     Message,
@@ -17,7 +16,7 @@ import {
 } from 'adesign-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Handle, MarkerType } from 'react-flow-renderer';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isNumber } from 'lodash';
 import Bus from '@utils/eventBus';
 import SvgSuccess from '@assets/logo/success';
 import SvgFailed from '@assets/logo/failed';
@@ -26,7 +25,7 @@ import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { fetchTeamPackage } from '@services/pay';
 import SvgMode from './mode';
-import { Select } from '@arco-design/web-react';
+import { Select, Input } from '@arco-design/web-react';
 
 
 const { CollapseItem, Collapse } = Col;
@@ -80,6 +79,8 @@ const Box = (props) => {
     const select_box_scene = useSelector((store) => store.scene.select_box);
     const scene_hide = useSelector((store) => store.scene.hide_drop);
     const id_now_scene = useSelector((store) => store.scene.id_now);
+    const refresh_box = useSelector((store) => store.scene.refresh_box);
+    const run_status_scene = useSelector((store) => store.scene.run_status);
 
 
     const nodes_plan = useSelector((store) => store.plan.nodes);
@@ -96,6 +97,7 @@ const Box = (props) => {
     const select_box_plan = useSelector((store) => store.plan.select_box);
     const plan_hide = useSelector((store) => store.plan.hide_drop);
     const id_now_plan = useSelector((store) => store.plan.id_now);
+    const run_status_plan = useSelector((store) => store.plan.run_status);
 
 
     const nodes_auto_plan = useSelector((store) => store.auto_plan.nodes);
@@ -112,8 +114,7 @@ const Box = (props) => {
     const select_box_auto_plan = useSelector((store) => store.auto_plan.select_box);
     const auto_plan_hide = useSelector((store) => store.auto_plan.hide_drop);
     const id_now_auto_plan = useSelector((store) => store.auto_plan.id_now);
-
-
+    const run_status_auto_plan = useSelector((store) => store.auto_plan.run_status);
 
     const nodes_case = useSelector((store) => store.case.nodes);
     const id_apis_case = useSelector((store) => store.case.id_apis);
@@ -129,7 +130,7 @@ const Box = (props) => {
     const select_box_case = useSelector((store) => store.case.select_box);
     const case_hide = useSelector((store) => store.case.hide_drop);
     const id_now_case = useSelector((store) => store.case.id_now);
-
+    const run_status_case = useSelector((store) => store.case.run_status);
 
     const nodes_list = {
         'scene': nodes_scene,
@@ -245,8 +246,17 @@ const Box = (props) => {
     const id_now = id_now_list[from];
 
 
+    const run_status_list = {
+        'scene': run_status_scene,
+        'plan': run_status_plan,
+        'auto_plan': run_status_auto_plan,
+        'case': run_status_case
+    }
+    const run_status = run_status_list[from];
+
+
     const theme = useSelector((store) => store.user.theme);
-    const [showApi, setShowApi] = useState(true);
+    const [isHide, setIsHide] = useState(false);
     const [showMode, setShowMode] = useState(false);
     const [showModeTime, setShowModeTime] = useState(false);
     // 1. 默认模式
@@ -273,13 +283,14 @@ const Box = (props) => {
     useEffect(() => {
         const my_config = node_config[id];
         if (my_config) {
-            const { weight, error_threshold, response_threshold, request_threshold, percent_age, mode } = my_config;
-            weight && setWeight(weight);
-            error_threshold && setError(error_threshold);
-            response_threshold && setRes(response_threshold);
-            request_threshold && setReq(request_threshold);
-            percent_age && setPercent(percent_age);
-            mode && setMode(mode);
+            const { weight, error_threshold, response_threshold, request_threshold, percent_age, mode, is_hide } = my_config;
+            isNumber(weight) && setWeight(weight);
+            isNumber(error_threshold) && setError(error_threshold);
+            isNumber(response_threshold) && setRes(response_threshold);
+            isNumber(request_threshold) && setReq(request_threshold);
+            isNumber(percent_age) && setPercent(percent_age);
+            isNumber(mode) && setMode(mode === 0 ? 1 : mode);
+            setIsHide(!!is_hide);
         }
     }, [node_config]);
 
@@ -301,7 +312,7 @@ const Box = (props) => {
 
     useEffect(() => {
         if (open_scene) {
-            if (to_loading && running_scene === open_scene.scene_id) {
+            if (to_loading && running_scene === (open_scene.scene_id ? open_scene.scene_id : open_scene.target_id)) {
                 setStatus('running');
             }
         }
@@ -324,27 +335,7 @@ const Box = (props) => {
                     } else {
                         Bus.$emit('cloneNode', id, nodes, node_config, id_apis, open_scene, from);
                     }
-                    if (from === 'scene') {
-                        dispatch({
-                            type: 'scene/updateIsChanged',
-                            payload: true
-                        })
-                    } else if (from === 'plan') {
-                        dispatch({
-                            type: 'plan/updateIsChanged',
-                            payload: true
-                        })
-                    } else if (from === 'auto_plan') {
-                        dispatch({
-                            type: 'auto_plan/updateIsChanged',
-                            payload: true
-                        })
-                    } else if (from === 'case') {
-                        dispatch({
-                            type: 'case/updateIsChanged',
-                            payload: true
-                        })
-                    }
+
                     refDropdown.current.setPopupVisible(false);
 
                 }}>{t('scene.copyApi')}</p>
@@ -354,10 +345,7 @@ const Box = (props) => {
                             type: 'scene/updateDeleteNode',
                             payload: id,
                         });
-                        dispatch({
-                            type: 'scene/updateIsChanged',
-                            payload: true
-                        })
+
                         if (id_now === id) {
                             dispatch({
                                 type: 'scene/updateApiConfig',
@@ -369,10 +357,7 @@ const Box = (props) => {
                             type: 'plan/updateDeleteNode',
                             payload: id,
                         });
-                        dispatch({
-                            type: 'plan/updateIsChanged',
-                            payload: true
-                        })
+
                         if (id_now === id) {
                             dispatch({
                                 type: 'plan/updateApiConfig',
@@ -384,10 +369,7 @@ const Box = (props) => {
                             type: 'auto_plan/updateDeleteNode',
                             payload: id,
                         });
-                        dispatch({
-                            type: 'auto_plan/updateIsChanged',
-                            payload: true
-                        })
+
                         if (id_now === id) {
                             dispatch({
                                 type: 'auto_plan/updateApiConfig',
@@ -399,10 +381,7 @@ const Box = (props) => {
                             type: 'case/updateDeleteNode',
                             payload: id,
                         });
-                        dispatch({
-                            type: 'case/updateIsChanged',
-                            payload: true
-                        })
+
                         if (id_now === id) {
                             dispatch({
                                 type: 'case/updateApiConfig',
@@ -451,7 +430,7 @@ const Box = (props) => {
             // const successEdge = [];
             // const Node = [];
 
-            edges.forEach(item => {
+            edges && edges.forEach(item => {
                 if (item.source === id && !success_edge.includes(item.id)) {
                     success_edge.push(item.id);
                     temp = true;
@@ -488,7 +467,7 @@ const Box = (props) => {
             }
         } else if (status === 'failed') {
 
-            edges.forEach(item => {
+            edges && edges.forEach(item => {
                 if (item.source === id && !failed_edge.includes(item.id)) {
                     failed_edge.push(item.id);
                     temp = true;
@@ -535,8 +514,11 @@ const Box = (props) => {
 
                 </div>
                 <div className='box-item-right'>
-                    <p className='drop-down' onClick={(e) => setShowApi(!showApi)}>
-                        {showApi ? <SvgDown /> : <SvgRight />}
+                    <p className='drop-down' onClick={(e) => {
+                        onTargetChange('is_hide', !isHide);
+                        setIsHide(!isHide);
+                    }}>
+                        {!isHide ? <SvgDown /> : <SvgRight />}
                     </p>
                     <Dropdown
                         ref={refDropdown}
@@ -551,6 +533,12 @@ const Box = (props) => {
 
                             e.preventDefault();
                             e.stopPropagation();
+
+                            if (run_status === 'running') {
+                                Message('error', t('message.runningSceneCanNotHandle'));
+                                return;
+                            }
+
                             setSelectBox(true);
 
 
@@ -676,31 +664,30 @@ const Box = (props) => {
     };
 
     const onTargetChange = (type, value) => {
-        if (from === 'case') {
-            Bus.$emit('updateCaseNodeConfig', type, value, id);
-        } else {
-            Bus.$emit('updateNodeConfig', type, value, id, node_config, from);
+        const callback = (node_config) => {
+            if (from === 'scene') {
+                setTimeout(() => {
+                    Bus.$emit('saveScene');
+                }, 100);
+            } else if (from === 'plan') {
+                setTimeout(() => {
+                    Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan');
+                }, 100);
+            } else if (from === 'auto_plan') {
+                setTimeout(() => {
+                    Bus.$emit('saveSceneAutoPlan');
+                }, 100);
+            } else if (from === 'case') {
+                setTimeout(() => {
+                    Bus.$emit('saveCase');
+                }, 100);
+            }
         }
-        if (from === 'scene') {
-            dispatch({
-                type: 'scene/updateIsChanged',
-                payload: true
-            })
-        } else if (from === 'plan') {
-            dispatch({
-                type: 'plan/updateIsChanged',
-                payload: true
-            })
-        } else if (from === 'auto_plan') {
-            dispatch({
-                type: 'auto_plan/updateIsChanged',
-                payload: true
-            })
-        } else if (from === 'case') {
-            dispatch({
-                type: 'case/updateIsChanged',
-                payload: true
-            })
+
+        if (from === 'case') {
+            Bus.$emit('updateCaseNodeConfig', type, value, id, callback);
+        } else {
+            Bus.$emit('updateNodeConfig', type, value, id, node_config, from, callback);
         }
     }
 
@@ -832,19 +819,17 @@ const Box = (props) => {
             {
                 (from === 'scene' || from === 'plan') ? <div className='collapse'>
                     <Header />
-                    {showApi && <div className='collapse-body'>
+                    {!isHide && <div className='collapse-body'>
                         <div className='api-weight'>
                             <span>{t('scene.weight')}</span>
                             <Input size="mini" value={weight} onChange={(e) => {
-                                if (parseInt(e) > 100 || parseInt(e) < 0) {
-                                    Message('error', t('message.apiWeight'));
-                                    setWeight(parseInt(e) > 100 ? '100' : '0');
-                                    onTargetChange('weight', parseInt(e) > 100 ? 100 : 0);
-                                    // setWeight();
-                                    // onTargetChange('weight', parseInt(e));
-                                } else {
+                                if (parseInt(e) <= 100 && parseInt(e) >= 1) {
                                     setWeight(parseInt(e));
                                     onTargetChange('weight', parseInt(e));
+                                } else {
+                                    Message('error', t('message.apiWeight'));
+                                    setWeight(parseInt(e) > 100 ? 100 : 1);
+                                    onTargetChange('weight', parseInt(e) > 100 ? 100 : 1);
                                 }
                             }} placeholder={t('scene.value')} />
                         </div>
@@ -875,8 +860,19 @@ const Box = (props) => {
                             mode === 3 && <div className='common-flex'>
                                 <span>{t('scene.errorValue')}</span>
                                 <Input size="mini" value={error_threshold} onChange={(e) => {
-                                    setError(parseFloat(e));
-                                    onTargetChange('error_threshold', parseFloat(e));
+                                    setError(e);
+                                }} onBlur={(e) => {
+                                    const { value } = e.target;
+                                    if (value.length === 0) {
+                                        setError(0);
+                                        onTargetChange('error_threshold', 0);
+                                    } else if (parseFloat(value) > 1) {
+                                        setError(1);
+                                        onTargetChange('error_threshold', 1);
+                                    } else {
+                                        setError(parseFloat(value));
+                                        onTargetChange('error_threshold', parseFloat(value));
+                                    }
                                 }} placeholder={t('scene.errorRate')} />
                             </div>
                         }
@@ -932,8 +928,26 @@ const Box = (props) => {
                                 <div className='common-flex'>
                                     <span>{t('scene.resTime')}</span>
                                     <Input size="mini" value={response_threshold} onChange={(e) => {
-                                        setRes(parseInt(e));
-                                        onTargetChange('response_threshold', parseInt(e));
+                                        setRes(e);
+                                    }} onBlur={(e) => {
+                                        const { value } = e.target;
+                                        // 0-10w之间的值
+                                        if (value.trim().length === 0) {
+                                            setRes(0);
+                                            onTargetChange('response_threshold', 0);
+                                        } else if (parseInt(value) >= 0 && parseInt(value) <= 100000) {
+                                            setRes(parseInt(value));
+                                            onTargetChange('response_threshold', parseInt(value));
+                                        } else if (parseInt(value) < 0) {
+                                            setRes(0);
+                                            onTargetChange('response_threshold', 0);
+                                        } else if (parseInt(value) > 100000) {
+                                            setRes(100000);
+                                            onTargetChange('response_threshold', 100000);
+                                        } else {
+                                            setRes(0);
+                                            onTargetChange('response_threshold', 0);
+                                        }
                                     }} placeholder={t('scene.thresholdTime')} />
                                 </div>
                                 {/* <div className='common-flex'>
@@ -949,8 +963,16 @@ const Box = (props) => {
                             mode === 5 && <div className='common-flex'>
                                 <span>{t('scene.reqValue')}</span>
                                 <Input size="mini" value={request_threshold} placeholder={t('scene.threshold')} onChange={(e) => {
-                                    setReq(parseInt(e));
-                                    onTargetChange('request_threshold', parseInt(e));
+                                    setReq(e);
+                                }} onBlur={(e) => {
+                                    const { value } = e.target;
+                                    if (value.trim().length === 0) {
+                                        setReq(0);
+                                        onTargetChange('request_threshold', 0);
+                                    } else {
+                                        setReq(parseInt(value));
+                                        onTargetChange('request_threshold', parseInt(value));
+                                    }
                                 }} />
                             </div>
                         }
@@ -965,7 +987,7 @@ const Box = (props) => {
                     <div className='auto-plan-box'>
                         <Header />
                         {
-                            showApi && <>
+                            !isHide && <>
                                 <div className='box-container'>
                                     <p className='label'>{t('scene.apiAssert')}</p>
                                     <div className='assert-num'>

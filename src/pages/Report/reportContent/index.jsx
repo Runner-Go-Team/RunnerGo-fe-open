@@ -8,9 +8,12 @@ import { TabStyle } from './style';
 import { fetchReportInfo } from '@services/report';
 import { useParams, useMatch, useLocation } from 'react-router-dom';
 import qs from 'qs';
+import Bus from '@utils/eventBus';
 import { useSelector, useDispatch } from 'react-redux';
 
 const { Tabs, TabPan } = TabList;
+
+let report_info_t = null;
 
 const ReportContent = () => {
     // const { id: report_id } = useParams();
@@ -27,20 +30,51 @@ const ReportContent = () => {
     const [stopDebug, setStopDebug] = useState('stop');
     const [reportStatus, setReportStatus] = useState(1);
     const [runTime, setRunTime] = useState(0);
-    const [planId, setPlanId] = useState(0);
+    const [planId, setPlanId] = useState('');
     const select_plan = useSelector((store) => (store.plan.select_plan));
+    const report_info = useSelector((store) => store.report.report_info);
 
-
-    let report_info_t = null;
 
     useEffect(() => {
         if (report_id) {
             getReportInfo();
             report_info_t = setInterval(getReportInfo, 3000);
 
-            return () => {
-                report_info_t && clearInterval(report_info_t);
+            let setIntervalList = window.setIntervalList;
+            if (setIntervalList) {
+                setIntervalList.push(report_info_t);
+            } else {
+                setIntervalList = [report_info_t];
             }
+            window.setIntervalList = setIntervalList;
+
+        }
+
+        return () => {
+            dispatch({
+                type: 'report/updateDebugList',
+                payload: null
+            })
+            dispatch({
+                type: 'report/updateMonitorList',
+                payload: null
+            })
+            dispatch({
+                type: 'report/updateReportDetail',
+                payload: null
+            })
+            dispatch({
+                type: 'report/updateReportInfo',
+                payload: null
+            })
+            let setIntervalList = window.setIntervalList;
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === report_info_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
+            }
+
+            clearInterval(report_info_t);
         }
     }, []);
 
@@ -50,39 +84,52 @@ const ReportContent = () => {
         }
     }, [select_plan]);
 
+    useEffect(() => {
+        if (report_info) {
+            const { report: { plan_name, plan_id, task_mode, control_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, scene_name, change_take_conf } } = report_info;
+            setPlanId(plan_id);
+            setCreateTime(created_time_sec);
+            setHeaderData({
+                plan_name,
+                scene_name
+            })
+            setInfoData({
+                user_avatar,
+                user_name,
+                created_time_sec,
+            });
+            setConfigData({
+                task_mode,
+                task_type,
+                mode_conf,
+                plan_id,
+                control_mode,
+                change_take_conf,
+            });
+            setReportStatus(task_status);
+            if (task_status === 2) {
+                let setIntervalList = window.setIntervalList;
+                if (setIntervalList) {
+                    let _index = setIntervalList.findIndex(item => item === report_info_t);
+                    setIntervalList.splice(_index, 1);
+                    window.setIntervalList = setIntervalList;
+                }
+
+                clearInterval(report_info_t);
+            }
+        }
+    }, [report_info]);
+
     const getReportInfo = () => {
         const query = {
             report_id: report_id ? report_id : JSON.parse(contrast)[select_plan].report_id,
             team_id: localStorage.getItem('team_id'),
         };
-        fetchReportInfo(query).subscribe({
-            next: (res) => {
-                const { data: { report: { plan_name, plan_id, task_mode, control_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, scene_name, change_take_conf } } } = res;
-                setPlanId(plan_id);
-                setCreateTime(created_time_sec);
-                setHeaderData({
-                    plan_name,
-                    scene_name
-                })
-                setInfoData({
-                    user_avatar,
-                    user_name,
-                    created_time_sec,
-                });
-                setConfigData({
-                    task_mode,
-                    task_type,
-                    mode_conf,
-                    plan_id,
-                    control_mode,
-                    change_take_conf,
-                });
-                setReportStatus(task_status);
-                if (task_status === 2) {
-                    report_info_t && clearInterval(report_info_t);
-                }
-            }
-        });
+        
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "stress_report_task_detail",
+            param: JSON.stringify(query)
+        }))
     }
 
 

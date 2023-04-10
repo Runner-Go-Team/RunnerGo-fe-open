@@ -27,7 +27,7 @@ import InvitateSuccess from '@modals/InvitateSuccess';
 import RunningShow from './runningShow';
 import GlobalConfig from './globalConfig';
 import { Dropdown, Tooltip } from '@arco-design/web-react';
-
+import Bus from '@utils/eventBus';
 
 const HeaderRight = () => {
     const [showModal, setShowModal] = useState(false);
@@ -104,7 +104,7 @@ const HeaderRight = () => {
                             <div onClick={() => {
                                 refDropdown.current.setPopupVisible(false);
                             }}>
-                                <Tooltip content={<img style={{ width: '200px', height: '200px' }} src="your qrcode oss url" />}>
+                                <Tooltip content={<img style={{ width: '200px', height: '200px' }} src="https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/qrcode/qiyezhuanshukefu.png" />}>
                                     <div className='person-drop-item'>
                                         <SvgCustomer />
                                         <span>{t('header.customer')}</span>
@@ -125,6 +125,7 @@ const HeaderRight = () => {
     };
 
     const loginOut = () => {
+        Bus.$emit('closeWs');
         localStorage.removeItem('runnergo-token');
         localStorage.removeItem('expire_time_sec');
         localStorage.removeItem('team_id');

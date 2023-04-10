@@ -47,6 +47,8 @@ const ConditionController = (props) => {
     const open_scene_scene = useSelector((store) => store.scene.open_scene);
     const running_scene_scene = useSelector((store) => store.scene.running_scene);
     const select_box_scene = useSelector((store) => store.scene.select_box);
+    const nodes_scene = useSelector((store) => store.scene.nodes);
+    const id_apis_scene = useSelector((store) => store.scene.id_apis);
 
     const run_res_plan = useSelector((store) => store.plan.run_res);
     const edges_plan = useSelector((store) => store.plan.edges);
@@ -58,6 +60,8 @@ const ConditionController = (props) => {
     const open_scene_plan = useSelector((store) => store.plan.open_plan_scene);
     const running_scene_plan = useSelector((store) => store.plan.running_scene);
     const select_box_plan = useSelector((store) => store.plan.select_box);
+    const nodes_plan = useSelector((store) => store.plan.nodes);
+    const id_apis_plan = useSelector((store) => store.plan.id_apis);
 
     const run_res_auto_plan = useSelector((store) => store.auto_plan.run_res);
     const edges_auto_plan = useSelector((store) => store.auto_plan.edges);
@@ -69,6 +73,8 @@ const ConditionController = (props) => {
     const open_scene_auto_plan = useSelector((store) => store.auto_plan.open_plan_scene);
     const running_scene_auto_plan = useSelector((store) => store.auto_plan.running_scene);
     const select_box_auto_plan = useSelector((store) => store.auto_plan.select_box);
+    const nodes_auto_plan = useSelector((store) => store.auto_plan.nodes);
+    const id_apis_auto_plan = useSelector((store) => store.auto_plan.id_apis);
 
 
     const run_res_case = useSelector((store) => store.case.run_res);
@@ -81,6 +87,9 @@ const ConditionController = (props) => {
     const open_scene_case = useSelector((store) => store.case.open_case);
     const running_scene_case = useSelector((store) => store.case.running_scene);
     const select_box_case = useSelector((store) => store.case.select_box);
+    const nodes_case = useSelector((store) => store.case.nodes);
+    const id_apis_case = useSelector((store) => store.case.id_apis);
+
 
     const run_res_list = {
         'scene': run_res_scene,
@@ -161,6 +170,24 @@ const ConditionController = (props) => {
         'case': select_box_case
     }
     const select_box = select_box_list[from];
+
+    const nodes_list = {
+        'scene': nodes_scene,
+        'plan': nodes_plan,
+        'auto_plan': nodes_auto_plan,
+        'case': nodes_case
+    };
+    const nodes = nodes_list[from];
+
+    const id_apis_list = {
+        'scene': id_apis_scene,
+        'plan': id_apis_plan,
+        'auto_plan': id_apis_auto_plan,
+        'case': id_apis_case
+    };
+    const id_apis = id_apis_list[from];
+
+
     const dispatch = useDispatch();
     // 变量
     const [_var, setVar] = useState('');
@@ -191,7 +218,7 @@ const ConditionController = (props) => {
     useEffect(() => {
 
         if (open_scene) {
-            if (to_loading && running_scene === open_scene.scene_id) {
+            if (to_loading && running_scene === (open_scene.scene_id ? open_scene.scene_id : open_scene.target_id)) {
                 setStatus('running');
             }
         }
@@ -223,7 +250,7 @@ const ConditionController = (props) => {
             // const successEdge = [];
             // const Node = [];
 
-            edges.forEach(item => {
+            edges && edges.forEach(item => {
                 if (item.source === id && !success_edge.includes(item.id)) {
                     temp = true;
                     success_edge.push(item.id);
@@ -257,7 +284,7 @@ const ConditionController = (props) => {
         } else if (status === 'failed') {
             // const failed_edge = [];
 
-            edges.forEach(item => {
+            edges && edges.forEach(item => {
                 if (item.source === id) {
                     temp = true;
 
@@ -291,84 +318,26 @@ const ConditionController = (props) => {
         }
     }
 
-    const DropContent = () => {
-        return (
-            <div className='drop-content'>
-                <p onClick={() => {
-                    // if (from === 'scene') {
-                    //     dispatch({
-                    //         type: 'scene/updateDeleteNode',
-                    //         payload: id,
-                    //     });
-                    // } else {
-                    //     dispatch({
-                    //         type: 'plan/updateDeleteNode',
-                    //         payload: id,
-                    //     });
-                    // }
-                    // refDropdown.current.setPopupVisible(false);
-                    // const _open_scene = cloneDeep(open_scene);
-                    // const index = _open_scene.nodes.findIndex(item => item.id === id);
-                    // _open_scene.nodes.splice(index, 1);
-                    // const edges_index = [];
-                    // _open_scene.edges.forEach((item, index) => {
-                    //     if (item.source !== id && item.target !== id) {
-                    //         edges_index.push(index);
-                    //     }
-                    // });
-                    // _open_scene.edges = _open_scene.edges.filter((item, index) => !edges_index.includes(index));
-                    // _open_scene.edges = edges;
-
-                    if (from === 'scene') {
-                        dispatch({
-                            type: 'scene/updateDeleteNode',
-                            payload: id,
-                        });
-                    } else if (from === 'plan') {
-                        dispatch({
-                            type: 'plan/updateDeleteNode',
-                            payload: id,
-                        });
-                    } else if (from === 'auto_plan') {
-                        dispatch({
-                            type: 'auto_plan/updateDeleteNode',
-                            payload: id,
-                        });
-                    } else if (from === 'case') {
-                        dispatch({
-                            type: 'case/updateDeleteNode',
-                            payload: id,
-                        });
-                    }
-                }}>删除控制器</p>
-            </div>
-        )
-    };
-
     const onTargetChange = (type, value) => {
 
         Bus.$emit('updateNodeConfig', type, value, id, node_config, from);
 
         if (from === 'scene') {
-            dispatch({
-                type: 'scene/updateIsChanged',
-                payload: true
-            })
+            setTimeout(() => {
+                Bus.$emit('saveScene');
+            }, 100);
         } else if (from === 'plan') {
-            dispatch({
-                type: 'plan/updateIsChanged',
-                payload: true
-            })
+            setTimeout(() => {
+                Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan');
+            }, 100);
         } else if (from === 'auto_plan') {
-            dispatch({
-                type: 'auto_plan/updateIsChanged',
-                payload: true
-            })
+            setTimeout(() => {
+                Bus.$emit('saveSceneAutoPlan');
+            }, 100);
         } else if (from === 'case') {
-            dispatch({
-                type: 'case/updateIsChanged',
-                payload: true
-            })
+            setTimeout(() => {
+                Bus.$emit('saveCase');
+            }, 100);
         }
     }
 
@@ -494,37 +463,21 @@ const ConditionController = (props) => {
                                     type: 'scene/updateDeleteNode',
                                     payload: id,
                                 });
-                                dispatch({
-                                    type: 'scene/updateIsChanged',
-                                    payload: true
-                                })
                             } else if (from === 'plan') {
                                 dispatch({
                                     type: 'plan/updateDeleteNode',
                                     payload: id,
                                 });
-                                dispatch({
-                                    type: 'plan/updateIsChanged',
-                                    payload: true
-                                })
                             } else if (from === 'auto_plan') {
                                 dispatch({
                                     type: 'auto_plan/updateDeleteNode',
                                     payload: id,
                                 });
-                                dispatch({
-                                    type: 'auto_plan/updateIsChanged',
-                                    payload: true
-                                })
                             } else if (from === 'case') {
                                 dispatch({
                                     type: 'case/updateDeleteNode',
                                     payload: id,
                                 });
-                                dispatch({
-                                    type: 'case/updateIsChanged',
-                                    payload: true
-                                })
                             }
 
                         }} />

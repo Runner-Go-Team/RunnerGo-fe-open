@@ -51,7 +51,7 @@ const devConfig = {
                     }
                 },
             }
-        }
+        },
     },
     devtool: 'eval-source-map',
     plugins: [

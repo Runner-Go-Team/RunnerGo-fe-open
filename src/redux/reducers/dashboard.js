@@ -7,28 +7,45 @@ const initialState = {
     report_num: 0,
     scene_num: 0,
   },
-  refresh: false
+
+  homeData: null,
+  refresh: false,
+  runningPlan: null
 };
 
 // action名称
 const actionTypes = {
-    updateUserData: 'updateUserData',
-    updateRefresh: 'updateRefresh'
+  updateUserData: 'updateUserData',
+  updateRefresh: 'updateRefresh',
+
+  updateHomeData: 'updateHomeData',
+  updateRunningPlan: 'updateRunningPlan'
 }
 
 export const dashBoardReducer = (state = initialState, action) => {
   switch (action.type) {
     case `${NAMESPACE}/${actionTypes.updateUserData}`:
-      
+
       return {
         ...state,
         userData: action.payload,
       };
-    
+
     case `${NAMESPACE}/${actionTypes.updateRefresh}`:
       return {
         ...state,
         refresh: action.payload
+      }
+
+    case `${NAMESPACE}/${actionTypes.updateHomeData}`:
+      return {
+        ...state,
+        homeData: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateRunningPlan}`:
+      return {
+        ...state,
+        runningPlan: action.payload
       }
     default:
       return state;

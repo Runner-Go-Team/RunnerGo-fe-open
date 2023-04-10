@@ -23,7 +23,7 @@ const LinkMore = () => {
                         placement='top-end'
                         content={
                             <div>
-                                <img style={{ width: '200px', height: '200px' }} src="your qrcode oss url" />
+                                <img style={{ width: '200px', height: '200px' }} src="https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/images/wx-customer-service.jpg" />
                             </div>
                         }
                     >

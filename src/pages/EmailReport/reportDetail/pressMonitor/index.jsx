@@ -200,7 +200,7 @@ const PressMonitor = (props) => {
             {
                 metrics.length > 0 && metrics.map(item => (
                     <div className='machine-info'>
-                        <p className='ip'>IP: {item.ip}</p>
+                        <p className='ip'>HostName: {item.machine_name}</p>
                         <div className='monitor-list'>
                             <ReactEcharts className='echarts' option={getOption('cpu', item.cpu)} />
                             <ReactEcharts className='echarts' option={getOption('disk_io', item.disk_io)} />

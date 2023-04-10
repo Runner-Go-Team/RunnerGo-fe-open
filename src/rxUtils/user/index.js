@@ -100,7 +100,11 @@ export const getUserConfig$ = () => {
                 return of('');
             }),
             // mergeMap(() => getLocalUserConfig(uuid, 1)),
-            catchError((err) => getLocalUserConfig(err))
+            
+            catchError((err) => {
+                console.log(err);
+                getLocalUserConfig(err);
+            })
         );
         // of('').pipe(mergeMap(() => getLocalUserConfig(uuid)))
     // );

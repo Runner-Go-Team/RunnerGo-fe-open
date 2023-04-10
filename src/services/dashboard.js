@@ -40,3 +40,8 @@ export const fetchSaveVar = (
 export const fetchGetIndex = (
     params
 ) => ajax('post', '/management/api/v1/dashboard/home_page', 'json', false, params);
+
+// 获取公共函数
+export const fetchPublicFunction = (
+    query
+) => ajax('get', '/management/api/v1/dashboard/public_function_list', 'json', false, {}, query);

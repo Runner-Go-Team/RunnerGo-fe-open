@@ -7,9 +7,11 @@ import { fetchMachine } from '@services/report';
 import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 import qs from 'qs';
+import Bus from '@utils/eventBus';
 import { useTranslation } from 'react-i18next';
 import { Explain as SvgExplain } from 'adesign-react/icons';
 
+let press_monitor_t = null;
 
 const PressMonitor = (props) => {
     const { status, tab } = props;
@@ -27,22 +29,43 @@ const PressMonitor = (props) => {
 
     const theme = useSelector((store) => store.user.theme);
     const select_plan = useSelector((store) => (store.plan.select_plan));
+    const monitor_list = useSelector((store) => store.report.monitor_list);
 
-    let press_monitor_t = null;
     useEffect(() => {
+        let setIntervalList = window.setIntervalList;
 
         if (report_id) {
             getMonitorData();
 
             if (status === 2 && tab !== '3') {
-                press_monitor_t && clearInterval(press_monitor_t);
+                if (setIntervalList) {
+                    let _index = setIntervalList.findIndex(item => item === press_monitor_t);
+                    setIntervalList.splice(_index, 1);
+                    window.setIntervalList = setIntervalList;
+                }
+
+                clearInterval(press_monitor_t);
             } else {
                 press_monitor_t = setInterval(getMonitorData, 3000);
+
+                if (setIntervalList) {
+                    setIntervalList.push(press_monitor_t);
+                } else {
+                    setIntervalList = [press_monitor_t];
+                }
+                window.setIntervalList = setIntervalList;
+            }
+        }
+
+        return () => {
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === press_monitor_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
             }
 
-            return () => {
-                clearInterval(press_monitor_t);
-            }
+            clearInterval(press_monitor_t);
+
         }
     }, [status, tab]);
 
@@ -52,26 +75,28 @@ const PressMonitor = (props) => {
         }
     }, [select_plan]);
 
+    useEffect(() => {
+        if (monitor_list) {
+            const { start_time_sec, end_time_sec, metrics } = monitor_list;
+            setStartTime(start_time_sec);
+            setEndTime(end_time_sec);
+            setMetrics(metrics ? metrics : []);
+        }
+    }, [monitor_list]);
+
     const getMonitorData = () => {
         const query = {
             team_id: localStorage.getItem('team_id'),
             report_id: report_id ? report_id : JSON.parse(contrast)[select_plan].report_id,
         };
-        fetchMachine(query).subscribe({
-            next: (res) => {
-                const { data: { start_time_sec, end_time_sec, metrics }, code } = res;
-                if (code === 0) {
-                    setStartTime(start_time_sec);
-                    setEndTime(end_time_sec);
-                    setMetrics(metrics);
-                }
-            }
-        });
+        
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "stress_report_machine_monitor",
+            param: JSON.stringify(query)
+        }))
     }
-    // for (let i = 1; i < 20000; i++) {
-    //     let now = new Date((base += oneDay));
-    //     _data.push([+now, Math.round((Math.random() - 0.5) * 20 + _data[i - 1][1])]);
-    // }
+
+
     let getOption = (name, data) => {
         // let x_data = [];
         // let y_data = [];
@@ -207,14 +232,14 @@ const PressMonitor = (props) => {
                 <p>{t('report.pressMonitorTips')}</p>
             </div>
             {
-                metrics && metrics.length > 0 && metrics.map(item => (
+                metrics.map(item => (
                     <div className='machine-info'>
                         <p className='ip'>HostName: { item.machine_name }</p>
                         <div className='monitor-list'>
-                            <ReactEcharts className='echarts' option={getOption('cpu', item.cpu)} />
-                            <ReactEcharts className='echarts' option={getOption('disk_io', item.disk_io)} />
-                            <ReactEcharts className='echarts' option={getOption('mem', item.mem)} />
-                            <ReactEcharts className='echarts' option={getOption('net_io', item.net_io)} />
+                            <ReactEcharts className='echarts-monitor' option={getOption('cpu', item.cpu)} />
+                            <ReactEcharts className='echarts-monitor' option={getOption('disk_io', item.disk_io)} />
+                            <ReactEcharts className='echarts-monitor' option={getOption('mem', item.mem)} />
+                            <ReactEcharts className='echarts-monitor' option={getOption('net_io', item.net_io)} />
                         </div>
                     </div>
                 ))

@@ -175,7 +175,7 @@ const ScenePicker = (props) => {
         })
         dispatch({
           type: 'plan/updateOpenDesc',
-          payload: scene_id_list[0].desc
+          payload: scene_id_list[0].description
         })
       } else {
         dispatch({
@@ -184,7 +184,7 @@ const ScenePicker = (props) => {
         })
         dispatch({
           type: 'scene/updateOpenDesc',
-          payload: scene_id_list[0].desc
+          payload: scene_id_list[0].description
         })
       }
 

@@ -242,7 +242,9 @@
         "toPay": "去付费",
         "pay": "去支付",
         "quit": "退出登录",
-        "skip": "跳过"
+        "skip": "跳过",
+        "estimateVum": "预估VUM",
+        "asyncApipostApi": "同步Apipost接口"
     },
     "message": {
         "saveSuccess": "保存成功!",
@@ -354,7 +356,7 @@
         "sendError": "发送失败!",
         "copyClipboard": "已成功将内容复制到剪贴板",
         "varRepeat": "变量名重复!",
-        "apiWeight": "接口权重范围在0-100之间!",
+        "apiWeight": "接口权重范围在1-100之间!",
         "lineError": "输入数字只能大于等于50, 小于100",
         "shiftDelFolder": "确定要彻底删除该目录？将不可恢复",
         "restoreFolder": "确定要恢复目录吗？",
@@ -408,7 +410,13 @@
         "wxCodeTimeOver": "微信验证过期",
         "inputPhoneBefore": "请先输入手机号",
         "setOssConfig": "请前往config文件夹配置OSS服务!",
-        "maxConcurrencyLessStart": "最大并发数不能小于起始并发数"
+        "maxConcurrencyLessStart": "最大并发数不能小于起始并发数",
+        "cloneSuccess": "克隆成功!",
+        "runningSceneCanNotDelete": "当前场景正在运行, 禁止删除!",
+        "runningSceneCanNotHandle": "调试中不可编辑!",
+        "userLogout": "您的账号已在别处登录，RunnerGo暂不支持多平台登录，如不是您本人操作，请及时修改密码",
+        "asyncSuccess": "同步成功!",
+        "selectEmpty": "您未选择任何内容!"
     },
     "modal": {
         "bindNow": "立即绑定",
@@ -907,7 +915,7 @@
         "thresholdTime": "阈值 ms",
         "line": "线",
         "resTime": "响应时间阈值",
-        "reqValue": "请求数阈值",
+        "reqValue": "应答数阈值",
         "modeList": {
             "1": "默认模式",
             "3": "错误率模式",

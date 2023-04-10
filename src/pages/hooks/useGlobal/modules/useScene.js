@@ -11,14 +11,17 @@ import { getBaseCollection } from '@constants/baseCollection';
 import { fetchApiDetail, fetchGetResult } from '@services/apis';
 import { v4 } from 'uuid';
 import QueryString from 'qs';
+import { useTranslation } from 'react-i18next';
 
 import { global$ } from '../global';
+import { Message } from 'adesign-react';
 
 let scene_t = null;
 let send_scene_api_t = null;
 
 const useScene = () => {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     // const nodes = useSelector((store) => store.scene.nodes);
     // const edges = useSelector((store) => store.scene.edges);
     // const { open_apis, open_api_now, open_res } = useSelector((store) => store?.opens)
@@ -187,10 +190,23 @@ const useScene = () => {
             .subscribe();
     }
 
+    // function getNodesByLevel(nodes, edges) {
+    //     let arr = [];
+    //     while (nodes.length > 0) {
+    //         let currentLayer = nodes.filter(node => !edges.some(edge => edge.target === node.id));
+    //         arr.push(currentLayer);
+    //         currentLayer.forEach(node => {
+    //             edges = edges.filter(edge => edge.source !== node.id);
+    //         });
+    //         nodes = nodes.filter(node => !currentLayer.includes(node));
+    //     }
+    //     return arr;
+    // }
+
     const saveScene = (callback) => {
         const get_pre = (id, edges) => {
             const pre_list = [];
-            edges.forEach(item => {
+            edges && edges.forEach(item => {
                 if (item.target === id) {
                     pre_list.push(item.source);
                 }
@@ -201,7 +217,7 @@ const useScene = () => {
 
         const get_next = (id, edges) => {
             const next_list = [];
-            edges.forEach(item => {
+            edges && edges.forEach(item => {
                 if (item.source === id) {
                     next_list.push(item.target);
                 }
@@ -237,21 +253,28 @@ const useScene = () => {
             nodes: _nodes,
             edges,
             source: 1,
+            // nodes_round: getNodesByLevel(_nodes, edges ? edges : [])
             // multi_level_nodes: JSON.stringify(formatSceneData(nodes, edges))
             // songsong: formatSceneData(nodes, edges),
         };
         // callback && callback();
 
         // return;
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "save_scene_flow",
+            param: JSON.stringify(params)
+        }))
 
-        fetchCreateSceneFlow(params).subscribe({
-            next: (res) => {
-                const { code } = res;
-                if (code === 0) {
-                    callback && callback();
-                }
-            }
-        })
+        callback && callback();
+
+        // fetchCreateSceneFlow(params).subscribe({
+        //     next: (res) => {
+        //         const { code } = res;
+        //         if (code === 0) {
+        //             callback && callback();
+        //         }
+        //     }
+        // })
     }
 
     const addNewSceneControl = (id, node_config = {}) => {
@@ -264,7 +287,7 @@ const useScene = () => {
         })
     }
 
-    const addNewSceneApi = (id, id_apis = {}, node_config = {}, api = {}, config = {}, from) => {
+    const addNewSceneApi = (id, api = {}, config = {}, from, callback) => {
         let _id = isArray(id) ? id : [id];
         let _api = isArray(api) ? api : [api];
         let _config = isArray(config) ? config : [config];
@@ -318,9 +341,12 @@ const useScene = () => {
                 })
             }
         }
+
+
+        callback && callback();
     }
 
-    const updateNodeConfig = (type, value, id, node_config, from) => {
+    const updateNodeConfig = (type, value, id, node_config, from, callback) => {
         const _node_config = cloneDeep(node_config);
         _node_config[id][type] = value;
         if (type === 'mode' && value === 4) {
@@ -382,11 +408,13 @@ const useScene = () => {
                 payload: _node_config
             })
         }
+
+
+        callback && callback(_node_config);
     }
 
-    const updateSceneApi = (data, id_apis) => {
+    const updateSceneApi = (data, callback) => {
         const { id, pathExpression, value } = data;
-
         set(id_apis[id], pathExpression, value);
 
         if (pathExpression === 'request.url') {
@@ -476,23 +504,39 @@ const useScene = () => {
         let _api_now = cloneDeep(id_apis[id]);
         _api_now.id = id;
 
+
+
         dispatch({
             type: 'scene/updateApiNow',
             payload: _api_now
         });
-    }
-
-    const saveSceneApi = (api_now, id_apis, callback) => {
-        const _id_apis = cloneDeep(id_apis);
-        api_now.is_changed = false;
-        const id = api_now.id;
-        delete api_now['id'];
-        _id_apis[id] = api_now;
 
         dispatch({
             type: 'scene/updateIdApis',
-            payload: _id_apis,
-        });
+            payload: id_apis
+        })
+
+        dispatch({
+            type: 'scene/updateRefreshBox',
+            payload: v4()
+        })
+
+
+
+        callback && callback();
+    }
+
+    const saveSceneApi = (callback) => {
+        // const _id_apis = cloneDeep(id_apis);
+        // api_now.is_changed = false;
+        // const id = api_now.id;
+        // delete api_now['id'];
+        // _id_apis[id] = api_now;
+
+        // dispatch({
+        //     type: 'scene/updateIdApis',
+        //     payload: _id_apis,
+        // });
 
         callback && callback();
     }
@@ -556,6 +600,10 @@ const useScene = () => {
             type: 'scene/updateBeautify',
             payload: false
         })
+        dispatch({
+            type: 'scene/updateRunStatus',
+            payload: 'finish',
+        })
         let _id = '';
         if (typeof id === 'object') {
             const { target_id, scene_id } = id;
@@ -596,6 +644,7 @@ const useScene = () => {
                             compare,
                             val,
                             remark,
+                            is_hide,
                         } = item;
                         const config = {
                             weight,
@@ -608,7 +657,8 @@ const useScene = () => {
                             var: _var,
                             compare,
                             val,
-                            remark
+                            remark,
+                            is_hide
                         };
                         if (api) {
                             api.id = id;
@@ -619,7 +669,7 @@ const useScene = () => {
                         idList.push(id);
 
                     });
-                    Bus.$emit('addNewSceneApi', idList, id_apis, node_config, apiList, configList, 'scene');
+                    Bus.$emit('addNewSceneApi', idList, apiList, configList, 'scene');
                 }
 
                 dispatch({
@@ -630,7 +680,12 @@ const useScene = () => {
         })
     }
 
-    const deleteScene = (id, open_scene, from, plan_id, callback) => {
+    const deleteScene = (id, open_scene, from, plan_id, running_scene, callback) => {
+
+        if (running_scene === id) {
+            Message('error', t('message.runningSceneCanNotDelete'));
+            return;
+        }
         let from_list = {
             'scene': 1,
             'plan': 2,
@@ -644,11 +699,15 @@ const useScene = () => {
         };
         fetchDeleteScene(params).subscribe({
             next: (res) => {
-                if (res.code === 0 || parseInt(open_scene || open_scene.scene_id || open_scene.target_id) === parseInt(id)) {
+                if (res.code === 0 || open_scene || open_scene.scene_id || open_scene.target_id === id) {
                     if (from === 'scene') {
                         dispatch({
                             type: 'scene/updateOpenScene',
                             payload: null,
+                        })
+                        dispatch({
+                            type: 'scene/updateRunStatus',
+                            payload: 'finish',
                         })
                         global$.next({
                             action: 'RELOAD_LOCAL_SCENE',
@@ -659,6 +718,10 @@ const useScene = () => {
                             type: 'plan/updateOpenScene',
                             payload: null,
                         })
+                        dispatch({
+                            type: 'plan/updateRunStatus',
+                            payload: 'finish',
+                        })
                         global$.next({
                             action: 'RELOAD_LOCAL_PLAN',
                             id: plan_id
@@ -668,11 +731,24 @@ const useScene = () => {
                             type: 'auto_plan/updateOpenScene',
                             payload: null,
                         })
+                        dispatch({
+                            type: 'auto_plan/updateRunStatus',
+                            payload: 'finish',
+                        })
                         global$.next({
                             action: 'RELOAD_LOCAL_AUTO_PLAN',
                             id: plan_id
                         });
+                    } else if (from === 'case') {
+                        dispatch({
+                            type: 'case/updateRunStatus',
+                            payload: 'finish',
+                        })
                     }
+                    dispatch({
+                        type: 'case/updateShowCase',
+                        payload: false
+                    })
                 }
                 callback && callback(res.code);
 
@@ -959,15 +1035,27 @@ const useScene = () => {
                                                 type: 'scene/updateRunStatus',
                                                 payload: 'finish',
                                             })
+                                            dispatch({
+                                                type: 'scene/updateRunningScene',
+                                                payload: '',
+                                            })
                                         } else if (from === 'plan') {
                                             dispatch({
                                                 type: 'plan/updateRunStatus',
                                                 payload: 'finish',
                                             })
+                                            dispatch({
+                                                type: 'plan/updateRunningScene',
+                                                payload: '',
+                                            })
                                         } else if (from === 'auto_plan') {
                                             dispatch({
                                                 type: 'auto_plan/updateRunStatus',
                                                 payload: 'finish',
+                                            })
+                                            dispatch({
+                                                type: 'auto_plan/updateRunningScene',
+                                                payload: '',
                                             })
                                         }
                                         // const { scenes } = data;
@@ -1129,20 +1217,36 @@ const useScene = () => {
                             type: 'scene/updateRunStatus',
                             payload: 'finish',
                         })
+                        dispatch({
+                            type: 'scene/updateRunningScene',
+                            payload: '',
+                        })
                     } else if (from === 'plan') {
                         dispatch({
                             type: 'plan/updateRunStatus',
                             payload: 'finish',
+                        })
+                        dispatch({
+                            type: 'plan/updateRunningScene',
+                            payload: '',
                         })
                     } else if (from === 'auto_plan') {
                         dispatch({
                             type: 'auto_plan/updateRunStatus',
                             payload: 'finish',
                         })
+                        dispatch({
+                            type: 'auto_plan/updateRunningScene',
+                            payload: '',
+                        })
                     } else if (from === 'case') {
                         dispatch({
                             type: 'case/updateRunStatus',
                             payload: 'finish',
+                        })
+                        dispatch({
+                            type: 'case/updateRunningScene',
+                            payload: '',
                         })
                     }
                 }
@@ -1184,14 +1288,34 @@ const useScene = () => {
         }
     }
 
+    const clearFetchSceneState = () => {
+        clearInterval(scene_t);
+        dispatch({
+            type: 'scene/updateRunStatus',
+            payload: 'finish',
+        })
+        dispatch({
+            type: 'plan/updateRunStatus',
+            payload: 'finish',
+        })
+        dispatch({
+            type: 'auto_plan/updateRunStatus',
+            payload: 'finish',
+        })
+        dispatch({
+            type: 'case/updateRunStatus',
+            payload: 'finish',
+        })
+    }
+
     useEventBus('createApiNode', createApiNode);
     useEventBus('updateSceneGroup', updateSceneGroup);
     useEventBus('updateSceneItem', updateSceneItem);
     useEventBus('dragUpdateScene', dragUpdateScene);
     useEventBus('saveScene', saveScene, [nodes, edges, id_apis, node_config, open_scene]);
-    useEventBus('addNewSceneApi', addNewSceneApi);
-    useEventBus('updateSceneApi', updateSceneApi);
-    useEventBus('saveSceneApi', saveSceneApi);
+    useEventBus('addNewSceneApi', addNewSceneApi, [id_apis, node_config]);
+    useEventBus('updateSceneApi', updateSceneApi, [id_apis]);
+    useEventBus('saveSceneApi', saveSceneApi, [api_now, id_apis]);
     useEventBus('updateNodeConfig', updateNodeConfig);
     useEventBus('addNewSceneControl', addNewSceneControl);
     useEventBus('importApiList', importApiList);
@@ -1208,6 +1332,7 @@ const useScene = () => {
     useEventBus('openRecordScene', openRecordScene, [sceneDatas]);
     useEventBus('recordOpenScene', recordOpenScene, [open_scene, open_scene_name]);
     useEventBus('cloneSceneTask', cloneSceneTask);
+    useEventBus('clearFetchSceneState', clearFetchSceneState);
 };
 
 export default useScene;

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Message } from 'adesign-react';
 import { Left as SvgLeft } from 'adesign-react/icons';
 import './index.less';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
 import Box from "./box";
 import ConditionController from "./controller/condition";
 import WaitController from "./controller/wait";
@@ -20,6 +20,7 @@ import Bus from '@utils/eventBus';
 import { v4 } from 'uuid';
 import { edges as initialEdges } from './mock';
 import CustomEdge from "./customEdge";
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CaseList from "@components/CaseList";
 
@@ -39,13 +40,13 @@ const onLoad = (reactFlowInstance) => {
     reactFlowInstance.fitView();
 };
 
-const SceneBox = (props) => {
-    
-    // TODO: 待优化
+let drop_loading_time = null;
 
+const SceneBox = (props) => {
     const { from } = props;
 
     const refBox = useRef();
+    const { id } = useParams();
     const refContainer = useRef();
     const dispatch = useDispatch();
 
@@ -256,33 +257,35 @@ const SceneBox = (props) => {
 
     const { t } = useTranslation();
 
-    useEffect(() => {
-        if (_nodes && _nodes.length > 0 && beautify) {
-            setNodes(_nodes);
 
-            if (from === 'scene') {
-                dispatch({
-                    type: 'scene/updateBeautify',
-                    payload: false
-                })
-            } else if (from === 'plan') {
-                dispatch({
-                    type: 'plan/updateBeautify',
-                    payload: false
-                })
-            } else if (from === 'auto_plan') {
-                dispatch({
-                    type: 'auto_plan/updateBeautify',
-                    payload: false
-                })
-            } else if (from === 'case') {
-                dispatch({
-                    type: 'case/updateBeautify',
-                    payload: false
-                })
-            }
-        }
-    }, [_nodes]);
+    // useEffect(() => {
+    //     if (_nodes && _nodes.length > 0 && beautify) {
+    //         setNodes(_nodes);
+
+    //         if (from === 'scene') {
+    //             dispatch({
+    //                 type: 'scene/updateBeautify',
+    //                 payload: false
+    //             })
+    //         } else if (from === 'plan') {
+    //             dispatch({
+    //                 type: 'plan/updateBeautify',
+    //                 payload: false
+    //             })
+    //         } else if (from === 'auto_plan') {
+    //             dispatch({
+    //                 type: 'auto_plan/updateBeautify',
+    //                 payload: false
+    //             })
+    //         } else if (from === 'case') {
+    //             dispatch({
+    //                 type: 'case/updateBeautify',
+    //                 payload: false
+    //             })
+    //         }
+    //     }
+    // }, [_nodes]);
+
 
     const getFather = (a, b) => {
         let obj = {};
@@ -299,6 +302,7 @@ const SceneBox = (props) => {
     const onConnect = useCallback((params) => {
 
         const _params = cloneDeep(params);
+        const _open_data = cloneDeep(open_data);
         _params.type = 'common';
         _params.data = {
             from
@@ -312,34 +316,64 @@ const SceneBox = (props) => {
         if (res) {
 
             return setEdges((eds) => {
+                let _edges = addEdge(_params, eds);
+                _open_data.edges = _edges;
                 if (from === 'scene') {
                     dispatch({
-                        type: 'scene/updateIsChanged',
-                        payload: true
+                        type: 'scene/updateEdges',
+                        payload: _edges,
                     })
+                    dispatch({
+                        type: 'scene/updateOpenScene',
+                        payload: _open_data,
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveScene');
+                    }, 100);
                 } else if (from === 'plan') {
                     dispatch({
-                        type: 'plan/updateIsChanged',
-                        payload: true
+                        type: 'plan/updateEdges',
+                        payload: _edges,
                     })
+                    dispatch({
+                        type: 'plan/updateOpenScene',
+                        payload: _open_data,
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveScenePlan', nodes, _edges, id_apis, node_config, open_data, id, 'plan');
+                    }, 100);
                 } else if (from === 'auto_plan') {
                     dispatch({
-                        type: 'auto_plan/updateIsChanged',
-                        payload: true
+                        type: 'auto_plan/updateEdges',
+                        payload: _edges,
                     })
+                    dispatch({
+                        type: 'auto_plan/updateOpenScene',
+                        payload: _open_data,
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveSceneAutoPlan', id);
+                    }, 100);
                 } else if (from === 'case') {
                     dispatch({
-                        type: 'case/updateIsChanged',
-                        payload: true
+                        type: 'case/updateEdges',
+                        payload: _edges,
                     })
+                    dispatch({
+                        type: 'case/updateOpenScene',
+                        payload: _open_data,
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveCase');
+                    }, 100);
                 }
-                return addEdge(_params, eds)
+                return _edges;
             })
         } else {
             Message('error', t('message.closeLoop'))
         }
 
-    }, [nodes, edges, from]);
+    }, [nodes, edges, id_apis, node_config, open_data, id, from]);
 
     const check = (sources, target, id_obj) => {
         for (const source of sources) {
@@ -354,35 +388,6 @@ const SceneBox = (props) => {
             }
         }
     }
-
-    // const checkConnect = (source, target) => {
-    //     if (source === target) {
-    //         return false;
-    //     }
-
-    //     for (let i = 0; i < edges.length; i++) {
-    //         if (edges[i].source === target && (edges.findIndex(item => item.target === source) !== -1)) {
-    //             return false;
-    //         }
-    //         if (edges[i].target === source) {
-    //             // arr.push(edges[i].source);
-    //             checkConnect(edges[i].source, target);
-    //         }
-    //     };
-    //     return true;
-    // };
-
-    // const _nodes = [
-    //     { id: 'a' },
-    //     { id: 'b' },
-    //     { id: 'c' },
-    // ];
-    // const _edges = [
-    //     { source: 'a', target: 'b' },
-    //     { source: 'b', target: 'c' },
-    // ];
-
-    // const connect = { source: 'c', target: 'a' }; // 不允许
 
     useEffect(() => {
         if (edges.length > 0 && to_loading) {
@@ -423,58 +428,10 @@ const SceneBox = (props) => {
         return position;
     }
 
-    // useEffect(() => {
-    //     formatSuccess();
-    // }, [success_edge_scene]);
-
-    useEffect(() => {
-        // formatSuccess();
-
-        if (nodes.length > 0 || edges.length > 0) {
-
-            if (from === 'scene') {
-                dispatch({
-                    type: 'scene/updateNodes',
-                    payload: nodes,
-                });
-                dispatch({
-                    type: 'scene/updateEdges',
-                    payload: edges,
-                })
-            } else if (from === 'plan') {
-                dispatch({
-                    type: 'plan/updateNodes',
-                    payload: nodes,
-                });
-                dispatch({
-                    type: 'plan/updateEdges',
-                    payload: edges,
-                })
-            } else if (from === 'auto_plan') {
-                dispatch({
-                    type: 'auto_plan/updateNodes',
-                    payload: nodes,
-                });
-                dispatch({
-                    type: 'auto_plan/updateEdges',
-                    payload: edges,
-                })
-            } else if (from === 'case') {
-                dispatch({
-                    type: 'case/updateNodes',
-                    payload: nodes,
-                });
-                dispatch({
-                    type: 'case/updateEdges',
-                    payload: edges,
-                })
-            }
-        }
-    }, [nodes, edges]);
-
     useEffect(() => {
         const _open_data = cloneDeep(open_data);
         let ids = [];
+        let _nodes = cloneDeep(nodes);
         if (import_node && import_node.length) {
             let _position = [];
             import_node.forEach(item => {
@@ -495,6 +452,8 @@ const SceneBox = (props) => {
                 ids.push(id);
                 setNodes((nds) => nds.concat(new_node));
 
+                _nodes.push(new_node);
+                _open_data.nodes = _nodes;
 
                 // if (_open_data.nodes) {
                 //     _open_data.nodes.push(new_node);
@@ -504,29 +463,80 @@ const SceneBox = (props) => {
                 // }
             });
             if (from === 'scene') {
-                Bus.$emit('addNewSceneApi', ids, id_apis, node_config, import_node, ids.map(item => new Object()), from);
-                dispatch({
-                    type: 'scene/updateImportNode',
-                    payload: [],
-                })
+                Bus.$emit('addNewSceneApi', ids, import_node, ids.map(item => new Object()), from, () => {
+                    dispatch({
+                        type: 'scene/updateImportNode',
+                        payload: [],
+                    })
+                    dispatch({
+                        type: 'scene/updateNodes',
+                        payload: _nodes,
+                    })
+                    dispatch({
+                        type: 'scene/updateOpenScene',
+                        payload: _open_data
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveScene');
+                    }, 100);
+                });
+
             } else if (from === 'plan') {
-                Bus.$emit('addNewPlanApi', ids, id_apis, node_config, import_node, ids.map(item => new Object()), from);
-                dispatch({
-                    type: 'plan/updateImportNode',
-                    payload: [],
-                })
+                Bus.$emit('addNewPlanApi', ids, id_apis, node_config, import_node, ids.map(item => new Object()), from, (id_apis, node_config) => {
+                    dispatch({
+                        type: 'plan/updateImportNode',
+                        payload: [],
+                    })
+                    dispatch({
+                        type: 'plan/updateNodes',
+                        payload: _nodes,
+                    })
+                    dispatch({
+                        type: 'plan/updateOpenScene',
+                        payload: _open_data
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                    }, 100);
+                });
+
             } else if (from === 'auto_plan') {
-                Bus.$emit('addNewAutoPlanApi', ids, id_apis, node_config, import_node, {}, from);
-                dispatch({
-                    type: 'auto_plan/updateImportNode',
-                    payload: [],
-                })
+                Bus.$emit('addNewAutoPlanApi', ids, import_node, {}, () => {
+                    dispatch({
+                        type: 'auto_plan/updateImportNode',
+                        payload: [],
+                    })
+                    dispatch({
+                        type: 'auto_plan/updateNodes',
+                        payload: _nodes,
+                    })
+                    dispatch({
+                        type: 'auto_plan/updateOpenScene',
+                        payload: _open_data
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveSceneAutoPlan', id);
+                    }, 100);
+                });
             } else if (from === 'case') {
-                Bus.$emit('addNewCaseApi', ids, import_node, {});
-                dispatch({
-                    type: 'case/updateImportNode',
-                    payload: [],
-                })
+                Bus.$emit('addNewCaseApi', ids, import_node, {}, () => {
+                    dispatch({
+                        type: 'case/updateImportNode',
+                        payload: [],
+                    })
+                    dispatch({
+                        type: 'case/updateNodes',
+                        payload: _nodes,
+                    })
+                    dispatch({
+                        type: 'case/updateOpenScene',
+                        payload: _open_data
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveCase');
+                    }, 100);
+                });
+
             }
         }
     }, [import_node]);
@@ -538,6 +548,7 @@ const SceneBox = (props) => {
     }, [nodes, success_edge, failed_edge])
 
     useEffect(() => {
+        console.log(open_data);
         if (Object.entries((open_data || {})).length > 0) {
             const { nodes, edges } = open_data;
             // 1. 对nodes进行赋值, 渲染视图
@@ -548,27 +559,23 @@ const SceneBox = (props) => {
                     // node基本配置
                     data,
                     dragging,
-                    height,
                     id,
                     is_check,
                     position,
                     positionAbsolute,
                     selected,
                     type,
-                    width,
                     dragHandle,
                 } = item;
                 return {
                     data,
                     dragging,
-                    height,
                     id,
                     is_check,
                     position,
                     positionAbsolute,
                     selected,
                     type,
-                    width,
                     dragHandle,
                 };
             });
@@ -619,6 +626,7 @@ const SceneBox = (props) => {
 
     useEffect(() => {
         if (delete_node.length > 0) {
+            const _open_data = cloneDeep(open_data);
             const node_index = nodes.findIndex(item => item.id === delete_node);
             const edge_index = edges.map((item, index) => {
                 if (item.source === delete_node || item.target === delete_node) {
@@ -630,11 +638,13 @@ const SceneBox = (props) => {
             _nodes.splice(node_index, 1);
 
             setNodes(_nodes);
+            _open_data.nodes = _nodes;
             // edge_index.forEach(item => {
             //     typeof item === 'number' && _edges.splice(item, 1);
             // })
             _edges = _edges.filter((item, index) => !edge_index.includes(index));
             setEdges(_edges);
+            _open_data.edges = _edges;
             // if (_nodes.length === 0) {
             if (from === 'scene') {
                 dispatch({
@@ -649,6 +659,13 @@ const SceneBox = (props) => {
                     type: 'scene/updateDeleteNode',
                     payload: '',
                 });
+                dispatch({
+                    type: 'scene/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScene');
+                }, 100);
             } else if (from === 'plan') {
                 dispatch({
                     type: 'plan/updateNodes',
@@ -662,6 +679,13 @@ const SceneBox = (props) => {
                     type: 'plan/updateDeleteNode',
                     payload: '',
                 });
+                dispatch({
+                    type: 'plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                }, 100);
             } else if (from === 'auto_plan') {
                 dispatch({
                     type: 'auto_plan/updateNodes',
@@ -675,6 +699,13 @@ const SceneBox = (props) => {
                     type: 'auto_plan/updateDeleteNode',
                     payload: '',
                 });
+                dispatch({
+                    type: 'auto_plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveSceneAutoPlan', id);
+                }, 100);
             } else if (from === 'case') {
                 dispatch({
                     type: 'case/updateNodes',
@@ -688,6 +719,13 @@ const SceneBox = (props) => {
                     type: 'case/updateDeleteNode',
                     payload: '',
                 });
+                dispatch({
+                    type: 'case/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveCase');
+                }, 100);
             }
             // }
         }
@@ -696,19 +734,46 @@ const SceneBox = (props) => {
 
     useEffect(() => {
         if (Object.entries(clone_node).length > 0) {
-
+            const _open_data = cloneDeep(open_data);
             const _nodes = cloneDeep(nodes);
-            if (from !== 'case') {
-                _nodes.splice(_nodes.length - 1, 1);
+  
+            _nodes.push(clone_node);
+            setNodes(_nodes);
+            _open_data.nodes = _nodes;
+            
+            if (from === 'scene') {
+                dispatch({
+                    type: 'scene/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScene');
+                }, 100);
+            } else if (from === 'plan') {
+                dispatch({
+                    type: 'plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                }, 100);
+            } else if (from === 'auto_plan') {
+                dispatch({
+                    type: 'auto_plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveSceneAutoPlan', id);
+                }, 100);
+            } else if (from === 'case') {
+                dispatch({
+                    type: 'case/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveCase');
+                }, 100);
             }
-            const index = _nodes.findIndex(item => item.id === clone_node.id);
-
-            if (index === -1) {
-                _nodes.push(clone_node);
-                setNodes(_nodes);
-                // setNodes((nds) => nds.concat(clone_node));
-            }
-            // setNodes(nodes);
         }
     }, [clone_node]);
 
@@ -784,40 +849,6 @@ const SceneBox = (props) => {
         }
     }
 
-    useEffect(() => {
-        // if (success_edge.length > 0 && edges.length > 0) {
-        //     const _edges = cloneDeep(edges);
-        //     _edges.forEach(item => {
-        //         if (success_edge.includes(item.id)) {
-        //             item.style = {
-        //                 stroke: '#2BA58F',
-        //             };
-        //             item.markerEnd = {
-        //                 type: MarkerType.ArrowClosed,
-        //             };
-        //         }
-        //     });
-        //     setEdges(_edges);
-        // }
-    }, [success_edge]);
-
-    useEffect(() => {
-        // if (failed_edge.length > 0 && edges.length > 0) {
-        //     const _edges = cloneDeep(edges);
-        //     _edges.forEach(item => {
-        //         if (failed_edge.includes(item.id)) {
-        //             item.style = {
-        //                 stroke: 'var(--delete-red)',
-        //             };
-        //             item.markerEnd = {
-        //                 type: MarkerType.ArrowClosed,
-        //             };
-        //         }
-        //     })
-        //     setEdges(_edges);
-        // }
-    }, [failed_edge]);
-
 
     const [showMouse, setShowMouse] = useState(false);
     const [position, setPosition] = useState([]);
@@ -826,6 +857,7 @@ const SceneBox = (props) => {
         const [action, type] = type_now;
 
         const id = v4();
+        const _open_data = cloneDeep(open_data);
         if (action === 'add' && type === 'api') {
             const apiList = nodes.filter(item => item.type === 'api');
             const new_node = {
@@ -843,32 +875,65 @@ const SceneBox = (props) => {
                     x: position[0],
                     y: position[1]
                 },
+                mode: 1,
                 dragHandle: '.drag-content',
             }
             setPosition([]);
-            const _open_data = cloneDeep(open_data);
-            if (_open_data.nodes) {
-                _open_data.nodes.push(new_node);
-            } else {
-                _open_data.nodes = [new_node];
-                _open_data.edges = [];
-            }
+            let _nodes = cloneDeep(nodes);
+            _nodes.push(new_node);
+            _open_data.nodes = _nodes;
             if (from === 'scene') {
-                Bus.$emit('addNewSceneApi', new_node.id, id_apis, node_config, { id }, { id }, from);
-                // dispatch({
-                //     type: 'scene/updateOpenScene',
-                //     payload: _open_data,
-                // })
+                Bus.$emit('addNewSceneApi', new_node.id, { id }, { id }, from);
+                dispatch({
+                    type: 'scene/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'scene/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScene');
+                }, 100);
             } else if (from === 'plan') {
                 Bus.$emit('addNewPlanApi', new_node.id, id_apis, node_config, { id }, { id }, from);
-                // dispatch({
-                //     type: 'plan/updateOpenScene',
-                //     payload: _open_data,
-                // })
+                dispatch({
+                    type: 'plan/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                }, 300);
             } else if (from === 'auto_plan') {
-                Bus.$emit('addNewAutoPlanApi', new_node.id, id_apis, node_config, { id }, { id }, from);
+                Bus.$emit('addNewAutoPlanApi', new_node.id, { id }, { id });
+                dispatch({
+                    type: 'auto_plan/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'auto_plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveSceneAutoPlan', id);
+                }, 100);
             } else if (from === 'case') {
                 Bus.$emit('addNewCaseApi', new_node.id, { id }, { id });
+                dispatch({
+                    type: 'case/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'case/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveCase');
+                }, 100);
             }
             setNodes((nds) => nds.concat(new_node));
         } else if (action === 'add' && type === 'condition_controller') {
@@ -891,25 +956,62 @@ const SceneBox = (props) => {
             }
 
             setPosition([]);
-
-            // const _open_data = cloneDeep(open_data);
-            // if (_open_data.nodes) {
-            //     _open_data.nodes.push(new_node);
-            // } else {
-            //     _open_data.nodes = [new_node];
-            //     _open_data.edges = [];
-            // }
+            let _nodes = cloneDeep(nodes);
+            _nodes.push(new_node);
+            _open_data.nodes = _nodes;
 
             if (from === 'scene') {
                 Bus.$emit('addNewSceneControl', new_node.id, node_config);
-
+                dispatch({
+                    type: 'scene/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'scene/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScene');
+                }, 100);
             } else if (from === 'plan') {
                 Bus.$emit('addNewPlanControl', new_node.id, node_config);
-
+                dispatch({
+                    type: 'plan/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                }, 100);
             } else if (from === 'auto_plan') {
-                Bus.$emit('addNewAutoPlanControl', new_node.id, node_config);
+                Bus.$emit('addNewAutoPlanControl', new_node.id);
+                dispatch({
+                    type: 'auto_plan/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'auto_plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveSceneAutoPlan', id);
+                }, 100);
             } else if (from === 'case') {
                 Bus.$emit('addNewCaseControl', new_node.id);
+                dispatch({
+                    type: 'case/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'case/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveCase');
+                }, 100);
             }
 
             setNodes((nds) => nds.concat(new_node));
@@ -932,22 +1034,62 @@ const SceneBox = (props) => {
                 dragHandle: '.drag-content',
             }
             setPosition([]);
-            // const _open_data = cloneDeep(open_data || []);
-            // if (_open_data.nodes) {
-            //     _open_data.nodes.push(new_node);
-            // } else {
-            //     _open_data.nodes = [new_node];
-            //     _open_data.edges = [];
-            // }
+            let _nodes = cloneDeep(nodes);
+            _nodes.push(new_node);
+            _open_data.nodes = _nodes;
 
             if (from === 'scene') {
                 Bus.$emit('addNewSceneControl', new_node.id, node_config);
+                dispatch({
+                    type: 'scene/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'scene/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScene');
+                }, 100);
             } else if (from === 'plan') {
                 Bus.$emit('addNewPlanControl', new_node.id, node_config);
+                dispatch({
+                    type: 'plan/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                }, 100);
             } else if (from === 'auto_plan') {
-                Bus.$emit('addNewAutoPlanControl', new_node.id, node_config);
+                Bus.$emit('addNewAutoPlanControl', new_node.id);
+                dispatch({
+                    type: 'auto_plan/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'auto_plan/updateOpenScene',
+                    payload: _open_data
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveSceneAutoPlan', id);
+                }, 100);
             } else if (from === 'case') {
                 Bus.$emit('addNewCaseControl', new_node.id);
+                dispatch({
+                    type: 'case/updateNodes',
+                    payload: _nodes,
+                })
+                dispatch({
+                    type: 'case/updateOpenScene',
+                    payload: _open_data
+                })
+               setTimeout(() => {
+                Bus.$emit('saveCase');
+               }, 100);
             }
 
             setNodes((nds) => nds.concat(new_node));
@@ -1011,103 +1153,67 @@ const SceneBox = (props) => {
     }
     const edge_right = edge_right_list[from];
 
+
     useEffect(() => {
         const rightMenu = document.getElementsByClassName('scene-right-menu')[0];
+        let rightMenuHandle = (e) => {
+            const __edges = cloneDeep(_edges);
+            if (edge_right) {
+                const _index = __edges.findIndex(item => item.id === edge_right);
+                if (_index !== -1) {
+                    __edges.splice(_index, 1);
 
-        if (rightMenu) {
-            rightMenu.addEventListener('click', (e) => {
-                const __edges = cloneDeep(_edges);
-                if (edge_right) {
-                    const _index = __edges.findIndex(item => item.id === edge_right);
-                    if (_index !== -1) {
-                        __edges.splice(_index, 1);
+                    if (from === 'scene') {
+                        dispatch({
+                            type: 'scene/updateEdges',
+                            payload: __edges
+                        });
+                        setTimeout(() => {
+                            Bus.$emit('saveScene');
+                        }, 100);
+                    } else if (from === 'plan') {
 
-                        if (from === 'scene') {
-                            dispatch({
-                                type: 'scene/updateEdges',
-                                payload: __edges
-                            });
-                            dispatch({
-                                type: 'scene/updateIsChanged',
-                                payload: true
-                            })
-                        } else if (from === 'plan') {
+                        dispatch({
+                            type: 'plan/updateEdges',
+                            payload: __edges
+                        });
+                        setTimeout(() => {
+                            Bus.$emit('saveScenePlan', nodes, __edges, id_apis, node_config, open_data, id, 'plan');
+                        }, 100);
+                    } else if (from === 'auto_plan') {
 
-                            dispatch({
-                                type: 'plan/updateEdges',
-                                payload: __edges
-                            });
-                            dispatch({
-                                type: 'plan/updateIsChanged',
-                                payload: true
-                            })
-                        } else if (from === 'auto_plan') {
-
-                            dispatch({
-                                type: 'auto_plan/updateEdges',
-                                payload: __edges
-                            });
-                            dispatch({
-                                type: 'auto_plan/updateIsChanged',
-                                payload: true
-                            })
-                        } else if (from === 'case') {
-
-                            dispatch({
-                                type: 'case/updateEdges',
-                                payload: __edges
-                            });
-                            dispatch({
-                                type: 'case/updateIsChanged',
-                                payload: true
-                            })
-                        }
+                        dispatch({
+                            type: 'auto_plan/updateEdges',
+                            payload: __edges
+                        });
+                        setTimeout(() => {
+                            Bus.$emit('saveSceneAutoPlan', id);
+                        }, 100);
+                    } else if (from === 'case') {
+                        dispatch({
+                            type: 'case/updateEdges',
+                            payload: __edges
+                        });
+                        setTimeout(() => {
+                            Bus.$emit('saveCase');
+                        }, 100);
                     }
-
-                    setEdges(__edges);
                 }
 
-                rightMenu.style.display = 'none';
-            })
+                setEdges(__edges);
+            }
+
+            rightMenu.style.display = 'none';
+        }
+
+        if (rightMenu) {
+            rightMenu.addEventListener('click', rightMenuHandle);
         }
 
         return () => {
-            rightMenu.removeEventListener('click', (e) => {
-                const __edges = cloneDeep(_edges);
-                if (edge_right) {
-                    const _index = __edges.findIndex(item => item.id === edge_right);
-                    if (_index !== -1) {
-                        __edges.splice(_index, 1);
-
-                        if (from === 'scene') {
-                            dispatch({
-                                type: 'scene/updateEdges',
-                                payload: __edges
-                            });
-                        } else if (from === 'plan') {
-
-                            dispatch({
-                                type: 'plan/updateEdges',
-                                payload: __edges
-                            });
-                        } else if (from === 'auto_plan') {
-
-                            dispatch({
-                                type: 'auto_plan/updateEdges',
-                                payload: __edges
-                            });
-                        } else if (from === 'case') {
-
-                            dispatch({
-                                type: 'case/updateEdges',
-                                payload: __edges
-                            });
-                        }
-                    }
-
-                    setEdges(__edges);
-                }
-            })
+            if (rightMenu) {
+                rightMenu.removeEventListener('click', rightMenuHandle);
+            }
         }
     }, [edge_right, _edges, from]);
 
@@ -1173,10 +1279,6 @@ const SceneBox = (props) => {
                         type: 'scene/updateAddNew',
                         payload: ''
                     })
-                    dispatch({
-                        type: 'scene/updateIsChanged',
-                        payload: true
-                    })
                 } else if (from === 'plan') {
                     dispatch({
                         type: 'plan/updateType',
@@ -1185,10 +1287,6 @@ const SceneBox = (props) => {
                     dispatch({
                         type: 'plan/updateAddNew',
                         payload: ''
-                    })
-                    dispatch({
-                        type: 'plan/updateIsChanged',
-                        payload: true
                     })
                 } else if (from === 'auto_plan') {
                     dispatch({
@@ -1199,10 +1297,6 @@ const SceneBox = (props) => {
                         type: 'auto_plan/updateAddNew',
                         payload: ''
                     })
-                    dispatch({
-                        type: 'auto_plan/updateIsChanged',
-                        payload: true
-                    })
                 } else if (from === 'case') {
                     dispatch({
                         type: 'case/updateType',
@@ -1211,10 +1305,6 @@ const SceneBox = (props) => {
                     dispatch({
                         type: 'case/updateAddNew',
                         payload: ''
-                    })
-                    dispatch({
-                        type: 'case/updateIsChanged',
-                        payload: true
                     })
                 }
                 svgMouse.style.display = 'none';
@@ -1229,10 +1319,6 @@ const SceneBox = (props) => {
                         type: 'scene/updateAddNew',
                         payload: ''
                     })
-                    dispatch({
-                        type: 'scene/updateIsChanged',
-                        payload: true
-                    })
                 } else if (from === 'plan') {
                     dispatch({
                         type: 'plan/updateType',
@@ -1241,10 +1327,6 @@ const SceneBox = (props) => {
                     dispatch({
                         type: 'plan/updateAddNew',
                         payload: ''
-                    })
-                    dispatch({
-                        type: 'plan/updateIsChanged',
-                        payload: true
                     })
                 } else if (from === 'auto_plan') {
                     dispatch({
@@ -1255,10 +1337,6 @@ const SceneBox = (props) => {
                         type: 'auto_plan/updateAddNew',
                         payload: ''
                     })
-                    dispatch({
-                        type: 'auto_plan/updateIsChanged',
-                        payload: true
-                    })
                 } else if (from === 'case') {
                     dispatch({
                         type: 'case/updateType',
@@ -1267,10 +1345,6 @@ const SceneBox = (props) => {
                     dispatch({
                         type: 'case/updateAddNew',
                         payload: ''
-                    })
-                    dispatch({
-                        type: 'case/updateIsChanged',
-                        payload: true
                     })
                 }
                 svgMouse.style.display = 'none';
@@ -1285,10 +1359,6 @@ const SceneBox = (props) => {
                         type: 'scene/updateAddNew',
                         payload: ''
                     })
-                    dispatch({
-                        type: 'scene/updateIsChanged',
-                        payload: true
-                    })
                 } else if (from === 'plan') {
                     dispatch({
                         type: 'plan/updateType',
@@ -1297,10 +1367,6 @@ const SceneBox = (props) => {
                     dispatch({
                         type: 'plan/updateAddNew',
                         payload: ''
-                    })
-                    dispatch({
-                        type: 'plan/updateIsChanged',
-                        payload: true
                     })
                 } else if (from === 'auto_plan') {
                     dispatch({
@@ -1311,10 +1377,6 @@ const SceneBox = (props) => {
                         type: 'auto_plan/updateAddNew',
                         payload: ''
                     })
-                    dispatch({
-                        type: 'auto_plan/updateIsChanged',
-                        payload: true
-                    })
                 } else if (from === 'case') {
                     dispatch({
                         type: 'case/updateType',
@@ -1323,10 +1385,6 @@ const SceneBox = (props) => {
                     dispatch({
                         type: 'case/updateAddNew',
                         payload: ''
-                    })
-                    dispatch({
-                        type: 'case/updateIsChanged',
-                        payload: true
                     })
                 }
                 svgMouse.style.display = 'none';
@@ -1372,6 +1430,70 @@ const SceneBox = (props) => {
     }, [add_new, zoom]);
 
     const hide_config = useSelector((store) => store.plan.hide_config);
+
+
+    const updateSceneWs = (param) => {
+        if (drop_loading_time !== param) {
+            return;
+        }
+        const _open_data = cloneDeep(open_data);
+        _open_data.nodes = nodes;
+        if (from === 'scene') {
+            dispatch({
+                type: 'scene/updateNodes',
+                payload: nodes,
+            })
+            dispatch({
+                type: 'scene/updateOpenScene',
+                payload: _open_data,
+            })
+            setTimeout(() => {
+                Bus.$emit('saveScene');
+            }, 100);
+        } else if (from === 'plan') {
+            dispatch({
+                type: 'plan/updateNodes',
+                payload: nodes,
+            })
+            dispatch({
+                type: 'plan/updateOpenScene',
+                payload: _open_data,
+            })
+            setTimeout(() => {
+                Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_data, id, 'plan');
+            }, 100);
+        } else if (from === 'auto_plan') {
+            dispatch({
+                type: 'auto_plan/updateNodes',
+                payload: nodes,
+            })
+            dispatch({
+                type: 'auto_plan/updateOpenScene',
+                payload: _open_data,
+            })
+            setTimeout(() => {
+                Bus.$emit('saveSceneAutoPlan', id);
+            }, 100);
+        } else if (from === 'case') {
+            dispatch({
+                type: 'case/updateNodes',
+                payload: nodes,
+            })
+            dispatch({
+                type: 'case/updateOpenScene',
+                payload: _open_data,
+            })
+            setTimeout(() => {
+                Bus.$emit('saveCase');
+            }, 100);
+        }
+    }
+
+    const nodeDragDebounce = () => {
+        drop_loading_time = new Date().getTime();
+
+        debounce((drop_loading_time) => updateSceneWs(drop_loading_time), 1000)(drop_loading_time);
+    };
 
 
     return (
@@ -1425,93 +1547,164 @@ const SceneBox = (props) => {
                         })
                     }
                 }}
-                onNodeDrag={() => {
-                    if (from === 'scene') {
-                        dispatch({
-                            type: 'scene/updateIsChanged',
-                            payload: true
-                        })
-                    } else if (from === 'plan') {
-                        dispatch({
-                            type: 'plan/updateIsChanged',
-                            payload: true
-                        })
-                    } else if (from === 'auto_plan') {
-                        dispatch({
-                            type: 'auto_plan/updateIsChanged',
-                            payload: true
-                        })
-                    } else if (from === 'case') {
-                        dispatch({
-                            type: 'case/updateIsChanged',
-                            payload: true
-                        })
-                    }
-                }}
+                onNodeDrag={nodeDragDebounce}
                 onNodesDelete={(e) => {
-                    const { id } = e;
                     const _nodes = cloneDeep(nodes);
-                    const _index = _nodes.findIndex(item => item.id === id);
-                    _nodes.splice(_index, 1);
+                    const _open_data = cloneDeep(open_data);
+                    const _index = _nodes.findIndex(item => item.id === e[0].id);
+                    if (_index !== -1) {
+                        _nodes.splice(_index, 1);
+                    }
+                    
+                    const edge_index = edges.map((item, index) => {
+                        if (item.source === e[0].id || item.target === e[0].id) {
+                            return index;
+                        }
+                    });
+                    let _edges = cloneDeep(edges);
+                    _edges = _edges.filter((item, index) => !edge_index.includes(index));
+                    setEdges(_edges);
+
+                    _open_data.nodes = _nodes;
+                    _open_data.edges = _edges;
+
                     if (from === 'scene') {
-                        dispatch({
-                            type: 'scene/updateIsChanged',
-                            payload: true
-                        })
                         dispatch({
                             type: 'scene/updateNodes',
                             payload: _nodes
                         })
-                    } else if (from === 'plan') {
                         dispatch({
-                            type: 'plan/updateIsChanged',
-                            payload: true
+                            type: 'scene/updateEdges',
+                            payload: _edges
                         })
+                        dispatch({
+                            type: 'scene/updateOpenScene',
+                            payload: _open_data,
+                        })
+                        setNodes(_nodes);
+                        setEdges(_edges);
+                        setTimeout(() => {
+                            Bus.$emit('saveScene');
+                        }, 100);
+                    } else if (from === 'plan') {
                         dispatch({
                             type: 'plan/updateNodes',
                             payload: _nodes
                         })
-                    } else if (from === 'auto_plan') {
                         dispatch({
-                            type: 'auto_plan/updateIsChanged',
-                            payload: true
+                            type: 'plan/updateEdges',
+                            payload: _edges
                         })
+                        dispatch({
+                            type: 'plan/updateOpenScene',
+                            payload: _open_data,
+                        })
+                        setNodes(_nodes);
+                        setEdges(_edges);
+
+                        setTimeout(() => {
+                            Bus.$emit('saveScenePlan', _nodes, _edges, id_apis, node_config, open_data, id, 'plan');
+                        }, 100);
+                    } else if (from === 'auto_plan') {
                         dispatch({
                             type: 'auto_plan/updateNodes',
                             payload: _nodes
                         })
-                    } else if (from === 'case') {
                         dispatch({
-                            type: 'case/updateIsChanged',
-                            payload: true
+                            type: 'auto_plan/updateEdges',
+                            payload: _edges
                         })
+                        dispatch({
+                            type: 'auto_plan/updateOpenScene',
+                            payload: _open_data,
+                        })
+                        setNodes(_nodes);
+                        setEdges(_edges);
+
+                        setTimeout(() => {
+                            Bus.$emit('saveSceneAutoPlan', id);
+                        }, 100);
+                    } else if (from === 'case') {
                         dispatch({
                             type: 'case/updateNodes',
                             payload: _nodes
                         })
+                        dispatch({
+                            type: 'case/updateEdges',
+                            payload: _edges
+                        })
+                        dispatch({
+                            type: 'case/updateOpenScene',
+                            payload: _open_data,
+                        })
+                        setNodes(_nodes);
+                        setEdges(_edges);
+
+                        setTimeout(() => {
+                            Bus.$emit('saveCase');
+                        }, 100);
                     }
                 }}
-                onEdgesDelete={() => {
+                onEdgesDelete={(e) => {
+                    const _edges = cloneDeep(edges);
+                    const _open_data = cloneDeep(open_data);
+                    const _index = _edges.findIndex(item => item.id === e[0].id);
+                    if (_index !== -1) {
+                        _edges.splice(_index, 1);
+                    } 
+        
+                    setEdges(_edges);
+
+                    _open_data.edges = _edges;
+
                     if (from === 'scene') {
                         dispatch({
-                            type: 'scene/updateIsChanged',
-                            payload: true
+                            type: 'scene/updateEdges',
+                            payload: _edges
                         })
+                        dispatch({
+                            type: 'scene/updateOpenScene',
+                            payload: _open_data,
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveScene');
+                        }, 100);
                     } else if (from === 'plan') {
                         dispatch({
-                            type: 'plan/updateIsChanged',
-                            payload: true
+                            type: 'plan/updateEdges',
+                            payload: _edges
                         })
+                        dispatch({
+                            type: 'plan/updateOpenScene',
+                            payload: _open_data,
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveScenePlan', nodes, _edges, id_apis, node_config, open_data, id, 'plan');
+                        }, 100);
                     } else if (from === 'auto_plan') {
                         dispatch({
-                            type: 'auto_plan/updateIsChanged',
-                            payload: true
+                            type: 'auto_plan/updateEdges',
+                            payload: _edges
                         })
+                        dispatch({
+                            type: 'auto_plan/updateOpenScene',
+                            payload: _open_data,
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveSceneAutoPlan', id);
+                        }, 100);
                     } else if (from === 'case') {
                         dispatch({
-                            type: 'case/updateIsChanged',
-                            payload: true
+                            type: 'case/updateEdges',
+                            payload: _edges
                         })
+                        dispatch({
+                            type: 'case/updateOpenScene',
+                            payload: _open_data,
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveCase');
+                        }, 100);
                     }
                 }}
                 onPaneMouseMove={(e) => {

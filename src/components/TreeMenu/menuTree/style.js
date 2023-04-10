@@ -9,6 +9,7 @@ export const MenuTreeNode = styled.div`
     // background: var(--highlight-background-color-secondary);
     .btn-more {
       display: flex;
+      background-color: var(--select-hover);
     }
   }
   .tree-node-inner {
@@ -26,7 +27,8 @@ export const MenuTreeNode = styled.div`
   }
 
   .apipost-tree-node-title {
-    max-width: 150px;
+    flex: 1;
+    width: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;

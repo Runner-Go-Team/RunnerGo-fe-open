@@ -351,10 +351,14 @@ const TReportDetailResult = (props) => {
                                             reqTab === "1"
                                                 ?
                                                 <div className="req-header">
-                                                    {
-                                                        Object.entries(checkDetail || {}).length > 0 &&
-                                                        checkDetail.request_header
-                                                    }
+                                                    <MonacoEditor
+                                                        width="100%"
+                                                        ref={currentRef}
+                                                        language={EditFormat(checkDetail.request_header).language || 'json'}
+                                                        options={{ minimap: { enabled: false } }}
+                                                        editorDidMount={handleSetEditor}
+                                                        value={EditFormat(checkDetail.request_header).value === 'undefined' ? '' : EditFormat(checkDetail.request_header).value}
+                                                    />
                                                 </div>
                                                 :
                                                 <div className="req-body">
@@ -380,10 +384,14 @@ const TReportDetailResult = (props) => {
                                             resTab === "1"
                                                 ?
                                                 <div className="res-header">
-                                                    {
-                                                        Object.entries(checkDetail || {}).length > 0 &&
-                                                        checkDetail.response_header
-                                                    }
+                                                    <MonacoEditor
+                                                        width="100%"
+                                                        ref={currentRef}
+                                                        language={EditFormat(checkDetail.response_header).language || 'json'}
+                                                        options={{ minimap: { enabled: false } }}
+                                                        editorDidMount={handleSetEditor}
+                                                        value={EditFormat(checkDetail.response_header).value === 'undefined' ? '' : EditFormat(checkDetail.response_header).value}
+                                                    />
                                                 </div>
                                                 :
                                                 <div className="res-body">

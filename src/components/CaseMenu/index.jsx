@@ -87,349 +87,63 @@ const CaseMenu = (props) => {
     };
     const open_info = open_info_list[from];
 
-    const closeCase = () => {
-        if (is_changed) {
-            Modal.confirm({
-                title: t('modal.tips'),
-                content: t('modal.caseNotSave'),
-                okText: t('btn.save'),
-                cancelText: t('btn.cancel'),
-                diyText: t('btn.notSave'),
-                onOk: () => {
-                    // 保存当前场景
-                    Bus.$emit('saveCase', () => {
-                        Message('success', t('message.saveSuccess'));
-
-                        dispatch({
-                            type: 'auto_plan/updateIsChanged',
-                            payload: false
-                        })
-
-                        dispatch({
-                            type: 'case/updateIsChanged',
-                            payload: false
-                        })
-
-                        dispatch({
-                            type: 'case/updateRunRes',
-                            payload: null,
-                        })
-                        dispatch({
-                            type: 'case/updateRunningScene',
-                            payload: '',
-                        })
-                        dispatch({
-                            type: 'case/updateNodes',
-                            payload: [],
-                        });
-                        dispatch({
-                            type: 'case/updateEdges',
-                            payload: [],
-                        })
-                        dispatch({
-                            type: 'case/updateCloneNode',
-                            payload: [],
-                        })
-                        dispatch({
-                            type: 'case/updateSuccessEdge',
-                            payload: [],
-                        });
-                        dispatch({
-                            type: 'case/updateFailedEdge',
-                            payload: [],
-                        });
-                        dispatch({
-                            type: 'case/updateApiConfig',
-                            payload: false,
-                        })
-                        dispatch({
-                            type: 'case/updateBeautify',
-                            payload: false
-                        })
-                        if (from === 'scene') {
-                            Bus.$emit('addOpenScene', open_info);
-                        } else if (from === 'auto_plan') {
-                            Bus.$emit('addOpenAutoPlanScene', open_info, id_apis_auto_plan, node_config_auto_plan);
-                        }
-                        dispatch({
-                            type: 'case/updateShowCase',
-                            payload: false
-                        })
-                    });
-
-                },
-                onCancel: () => {
-                    // 取消弹窗
-
-                },
-                onDiy: () => {
-
-                    dispatch({
-                        type: 'auto_plan/updateIsChanged',
-                        payload: false
-                    })
-
-                    dispatch({
-                        type: 'case/updateIsChanged',
-                        payload: false
-                    })
-
-                    dispatch({
-                        type: 'case/updateRunRes',
-                        payload: null,
-                    })
-                    dispatch({
-                        type: 'case/updateRunningScene',
-                        payload: '',
-                    })
-                    dispatch({
-                        type: 'case/updateNodes',
-                        payload: [],
-                    });
-                    dispatch({
-                        type: 'case/updateEdges',
-                        payload: [],
-                    })
-                    dispatch({
-                        type: 'case/updateCloneNode',
-                        payload: [],
-                    })
-                    dispatch({
-                        type: 'case/updateSuccessEdge',
-                        payload: [],
-                    });
-                    dispatch({
-                        type: 'case/updateFailedEdge',
-                        payload: [],
-                    });
-                    dispatch({
-                        type: 'case/updateApiConfig',
-                        payload: false,
-                    })
-                    dispatch({
-                        type: 'case/updateBeautify',
-                        payload: false
-                    })
-                    // 不保存, 直接跳转
-                    if (from === 'scene') {
-                        Bus.$emit('addOpenScene', open_info);
-                    } else if (from === 'auto_plan') {
-                        Bus.$emit('addOpenAutoPlanScene', open_info, id_apis_auto_plan, node_config_auto_plan);
-                    }
-                    dispatch({
-                        type: 'case/updateShowCase',
-                        payload: false
-                    })
-                }
-            })
-        } else {
-            if (from === 'scene') {
-                Bus.$emit('addOpenScene', open_info);
-            } else if (from === 'auto_plan') {
-                Bus.$emit('addOpenAutoPlanScene', open_info, id_apis_auto_plan, node_config_auto_plan);
-            }
-            dispatch({
-                type: 'case/updateShowCase',
-                payload: false
-            })
-        }
-    };
-
     const openCase = (item) => {
         const { case_id, case_name, description } = item;
-        if (is_changed) {
-            Modal.confirm({
-                title: t('modal.tips'),
-                content: t('modal.caseNotSave'),
-                okText: t('btn.save'),
-                cancelText: t('btn.cancel'),
-                diyText: t('btn.notSave'),
-                onOk: () => {
-                    // 保存当前场景
-                    Bus.$emit('saveCase', () => {
-                        Message('success', t('message.saveSuccess'));
-
-                        dispatch({
-                            type: 'auto_plan/updateIsChanged',
-                            payload: false
-                        })
-
-                        dispatch({
-                            type: 'case/updateIsChanged',
-                            payload: false
-                        })
-
-                        dispatch({
-                            type: 'case/updateRunRes',
-                            payload: null,
-                        })
-                        dispatch({
-                            type: 'case/updateRunningScene',
-                            payload: '',
-                        })
-                        dispatch({
-                            type: 'case/updateNodes',
-                            payload: [],
-                        });
-                        dispatch({
-                            type: 'case/updateEdges',
-                            payload: [],
-                        })
-                        dispatch({
-                            type: 'case/updateCloneNode',
-                            payload: [],
-                        })
-                        dispatch({
-                            type: 'case/updateSuccessEdge',
-                            payload: [],
-                        });
-                        dispatch({
-                            type: 'case/updateFailedEdge',
-                            payload: [],
-                        });
-                        dispatch({
-                            type: 'case/updateApiConfig',
-                            payload: false,
-                        })
-                        dispatch({
-                            type: 'case/updateBeautify',
-                            payload: false
-                        })
-                        dispatch({
-                            type: 'case/updateCaseName',
-                            payload: case_name || '',
-                        })
-                        dispatch({
-                            type: 'case/updateCaseDesc',
-                            payload: description || ''
-                        })
-                        dispatch({
-                            type: 'case/updateOpenInfo',
-                            payload: item
-                        })
-                        Bus.$emit('addOpenCase', case_id);
-                    });
-
-                },
-                onCancel: () => {
-                    // 取消弹窗
-
-                },
-                onDiy: () => {
-
-                    // 不保存, 直接跳转
-                    dispatch({
-                        type: 'auto_plan/updateIsChanged',
-                        payload: false
-                    })
-
-                    dispatch({
-                        type: 'case/updateIsChanged',
-                        payload: false
-                    })
-
-                    dispatch({
-                        type: 'case/updateRunRes',
-                        payload: null,
-                    })
-                    dispatch({
-                        type: 'case/updateRunningScene',
-                        payload: '',
-                    })
-                    dispatch({
-                        type: 'case/updateNodes',
-                        payload: [],
-                    });
-                    dispatch({
-                        type: 'case/updateEdges',
-                        payload: [],
-                    })
-                    dispatch({
-                        type: 'case/updateCloneNode',
-                        payload: [],
-                    })
-                    dispatch({
-                        type: 'case/updateSuccessEdge',
-                        payload: [],
-                    });
-                    dispatch({
-                        type: 'case/updateFailedEdge',
-                        payload: [],
-                    });
-                    dispatch({
-                        type: 'case/updateApiConfig',
-                        payload: false,
-                    })
-                    dispatch({
-                        type: 'case/updateBeautify',
-                        payload: false
-                    })
-                    dispatch({
-                        type: 'case/updateCaseName',
-                        payload: case_name || '',
-                    })
-                    dispatch({
-                        type: 'case/updateCaseDesc',
-                        payload: description || ''
-                    })
-                    dispatch({
-                        type: 'case/updateOpenInfo',
-                        payload: item
-                    })
-                    Bus.$emit('addOpenCase', case_id);
-                }
-            })
-        } else {
-            dispatch({
-                type: 'case/updateRunRes',
-                payload: null,
-            })
-            dispatch({
-                type: 'case/updateRunningScene',
-                payload: '',
-            })
-            dispatch({
-                type: 'case/updateNodes',
-                payload: [],
-            });
-            dispatch({
-                type: 'case/updateEdges',
-                payload: [],
-            })
-            dispatch({
-                type: 'case/updateCloneNode',
-                payload: [],
-            })
-            dispatch({
-                type: 'case/updateSuccessEdge',
-                payload: [],
-            });
-            dispatch({
-                type: 'case/updateFailedEdge',
-                payload: [],
-            });
-            dispatch({
-                type: 'case/updateApiConfig',
-                payload: false,
-            })
-            dispatch({
-                type: 'case/updateBeautify',
-                payload: false
-            })
-            dispatch({
-                type: 'case/updateCaseName',
-                payload: case_name || '',
-            })
-            dispatch({
-                type: 'case/updateCaseDesc',
-                payload: description || ''
-            })
-            dispatch({
-                type: 'case/updateOpenInfo',
-                payload: item
-            })
-            Bus.$emit('addOpenCase', case_id);
-        }
+        dispatch({
+            type: 'case/updateRunRes',
+            payload: null,
+        })
+        dispatch({
+            type: 'case/updateRunningScene',
+            payload: '',
+        })
+        dispatch({
+            type: 'case/updateNodes',
+            payload: [],
+        });
+        dispatch({
+            type: 'case/updateEdges',
+            payload: [],
+        })
+        dispatch({
+            type: 'case/updateCloneNode',
+            payload: [],
+        })
+        dispatch({
+            type: 'case/updateSuccessEdge',
+            payload: [],
+        });
+        dispatch({
+            type: 'case/updateFailedEdge',
+            payload: [],
+        });
+        dispatch({
+            type: 'case/updateApiConfig',
+            payload: false,
+        })
+        dispatch({
+            type: 'case/updateBeautify',
+            payload: false
+        })
+        dispatch({
+            type: 'case/updateCaseName',
+            payload: case_name || '',
+        })
+        dispatch({
+            type: 'case/updateCaseDesc',
+            payload: description || ''
+        })
+        dispatch({
+            type: 'case/updateOpenInfo',
+            payload: item
+        })
+        dispatch({
+            type: 'case/updateRunStatus',
+            payload: 'finish',
+        })
+        Bus.$emit('addOpenCase', case_id);
+        Bus.$emit('clearFetchSceneState');
+        Bus.$emit('clearFetchCaseState');
     };
 
     const changeSwitch = (case_id, value, e) => {
@@ -456,62 +170,15 @@ const CaseMenu = (props) => {
     return (
         <>
             <div className="case-menu">
-                <CaseList style={{ right: '-36px', left: 'auto', marginTop: '27.5px' }} lineStyle={{borderLeftWidth: 0, borderRightWidth: '1px', borderRadius: '0px 3px 3px 0px'}} from={from} />
+                <CaseList style={{ right: '-36px', left: 'auto', marginTop: '27.5px' }} lineStyle={{ borderLeftWidth: 0, borderRightWidth: '1px', borderRadius: '0px 3px 3px 0px' }} from={from} />
                 <div className="top">
                     <div className="top-left">
                         <p className="title">{t('case.caseSet')}</p>
                     </div>
                 </div>
                 <Button className="create-case-btn" onClick={() => {
-                    if (is_changed) {
-                        Modal.confirm({
-                            title: t('modal.tips'),
-                            content: t('modal.caseNotSave'),
-                            okText: t('btn.save'),
-                            cancelText: t('btn.cancel'),
-                            diyText: t('btn.notSave'),
-                            onOk: () => {
-                                // 保存当前场景
-                                Bus.$emit('saveCase', () => {
-                                    Message('success', t('message.saveSuccess'));
-                                    dispatch({
-                                        type: 'auto_plan/updateIsChanged',
-                                        payload: false
-                                    })
-
-                                    dispatch({
-                                        type: 'case/updateIsChanged',
-                                        payload: false
-                                    })
-                                    setEditCase(null);
-                                    setShowCreate(true);
-                                });
-
-                            },
-                            onCancel: () => {
-                                // 取消弹窗
-
-                            },
-                            onDiy: () => {
-
-                                dispatch({
-                                    type: 'auto_plan/updateIsChanged',
-                                    payload: false
-                                })
-
-                                dispatch({
-                                    type: 'case/updateIsChanged',
-                                    payload: false
-                                })
-                                // 不保存, 直接跳转
-                                setEditCase(null);
-                                setShowCreate(true);
-                            }
-                        })
-                    } else {
-                        setEditCase(null);
-                        setShowCreate(true);
-                    }
+                    setEditCase(null);
+                    setShowCreate(true);
                 }}>{t('case.createCase')}</Button>
                 {/* <Input
                     className="search-case"

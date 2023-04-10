@@ -26,6 +26,8 @@ import { fetchCopyPlan } from '@services/auto_plan';
 
 import { DatePicker, Table, Pagination } from '@arco-design/web-react';
 
+let auto_plan_t = null;
+
 const TestPlanList = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -47,6 +49,7 @@ const TestPlanList = () => {
 
     const dispatch = useDispatch();
     const refreshList = useSelector((store) => store.auto_plan.refreshList);
+    const _auto_plan_list = useSelector((store) => store.auto_plan.auto_plan_list);
 
     const language = useSelector((d) => d.user.language);
     const theme = useSelector((d) => d.user.theme);
@@ -215,18 +218,75 @@ const TestPlanList = () => {
         )
     }
 
-    let auto_plan_t = null;
     useEffect(() => {
         getPlanList();
+        let setIntervalList = window.setIntervalList;
+
         if (auto_plan_t) {
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === auto_plan_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
+            }
             clearInterval(auto_plan_t);
         }
         auto_plan_t = setInterval(getPlanList, 1000);
 
+
+        if (setIntervalList) {
+            setIntervalList.push(auto_plan_t);
+        } else {
+            setIntervalList = [auto_plan_t];
+        }
+        window.setIntervalList = setIntervalList;
+
         return () => {
+
+            if (setIntervalList) {
+                let _index = setIntervalList.findIndex(item => item === auto_plan_t);
+                setIntervalList.splice(_index, 1);
+                window.setIntervalList = setIntervalList;
+            }
+
             clearInterval(auto_plan_t);
         }
     }, [refreshList, keyword, currentPage, pageSize, startTime, endTime, taskType, status, sort, language]);
+
+    useEffect(() => {
+        if (_auto_plan_list) {
+            const { auto_plan_list, total } = _auto_plan_list;
+            if (auto_plan_list && auto_plan_list.length === 0 && currentPage > 1) {
+                pageChange(currentPage - 1, pageSize);
+            }
+            setTotal(total);
+            const planList = auto_plan_list ? auto_plan_list.map(item => {
+                const { task_type, mode, status, created_at, updated_at, plan_name, user_name, remark } = item;
+                return {
+                    ...item,
+                    plan_name:
+                        <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{plan_name}</div>}>
+                            <div className='ellipsis'>{plan_name}</div>
+                        </Tooltip>,
+                    user_name:
+                        <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{user_name}</div>}>
+                            <div className='ellipsis'>{user_name}</div>
+                        </Tooltip>,
+                    remark:
+                        <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{remark}</div>}>
+                            <div className='ellipsis'>{remark}</div>
+                        </Tooltip>,
+                    task_type: taskList[task_type],
+                    mode: modeList[mode],
+                    status: statusList[status],
+                    canDelete: status === 1,
+                    created_at: dayjs(created_at * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                    updated_at: dayjs(updated_at * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                    handle: <HandleContent data={item} />
+                }
+            }) : [];
+            setPlanList(planList);
+        }
+    }, [_auto_plan_list, currentPage, pageSize]);
 
     const getPlanList = () => {
         const params = {
@@ -240,41 +300,11 @@ const TestPlanList = () => {
             status,
             sort
         };
-        fetchTPlanList(params).subscribe({
-            next: (res) => {
-                const { data: { auto_plan_list, total } } = res;
-                if (auto_plan_list && auto_plan_list.length === 0 && currentPage > 1) {
-                    pageChange(currentPage - 1, pageSize);
-                }
-                setTotal(total);
-                const planList = auto_plan_list ? auto_plan_list.map(item => {
-                    const { task_type, mode, status, created_at, updated_at, plan_name, user_name, remark } = item;
-                    return {
-                        ...item,
-                        plan_name:
-                            <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{plan_name}</div>}>
-                                <div className='ellipsis'>{plan_name}</div>
-                            </Tooltip>,
-                        user_name:
-                            <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{user_name}</div>}>
-                                <div className='ellipsis'>{user_name}</div>
-                            </Tooltip>,
-                        remark:
-                            <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{remark}</div>}>
-                                <div className='ellipsis'>{remark}</div>
-                            </Tooltip>,
-                        task_type: taskList[task_type],
-                        mode: modeList[mode],
-                        status: statusList[status],
-                        canDelete: status === 1,
-                        created_at: dayjs(created_at * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                        updated_at: dayjs(updated_at * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                        handle: <HandleContent data={item} />
-                    }
-                }) : [];
-                setPlanList(planList);
-            }
-        })
+
+        Bus.$emit('sendWsMessage', JSON.stringify({
+            route_url: "auto_plan_list",
+            param: JSON.stringify(params)
+        }))
     }
 
 
@@ -499,7 +529,7 @@ const TestPlanList = () => {
                     sizeOptions={[5, 10, 15, 20]}
                     onChange={(page, pageSize) => pageChange(page, pageSize)}
                 />}
-            { showTeamExpiration && <TeamExpiration onCancel={() => setShowExpiration(false)} /> }
+            {showTeamExpiration && <TeamExpiration onCancel={() => setShowExpiration(false)} />}
         </div>
     )
 };
