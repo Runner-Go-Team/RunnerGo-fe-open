@@ -89,7 +89,7 @@ const PressMonitor = (props) => {
             team_id: localStorage.getItem('team_id'),
             report_id: report_id ? report_id : JSON.parse(contrast)[select_plan].report_id,
         };
-        
+
         Bus.$emit('sendWsMessage', JSON.stringify({
             route_url: "stress_report_machine_monitor",
             param: JSON.stringify(query)
@@ -128,7 +128,7 @@ const PressMonitor = (props) => {
                 //     } else {
                 //         return value[0].value[1];
                 //     }
-                    
+
                 // }
             },
             xAxis: {
@@ -174,7 +174,13 @@ const PressMonitor = (props) => {
                     lineStyle: {
                         color: theme === 'dark' ? '#39393D' : '#E9E9E9'
                     }
-                }
+                },
+                max: function() {
+                    return name === 'cpu' || name === "mem" ? 100 : undefined;
+                },
+                min: function() {
+                    return name === 'cpu' || name === "mem" ? 0 : undefined;
+                },
             },
             // dataZoom: [
             //     {
@@ -187,7 +193,7 @@ const PressMonitor = (props) => {
             //         end: 20
             //     }
             // ],
-            series: name === 'net_io' ? 
+            series: name === 'net_io' ?
             [
                 {
                     name: "net_out",
@@ -209,7 +215,7 @@ const PressMonitor = (props) => {
                         return [item[0], item[3]]
                     }),
                 }
-            ] : 
+            ] :
             [
                 {
                     name,

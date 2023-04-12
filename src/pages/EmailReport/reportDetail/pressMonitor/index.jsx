@@ -140,7 +140,13 @@ const PressMonitor = (props) => {
                     lineStyle: {
                         color: theme === 'dark' ? '#39393D' : '#E9E9E9'
                     }
-                }
+                },
+                max: function() {
+                    return name === 'cpu' || name === "mem" ? 100 : undefined;
+                },
+                min: function() {
+                    return name === 'cpu' || name === "mem" ? 0 : undefined;
+                },
             },
             // dataZoom: [
             //     {
