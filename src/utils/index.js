@@ -7,7 +7,6 @@ import Mock from 'mockjs';
 import ATools from 'apipost-tools';
 import IATools from 'apipost-inside-tools';
 import JSONbig from 'json-bigint';
-import { FE_BASEURL } from '@config/index';
 import { getBaseCollection } from '@constants/baseCollection';
 import JSON5 from 'json5';
 import X2JS from 'x2js';
@@ -1167,20 +1166,7 @@ export const pathArr = (array) => {
     return temp;
 };
 export const openUrl = (url) => {
-    if (isElectron()) {
-        const { shell } = window?.electron || {};
-        const token = getCookie('token');
-        // BASE_URL/api/uc?url=&token=
-        const _res = shell.openExternal(
-            `${FE_BASEURL}/api/uc?hash_token=${token}&reffer=${encodeURI(url)}`
-        );
-
-        if (!_res) {
-            window.open(url);
-        }
-    } else {
-        window.open(url);
-    }
+    window.open(url);
 };
 export const customizer = (objValue, srcValue) => {
     if (Object.prototype.toString.call(objValue) == Object.prototype.toString.call(srcValue)) {

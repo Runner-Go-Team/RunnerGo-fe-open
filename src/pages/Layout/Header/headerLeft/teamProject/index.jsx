@@ -7,7 +7,6 @@ import {
     StartUpTeam as SvgStartupteam,
     Search as SvgSearch,
 } from 'adesign-react/icons';
-import { FE_BASEURL } from '@config/client';
 import { global$ } from '@hooks/useGlobal/global';
 import { isObject, isString } from 'lodash';
 import TeamList from './teamList';
@@ -59,8 +58,6 @@ const TeamProject = () => {
         });
         refDropdown?.current?.setPopupVisible(false);
     };
-
-    const USER_PROJECT_URL = `${FE_BASEURL}/project/${CURRENT_PROJECT_ID}/lately`;
 
     return (
         <TeamProjectPanel>
