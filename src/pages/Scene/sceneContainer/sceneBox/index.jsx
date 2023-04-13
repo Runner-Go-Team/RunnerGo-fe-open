@@ -896,18 +896,20 @@ const SceneBox = (props) => {
                     Bus.$emit('saveScene');
                 }, 100);
             } else if (from === 'plan') {
-                Bus.$emit('addNewPlanApi', new_node.id, id_apis, node_config, { id }, { id }, from);
-                dispatch({
-                    type: 'plan/updateNodes',
-                    payload: _nodes,
-                })
-                dispatch({
-                    type: 'plan/updateOpenScene',
-                    payload: _open_data
-                })
-                setTimeout(() => {
-                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
-                }, 300);
+                Bus.$emit('addNewPlanApi', new_node.id, id_apis, node_config, { id }, { id }, from, (id_apis, node_config) => {
+                    dispatch({
+                        type: 'plan/updateNodes',
+                        payload: _nodes,
+                    })
+                    dispatch({
+                        type: 'plan/updateOpenScene',
+                        payload: _open_data
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                    }, 300);
+                });
+ 
             } else if (from === 'auto_plan') {
                 Bus.$emit('addNewAutoPlanApi', new_node.id, { id }, { id });
                 dispatch({

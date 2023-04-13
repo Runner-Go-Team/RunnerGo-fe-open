@@ -168,10 +168,10 @@ const TPlanDetailHeader = (props) => {
                                 {t('plan.planManage')} /
                                 <Tooltip
                                     placement="top"
-                                    content={<div>{planDetail.plan_name}</div>}
+                                    content={<div>{planName}</div>}
                                 >
                                     <div style={{ marginLeft: '8px' }}>
-                                        <Input maxLength={30} disabled={planDetail.status === 2} value={planDetail.plan_name} onBlur={(e) => changePlanInfo('plan_name', e.target.value)} onChange={(e) => setPlanName(e)} />
+                                        <Input maxLength={30} disabled={planDetail.status === 2} value={planName} onBlur={(e) => changePlanInfo('plan_name', e.target.value)} onChange={(e) => setPlanName(e)} />
                                     </div>
                                 </Tooltip>
                             </p>
@@ -193,7 +193,7 @@ const TPlanDetailHeader = (props) => {
                             </div>
                             <div className='item'>
                                 {t('plan.planDesc')}:
-                                <Input maxLength={50} disabled={planDetail.status === 2} value={planDetail.remark} onBlur={(e) => changePlanInfo('remark', e.target.value)} onChange={(e) => setPlanDesc(e)} />
+                                <Input maxLength={50} disabled={planDetail.status === 2} value={planDesc} onBlur={(e) => changePlanInfo('remark', e.target.value)} onChange={(e) => setPlanDesc(e)} />
                             </div>
                         </div>
                     </div>
