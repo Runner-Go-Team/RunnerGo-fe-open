@@ -649,7 +649,7 @@
             "varDesc": "变量描述"
         },
         "machine": {
-            "machineID": "机器ID",
+            "machineID": "机器名称",
             "cpu": "CPU使用率",
             "cpuLoad1": "cpu-load1",
             "cpuLoad5": "cpu-load5",

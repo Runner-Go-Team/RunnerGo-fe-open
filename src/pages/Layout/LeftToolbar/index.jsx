@@ -174,9 +174,9 @@ const LeftToolbar = () => {
                         </Link>
                     </SubMenu>
 
-                    {/* <Link to="/machine">
+                    <Link to="/machine">
                         <MenuItem key='/machine'><SvgMachine className="arco-icon arco-icon-robot" />{t('leftBar.machine')}</MenuItem>
-                    </Link> */}
+                    </Link>
                     <MenuItem onClick={() => {
                         window.open('https://rhl469webu.feishu.cn/docx/Rr0cdBuVUoskdkxE5t6cUo9vnOe', '_blank');
                     }} key='/doc'><SvgDoc className="arco-icon arco-icon-robot" />{t('leftBar.docs')}</MenuItem>

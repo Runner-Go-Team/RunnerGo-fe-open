@@ -49,14 +49,6 @@ const Machine = () => {
             sorter: true
         },
         {
-            title: t('column.machine.maxCoprogram'),
-            dataIndex: 'max_goroutines'
-        },
-        {
-            title: t('column.machine.useCoprogram'),
-            dataIndex: 'current_goroutines'
-        },
-        {
             title: t('column.machine.type'),
             dataIndex: 'server_type'
         },
@@ -111,15 +103,14 @@ const Machine = () => {
         }))
     }
 
-    let machine_t = null;
-
     useEffect(() => {
         let setIntervalList = window.setIntervalList;
 
         getTableData();
-        machine_t = setInterval(() => {
-            getTableData();
-        }, 5000);
+        if (machine_t) {
+            clearInterval(machine_t);
+        }
+        machine_t = setInterval(getTableData, 5000);
         if (setIntervalList) {
             setIntervalList.push(machine_t);
         } else {

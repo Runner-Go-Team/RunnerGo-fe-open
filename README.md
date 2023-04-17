@@ -8,7 +8,7 @@
     # 克隆代码
     git clone https://github.com/Runner-Go-Team/RunnerGo-fe-open.git
     # 切换目录
-    cd RunnerGo-fe-open
+    cd runnerGo-fe-open
     # 下载依赖
     npm install
     # 启动开发环境项目
