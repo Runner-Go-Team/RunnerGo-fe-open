@@ -89,6 +89,10 @@ const createTarget = (type, baseCollection) => {
               tokenSecret: '',
               token: '',
             },
+            bidirectional: {
+              ca_cert: '',
+              ca_cert_name: ''
+            }
           },
           body: {
             mode: 'none', // body 参数类型 none/form-data / urlencoded / json /xml /plain/html

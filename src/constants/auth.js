@@ -81,6 +81,10 @@ export const defaultAuth = {
         tokenSecret: '',
         token: '',
     },
+    bidirectional: {
+        ca_cert: '',
+        ca_cert_name: ''
+    }
 };
 
 export const digestPlaceholder = {

@@ -992,6 +992,7 @@ const useScene = () => {
                 const { data: { ret_id }, code } = res;
 
                 if (code === 0) {
+                    clearInterval(scene_t);
 
                     const query = {
                         ret_id,
@@ -1120,6 +1121,8 @@ const useScene = () => {
         fetchSendSceneApi(params).pipe(
             tap(res => {
                 const { data: { ret_id } } = res;
+                clearInterval(send_scene_api_t);
+
                 const query = {
                     ret_id,
                 };

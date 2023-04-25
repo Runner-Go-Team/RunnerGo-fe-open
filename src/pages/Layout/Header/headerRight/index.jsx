@@ -158,7 +158,7 @@ const HeaderRight = () => {
                 setShowModal(false);
                 setAddLength(0);
                 setUnRegister(0);
-                setUnEmail(0);
+                setUnEmail([]);
                 addLength && setAddLength(addLength);
                 unRegister && setUnRegister(unRegister);
                 unEmail && setUnEmail(unEmail);

@@ -35,7 +35,8 @@ const Header = (props) => {
       ...rowData,
       ...newVal,
     };
-    onChange('header', [...newList]);
+    // key和value都是空的数据不要
+    onChange('header', [...newList.filter(item => item.key.trim().length > 0 || item.value.trim().length > 0)]);
   };
 
   const handleTableDelete = (index) => {
@@ -70,7 +71,7 @@ const Header = (props) => {
           <SearchInput
             size="mini"
             value={text}
-            placeholder={ t('apis.key') }
+            placeholder={t('apis.key')}
             onChange={(newVal) => {
               handleChange(rowData, rowIndex, { key: newVal });
             }}
@@ -173,7 +174,7 @@ const Header = (props) => {
           <Input
             size="mini"
             value={text}
-            placeholder={ t('placeholder.bodyDesc') }
+            placeholder={t('placeholder.bodyDesc')}
             onChange={(newVal) => {
               handleChange(rowData, rowIndex, { description: newVal });
             }}

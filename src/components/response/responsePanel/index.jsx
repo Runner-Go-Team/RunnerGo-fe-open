@@ -23,7 +23,7 @@ import './index.less';
 const { Tabs, TabPan } = TabComponent;
 const Option = Select.Option;
 const ResPonsePanel = (props) => {
-  let { data, tempData, onChange, direction, from = 'apis', showAssert } = props;
+  let { data, tempData, onChange, direction, from = 'apis', showAssert, showRight = true } = props;
   const { t } = useTranslation();
   const open_res = useSelector((store) => store.opens.open_res);
   const open_scene_res = useSelector((store) => store.scene.run_api_res);
@@ -43,6 +43,10 @@ const ResPonsePanel = (props) => {
 
   const open_api_now = useSelector((store) => store.opens.open_api_now);
 
+  const debug_target_id = useSelector((store) => store.auto_report.debug_target_id);
+
+  const report_debug_res = useSelector((store) => store.report.debug_res);
+
   const run_res_list = {
     'scene': run_res_scene,
     'plan': run_res_plan,
@@ -51,12 +55,15 @@ const ResPonsePanel = (props) => {
   }
   const run_res = run_res_list[from];
 
+
   const response_list = {
     'apis': open_res && open_res[open_api_now],
     'scene': open_scene_res && open_scene_res[id_now],
     'plan': open_plan_res && open_plan_res[id_plan_now],
     'auto_plan': open_auto_plan_res && open_auto_plan_res[id_auto_plan_now],
-    'case': open_case_res && open_case_res[id_case_now]
+    'case': open_case_res && open_case_res[id_case_now],
+    'auto_report': open_res && open_res[debug_target_id ? debug_target_id.target_id : ''],
+    'report': report_debug_res ? report_debug_res : ''
   }
 
   const id_now_list = {
@@ -140,7 +147,7 @@ const ResPonsePanel = (props) => {
       id: '5',
       title: (
         <div style={{ position: 'relative' }}>
-          <span style={{ marginRight: ((response_data && response_data.assertion) || (scene_result  && scene_result.assertion)) ? '8px' : 0 }}>{t('apis.resAssert')}</span>
+          <span style={{ marginRight: ((response_data && response_data.assertion) || (scene_result && scene_result.assertion)) ? '8px' : 0 }}>{t('apis.resAssert')}</span>
           {
             response_data ?
               response_data && response_data.assertion
@@ -175,17 +182,7 @@ const ResPonsePanel = (props) => {
   const [activeIndex, setActiveIndex] = useState('1');
   const [specialStatus, setSpecialStatus] = useState('none');
   const [diyExampleKey, setDiyExampleKey] = useState('');
-  // useEffect(() => {
-  //   // setDiyExampleKey('');
-  //   User.get(localStorage.getItem('uuid') || '-1').then((user) => {
-  //     if (isPlainObject(user.config)) {
-  //       if (user.config?.TAB_TO_RESPONSE_AFTER_SEND > 0 && tempData.hasOwnProperty('response')) {
-  //         setActiveIndex('1');
-  //         setDiyVisible(false);
-  //       }
-  //     }
-  //   });
-  // }, [tempData]);
+
 
   const handleTabChange = (index) => {
     setActiveIndex(index);
@@ -212,10 +209,13 @@ const ResPonsePanel = (props) => {
           ) : (
             headerTabItems
           )}
-          <ResponseStatus
-            response={scene_result || response_data || {}}
-            onChange={onChange}
-          ></ResponseStatus>
+          {
+            showRight ? <ResponseStatus
+              response={scene_result || response_data || {}}
+              onChange={onChange}
+            ></ResponseStatus> : ''
+          }
+
         </div>
       </>
     );
@@ -324,7 +324,7 @@ const ResPonsePanel = (props) => {
         onChange={handleTabChange}
         headerRender={renderTabPanel}
         contentRender={contentRender}
-        style={{ padding: '0 16px', marginTop: '2px', paddingTop: '8px'}}
+        style={{ padding: '0 16px', marginTop: '2px', paddingTop: '8px' }}
       >
         {defaultList.map((d) => (
           <TabPan
@@ -335,7 +335,7 @@ const ResPonsePanel = (props) => {
             title={d.title}
           // disabled={}
           >
-            <>{scene_result || response_data ? d.content : <NotResponse  text={t('apis.resEmpty')} />}</>
+            <>{scene_result || response_data ? d.content : <NotResponse text={t('apis.resEmpty')} />}</>
           </TabPan>
         ))}
       </Tabs>

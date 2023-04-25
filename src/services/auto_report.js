@@ -24,3 +24,13 @@ export const fetchEmailTReport = (
 export const fetchEmailReportDetail = (
     params
 ) => ajax('post', '/html/api/v1/auto_plan/get_report_detail', 'json', false, params);
+
+// 获取自动化报告里面的接口详情
+export const fetchAutoReportApi = (
+    params
+) => ajax('post', '/management/api/v1/auto_plan/get_report_api_detail', 'json', false, params);
+
+// 运行自动化报告里的接口
+export const fetchRunAutoReportApi = (
+    params
+) => ajax('post', '/management/api/v1/auto_plan/send_report_api', 'json', false, params);

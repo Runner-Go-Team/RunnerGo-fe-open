@@ -34,6 +34,10 @@ const PresetConfig = () => {
             dataIndex: 'task_type'
         },
         {
+            title: t('column.preset.debugMode'),
+            dataIndex: 'debug_mode'
+        },
+        {
             title: t('column.preset.taskMode'),
             dataIndex: 'task_mode'
         },
@@ -105,6 +109,13 @@ const PresetConfig = () => {
         '3': t('plan.taskList.mixTask')
     };
 
+    const debugModeList = {
+        'stop': t('plan.debugMode-0'),
+        'all': t('plan.debugMode-1'),
+        'only_success': t('plan.debugMode-2'),
+        'stop': t('plan.debugMode-3'),
+    }
+
     const controlModeList = [t('plan.controlModeList.0'), t('plan.controlModeList.1')];
 
     const getTableData = () => {
@@ -122,7 +133,7 @@ const PresetConfig = () => {
                 }
                 setTotalData(preinstall_list ? preinstall_list : []);
                 setTableData(preinstall_list ? preinstall_list.map(item => {
-                    const { mode_conf, task_type, task_mode, control_mode } = item;
+                    const { mode_conf, task_type, task_mode, control_mode, debug_mode } = item;
 
                     for (let i in mode_conf) {
                         if (!mode_conf[i]) {
@@ -136,6 +147,7 @@ const PresetConfig = () => {
                         task_type: taskList[task_type],
                         task_mode: modeList[task_mode],
                         control_mode: controlModeList[control_mode],
+                        debug_mode: debugModeList[debug_mode ? debug_mode : "stop"],
                         handle: <div className='handle'>
                             <SvgEye onClick={() => {
                                 let result = preinstall_list.find(elem => elem.id === item.id);

@@ -144,7 +144,6 @@ const ScenePicker = (props) => {
 
     Bus.$emit('importSceneList', _dataList.map(item => item.id), id, 'auto_plan', (scene_id_list, code) => {
 
-
       dispatch({
         type: 'scene/updateOpenName',
         payload: scene_id_list[0].name,
@@ -158,7 +157,7 @@ const ScenePicker = (props) => {
 
       dispatch({
         type: 'auto_plan/updateOpenInfo',
-        payload: { target_id: scene_id_list[0].id }
+        payload: { target_id: scene_id_list[0].target_id }
       })
 
       if (code === 0) {

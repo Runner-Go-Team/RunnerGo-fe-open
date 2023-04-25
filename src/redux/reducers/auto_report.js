@@ -5,13 +5,17 @@ const initialState = {
   refreshList: false,
 
   // 列表数据
-  auto_report_list: null
+  auto_report_list: null,
+
+  // 正在调试的接口
+  debug_target_id: null
 };
 
 // action名称
 const actionTypes = {
   updateRefreshList: 'updateRefreshList',
-  updateAutoReportList: 'updateAutoReportList'
+  updateAutoReportList: 'updateAutoReportList',
+  updateDebugTargetId: 'updateDebugTargetId'
 }
 
 export const autoReportReducer = (state = initialState, action) => {
@@ -26,6 +30,11 @@ export const autoReportReducer = (state = initialState, action) => {
       return {
         ...state,
         auto_report_list: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateDebugTargetId}`:
+      return {
+        ...state,
+        debug_target_id: action.payload
       }
     default:
       return state;

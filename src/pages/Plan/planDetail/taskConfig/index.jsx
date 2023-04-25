@@ -64,7 +64,8 @@ const TaskConfig = (props) => {
                                 mode_conf,
                                 task_type,
                                 control_mode,
-                                timed_task_conf
+                                timed_task_conf,
+                                debug_mode
                             } = plan_task;
                             setMode(mode);
                             setControlMode(control_mode);
@@ -79,6 +80,7 @@ const TaskConfig = (props) => {
                             setStepRunTime(step_run_time);
                             setModeConf(mode_conf);
                             setTaskType(task_type);
+                            setDebugMode(debug_mode ? debug_mode: 'stop');
 
                             if (timed_task_conf) {
 
@@ -102,6 +104,7 @@ const TaskConfig = (props) => {
                                     cron_expr,
                                     task_type,
                                     control_mode,
+                                    debug_mode: debug_mode ? debug_mode : 'stop',
                                     mode_conf: mode_conf ? mode_conf : {},
                                     timed_task_conf: timed_task_conf ? timed_task_conf : {}
                                 },
@@ -133,6 +136,7 @@ const TaskConfig = (props) => {
             timed_task_conf,
             task_type,
             control_mode,
+            debug_mode
         } = preinstall;
         const { concurrency, duration, max_concurrency, round_num, start_concurrency, step, step_run_time } = mode_conf;
         setMode(task_mode);
@@ -147,6 +151,7 @@ const TaskConfig = (props) => {
         setStep(step);
         setStepRunTime(step_run_time);
         setTaskType(task_type);
+        setDebugMode(debug_mode ? debug_mode : "stop");
 
 
         if (round_num > 0 && (!duration > 0)) {
@@ -169,6 +174,7 @@ const TaskConfig = (props) => {
             mode_conf: mode_conf ? mode_conf : {},
             timed_task_conf: timed_task_conf ? timed_task_conf : {},
             task_type,
+            debug_mode: debug_mode ? debug_mode : 'stop'
         }
 
 
@@ -227,6 +233,8 @@ const TaskConfig = (props) => {
             _task_config['mode'] = value;
         } else if (type === 'control_mode') {
             _task_config['control_mode'] = value;
+        } else if (type === 'debug_mode') {
+            _task_config['debug_mode'] = value;
         } else if (arr.includes(type)) {
             _task_config['task_type'] = task_type;
             if (task_type === 2) {
@@ -640,6 +648,9 @@ const TaskConfig = (props) => {
     const [taskCloseTime, setTaskCloseTime] = useState(0);
     const [timeText, setTimeText] = useState('');
 
+    // debug模式
+    const [debugMode, setDebugMode] = useState("stop");
+
     useEffect(() => {
         let start = dayjs(taskExecTime * 1000).format('YYYY-MM-DD HH:mm');
         let start_time = dayjs(taskExecTime * 1000).format('HH:mm');
@@ -766,6 +777,18 @@ const TaskConfig = (props) => {
                                 <p style={{ marginLeft: '16px' }}>{taskList[task_type]}</p>
                             </div>
                             <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                                <p>{t('plan.debugMode')}: </p>
+                                <Select style={{ width: '300px', height: '32px', marginLeft: '14px' }} value={debugMode} onChange={(e) => {
+                                    setDebugMode(e);
+                                    updateTaskConfig('debug_mode', e);
+                                }}>
+                                    <Option value="stop">{t('plan.debugMode-0')}</Option>
+                                    <Option value="all">{t('plan.debugMode-1')}</Option>
+                                    <Option value="only_success">{t('plan.debugMode-2')}</Option>
+                                    <Option value="only_error">{t('plan.debugMode-3')}</Option>
+                                </Select>
+                            </div>
+                            <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                                 <p>{t('plan.controlMode')}:</p>
                                 <Tooltip content={controlExplain[control_mode]}>
                                     <div>
@@ -830,35 +853,6 @@ const TaskConfig = (props) => {
 
                                     </div> : <></>
                             }
-                            {/* <div className='select-date'>
-                            <div className='select-date-right'>
-                                <div className='time-item'>
-                                    <p className='label'>{t('index.startTime')}:</p>
-                                    <DatePicker
-                                        value={taskExecTime * 1000}
-                                        placeholder={t('placeholder.startTime')}
-                                        style={{ marginTop: '10px' }}
-                                        showTime
-                                        format='YYYY-MM-DD HH:mm'
-                                        onChange={onTimeStart}
-                                        disabledDate={(current) => current.isBefore(new Date().getTime() - 86400000)}
-                                    />
-                                </div>
-                                <div className='time-item'>
-                                    <p className='label'>{t('index.endTime')}:</p>
-                                    <DatePicker
-                                        value={taskCloseTime * 1000}
-                                        disabled={frequency === 0}
-                                        placeholder={t('placeholder.endTime')}
-                                        style={{ marginTop: '10px' }}
-                                        showTime
-                                        format='YYYY-MM-DD HH:mm'
-                                        onChange={onTimeEnd}
-                                        disabledDate={(current) => current.isBefore(dayjs(taskExecTime * 1000).format('YYYY-MM-DD HH:mm:ss'))}
-                                    />
-                                </div>
-                            </div>
-                        </div> */}
                             <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                                 <p >{t('plan.mode')}:</p>
                                 <Select value={mode} style={{ width: '300px', height: '32px', marginLeft: '14px' }} onChange={(e) => {

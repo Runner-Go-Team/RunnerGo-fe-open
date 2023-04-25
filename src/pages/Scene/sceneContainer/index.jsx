@@ -182,17 +182,17 @@ const SceneContainer = (props) => {
     };
 
 
-    const onTargetChange = (type, value) => {
+    const onTargetChange = (type, value, extension) => {
         if (from === 'scene') {
             Bus.$emit('updateSceneApi', {
                 id: api_now.id,
-                pathExpression: getPathExpressionObj(type),
+                pathExpression: getPathExpressionObj(type, extension),
                 value,
             }, closeApiConfig);
         } else if (from === 'case') {
             Bus.$emit('updateCaseApi', {
                 id: api_now.id,
-                pathExpression: getPathExpressionObj(type),
+                pathExpression: getPathExpressionObj(type, extension),
                 value,
             }, closeApiConfig);
         }
@@ -216,7 +216,7 @@ const SceneContainer = (props) => {
                         footer={null}
                         mask={false}
                     >
-                        <ApiManage from={from} apiInfo={api_now} showInfo={false} showAssert={show_assert} onChange={(type, val) => onTargetChange(type, val)} />
+                        <ApiManage from={from} apiInfo={api_now} showInfo={false} showAssert={show_assert} onChange={(type, val, extension) => onTargetChange(type, val, extension)} />
                     </Drawer> : <></>
                 }
             </div>

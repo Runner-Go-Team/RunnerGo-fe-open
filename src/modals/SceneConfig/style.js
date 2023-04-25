@@ -65,17 +65,10 @@ export const GlobalVarModal = css`
         margin-right: 6px;
     }
     .delete-svg {
-        width: 100%;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        svg {
-            width: 16px;
-            height: 16px;
-            fill: #f00;
-        }
+        width: 16px;
+        height: 16px;
+        fill: #f00;
+        cursor: pointer;
     }
     .file-list {
         display: flex;
@@ -188,6 +181,68 @@ export const GlobalVarModal = css`
             }
         }
     }
+
+    .apipost-table {
+        margin-top: 10px;
+    }
+
+    .apipost-table-td {
+        border-color: var(--border-line) !important;
+      }
+      .apipost-table-th {
+        .apipost-table-td {
+          .apipost-table-cell {
+            background-color: var(--bg);
+          }
+        }
+      }
+      .apipost-table-tr {
+        .apipost-table-td {
+          background-color: var(--module) !important;
+    
+          svg {
+            fill: var(--font-1);
+          }
+    
+          .apipost-input-inner-wrapper:hover {
+            background-color: var(--select-hover) !important;
+          }
+        }
+    }
+
+    .apipost-table-td {
+        color: var(--font-1);
+        height: 24px;
+        .apipost-table-cell {
+            overflow:hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            height: 24px;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .apipost-btn {
+                background-color: transparent;
+
+                svg {
+                    margin: 0;
+                }
+            }
+    
+            .apipost-input-inner-wrapper {
+                height: 24px;
+            }
+            .apipost-select {
+              height: 24px;
+            }
+    
+            .apipost-textarea-wrapper, .apipost-textarea {
+              width: 100%;
+            }
+    }
+
 `;
 
 export const HeaderTitleStyle = css`

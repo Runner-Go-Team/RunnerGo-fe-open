@@ -92,11 +92,11 @@ const PlanDetail = () => {
         setApiName(api_now.name);
     }, [api_now])
 
-    const onTargetChange = (type, value) => {
+    const onTargetChange = (type, value, extension) => {
 
         Bus.$emit('updatePlanApi', {
             id: api_now.id,
-            pathExpression: getPathExpressionObj(type),
+            pathExpression: getPathExpressionObj(type, extension),
             value,
         }, id_apis, closeApiConfig);
     };
@@ -208,7 +208,7 @@ const PlanDetail = () => {
                         footer={null}
                         mask={false}
                     >
-                        <ApiManage from="plan" apiInfo={api_now} showInfo={false} onChange={(type, val) => onTargetChange(type, val)} />
+                        <ApiManage from="plan" apiInfo={api_now} showInfo={false} onChange={(type, val, extension) => onTargetChange(type, val, extension)} />
                     </Drawer>
                 </div>
             }

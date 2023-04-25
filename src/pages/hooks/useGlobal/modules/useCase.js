@@ -566,6 +566,7 @@ const useCase = () => {
         fetchRunCase(params).subscribe({
             next: (res) => {
                 const { data: { ret_id } } = res;
+                clearInterval(case_t);
 
                 const query = {
                     ret_id,

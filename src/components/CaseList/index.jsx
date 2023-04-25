@@ -133,6 +133,26 @@ const CaseList = (props) => {
 
     const showCase = () => {
 
+        dispatch({
+            type: 'auto_plan/updateApiConfig',
+            payload: false
+        })
+
+        dispatch({
+            type: 'plan/updateApiConfig',
+            payload: false
+        })
+
+        dispatch({
+            type: 'scene/updateApiConfig',
+            payload: false
+        })
+
+        dispatch({
+            type: 'case/updateApiConfig',
+            payload: false
+        })
+
         if (style) {
             closeCase();
         } else {

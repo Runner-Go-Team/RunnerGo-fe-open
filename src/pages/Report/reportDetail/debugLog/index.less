@@ -7,6 +7,26 @@
     padding: 8px;
     color: var(--font-1);
 
+    .container {
+        display: flex;
+        max-height: 740px;
+        padding-bottom: 20px;
+
+
+        .apipost-tabs {
+            padding-top: 0 !important;
+            
+        }
+
+        .scale-item {
+            flex: 1;
+        }
+
+        .apipost-scale {
+            max-height: 740px;
+        }
+    }
+
     &-tips {
         width: 100%;
         display: flex;
@@ -32,5 +52,82 @@
     &-item {
         // margin: 20px;
         line-height: 20px;
+    }
+
+    &-list {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-height: 740px;
+        overflow: scroll;
+
+        .select {
+            background-color: var(--theme-10);
+        }
+
+        &-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 40px;
+            box-sizing: border-box;
+            width: 100%;
+            font-size: 14px;
+            margin-bottom: 8px;
+            background-color: var(--border-line);
+            border-radius: 2px;
+            cursor: pointer;
+
+            .left {
+                display: flex;
+                align-items: center;
+
+                .name {
+                    color: var(--font-1);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    width: 70px;
+                    max-width: 70px;
+                }
+
+                .post {
+                    color: var(--post);
+                }
+
+                .get {
+                    color: var(--get);
+                }
+
+                .url {
+                    margin-left: 8px;
+                    flex: 1;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+
+            .right {
+                display: flex;
+                align-items: center;
+
+                .size {
+                    margin-right: 10px;
+                }
+
+                .time {
+                    margin-right: 10px;
+                }
+
+                .success {
+                    color: var(--sub-color-1);
+                }
+
+                .error {
+                    color: var(--sub-color-4);
+                }
+            }
+        }
     }
 }

@@ -23,6 +23,7 @@ import { fetchEmailList } from '@services/plan';
 import { fetchTPlanEmailList } from '@services/auto_plan';
 import TestTaskConfig from '@modals/TestTaskConfig';
 import { Input } from '@arco-design/web-react';
+import { debounce } from 'lodash';
 
 let auto_plan_task_t = null;
 
@@ -140,6 +141,27 @@ const TPlanDetailHeader = (props) => {
         })
     }
 
+    const runPlan = () => {
+        Bus.$emit('runAutoPlan', plan_id, (code, data) => {
+            setRunLoading(true);
+            setTimeout(() => {
+                setRunLoading(false);
+            }, 5000);
+            if (code === 0) {
+                const { task_type } = data;
+
+                if (task_type === 1) {
+                    Message('success', t('message.runSuccess'))
+                    navigate('/Treport/list');
+                } else if (task_type === 2) {
+                    Message('success', t('message.runTiming'));
+                }
+            }
+        })
+    }
+
+    const debounceRunPlan = debounce(runPlan, 500);
+
     const [runLoading, setRunLoading] = useState(false);
     const [showTaskConfig, setTaskConfig] = useState(false);
 
@@ -214,41 +236,8 @@ const TPlanDetailHeader = (props) => {
                         planDetail.status === 1
                             ? (
                                 emailList && emailList.length > 0 ? <Tooltip placement="top-end" content={<div style={{ whiteSpace: 'nowrap' }}>{t('message.runPlanTooltip')}</div>}>
-                                    <Button className='run' preFix={<SvgCareRight width="16" height="16" />} onClick={() => Bus.$emit('runAutoPlan', plan_id, (code, data) => {
-                                        setRunLoading(true);
-                                        setTimeout(() => {
-                                            setRunLoading(false);
-                                        }, 5000);
-                                        if (code === 0) {
-                                            const { task_type } = data;
-
-                                            if (task_type === 1) {
-                                                Message('success', t('message.runSuccess'))
-                                                navigate('/Treport/list');
-                                            } else if (task_type === 2) {
-                                                Message('success', t('message.runTiming'));
-                                            }
-                                        }
-                                    })}>{t('btn.runPlan')}</Button>
-                                </Tooltip> : <Button className='run' disabled={runLoading} preFix={<SvgCareRight width="16" height="16" />} onClick={() => {
-                                    setRunLoading(true);
-                                    setTimeout(() => {
-                                        setRunLoading(false);
-                                    }, 5000);
-                                    Bus.$emit('runAutoPlan', plan_id, (code, data) => {
-                                        if (code === 0) {
-                                            const { task_type } = data;
-
-                                            if (task_type === 1) {
-                                                Message('success', t('message.runSuccess'))
-                                                navigate('/Treport/list');
-                                            } else if (task_type === 2) {
-                                                getReportDetail();
-                                                Message('success', t('message.runTiming'));
-                                            }
-                                        }
-                                    })
-                                }}>{t('btn.runPlan')}</Button>
+                                    <Button className='run' preFix={<SvgCareRight width="16" height="16" />} onClick={debounceRunPlan}>{t('btn.runPlan')}</Button>
+                                </Tooltip> : <Button className='run' disabled={runLoading} preFix={<SvgCareRight width="16" height="16" />} onClick={debounceRunPlan}>{t('btn.runPlan')}</Button>
                             )
                             : <Button className='stop' preFix={<SvgStop width="10" height="10" />} onClick={() => Bus.$emit('stopAutoPlan', plan_id, (code) => {
                                 if (code === 0) {

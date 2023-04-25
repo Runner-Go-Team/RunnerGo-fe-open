@@ -12,7 +12,9 @@ const initialState = {
   // 报告数据
   report_detail: null,
   // 报告顶部的基本信息
-  report_info: null
+  report_info: null,
+  // debug响应区
+  debug_res: null
 };
 
 // action名称
@@ -22,7 +24,8 @@ const actionTypes = {
   updateDebugList: 'updateDebugList',
   updateMonitorList: 'updateMonitorList',
   updateReportDetail: 'updateReportDetail',
-  updateReportInfo: 'updateReportInfo'
+  updateReportInfo: 'updateReportInfo',
+  updateDebugRes: 'updateDebugRes'
 }
 
 export const reportReducer = (state = initialState, action) => {
@@ -56,6 +59,11 @@ export const reportReducer = (state = initialState, action) => {
       return {
         ...state,
         report_info: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateDebugRes}`:
+      return {
+        ...state,
+        debug_res: action.payload
       }
     default:
       return state;

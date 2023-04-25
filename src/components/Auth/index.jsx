@@ -11,6 +11,7 @@ import AWSAuth from './modules/awsAuth';
 import HawkAuth from './modules/hawkAuth';
 import NtlmAuth from './modules/ntlmAuth';
 import EdgeridAuth from './modules/edgeridAuth';
+import BidirectionalAuth from './modules/BidirectionalAuth';
 import './index.less';
 import { useTranslation } from 'react-i18next';
 
@@ -79,13 +80,18 @@ const Authen = (props) => {
         );
       case 'oauth1':
         return <OAuth1 value={value} type={type} handleAttrChange={handleAttrChange}></OAuth1>;
-
+      case 'unidirectional':
+        return t('apis.oneWayAuth');
+      case 'bidirectional':
+        return <BidirectionalAuth value={value} type={type} handleAttrChange={handleAttrChange}></BidirectionalAuth>;
       default:
         return t('apis.notAuth');
     }
   };
   const authList = {
     noauth: t('apis.authList.noauth'),
+    unidirectional: t('apis.authList.oneway'),
+    bidirectional: t('apis.authList.twoway'),
     kv: t('apis.authList.kv'),
     bearer:t('apis.authList.bearer'),
     basic: t('apis.authList.basic'),

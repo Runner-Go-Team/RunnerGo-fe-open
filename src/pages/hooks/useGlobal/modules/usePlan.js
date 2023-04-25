@@ -238,7 +238,6 @@ const usePlan = () => {
 
 
     const addNewPlanApi = (id, id_apis, node_config, api = {}, config = {}, from, callback) => {
-
         let newApi = cloneDeep(api);
 
         let _id = isArray(id) ? id : [id];
@@ -250,7 +249,6 @@ const usePlan = () => {
 
         for (let i = 0; i < _api.length; i++) {
             let newApi = cloneDeep(_api[i]);
-
             if (Object.entries(_api[i]).length < 2) {
                 newApi = getBaseCollection('api');
                 newApi.method = 'POST';
@@ -265,6 +263,8 @@ const usePlan = () => {
             }
 
             new_apis[newApi.id] = newApi;
+
+            console.log(new_apis);
 
             if (from === 'scene') {
                 dispatch({

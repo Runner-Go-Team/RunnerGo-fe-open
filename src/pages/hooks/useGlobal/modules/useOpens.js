@@ -35,6 +35,7 @@ import { urlParseLax } from '@utils/common';
 import { from, lastValueFrom, tap, map, concatMap, of } from 'rxjs';
 import { CONFILCTURL } from '@constants/confilct';
 import { SaveTargetRequest, saveApiBakRequest, fetchHandleApi, fetchApiDetail, fetchSendApi, fetchGetResult, fetchDeleteApi, fetchChangeSort } from '@services/apis';
+import { fetchRunAutoReportApi } from '@services/auto_report';
 import { getBaseCollection } from '@constants/baseCollection';
 import QueryString from 'qs';
 
@@ -50,6 +51,8 @@ const useOpens = () => {
 
     const apiDatas = useSelector((store) => store.apis.apiDatas);
     const workspace = useSelector((store) => store?.workspace);
+    const debug_target_id = useSelector((store) => store.auto_report.debug_target_id);
+    const auto_report_redux = useSelector((store) => store.auto_report);
     const { CURRENT_PROJECT_ID, CURRENT_TARGET_ID } = workspace;
 
     const getSort = (apiDatas) => {
@@ -59,6 +62,102 @@ const useOpens = () => {
         const _list = Object.values(apiDatas).filter(item => `${item.parent_id}` === '0');
         return _list.length + 1;
     };
+
+    // 修改自动化测试报告的接口配置信息
+    const updateAutoReportApi = (data, callback) => {
+        const { id, pathExpression, value } = data;
+        set(debug_target_id, pathExpression, value);
+
+        if (pathExpression === 'request.url') {
+            let reqUrl = value;
+            let queryList = [];
+            const restfulList = [];
+            if (reqUrl) {
+                // 自动拼接url http://
+                if (!isURL(reqUrl)) {
+                    reqUrl = `http://${reqUrl}`;
+                }
+                const urlObj = createUrl(reqUrl);
+                if (isArray(debug_target_id.request?.query?.parameter)) {
+                    // 提取query
+                    const searchParams = GetUrlQueryToArray(urlObj?.search || '');
+                    queryList = id_apis[id].request.query.parameter.filter(
+                        (item) => item?.is_checked < 0
+                    );
+                    searchParams.forEach((item) => {
+                        const key = item?.key;
+                        const value = item?.value;
+                        let obj = {};
+                        const i = findIndex(id_apis[id].request.query.parameter, { key });
+                        if (i !== -1) obj = id_apis[id].request.query.parameter[i];
+                        queryList.push({
+                            description: obj?.description || '', // 字段描述
+                            is_checked: obj?.is_checked || 1, // 是否启用
+                            key: key?.trim(), // 参数名
+                            type: obj?.type || 'Text', // 字段类型
+                            not_null: obj?.not_null || 1, // 必填｜-1选填
+                            field_type: obj?.field_type || 'String', // 类型
+                            value: value?.trim(), // 参数值
+                        });
+                    });
+                    set(debug_target_id, 'request.query.parameter', queryList);
+                }
+
+                if (isArray(debug_target_id.request?.resful?.parameter)) {
+                    // 提取restful
+                    const paths = urlObj.pathname.split('/');
+                    paths.forEach((p) => {
+                        if (p.substring(0, 1) === ':' && p.length > 1) {
+                            let obj = {};
+                            const i = findIndex(id_apis[id].request?.resful?.parameter, {
+                                key: p.substring(1, p.length),
+                            });
+                            if (i !== -1) obj = id_apis[id].request?.resful?.parameter[i];
+                            restfulList.push({
+                                key: p.substring(1, p.length),
+                                description: obj?.description || '',
+                                is_checked: 1,
+                                type: 'Text',
+                                not_null: 1,
+                                field_type: 'String',
+                                value: obj?.value || '',
+                            });
+                        }
+                    });
+                    set(debug_target_id, 'request.resful.parameter', restfulList);
+                }
+            }
+            set(debug_target_id, 'url', value);
+        } else if (pathExpression === 'request.query.parameter') {
+            let paramsStr = '';
+            const url = debug_target_id.request?.url || '';
+            if (
+                isArray(debug_target_id.request?.query?.parameter) &&
+                debug_target_id.request?.query?.parameter.length > 0
+            ) {
+                debug_target_id.request.query.parameter.forEach((ite) => {
+                    if (ite.key !== '' && ite.is_checked == 1)
+                        paramsStr += `${paramsStr === '' ? '' : '&'}${ite.key}=${ite.value}`;
+                });
+                const newUrl = `${url.split('?')[0]}${paramsStr !== '' ? '?' : ''}${paramsStr}`;
+                set(debug_target_id, 'url', newUrl);
+                set(debug_target_id, 'request.url', newUrl);
+            }
+        } else if (pathExpression === 'name') {
+            set(debug_target_id, 'name', value);
+        }
+
+        set(debug_target_id, 'is_changed', true);
+
+
+        dispatch({
+            type: 'auto_report/updateDebugTargetId',
+            payload: debug_target_id
+        });
+
+        callback && callback();
+
+    }
 
     // 重新排序
     const targetReorder = (target) => {
@@ -1044,6 +1143,56 @@ const useOpens = () => {
         fetchChangeSort(params).subscribe();
     }
 
+    const sendAutoReportApi = (id) => {
+
+        const _open_res = cloneDeep(open_res);
+        _open_res[id] = {
+            ..._open_res[id],
+            status: 'running',
+        };
+        dispatch({
+            type: 'opens/updateOpenRes',
+            payload: _open_res
+        })
+        const params = {
+            api_detail: debug_target_id,
+            team_id: localStorage.getItem('team_id'),
+        };
+        fetchRunAutoReportApi(params).pipe(
+            tap(res => {
+                const { data: { ret_id }, code } = res;
+                if (code === 0) {
+                    clearInterval(send_api_t);
+                    const query = {
+                        ret_id,
+                    };
+
+                    send_api_t = setInterval(() => {
+                        fetchGetResult(query).subscribe({
+                            next: (res) => {
+                                const { data } = res;
+                                if (data) {
+                                    clearInterval(send_api_t);
+                                    const _open_res = cloneDeep(open_res);
+                                    _open_res[id] = {
+                                        ...data,
+                                        status: 'finish',
+                                    };
+                                    dispatch({
+                                        type: 'opens/updateOpenRes',
+                                        payload: _open_res
+                                    })
+                                }
+                            }
+                        })
+                    }, 1000);
+                }
+
+            })
+        )
+            .subscribe()
+    };
+
     const sendApi = (id) => {
         const params = {
             target_id: id ? id : open_api_now,
@@ -1062,6 +1211,7 @@ const useOpens = () => {
             tap(res => {
                 const { data: { ret_id }, code } = res;
                 if (code === 0) {
+                    clearInterval(send_api_t);
                     const query = {
                         ret_id,
                     };
@@ -1134,22 +1284,18 @@ const useOpens = () => {
                 if (res.code === 0) {
                     let _open_apis = cloneDeep(open_apis);
                     let localApi = JSON.parse(localStorage.getItem(`project_current:${localStorage.getItem('team_id')}`)).open_navs;
-                    console.log(localApi);
                     for (let i in _open_apis) {
                         if (_open_apis[i].parent_id === target_id) {
                             delete _open_apis[i];
                             let index = localApi.indexOf(i);
                             localApi.splice(index, 1);
-                            console.log(open_api_now, i);
                             if (open_api_now === i) {
                                 let newId = '';
-                                console.log(index);
                                 if (index > 0) {
                                     newId = localApi[index - 1];
                                 } else {
                                     newId = localApi[index + 1];
                                 }
-                                console.log(newId);
                                 dispatch({
                                     type: 'opens/updateOpenApiNow',
                                     payload: newId,
@@ -1299,6 +1445,8 @@ const useOpens = () => {
 
     useEventBus('sendApi', sendApi, [open_api_now]);
 
+    useEventBus('sendAutoReportApi', sendAutoReportApi,  [debug_target_id, open_res]);
+
     useEventBus('stopSend', stopSend);
 
     useEventBus('toDeleteFolder', toDeleteFolder, [apiDatas, open_api_now]);
@@ -1310,6 +1458,8 @@ const useOpens = () => {
     useEventBus('recordOpenApi', recordOpenApi, [open_apis, apiDatas]);
 
     useEventBus('openRecordApi', openRecordApi, [open_apis]);
+
+    useEventBus('updateAutoReportApi', updateAutoReportApi, [debug_target_id]);
     // 初始化tabs
     // useEffect(() => {
     //     reloadOpens();

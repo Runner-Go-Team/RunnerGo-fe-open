@@ -11,6 +11,17 @@
     display: flex;
     padding-left: 0;
 
+    .hide-scene-result, .hide-case-result {
+        background-color: var(--select-hover);
+        color: var(--font-2);
+        font-size: 14px;
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        line-height: 22px;
+    }
+
     .not-data {
         color: var(--font-1);
         height: 50px;
@@ -93,6 +104,7 @@
 
             .item {
                 display: flex;
+                align-items: center;
                 padding: 8px 11px 8px 5px;
                 width: 100%;
                 cursor: pointer;
@@ -101,7 +113,7 @@
                     margin-left: 4px;
                     color: var(--font-3);
                     white-space: nowrap;
-                    width: 40px;
+                    width: 100px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
@@ -111,7 +123,8 @@
                     margin-left: 4px;
                     background-color: var(--run-red);
                     border-radius: 7px;
-                    width: 74px;
+                    width: 0;
+                    flex: 1;
                     height: 8px;
                     position: relative;
 
@@ -126,7 +139,7 @@
                 }
 
                 .num {
-                    margin-left: 4px;
+                    margin-left: 6px;
 
                 }
             }
@@ -137,6 +150,7 @@
         display: flex;
         flex-direction: column;
         margin-left: 10px;
+        flex: 1;
 
         .title {
             color: var(--font-1);
@@ -201,6 +215,10 @@
                 display: flex;
                 align-items: center;
 
+                .debug-icon {
+                    margin-right: 10px;
+                }
+
                 .name {
                     margin: 0 6px;
                     text-overflow: ellipsis;
@@ -215,8 +233,8 @@
 
                 .url {
                     margin-left: 6px;
-                    width: 15vw;
-                    max-width: 15vw;
+                    // width: 15vw;
+                    // max-width: 15vw;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;

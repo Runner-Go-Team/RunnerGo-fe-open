@@ -56,4 +56,49 @@ export const AuthWrapper = styled.div`
       }
     }
   }
+
+  .bidirectional-auth {
+    .tips {
+      color: var(--font-3);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    .upload-btn {
+      background-color: var(--default-button);
+      border: 1px solid var(--theme-color);
+      border-radius: 3px;
+      color: var(--font-1);
+      margin-top: 22px;
+  
+      svg {
+          fill: var(--font-1);
+          width: 16px;
+          height: 16px;
+          margin-right: 4px;
+      }
+    }
+    .file-item {
+      background-color: var(--bg);
+      color: var(--font-1);
+      min-width: 319px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+      padding: 0 12px;
+      margin-top: 22px;
+      border-radius: 2px;
+      font-size: 12px;
+
+      .handle {
+        display: flex;
+        
+        .handle-item {
+          margin-left: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
 `;

@@ -909,7 +909,6 @@ const SceneBox = (props) => {
                         Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
                     }, 300);
                 });
- 
             } else if (from === 'auto_plan') {
                 Bus.$emit('addNewAutoPlanApi', new_node.id, { id }, { id });
                 dispatch({

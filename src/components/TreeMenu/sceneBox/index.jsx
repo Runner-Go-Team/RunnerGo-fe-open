@@ -57,6 +57,7 @@ const SceneBox = (props) => {
             <div className='scene-box-item' onClick={() => {
                 if (canCreate) {
                     setCreateScene(true);
+                    onChange(false);
                 } else {
                     Message('error', t('message.cantCreateScene'));
                 }

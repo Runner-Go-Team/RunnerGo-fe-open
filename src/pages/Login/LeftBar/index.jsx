@@ -14,7 +14,7 @@ const LeftBar = () => {
             <div className="top">
                 <SvgLogo />
                 <p className="line">/</p>
-                <p className="slogan">{ t('sign.slogn') }</p>
+                <p className="slogan">{ t('sign.slogn')}</p>
             </div>
 
             <div className="container">

@@ -102,7 +102,8 @@ const CreatePreset = (props) => {
                     frequency,
                     task_close_time,
                     task_exec_time
-                }
+                },
+                debug_mode
             } = configDetail;
 
             setId(id);
@@ -120,6 +121,7 @@ const CreatePreset = (props) => {
             setTaskExecTime(task_exec_time);
             setTaskCloseTime(task_close_time);
             setControlMode(control_mode);
+            setDebugMode(debug_mode ? debug_mode : "stop");
 
             if (round_num > 0) {
                 setDefaultMode('round_num');
@@ -277,6 +279,7 @@ const CreatePreset = (props) => {
     const [x_echart, setXEchart] = useState([]);
     const [y_echart, setYEchart] = useState([]);
     const [timeText, setTimeText] = useState('');
+    const [debug_mode, setDebugMode] = useState("stop");
 
     useEffect(() => {
         let start = dayjs(task_exec_time * 1000).format('YYYY-MM-DD HH:mm');
@@ -464,6 +467,7 @@ const CreatePreset = (props) => {
                 conf_name,
                 task_type,
                 task_mode,
+                debug_mode,
                 mode_conf: {
                     concurrency: isString(concurrency) ? 0 : concurrency,
                     duration: isString(duration) ? 0 : duration,
@@ -487,6 +491,7 @@ const CreatePreset = (props) => {
                 conf_name,
                 task_type,
                 task_mode,
+                debug_mode,
                 mode_conf: {
                     concurrency,
                     duration,
@@ -546,6 +551,17 @@ const CreatePreset = (props) => {
                                 <Radio value={1}>{t('plan.taskList.commonTask')}</Radio>
                                 <Radio value={2}>{t('plan.taskList.cronTask')}</Radio>
                             </Radio.Group>
+                        </div>
+                        <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                            <p>{t('plan.debugMode')}: </p>
+                            <Select style={{ width: '300px', height: '32px', marginLeft: '14px' }} value={debug_mode} onChange={(e) => {
+                                setDebugMode(e);
+                            }}>
+                                <Option value="stop">{t('plan.debugMode-0')}</Option>
+                                <Option value="all">{t('plan.debugMode-1')}</Option>
+                                <Option value="only_success">{t('plan.debugMode-2')}</Option>
+                                <Option value="only_error">{t('plan.debugMode-3')}</Option>
+                            </Select>
                         </div>
                         <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                             <p>{t('plan.controlMode')}:</p>
@@ -613,17 +629,15 @@ const CreatePreset = (props) => {
                         <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                             <p >{t('plan.mode')}:</p>
                             <Select value={task_mode} style={{ width: '300px', height: '32px', marginLeft: '14px' }} onChange={(e) => {
-                                if (e === 1) {
-                                    setDuration(0);
-                                    setRoundNum(0);
-                                    setConcurrency(0);
-                                } else {
-                                    setStartConcurrency(0);
-                                    setStep(0);
-                                    setStepRunTime(0);
-                                    setMaxConcurrency(0);
-                                    setDuration(0);
-                                }
+                                setDuration(0);
+                                setRoundNum(0);
+                                setConcurrency(0);
+                                setStartConcurrency(0);
+                                setStep(0);
+                                setStepRunTime(0);
+                                setMaxConcurrency(0);
+                                setDuration(0);
+
                                 setMode(e);
                                 setXEchart([]);
                                 setYEchart([]);

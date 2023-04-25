@@ -105,25 +105,6 @@ const TReportDetailResult = (props) => {
         }
     }, [apiResult, checkScene])
 
-    const defaultList1 = [
-        { id: '1', title: t('autoReport.all'), content: '新建内容1' },
-        { id: '2', title: t('autoReport.fail'), content: '新建内容2' },
-        { id: '3', title: t('autoReport.success'), content: '新建内容2' },
-    ];
-    const defaultList2 = [
-        { id: '1', title: t('autoReport.all'), content: '新建内容1' },
-        { id: '2', title: t('autoReport.fail'), content: '新建内容2' },
-        { id: '3', title: t('autoReport.success'), content: '新建内容2' },
-        { id: '4', title: t('autoReport.notRun'), content: '新建内容3' },
-    ];
-    const defaultList3 = [
-        { id: '1', title: t('autoReport.reqHeader'), content: '新建内容1' },
-        { id: '2', title: t('autoReport.reqBody'), content: '新建内容2' },
-    ];
-    const defaultList4 = [
-        { id: '1', title: t('autoReport.resHeader'), content: '新建内容1' },
-        { id: '2', title: t('autoReport.resBody'), content: '新建内容2' },
-    ];
 
     const CollapseHeader = (props) => {
         const { name, success, total } = props;
@@ -189,6 +170,76 @@ const TReportDetailResult = (props) => {
             }
         },
     }));
+
+    const defaultList1 = [
+        { id: '1', title: t('autoReport.all'), content: '新建内容1' },
+        { id: '2', title: t('autoReport.fail'), content: '新建内容2' },
+        { id: '3', title: t('autoReport.success'), content: '新建内容2' },
+    ];
+    const defaultList2 = [
+        { id: '1', title: t('autoReport.all'), content: '新建内容1' },
+        { id: '2', title: t('autoReport.fail'), content: '新建内容2' },
+        { id: '3', title: t('autoReport.success'), content: '新建内容2' },
+        { id: '4', title: t('autoReport.notRun'), content: '新建内容3' },
+    ];
+    const defaultList3 = [
+        {
+            id: '1', title: t('autoReport.reqHeader'), content: <div className="req-header">
+                <MonacoEditor
+                    width="100%"
+                    ref={currentRef}
+                    language={EditFormat(checkDetail.request_header).language || 'json'}
+                    options={{ minimap: { enabled: false } }}
+                    editorDidMount={handleSetEditor}
+                    showCheck={false}
+                    value={EditFormat(checkDetail.request_header).value === 'undefined' ? '' : EditFormat(checkDetail.request_header).value}
+                />
+            </div>
+        },
+        {
+            id: '2', title: t('autoReport.reqBody'), content: <div className="req-body">
+                <MonacoEditor
+                    width="100%"
+                    ref={currentRef}
+                    language={EditFormat(checkDetail.request_body).language || 'json'}
+                    options={{ minimap: { enabled: false } }}
+                    editorDidMount={handleSetEditor}
+                    showCheck={false}
+                    value={EditFormat(checkDetail.request_body).value === 'undefined' ? '' : EditFormat(checkDetail.request_body).value}
+                />
+            </div>
+        },
+        {
+            id: '3', title: t('autoReport.resHeader'), content: <div className="res-header">
+                <MonacoEditor
+                    width="100%"
+                    ref={currentRef}
+                    language={EditFormat(checkDetail.response_header).language || 'json'}
+                    options={{ minimap: { enabled: false } }}
+                    editorDidMount={handleSetEditor}
+                    showCheck={false}
+                    value={EditFormat(checkDetail.response_header).value === 'undefined' ? '' : EditFormat(checkDetail.response_header).value}
+                />
+            </div>
+        },
+        {
+            id: '4', title: t('autoReport.resBody'), content: <div className="res-body">
+                <MonacoEditor
+                    width="100%"
+                    ref={currentRef}
+                    language={EditFormat(checkDetail.response_body).language || 'json'}
+                    options={{ minimap: { enabled: false } }}
+                    editorDidMount={handleSetEditor}
+                    showCheck={false}
+                    value={EditFormat(checkDetail.response_body).value === 'undefined' ? '' : EditFormat(checkDetail.response_body).value}
+                />
+            </div>
+        },
+    ];
+    // const defaultList4 = [
+    //     { id: '1', title: t('autoReport.resHeader'), content: '新建内容1' },
+    //     { id: '2', title: t('autoReport.resBody'), content: '新建内容2' },
+    // ];
 
     return (
         <div className="tReport-email-detail-result">
@@ -348,62 +399,7 @@ const TReportDetailResult = (props) => {
                                 <TabPan key={d.id} id={d.id} title={d.title}>
                                     <div className="req">
                                         {
-                                            reqTab === "1"
-                                                ?
-                                                <div className="req-header">
-                                                    <MonacoEditor
-                                                        width="100%"
-                                                        ref={currentRef}
-                                                        language={EditFormat(checkDetail.request_header).language || 'json'}
-                                                        options={{ minimap: { enabled: false } }}
-                                                        editorDidMount={handleSetEditor}
-                                                        value={EditFormat(checkDetail.request_header).value === 'undefined' ? '' : EditFormat(checkDetail.request_header).value}
-                                                    />
-                                                </div>
-                                                :
-                                                <div className="req-body">
-                                                    <MonacoEditor
-                                                        width="100%"
-                                                        ref={currentRef}
-                                                        language={EditFormat(checkDetail.request_body).language || 'json'}
-                                                        options={{ minimap: { enabled: false } }}
-                                                        editorDidMount={handleSetEditor}
-                                                        value={EditFormat(checkDetail.request_body).value === 'undefined' ? '' : EditFormat(checkDetail.request_body).value}
-                                                    />
-                                                </div>
-                                        }
-                                    </div>
-                                </TabPan>
-                            ))}
-                        </Tabs>
-                        <Tabs defaultActiveId="1" onChange={(e) => setResTab(e)}>
-                            {defaultList4.map((d) => (
-                                <TabPan key={d.id} id={d.id} title={d.title}>
-                                    <div className="res">
-                                        {
-                                            resTab === "1"
-                                                ?
-                                                <div className="res-header">
-                                                    <MonacoEditor
-                                                        width="100%"
-                                                        ref={currentRef}
-                                                        language={EditFormat(checkDetail.response_header).language || 'json'}
-                                                        options={{ minimap: { enabled: false } }}
-                                                        editorDidMount={handleSetEditor}
-                                                        value={EditFormat(checkDetail.response_header).value === 'undefined' ? '' : EditFormat(checkDetail.response_header).value}
-                                                    />
-                                                </div>
-                                                :
-                                                <div className="res-body">
-                                                    <MonacoEditor
-                                                        width="100%"
-                                                        ref={currentRef}
-                                                        language={EditFormat(checkDetail.response_body).language || 'json'}
-                                                        options={{ minimap: { enabled: false } }}
-                                                        editorDidMount={handleSetEditor}
-                                                        value={EditFormat(checkDetail.response_body).value === 'undefined' ? '' : EditFormat(checkDetail.response_body).value}
-                                                    />
-                                                </div>
+                                            d.content
                                         }
                                     </div>
                                 </TabPan>

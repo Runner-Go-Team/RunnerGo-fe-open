@@ -157,6 +157,10 @@
   /* 场景内-输入框 */
   --scene-input: #E0E0F1;
 
+  /* POST橙 */
+  --post: #DF7B07;
 
+  /* GET绿 */
+  --get: #2BA58F;
 
 }

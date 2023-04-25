@@ -54,6 +54,7 @@ const ApiURLPanel = (props) => {
     const id_now_plan = useSelector((store) => store.plan.id_now);
     const id_now_auto_plan = useSelector((store) => store.auto_plan.id_now);
     const id_now_case = useSelector((store) => store.case.id_now);
+    const debug_target_id = useSelector((store) => store.auto_report.debug_target_id);
 
     const _saveId = useSelector((store) => store.opens.saveId);
 
@@ -69,16 +70,21 @@ const ApiURLPanel = (props) => {
         'scene': open_scene_res && open_scene_res[id_now],
         'plan': open_plan_res && open_plan_res[id_now_plan],
         'auto_plan': open_auto_plan_res && open_auto_plan_res[id_now_auto_plan],
-        'case': open_case_res && open_case_res[id_now_case]
+        'case': open_case_res && open_case_res[id_now_case],
+        'auto_report': open_res && open_res[debug_target_id ? debug_target_id.target_id : ""]
     };
 
     const res_now = res_list[from];
 
     useEffect(() => {
         if (res_now && res_now.status === 'finish') {
-            setBtnName(t('btn.send'));
+            if (from === 'auto_report') {
+                setBtnName(t('apis.send'));
+            } else {
+                setBtnName(t('btn.send'));
+            }
         }
-    }, [res_now]);
+    }, [res_now, from]);
 
     useEffect(() => {
         setSaveId(_saveId);
@@ -286,6 +292,13 @@ const ApiURLPanel = (props) => {
     }
 
     const [popupVisible, setPopupVisible] = useState(false);
+
+    useEffect(() => {
+        if (from === 'auto_report') {
+            setBtnName(t('apis.send'));
+        }
+    }, [from]);
+
     return (
         <>
             {
@@ -316,7 +329,7 @@ const ApiURLPanel = (props) => {
                     >
                         <ScaleItem>
                             <div className='env-input'>
-                                <Input value={data.request.pre_url} onChange={(e) => onChange('pre_url', e)} placeholder={t('placeholder.envBeforeUrl')} />
+                                <Input value={data.request ? data.request.pre_url : ''} onChange={(e) => onChange('pre_url', e)} placeholder={t('placeholder.envBeforeUrl')} />
                                 <Dropdown
                                     ref={refDropdown}
                                     placement="br"
@@ -370,6 +383,13 @@ const ApiURLPanel = (props) => {
                                     setBtnName(t('btn.sending'));
                                     Bus.$emit('sendSceneApi', open_scene_case.scene_id || open_scene_case.target_id, id_now_case, open_case_res || {}, 'case', open_scene_case.scene_case_id);
                                 })
+                            } else if (from === 'auto_report') {
+                                setBtnName(t('btn.sending'));
+                                dispatch({
+                                    type: 'auto_report/updateDebugTargetId',
+                                    payload: data
+                                })
+                                Bus.$emit('sendAutoReportApi', data.target_id);
                             } else {
                                 Bus.$emit('saveTargetById', {
                                     id: open_api_now,

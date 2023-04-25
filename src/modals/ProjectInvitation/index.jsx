@@ -27,6 +27,7 @@ import qs from 'qs';
 import { useDispatch } from 'react-redux';
 import { Tooltip } from '@arco-design/web-react';
 import SvgClose from '@assets/logo/close';
+import { debounce } from 'lodash';
 
 const Option = Select.Option;
 const InvitationModal = (props) => {
@@ -318,6 +319,7 @@ const InvitationModal = (props) => {
             if (code === 0) {
               Message('success', t('message.invitateSuccess'));
               Bus.$emit('getTeamMemberList');
+              console.log(register_num, un_register_emails, un_register_num);
               setAddList([]);
               onCancel({
                 addLength: register_num,
@@ -405,10 +407,8 @@ const InvitationModal = (props) => {
 
   
   };
-  const PayAddSuccessModalClose = () => {
-    projectInfoAll && projectInfoAll(current_project_id);
-    onCancel && onCancel();
-  };
+
+  const debounceSubmit = debounce(onSubmit, 500);
   return (
     <>
       {
@@ -586,7 +586,7 @@ const InvitationModal = (props) => {
               }
             </div>
             <div className="team-inviation-footer-r">
-              <Button disabled={addList.length === 0} onClick={onSubmit}>
+              <Button disabled={addList.length === 0} onClick={debounceSubmit}>
                 {(from === 'report' || from === 'auto_report') ? t('btn.send') : t('btn.addMem')}
               </Button>
             </div>

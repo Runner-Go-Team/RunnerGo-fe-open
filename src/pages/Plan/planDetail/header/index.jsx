@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import InvitationModal from '@modals/ProjectInvitation';
 import { fetchEmailList } from '@services/plan';
 import { Tooltip, Input } from '@arco-design/web-react';
+import { debounce } from 'lodash';
 
 let plan_task_t = null;
 
@@ -176,6 +177,37 @@ const DetailHeader = (props) => {
         })
     }
 
+    const runPlan = () => {
+        setRunLoading(true);
+        setTimeout(() => {
+            setRunLoading(false);
+        }, 5000);
+        Bus.$emit('runPlan', plan_id, (code) => {
+            if (code === 0) {
+                getReportDetail();
+                // 轮询查计划的运行状态, 结束后就退出
+                plan_task_t = setInterval(() => {
+                    getReportDetail();
+                }, 1000);
+                let setIntervalList = window.setIntervalList;
+                if (setIntervalList) {
+                    setIntervalList.push(plan_task_t);
+                } else {
+                    setIntervalList = [plan_task_t];
+                }
+                window.setIntervalList = setIntervalList;
+                if (planDetail.task_type === 1) {
+                    Message('success', t('message.runSuccess'))
+                    navigate('/report/list');
+                } else if (planDetail.task_type === 2) {
+                    Message('success', t('message.runTiming'));
+                }
+            }
+        })
+    }
+
+    const debounceRunPlan = debounce(runPlan, 500);
+
     const [runLoading, setRunLoading] = useState(false);
 
     return (
@@ -230,62 +262,8 @@ const DetailHeader = (props) => {
                         planDetail.status === 1
                             ? (
                                 emailList && emailList.length > 0 ? <Tooltip content={t('message.runPlanTooltip')}>
-                                    <Button className='run' preFix={<SvgCareRight width="16" height="16" />} onClick={() => {
-                                        setRunLoading(true);
-                                        setTimeout(() => {
-                                            setRunLoading(false);
-                                        }, 5000);
-                                        Bus.$emit('runPlan', plan_id, (code) => {
-                                            if (code === 0) {
-                                                getReportDetail();
-                                                // 轮询查计划的运行状态, 结束后就退出
-                                                plan_task_t = setInterval(() => {
-                                                    getReportDetail();
-                                                }, 1000);
-                                                let setIntervalList = window.setIntervalList;
-                                                if (setIntervalList) {
-                                                    setIntervalList.push(plan_task_t);
-                                                } else {
-                                                    setIntervalList = [plan_task_t];
-                                                }
-                                                window.setIntervalList = setIntervalList;
-                                                if (planDetail.task_type === 1) {
-                                                    Message('success', t('message.runSuccess'))
-                                                    navigate('/report/list');
-                                                } else if (planDetail.task_type === 2) {
-                                                    Message('success', t('message.runTiming'));
-                                                }
-                                            }
-                                        })
-                                    }}>{t('btn.runPlan')}</Button>
-                                </Tooltip> : <Button className='run' disabled={runLoading} preFix={<SvgCareRight width="16" height="16" />} onClick={() => {
-                                    setRunLoading(true);
-                                    setTimeout(() => {
-                                        setRunLoading(false);
-                                    }, 5000);
-                                    Bus.$emit('runPlan', plan_id, (code) => {
-                                        if (code === 0) {
-                                            getReportDetail();
-                                            // 轮询查计划的运行状态, 结束后就退出
-                                            plan_task_t = setInterval(() => {
-                                                getReportDetail();
-                                            }, 1000);
-                                            let setIntervalList = window.setIntervalList;
-                                            if (setIntervalList) {
-                                                setIntervalList.push(plan_task_t);
-                                            } else {
-                                                setIntervalList = [plan_task_t];
-                                            }
-                                            window.setIntervalList = setIntervalList;
-                                            if (planDetail.task_type === 1) {
-                                                Message('success', t('message.runSuccess'))
-                                                navigate('/report/list');
-                                            } else if (planDetail.task_type === 2) {
-                                                Message('success', t('message.runTiming'));
-                                            }
-                                        }
-                                    })
-                                }}>{t('btn.runPlan')}</Button>
+                                    <Button className='run' preFix={<SvgCareRight width="16" height="16" />} onClick={debounceRunPlan}>{t('btn.runPlan')}</Button>
+                                </Tooltip> : <Button className='run' disabled={runLoading} preFix={<SvgCareRight width="16" height="16" />} onClick={debounceRunPlan}>{t('btn.runPlan')}</Button>
                             )
                             : <Button className='stop' preFix={<SvgStop width="10" height="10" />} onClick={() => Bus.$emit('stopPlan', plan_id, (code) => {
                                 if (code === 0) {

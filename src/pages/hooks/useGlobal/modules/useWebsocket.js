@@ -148,6 +148,16 @@ const useWebsocket = () => {
                 type: 'auto_plan/updateAutoPlanDetail',
                 payload: data
             })
+        } else if (route_url === 'get_global_param') {
+            dispatch({
+                type: 'dashboard/updateGlobalParam',
+                payload: data
+            })
+        } else if (route_url === 'get_scene_param') {
+            dispatch({
+                type: 'scene/updateSceneGlobalParam',
+                payload: data
+            })
         }
 
     };

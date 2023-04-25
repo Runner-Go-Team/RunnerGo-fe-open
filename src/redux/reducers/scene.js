@@ -57,6 +57,8 @@ const initialState = {
   hide_drop: false, // 隐藏所有下拉框
 
   refresh_box: v4(),
+
+  scene_global_param: null
 };
 
 // action名称
@@ -103,7 +105,8 @@ const actionTypes = {
 
   updateHideDrop: 'updateHideDrop',
 
-  updateRefreshBox: 'updateRefreshBox'
+  updateRefreshBox: 'updateRefreshBox',
+  updateSceneGlobalParam: 'updateSceneGlobalParam'
 };
 
 export const sceneReducer = (state = initialState, action) => {
@@ -289,6 +292,11 @@ export const sceneReducer = (state = initialState, action) => {
       return {
         ...state,
         refresh_box: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateSceneGlobalParam}`:
+      return {
+        ...state,
+        scene_global_param: action.payload
       }
     default:
       return state;

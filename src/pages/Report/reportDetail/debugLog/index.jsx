@@ -3,12 +3,13 @@ import './index.less';
 import { fetchDebugLog } from '@services/report';
 import { useParams, useLocation } from 'react-router-dom';
 import qs from 'qs';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import MonacoEditor from '@components/MonacoEditor';
 import { EditFormat } from '@utils';
 import { Explain as SvgExplain } from 'adesign-react/icons';
-import Bus from '@utils/eventBus';
+import ResPonsePanel from '@components/response/responsePanel';
+import ScalePanelTwoItem from '@components/ScalePanelTwoItem';
+import { cloneDeep } from 'lodash';
 
 let debug_t = null;
 
@@ -18,14 +19,16 @@ const DebugLog = (props) => {
     const { search } = useLocation();
     const { id: report_id, contrast } = qs.parse(search.slice(1));
     const [log, setLog] = useState([]);
+    const [selectApi, setSelectApi] = useState(null);
     const select_plan = useSelector((store) => (store.plan.select_plan));
-    const debug_list = useSelector((store) => store.report.debug_list);
+    // const debug_list = useSelector((store) => store.report.debug_list);
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         let setIntervalList = window.setIntervalList;
+        if (report_id && plan_id) {
 
-        if (report_id && plan_id !== 0) {
             getDebug();
             if (end && tab !== '2') {
                 if (setIntervalList) {
@@ -35,8 +38,8 @@ const DebugLog = (props) => {
                 }
 
                 clearInterval(debug_t);
-            } else {
-                debug_t = setInterval(getDebug, 1000);
+            } else if (!end) {
+                debug_t = setInterval(getDebug, 3000);
 
                 if (setIntervalList) {
                     setIntervalList.push(debug_t);
@@ -57,34 +60,25 @@ const DebugLog = (props) => {
         }
     }, [end, tab, plan_id]);
 
-    useEffect(() => {
-        if (!report_id) {
-            getDebug();
-        }
-    }, [select_plan]);
-
-    useEffect(() => {
-        if (debug_list) {
-            setLog(JSON.stringify(debug_list));
-        }
-    }, [debug_list]);
-
     const getDebug = () => {
         const query = {
             report_id: report_id ? report_id : JSON.parse(contrast)[select_plan].report_id,
             team_id: localStorage.getItem('team_id'),
             plan_id,
         };
-        
-        Bus.$emit('sendWsMessage', JSON.stringify({
-            route_url: "stress_report_debug",
-            param: JSON.stringify(query)
-        }))
+
+        fetchDebugLog(query).subscribe({
+            next: (res) => {
+                const { data } = res;
+                setLog(data ? data : []);
+            }
+        })
     }
 
     const [editorDom, setEditorDom] = useState(null);
     const { mode: language, value: editValue } = EditFormat(log);
-    const currentRef = useRef();
+    const currentRef = useRef(null);
+    const containerRef = useRef(null);
 
     const handleSetEditor = (editor) => {
         setEditorDom(editor);
@@ -98,23 +92,78 @@ const DebugLog = (props) => {
         },
     }));
 
+
     return (
         <div className='debug-log'>
-            {/* {
-                log.length > 0 ? log.map(item => <p className='debug-log-item'>{item}</p>) : (stopDebug === 'stop' && status === 1 ? t('report.debugEmpty') : '')
-            } */}
             <div className='debug-log-tips'>
                 <SvgExplain />
                 <p>{t('report.debugLogTips')}</p>
             </div>
-            <MonacoEditor
-                ref={currentRef}
-                Height="76vh"
-                language={language || 'json'}
-                options={{ minimap: { enabled: false } }}
-                editorDidMount={handleSetEditor}
-                value={editValue !== 'null' ? editValue : '{}'}
-            />
+            <div className='container' ref={containerRef}>
+                {
+                    (selectApi && log.length > 0) ? <ScalePanelTwoItem
+                        refWrapper={containerRef}
+                        leftMin={<></>}
+                        left={<div className='debug-log-list'>
+                            {
+                                log.length > 0 ? log.map(item => (
+                                    <div className={`debug-log-list-item ${selectApi.uuid === item.uuid ? 'select' : ''}`} onClick={() => {
+                                        dispatch({
+                                            type: 'report/updateDebugRes',
+                                            payload: item
+                                        })
+                                        setSelectApi(item);
+                                    }}>
+                                        <div className='left'>
+                                            <p className='name'>{item.api_name}：</p>
+                                            <p className={item.method === 'GET' ? 'get' : 'post'}>{item.method}</p>
+                                            <p className='url'>{item.request_url}</p>
+                                        </div>
+                                        <div className='right'>
+                                            <p className='size'>{item.response_bytes}kb</p>
+                                            <p className='time'>{item.request_time}ms</p>
+                                            <p className={`code ${item.request_code === 200 ? 'success' : 'error'}`}>{item.request_code}</p>
+                                        </div>
+                                    </div>
+                                )) : ''
+                            }
+                        </div>}
+                        rightMin={<></>}
+                        right={
+                            <ResPonsePanel
+                                tempData={{}}
+                                data={selectApi || {}}
+                                from='report'
+                                showRight={false}
+                            />
+                        }
+                    /> : <div className='debug-log-list'>
+                        {
+                            log.length > 0 ? log.map(item => (
+                                <div className={`debug-log-list-item`} onClick={() => {
+                                    dispatch({
+                                        type: 'report/updateDebugRes',
+                                        payload: item
+                                    })
+                                    setSelectApi(item);
+                                }}>
+                                    <div className='left'>
+                                        <p className='name'>{item.api_name}：</p>
+                                        <p className={item.method === 'GET' ? 'get' : 'post'}>{item.method}</p>
+                                        <p className='url'>{item.request_url}</p>
+                                    </div>
+                                    <div className='right'>
+                                        <p className='size'>{item.response_bytes}kb</p>
+                                        <p className='time'>{item.request_time}ms</p>
+                                        <p className={`code ${item.request_code === 200 ? 'success' : 'error'}`}>{item.request_code}</p>
+                                    </div>
+                                </div>
+                            )) : ''
+                        }
+                    </div>
+                }
+
+            </div>
         </div>
     )
 };

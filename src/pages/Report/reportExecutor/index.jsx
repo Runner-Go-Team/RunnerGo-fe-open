@@ -24,7 +24,7 @@ const ReportExecutor = (props) => {
     const select_plan = useSelector((store) =>(store.plan.select_plan));
 
     useEffect(() => {
-        if (plan_id > 0) {
+        if (plan_id !== 0) {
             const query = {
                 report_id: report_id ? report_id : JSON.parse(contrast)[select_plan].report_id,
                 team_id: localStorage.getItem('team_id'),
@@ -41,7 +41,7 @@ const ReportExecutor = (props) => {
                         'only_success': t('report.debugList.3')
                     }
     
-                    setDebugName(itemList[data])
+                    setDebugName(itemList[data ? data : 'stop'])
                 }
             })
         }

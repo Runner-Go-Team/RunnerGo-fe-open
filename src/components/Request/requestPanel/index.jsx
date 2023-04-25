@@ -3,6 +3,7 @@ import { Tabs as TabComponent, Select } from 'adesign-react';
 import Authen from '@components/Auth';
 import ScriptBox from '@components/ScriptBox';
 import { isArray, isObject } from 'lodash';
+import Cookie from '@components/Request/cookie';
 import Header from '@components/Request/header';
 import Query from '@components/Request/query';
 import Body from '@components/Request/body';
@@ -21,11 +22,21 @@ const RequestPanel = (props) => {
 
   const defaultList = [
     {
+      id: '0',
+      title: t('apis.cookie'),
+      content: (
+        <Cookie
+          parameter={isArray(data?.request?.cookie?.parameter) ? data.request.cookie.parameter : []}
+          onChange={onChange}
+        />
+      ),
+    },
+    {
       id: '1',
       title: t('apis.header'),
       content: (
         <Header
-          parameter={isArray(data?.request?.header?.parameter) ? data.request.header.parameter : []}
+          parameter={data.request ? (isArray(data?.request?.header?.parameter) ? data.request.header.parameter : []) : []}
           onChange={onChange}
         />
       ),
@@ -35,8 +46,8 @@ const RequestPanel = (props) => {
       title: t('apis.query'),
       content: (
         <Query
-          resful={isArray(data?.request.resful?.parameter) ? data?.request.resful.parameter : []}
-          parameter={isArray(data?.request.query?.parameter) ? data?.request.query.parameter : []}
+          resful={data.request ? (isArray(data?.request.resful?.parameter) ? data?.request.resful.parameter : []) : []}
+          parameter={data.request ? (isArray(data?.request.query?.parameter) ? data?.request.query.parameter : []) : []}
           onChange={onChange}
         />
       ),
@@ -44,12 +55,12 @@ const RequestPanel = (props) => {
     {
       id: '3',
       title: t('apis.body'),
-      content: <Body value={isObject(data?.request?.body) ? data?.request.body : {}} onChange={onChange} />,
+      content: <Body value={data.request ? (isObject(data?.request?.body) ? data?.request.body : {}) : {}} onChange={onChange} />,
     },
     {
       id: '4',
       title: t('apis.auth'),
-      content: <Authen value={data?.request?.auth || {}} onChange={onChange}></Authen>,
+      content: <Authen value={data.request ? (data?.request?.auth || {}) : {}} onChange={onChange}></Authen>,
     },
     {
       id: '5',

@@ -99,7 +99,8 @@ const Body = (props) => {
       ...rowData,
       ...newVal,
     };
-    onChange('bodyParameter', [...newList]);
+    // key和value都是空的数据不要
+    onChange('bodyParameter', [...newList.filter(item => item.key.trim().length > 0 || item.value.trim().length > 0)]);
   };
 
   const handleTableDelete = (index) => {
@@ -134,7 +135,7 @@ const Body = (props) => {
         if (value.mode === 'form-data') {
           return (
             <Input
-              placeholder={ t('apis.key') }
+              placeholder={t('apis.key')}
               className="request-key"
               value={text}
               readonly={readonly == 1}
@@ -180,7 +181,7 @@ const Body = (props) => {
         }
         return (
           <Input
-            placeholder={ t('apis.key') }
+            placeholder={t('apis.key')}
             value={text}
             readonly={readonly == 1}
             onChange={(newVal) => {
@@ -242,7 +243,7 @@ const Body = (props) => {
         }
         return (
           <Input
-            placeholder={ t('placeholder.bodyValue') }
+            placeholder={t('placeholder.bodyValue')}
             value={text}
             onChange={(newVal) => {
               handleChange(rowData, rowIndex, { value: newVal });
@@ -301,7 +302,7 @@ const Body = (props) => {
       render: (text, rowData, rowIndex) => {
         return (
           <Input
-            placeholder={ t('placeholder.bodyDesc') }
+            placeholder={t('placeholder.bodyDesc')}
             value={text}
             onChange={(newVal) => {
               handleChange(rowData, rowIndex, { description: newVal });
@@ -403,7 +404,7 @@ const Body = (props) => {
                 }}
               >
                 <BeautifySvg width={16} />
-                <>{ t('btn.beautify') }</>
+                <>{t('btn.beautify')}</>
               </Button>
               <Button
                 onClick={() => {
@@ -412,7 +413,7 @@ const Body = (props) => {
                 }}
               >
                 <SimplifySvg width={16} />
-                <>{ t('btn.simplify') }</>
+                <>{t('btn.simplify')}</>
               </Button>
             </div>
           )}
@@ -421,7 +422,7 @@ const Body = (props) => {
           <Importexport data={[...value?.parameter]} type="bodyParameter" onChange={onChange} />
         )}
       </div>
-      {value?.mode === 'none' && <div className="body-none">{ t('apis.emptyBody') }</div>}
+      {value?.mode === 'none' && <div className="body-none">{t('apis.emptyBody')}</div>}
       {['urlencoded', 'form-data'].includes(value?.mode) && (
         <Table hasPadding={false} showBorder columns={columns} data={tableDataList} />
       )}

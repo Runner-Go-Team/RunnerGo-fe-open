@@ -10,7 +10,8 @@ const initialState = {
 
   homeData: null,
   refresh: false,
-  runningPlan: null
+  runningPlan: null,
+  globalParam: null
 };
 
 // action名称
@@ -19,7 +20,8 @@ const actionTypes = {
   updateRefresh: 'updateRefresh',
 
   updateHomeData: 'updateHomeData',
-  updateRunningPlan: 'updateRunningPlan'
+  updateRunningPlan: 'updateRunningPlan',
+  updateGlobalParam: 'updateGlobalParam'
 }
 
 export const dashBoardReducer = (state = initialState, action) => {
@@ -46,6 +48,11 @@ export const dashBoardReducer = (state = initialState, action) => {
       return {
         ...state,
         runningPlan: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateGlobalParam}`:
+      return {
+        ...state,
+        globalParam: action.payload
       }
     default:
       return state;

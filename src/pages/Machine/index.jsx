@@ -105,12 +105,11 @@ const Machine = () => {
 
     useEffect(() => {
         let setIntervalList = window.setIntervalList;
-
         getTableData();
         if (machine_t) {
             clearInterval(machine_t);
         }
-        machine_t = setInterval(getTableData, 5000);
+        machine_t = setInterval(getTableData, 1000);
         if (setIntervalList) {
             setIntervalList.push(machine_t);
         } else {

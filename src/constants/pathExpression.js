@@ -7,6 +7,7 @@ export const getPathExpressionObj = (type, extension) => {
     method: 'method', // 修改接口请求方式
     assert: 'assert', // 接口断言
     regex: 'regex', // 正则表达式
+    cookie: 'request.cookie.parameter', // 修改接口cookie
     header: 'request.header.parameter', // 修改接口请求头
     query: 'request.query.parameter', // 修改接口query参数
     resful: 'request.resful.parameter', // 修改路径变量

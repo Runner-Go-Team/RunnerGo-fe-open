@@ -48,16 +48,19 @@ const EnvManage = (props) => {
     }
 
     useEffect(() => {
+        console.log(envList);
         if (envList.length > 0) {
             let envNow = envList.find(item => item.id === selectId);
 
-
+            console.log(selectId, envNow, serviceList, envName);
             if (selectId === 0) {
                 setServiceList([{ name: '', content: '' }])
             } else if (envNow && envNow.service_list) {
+                console.log(envNow.name);
                 setEnvName(envNow.name);
                 setServiceList([...envNow.service_list, { name: '', content: '' }])
             } else {
+                setEnvName(envNow ? envNow.name : '');
                 setServiceList([{ name: '', content: '' }]);
             }
         } else {
@@ -224,7 +227,7 @@ const EnvManage = (props) => {
         const { id, name, service_list } = item;
         setSelectId(id);
         setEnvName(name);
-        setServiceList(service_list);
+        setServiceList(service_list ? service_list : [{ name: '', content: '' }]);
     }
     return (
         <Modal

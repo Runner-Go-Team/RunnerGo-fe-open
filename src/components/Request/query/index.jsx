@@ -30,7 +30,8 @@ const Query = (props) => {
       ...rowData,
       ...newVal,
     };
-    onChange('query', [...newList]);
+    // key和value都是空的数据不要
+    onChange('query', [...newList.filter(item => item.key.trim().length > 0 || item.value.trim().length > 0)]);
   };
 
   const handleTableDelete = (index) => {
@@ -64,7 +65,7 @@ const Query = (props) => {
         return (
           <Input
             value={text}
-            placeholder={ t('apis.key') }
+            placeholder={t('apis.key')}
             onChange={(newVal) => {
               handleChange(rowData, rowIndex, { key: newVal });
             }}
@@ -152,7 +153,7 @@ const Query = (props) => {
             height={24}
             value={text}
             bordered={false}
-            placeholder={ t('placeholder.bodyDesc') }
+            placeholder={t('placeholder.bodyDesc')}
             onChange={(newVal) => {
               handleChange(rowData, rowIndex, { description: newVal });
             }}

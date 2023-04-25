@@ -19,7 +19,7 @@ const GlobalConfig = () => {
 
     return (
         <div className='global-config'>
-            <Tooltip content={t('header.globalVar')}>
+            <Tooltip content={t('header.globalParam')}>
                 <div className='config-item' onClick={() => setShowVar(true)}>
                     <SvgGlobalVar />
                 </div>
