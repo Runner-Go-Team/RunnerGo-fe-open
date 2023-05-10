@@ -63,6 +63,7 @@ const ApiPicker = (props) => {
         draft[key] = newVal;
       })
     );
+    refTree.current?.handleExpandItem(true);
   };
 
   const { filteredTreeList } = useListData({ filterParams });
