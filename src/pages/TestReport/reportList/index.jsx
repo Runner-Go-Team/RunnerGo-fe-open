@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Table, Pagination } from '@arco-design/web-react';
 import { useSelector } from 'react-redux';
+import ResizableTable from '@components/ResizableTable';
 
 import Bus from '@utils/eventBus';
 
@@ -154,18 +155,10 @@ const TestReportList = () => {
             }
             setTotal(total);
             const list = auto_plan_report_list ? auto_plan_report_list.map(item => {
-                const { task_type, status, start_time_sec, end_time_sec, report_id, plan_name, run_user_name, task_mode, test_case_run_order, scene_run_order } = item;
+                const { task_type, status, start_time_sec, end_time_sec, report_id, plan_name, run_user_name, task_mode, test_case_run_order, scene_run_order, report_name } = item;
 
                 return {
                     ...item,
-                    plan_name:
-                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{plan_name}</div>}>
-                            <div className='ellipsis'>{plan_name}</div>
-                        </Tooltip>,
-                    run_user_name:
-                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{run_user_name}</div>}>
-                            <div className='ellipsis'>{run_user_name}</div>
-                        </Tooltip>,
                     status: statusList[status],
                     canDelete: status === 2,
                     task_type: taskList[task_type],
@@ -205,7 +198,7 @@ const TestReportList = () => {
         {
             title: t('index.rankId'),
             dataIndex: 'rank_id',
-            // width: 84,
+            width: 84,
         },
         {
             title: t('index.status'),
@@ -222,10 +215,16 @@ const TestReportList = () => {
             },
         },
         {
+            title: t('index.reportName'),
+            dataIndex: 'report_name',
+            ellipsis: true,
+            width: 200
+        },
+        {
             title: t('index.planName'),
             dataIndex: 'plan_name',
             ellipsis: true,
-            // width: 200
+            width: 200
         },
         {
             title: t('index.taskType'),
@@ -239,18 +238,22 @@ const TestReportList = () => {
                 setTaskType(value);
                 return true;
             },
+            width: 200
         },
         {
             title: t('autoReport.runMode'),
             dataIndex: 'task_mode',
+            width: 135
         },
         {
             title: t('autoReport.caseOrder'),
             dataIndex: 'test_case_run_order',
+            width: 150
         },
         {
             title: t('autoReport.sceneOrder'),
             dataIndex: 'scene_run_order',
+            width: 150
         },
         {
             title: t('index.startTime'),
@@ -267,8 +270,8 @@ const TestReportList = () => {
         {
             title: t('index.performer'),
             dataIndex: 'run_user_name',
-            ellipsis: true
-            // width: 200
+            ellipsis: true,
+            width: 200
         },
         {
             title: t('index.handle'),
@@ -356,7 +359,7 @@ const TestReportList = () => {
     return (
         <div className='report-list'>
             <TReportListHeader onChange={getNewkeyword} onDateChange={getSelectDate} selectReport={selectReport} />
-            <Table
+            <ResizableTable
                 className="report-table"
                 border
                 borderCell

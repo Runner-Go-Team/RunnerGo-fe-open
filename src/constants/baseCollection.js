@@ -137,7 +137,13 @@ const createTarget = (type, baseCollection) => {
           is_redirects: 0,
           redirects_num: 3,
           read_time_out: 0,
-          write_time_out: 0
+          write_time_out: 0,
+          client_name: '',
+          user_agent: true,
+          keep_alive: true,
+          max_idle_conn_duration: 5,
+          max_conn_wait_timeout: 5,
+          max_conn_per_host: 10000
         },
         is_check_result: 1, // 是否开启校验返回结果 开关
         check_result_expectId: '', // 校验期望id

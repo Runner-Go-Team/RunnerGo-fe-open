@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { Table, Pagination } from '@arco-design/web-react';
 import { useSelector } from 'react-redux';
 import Bus from '@utils/eventBus';
+import ResizableTable from '@components/ResizableTable';
 
 let report_t = null;
 
@@ -143,22 +144,9 @@ const ReportList = () => {
             }
             setTotal(total);
             const list = reports ? reports.map(item => {
-                const { task_type, task_mode, status, run_time_sec, last_time_sec, report_id, plan_name, scene_name, run_user_name } = item;
+                const { task_type, task_mode, status, run_time_sec, last_time_sec, report_id, plan_name, scene_name, run_user_name, report_name } = item;
                 return {
                     ...item,
-                    plan_name:
-                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{plan_name}</div>}>
-                            <div className='ellipsis'>{plan_name}</div>
-                        </Tooltip>,
-                    scene_name:
-                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{scene_name}</div>}>
-                            <div className='ellipsis'>{scene_name}</div>
-                        </Tooltip>,
-                    run_user_name:
-                        <Tooltip bgColor="var(--select-hover)" className='tooltip-diy' content={<div>{run_user_name}</div>}>
-                            <div className='ellipsis'>{run_user_name}</div>
-                        </Tooltip>,
-
                     task_mode: modeList[task_mode],
                     status: statusList[status],
                     canDelete: status === 2,
@@ -196,7 +184,7 @@ const ReportList = () => {
         {
             title: t('index.rankId'),
             dataIndex: 'rank_id',
-            // width: 84,
+            width: 84,
         },
         {
             title: t('index.status'),
@@ -213,16 +201,22 @@ const ReportList = () => {
             },
         },
         {
+            title: t('index.reportName'),
+            dataIndex: 'report_name',
+            ellipsis: true,
+            width: 200
+        },
+        {
             title: t('index.planName'),
             dataIndex: 'plan_name',
             ellipsis: true,
-            // width: 200
+            width: 200
         },
         {
             title: t('index.sceneName'),
             dataIndex: 'scene_name',
-            ellipsis: true
-            // width: 200
+            ellipsis: true,
+            width: 200
         },
         {
             title: t('index.taskType'),
@@ -237,7 +231,7 @@ const ReportList = () => {
             //     setTaskType(value);
             //     return true;
             // },
-            // width: 200
+            width: 200
         },
         {
             title: t('index.mode'),
@@ -273,8 +267,8 @@ const ReportList = () => {
         {
             title: t('index.performer'),
             dataIndex: 'run_user_name',
-            ellipsis: true
-            // width: 200
+            ellipsis: true,
+            width: 200
         },
         {
             title: t('index.handle'),
@@ -362,7 +356,7 @@ const ReportList = () => {
     return (
         <div className='report-list'>
             <ReportListHeader onChange={getNewkeyword} onDateChange={getSelectDate} selectReport={selectReport} />
-            <Table
+            <ResizableTable
                 className="report-table"
                 border
                 borderCell

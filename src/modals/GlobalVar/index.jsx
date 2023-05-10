@@ -95,7 +95,8 @@ const GlobalVar = (props) => {
         {
             title: t('apis.cookieName'),
             dataIndex: 'key',
-            width: 80,
+            enableResize: true,
+            width: 220,
             render: (text, rowData, rowIndex) => {
                 return (
                     <Input
@@ -182,6 +183,7 @@ const GlobalVar = (props) => {
             title: t('apis.key'),
             dataIndex: 'key',
             width: 230,
+            enableResize: true,
             render: (text, rowData, rowIndex) => {
                 return (
                     <Input
@@ -217,6 +219,7 @@ const GlobalVar = (props) => {
             title: t('apis.value'),
             dataIndex: 'value',
             width: 120,
+            enableResize: true,
             render: (text, rowData, rowIndex) => {
                 return (
                     <Input
@@ -287,6 +290,7 @@ const GlobalVar = (props) => {
             title: t('column.globalVar.varName'),
             dataIndex: 'key',
             width: 211,
+            enableResize: true,
             render: (text, rowData, rowIndex) => {
                 return (
                     <div className={VarNameStyle}>
@@ -315,7 +319,7 @@ const GlobalVar = (props) => {
                                 handleChange(rowData, rowIndex, { key: newVal });
                             }}
                         />
-                        {rowIndex !== varList.length && <SvgCopy className='copy-svg' onClick={() => copyStringToClipboard(varList[rowIndex].var)} />}
+                        {rowIndex !== varList.length && <SvgCopy className='copy-svg' onClick={() => copyStringToClipboard(varList[rowIndex].key)} />}
                     </div>
                 )
             }
@@ -323,6 +327,7 @@ const GlobalVar = (props) => {
         {
             title: t('column.globalVar.varVal'),
             dataIndex: 'value',
+            enableResize: true,
             width: 220,
             render: (text, rowData, rowIndex) => {
                 return (
@@ -387,6 +392,7 @@ const GlobalVar = (props) => {
         {
             title: t('apis.assertBody'),
             width: 150,
+            enableResize: true,
             dataIndex: 'response_type',
             render: (text, rowData, rowIndex) => (
                 <Select
@@ -413,6 +419,8 @@ const GlobalVar = (props) => {
         {
             title: t('apis.field'),
             dataIndex: 'var',
+            enableResize: true,
+            width: 200,
             render: (text, rowData, rowIndex) => {
                 return (
                     <Input
@@ -435,6 +443,7 @@ const GlobalVar = (props) => {
         {
             title: t('apis.condition'),
             width: 150,
+            enableResize: true,
             dataIndex: 'compare',
             render: (text, rowData, rowIndex) => {
                 let compare = cloneDeep(COMPARE_IF_TYPE);

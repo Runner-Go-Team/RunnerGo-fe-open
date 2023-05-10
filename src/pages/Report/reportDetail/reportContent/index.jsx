@@ -307,6 +307,7 @@ const ReportContent = (props) => {
         {
             title: t('report.apiName'),
             dataIndex: 'api_name',
+            fixed: 'left',
             render: (col, item, index) => {
 
                 return <Tooltip content={col}>
@@ -697,30 +698,6 @@ const ReportContent = (props) => {
                 })
             })
         }
-        // const e1 = document.querySelector('.e1');
-        // e1.addEventListener('mouseout', function () {
-        // })
-        // const e2 = document.querySelector('.e2');
-        // e2.addEventListener('mouseout', function () {
-        // })
-        // const e3 = document.querySelector('.e3');
-        // e3.addEventListener('mouseout', function () {
-        // })
-        // const e4 = document.querySelector('.e4');
-        // e4.addEventListener('mouseout', function() {
-        // })
-        // const e5 = document.querySelector('.e5');
-        // e5.addEventListener('mouseout', function() {
-        // })
-        // const e6 = document.querySelector('.e6');
-        // e6.addEventListener('mouseout', function() {
-        // })
-        // const e7 = document.querySelector('.e7');
-        // e7.addEventListener('mouseout', function() {
-        // })
-        // const e8 = document.querySelector('.e8');
-        // e8.addEventListener('mouseout', function() {
-        // })
     }, [echartsRef1]);
 
 
@@ -961,7 +938,7 @@ const ReportContent = (props) => {
 
     const [editDesc, setEditDesc] = useState(false);
 
-    const explainList = ["Max(ms): 最大响应时间", "Min(ms): 最小响应时间", "Avg(ms): 平均响应时长", "90%: 响应时间90%线", "95%: 响应时间95%线", "99%: 响应时间99%线", "RPS: 每秒应答数", "SRPS: 每秒应答成功数", "TPS: 每秒事务数", "STPS: 每秒成功事务数"];
+    const explainList = ["Max(ms): 最大响应时间", "Min(ms): 最小响应时间", "Avg(ms): 平均响应时长", "90%: 响应时间90%线", "95%: 响应时间95%线", "99%: 响应时间99%线", "RPS: 每秒应答数", "SRPS: 每秒应答成功数", "TPS: 吞吐量", "STPS: 成功数吞吐量"];
 
     return (
         <div className='report-content'>

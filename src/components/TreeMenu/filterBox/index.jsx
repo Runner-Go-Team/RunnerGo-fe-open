@@ -15,6 +15,7 @@ const FilterBox = (props) => {
 
     const handleFilterKey = (key) => {
         onChange({ ...filterParams, key });
+        treeRef.current?.handleExpandItem(true);
     };
 
     const handleFilterStatus = (status) => {

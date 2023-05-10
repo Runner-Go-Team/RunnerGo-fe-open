@@ -14,9 +14,16 @@ import Bus from '@utils/eventBus';
 import { useParams } from 'react-router-dom';
 import { cloneDeep } from 'lodash';
 import { MarkerType } from 'react-flow-renderer';
-import SvgStop from './stop';
+import SvgStop from '../stop';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from '@arco-design/web-react';
+import InputText from '@components/InputText';
+import { fetchCreateScene } from '@services/scene';
+import { fetchSaveCase } from '@services/case';
+import { global$ } from '@hooks/useGlobal/global';
+import { v4 } from 'uuid';
+
+
 
 const SceneHeader = (props) => {
     const { from, open } = props;
@@ -335,153 +342,37 @@ const SceneHeader = (props) => {
             }, 200);
         }
 
-        if (from === 'case') {
-            Bus.$emit('runCase');
-        } else {
-            Bus.$emit('runScene', scene_id ? scene_id : target_id, nodes.length, from);
-        }
-
-
-        // const _callback = () => {
-        //     if (from === 'case') {
-        //         Bus.$emit('runCase');
-        //     } else {
-        //         Bus.$emit('runScene', scene_id ? scene_id : target_id, nodes.length, from);
-        //     }
+        // if (from === 'case') {
+        //     Bus.$emit('runCase');
+        // } else {
+        //     Bus.$emit('runScene', scene_id ? scene_id : target_id, nodes.length, from);
         // }
-        // saveScene(_callback);
+
+
+        const _callback = () => {
+            if (from === 'case') {
+                Bus.$emit('runCase');
+            } else {
+                Bus.$emit('runScene', scene_id ? scene_id : target_id, nodes.length, from);
+            }
+        }
+        saveScene(_callback);
     };
 
 
     const saveScene = (callback) => {
         if (from === 'scene') {
-         
+
             Bus.$emit('saveScene', callback);
         } else if (from === 'plan') {
-         
+
             Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan', callback);
         } else if (from === 'auto_plan') {
-        
-            Bus.$emit('saveSceneAutoPlan');
+            Bus.$emit('saveSceneAutoPlan', id, callback);
         } else if (from === 'case') {
-      
-            const open_scene = open === 'auto_plan' ? open_scene_auto_plan : open_scene_scene;
+
             Bus.$emit('saveCase', callback);
         }
-    };
-
-    const formatData = (a, b) => {
-        let result = [];
-        let root = [];
-        a.forEach(item => {
-            if (b.findIndex(elem => elem.target === item.id) === -1) {
-                root.push(item);
-            }
-        })
-        result.push(root);
-
-        const findValue = (id) => {
-            return a.find(item => item.id === id);
-        }
-
-        let loop = (result, arr) => {
-            let res = [];
-            arr.forEach(item => {
-                let data = b.filter(elem => elem.source === item.id).map(elem1 => {
-                    result.forEach(item => {
-                        let _index = item.findIndex(elem2 => elem2.id === elem1.target);
-                        if (_index !== -1) {
-                            item.splice(_index, 1);
-                        }
-                    })
-                    return { ...findValue(elem1.target) }
-                });
-                res.push(...data);
-            })
-
-            if (res.length > 0) {
-                result.push(res);
-                return loop(result, res);
-            } else {
-                return result;
-            }
-        }
-
-        return loop(result, root);
-    };
-
-    const toBeautify = () => {
-        if (nodes.length === 0) {
-            return;
-        }
-
-        const result = formatData(nodes, edges);
-        result.forEach((item, index) => {
-            // const rootY = item[0].position.y;
-            let Y = 50 + (index) * 220;
-
-            item.forEach(elem => {
-                elem.position.y = Y;
-                elem.positionAbsolute.y = Y;
-            })
-        })
-
-        let _result = [];
-        result.forEach(item => {
-            item.forEach(elem => {
-                _result.push(elem);
-            })
-        });
-        if (from === 'scene') {
-            dispatch({
-                type: 'scene/updateNodes',
-                payload: newNodes
-            });
-            dispatch({
-                type: 'scene/updateBeautify',
-                payload: true
-            })
-        } else if (from === 'plan') {
-            dispatch({
-                type: 'plan/updateNodes',
-                payload: _result
-            });
-            dispatch({
-                type: 'plan/updateBeautify',
-                payload: true
-            })
-            dispatch({
-                type: 'plan/updateIsChanged',
-                payload: true
-            })
-        } else if (from === 'auto_plan') {
-            dispatch({
-                type: 'auto_plan/updateNodes',
-                payload: _result
-            });
-            dispatch({
-                type: 'auto_plan/updateBeautify',
-                payload: true
-            })
-            dispatch({
-                type: 'auto_plan/updateIsChanged',
-                payload: true
-            })
-        } else if (from === 'case') {
-            dispatch({
-                type: 'case/updateNodes',
-                payload: _result
-            });
-            dispatch({
-                type: 'case/updateBeautify',
-                payload: true
-            })
-            dispatch({
-                type: 'case/updateIsChanged',
-                payload: true
-            })
-        }
-
     };
 
     const initScene = () => {
@@ -516,46 +407,218 @@ const SceneHeader = (props) => {
     const open_case_name = useSelector((store) => store.case.open_case_name);
     const open_case_desc = useSelector((store) => store.case.open_case_desc);
 
+    const sceneDatas = useSelector((store) => store.scene.sceneDatas);
+    const planMenu = useSelector((store) => store.plan.planMenu);
+    const autoPlanMenu = useSelector((store) => store.auto_plan.planMenu);
+    const caseMenu = useSelector((store) => store.case.case_menu);
+
+    // 当前目录选中的项的基本信息
+    const menulist = {
+        'scene': sceneDatas,
+        'plan': planMenu,
+        'auto_plan': autoPlanMenu,
+        'case': caseMenu
+    };
+
+    const menuItem = menulist[from];
+
+
+    // 提取一个函数来渲染描述
+    const renderDesc = (desc, type) => {
+        return desc ? (
+            <p className="desc" style={{ maxWidth: from === "plan" ? "16.66rem" : "51.25rem" }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {t(`${type}.${type}Desc`)}：
+                    <InputText
+                        value={desc}
+                        maxLength={50}
+                        placeholder={t(`placeholder.${type}Desc`)}
+                        onChange={(e) => {
+                            const plan_id = id;
+
+                            if (type === 'scene') {
+                                const from_list = {
+                                    'scene': 1,
+                                    'plan': 2,
+                                    'auto_plan': 3,
+                                    'case': 4
+                                }
+                                const params = {
+                                    ...menuItem[open_scene.scene_id ? open_scene.scene_id : open_scene.target_id],
+                                    description: e.trim(),
+                                    source: from_list[from],
+                                    plan_id,
+                                };
+                                fetchCreateScene(params).subscribe({
+                                    next: (res) => {
+                                        const { code, data } = res;
+                                        if (code === 0) {
+                                            if (from === 'plan') {
+                                                dispatch({
+                                                    type: 'plan/updateOpenDesc',
+                                                    payload: e.trim(),
+                                                })
+                                            } else {
+                                                dispatch({
+                                                    type: 'scene/updateOpenDesc',
+                                                    payload: e.trim(),
+                                                })
+                                                let storageScene = JSON.parse(localStorage.getItem('open_scene'));
+                                                storageScene.description = e.trim();
+                                                localStorage.setItem('open_scene', JSON.stringify(storageScene));
+                                            }
+
+
+                                            if (from === 'scene') {
+                                                global$.next({
+                                                    action: 'RELOAD_LOCAL_SCENE',
+                                                });
+                                            } else if (from === 'plan') {
+                                                global$.next({
+                                                    action: 'RELOAD_LOCAL_PLAN',
+                                                    id: plan_id
+                                                });
+                                            } else if (from === 'auto_plan') {
+                                                global$.next({
+                                                    action: 'RELOAD_LOCAL_AUTO_PLAN',
+                                                    id: plan_id
+                                                });
+                                            }
+                                        }
+                                    }
+                                })
+                            } else {
+                                const params = {
+                                    ...menuItem[open_scene.scene_case_id],
+                                    plan_id,
+                                    name: menuItem[open_scene.scene_case_id].case_name,
+                                    description: e.trim(),
+                                    source: from === 'auto_plan' ? 3 : 1
+                                };
+                                fetchSaveCase(params).subscribe({
+                                    next: (res) => {
+                                        const { code, data } = res;
+                                        if (code === 0) {
+                                            dispatch({
+                                                type: 'case/updateCaseDesc',
+                                                payload: e.trim() || '',
+                                            });
+                                            dispatch({
+                                                type: 'case/updateRefreshMenu',
+                                                payload: v4()
+                                            })
+                                        }
+
+                                    }
+                                })
+                            }
+                        }}
+                    />
+                </div>
+            </p>
+        ) : null;
+    };
+
     return (
         <div className='scene-header'>
             <div className='scene-header-left'>
-                <Tooltip color='var(--select-hover)' content={show_case && Object.entries(open_case || {}).length > 0 ? open_case_name : open_scene_name}>
-                    <p className='name'>{show_case && Object.entries(open_case || {}).length > 0 ? open_case_name : open_scene_name}</p>
-                </Tooltip>
+                <InputText
+                    maxLength={30}
+                    value={show_case && Object.entries(open_case || {}).length > 0 ? open_case_name : open_scene_name}
+                    placeholder={t('placeholder.sceneName')}
+                    onChange={(e) => {
+                        if (e.trim().length === 0) {
+                            Message('error', t('message.SceneNameEmpty'));
+                            return;
+                        }
+                        const plan_id = id;
+
+                        if (show_case && Object.entries(open_case || {}).length > 0) {
+                            // 当前编辑的是用例
+                            const params = {
+                                ...menuItem[open_scene.scene_case_id],
+                                plan_id,
+                                name: e.trim(),
+                                source: from === 'auto_plan' ? 3 : 1
+                            };
+                            fetchSaveCase(params).subscribe({
+                                next: (res) => {
+                                    const { code, data } = res;
+                                    if (code === 0) {
+                                        dispatch({
+                                            type: 'case/updateCaseName',
+                                            payload: e.trim() || '',
+                                        });
+                                        dispatch({
+                                            type: 'case/updateRefreshMenu',
+                                            payload: v4()
+                                        })
+                                    }
+
+                                }
+                            })
+                        } else {
+                            // 当前编辑的是场景
+                            const from_list = {
+                                'scene': 1,
+                                'plan': 2,
+                                'auto_plan': 3,
+                                'case': 4
+                            }
+                            const params = {
+                                ...menuItem[open_scene.scene_id ? open_scene.scene_id : open_scene.target_id],
+                                name: e.trim(),
+                                source: from_list[from],
+                                plan_id,
+                            };
+                            console.log(params, menuItem);
+                            fetchCreateScene(params).subscribe({
+                                next: (res) => {
+                                    const { code, data } = res;
+                                    if (code === 0) {
+                                        if (from === 'plan') {
+                                            dispatch({
+                                                type: 'plan/updateOpenName',
+                                                payload: e.trim(),
+                                            })
+                                        } else {
+                                            dispatch({
+                                                type: 'scene/updateOpenName',
+                                                payload: e.trim(),
+                                            })
+                                            let storageScene = JSON.parse(localStorage.getItem('open_scene'));
+                                            storageScene.name = e.trim();
+                                            localStorage.setItem('open_scene', JSON.stringify(storageScene));
+                                        }
+
+
+                                        if (from === 'scene') {
+                                            global$.next({
+                                                action: 'RELOAD_LOCAL_SCENE',
+                                            });
+                                        } else if (from === 'plan') {
+                                            global$.next({
+                                                action: 'RELOAD_LOCAL_PLAN',
+                                                id: plan_id
+                                            });
+                                        } else if (from === 'auto_plan') {
+                                            global$.next({
+                                                action: 'RELOAD_LOCAL_AUTO_PLAN',
+                                                id: plan_id
+                                            });
+                                        }
+                                    }
+                                }
+                            })
+                        }
+                    }}
+                />
                 {
-                    show_case && Object.entries(open_case || {}).length > 0 ?
-                        open_case_desc ? <Tooltip color='var(--select-hover)' content={open_case_desc}>
-                            {
-                                open_case_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem' : '51.25rem' }}>
-                                    {open_case_desc ? <span>{t('case.caseDesc')}：</span> : ''}
-                                    {open_case_desc}
-                                </p> : ''
-                            }
-                        </Tooltip>
-                            : <>
-                                {
-                                    open_case_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem' : '51.25rem' }}>
-                                        {open_case_desc ? <span>{t('case.caseDesc')}：</span> : ''}
-                                        {open_case_desc}
-                                    </p> : ''
-                                }
-                            </>
-                        : open_scene_desc ? <Tooltip color='var(--select-hover)' content={open_scene_desc}>
-                            {
-                                open_scene_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem' : '51.25rem' }}>
-                                    {open_scene_desc ? <span>{t('scene.sceneDesc')}：</span> : ''}
-                                    {open_scene_desc}
-                                </p> : ''
-                            }
-                        </Tooltip>
-                            : <>
-                                {
-                                    open_scene_desc ? <p className='desc' style={{ maxWidth: from === 'plan' ? '16.66rem' : '51.25rem' }}>
-                                        {open_scene_desc ? <span>{t('scene.sceneDesc')}：</span> : ''}
-                                        {open_scene_desc}
-                                    </p> : ''
-                                }
-                            </>
+                    show_case && Object.entries(open_case || {}).length > 0 &&
+                    renderDesc(open_case_desc, "case")
+                }
+                {
+                    !show_case && renderDesc(open_scene_desc, "scene")
                 }
             </div>
             <div className='scene-header-right'>
@@ -583,7 +646,7 @@ const SceneHeader = (props) => {
                                 })
                             }
                         }}>{t('btn.stopRun')}</Button>
-                        : <Button className='runBtn' disabled={run_status === 'running'} preFix={<SvgCaretRight />} onClick={() => runScene()}>{ from === 'case' ? t('case.runCase') : t('btn.runScene') }</Button>
+                        : <Button className='runBtn' disabled={run_status === 'running'} preFix={<SvgCaretRight />} onClick={() => runScene()}>{from === 'case' ? t('case.runCase') : t('btn.runScene')}</Button>
                 }
             </div>
             {showSceneConfig && <SceneConfig from={from} onCancel={() => setSceneConfig(false)} />}

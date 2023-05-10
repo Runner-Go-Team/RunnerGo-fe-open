@@ -62,13 +62,15 @@ const TestReportDetail = () => {
                     scene_id_case_result_map,
 
                     report_status,
+                    report_name
                 } } = res;
                 setHeader({
                     plan_name,
                     avatar,
                     nickname,
                     remark,
-                    report_status
+                    report_status,
+                    report_name
                 })
 
                 setInfo({

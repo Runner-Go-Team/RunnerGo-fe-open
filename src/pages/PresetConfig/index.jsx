@@ -16,6 +16,7 @@ import { fetchPresetList, fetchDeletePreset, fetchCopyPreset } from '@services/p
 import SvgEmpty from '@assets/img/empty';
 import { debounce } from 'lodash';
 import { Pagination } from '@arco-design/web-react';
+import ResizableTable from '@components/ResizableTable';
 
 const { Tabs, TabPan } = TabList;
 const PresetConfig = () => {
@@ -24,54 +25,67 @@ const PresetConfig = () => {
         {
             title: t('column.preset.name'),
             dataIndex: 'conf_name',
+            width: 150,
         },
         {
             title: t('column.preset.creator'),
-            dataIndex: 'user_name'
+            dataIndex: 'user_name',
+            width: 150,
         },
         {
             title: t('column.preset.taskType'),
-            dataIndex: 'task_type'
+            dataIndex: 'task_type',
+            width: 150,
         },
         {
             title: t('column.preset.debugMode'),
-            dataIndex: 'debug_mode'
+            dataIndex: 'debug_mode',
+            width: 180,
         },
         {
             title: t('column.preset.taskMode'),
-            dataIndex: 'task_mode'
+            dataIndex: 'task_mode',
+            width: 150,
         },
         {
             title: t('column.preset.controlMode'),
             dataIndex: 'control_mode',
+            width: 150,
         },
         {
             title: t('column.preset.startConcurrency'),
-            dataIndex: 'start_concurrency'
+            dataIndex: 'start_concurrency',
+            width: 120
         },
         {
             title: t('column.preset.step'),
-            dataIndex: 'step'
+            dataIndex: 'step',
+            width: 120
         },
         {
             title: t('column.preset.stepRunTime'),
-            dataIndex: 'step_run_time'
+            dataIndex: 'step_run_time',
+            width: 120
         },
         {
             title: t('column.preset.maxConcurrency'),
-            dataIndex: 'max_concurrency'
+            dataIndex: 'max_concurrency',
+            width: 120
         },
         {
             title: t('column.preset.duration'),
-            dataIndex: 'duration'
+            dataIndex: 'duration',
+            width: 120
         },
         {
             title: t('column.preset.roundNum'),
-            dataIndex: 'round_num'
+            dataIndex: 'round_num',
+            width: 120
         },
         {
             title: t('column.preset.concurrency'),
-            dataIndex: 'concurrency'
+            dataIndex: 'concurrency',
+            width: 120,
         },
         {
             title: t('column.preset.handle'),
@@ -252,7 +266,7 @@ const PresetConfig = () => {
                     <Button preFix={<SvgAdd />} onClick={() => setShowCreate(true)}>{t('index.create')}</Button>
                 </div>
             </div>
-            <Table
+            <ResizableTable
                 className="preset-table"
                 border={{
                     wrapper: true,

@@ -16,9 +16,14 @@ export const ImportModal = css`
       left: 0;
       width: 100%;
       background-color: var(--scene-api-line);
+      color: var(--font-1);
       .apipost-btn-default {
         background-color: var(--module);
         border-radius: 5px;
+      }
+
+      .apipost-btn:last-child {
+        background-color: var(--theme-color) !important;
       }
     }
   }

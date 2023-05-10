@@ -64,6 +64,7 @@
     "apizza2apipost": "^0.0.2",
     "copy-to-clipboard": "^3.3.3",
     "curl2har": "^0.0.18",
+    "dagre": "^0.8.5",
     "dayjs": "^1.11.2",
     "echarts": "^5.3.3",
     "echarts-for-react": "^3.0.2",

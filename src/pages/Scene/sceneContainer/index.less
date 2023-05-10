@@ -5,6 +5,7 @@
 
   .api-config-drawer {
     position: relative;
+
     .scene-drawer {
       box-shadow: -15px 0px 20px rgba(0, 0, 0, 0.2);
       border-radius: 0px 0px 5px 5px;
@@ -100,13 +101,34 @@
     }
 
     &-right {
-      .apipost-btn {
-        background-color: var(--theme-color);
-        width: 84px;
-        height: 30px;
-        padding: 12px;
-        border-radius: 3px;
+      display: flex;
+      align-items: center;
+
+      .stopBtn,
+      .runBtn {
+        // width: 84px;
+        height: 25px;
+        padding: 8px;
+        background-color: rgba(76, 203, 126, 0.2);
+        border: 1px solid var(--sub-color-1);
         color: var(--font-1);
+        margin-right: 20px;
+
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+
+      .stopBtn {
+        background-color: rgba(237, 120, 71, 0.1);
+        border: 1px solid var(--sub-color-4);
+        border-radius: 3px;
+
+        svg {
+          width: 14px;
+          height: 14px;
+        }
       }
 
       p {
@@ -116,4 +138,17 @@
       }
     }
   }
+}
+
+.runnergo-full-screen {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+}
+
+.full-screen-container {
+  width: 100%;
+  height: 100%;
 }

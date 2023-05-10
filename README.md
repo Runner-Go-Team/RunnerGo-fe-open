@@ -17,11 +17,15 @@
 
 ## 相关配置
 
-### OSS
+### 文件存储
 
-如果想使用上传头像、上传场景内的csv、text文件等功能, 需要配置阿里云OSS服务
+如果想使用上传头像、上传场景内的csv、text文件等功能, 有两种选择
+
+1. 阿里云OSS服务
 
 在根目录的config文件夹中的oss文件中
+
+`config/oss.js`
 
 ```js
 export const OSS_Config = {
@@ -30,6 +34,24 @@ export const OSS_Config = {
     accessKeySecret: 'Your AccessKeySecret',
     bucket: 'Your Bucket',
 }
+```
+
+2. 使用文件本地存储的服务
+
+在本项目开源总目录下有一个file-server服务, 部署运行一下, 然后在config目录里配置以下内容
+
+`config/base.js`
+
+```js
+// 是否使用OSS服务做文件存储, 若使用将值设为true,  若不使用, 设为false, 会走另外一个文件本地存储服务filer-server的逻辑
+export const USE_OSS = false;
+```
+
+`config/server.js`
+
+```js
+// 后端文件存储地址
+export const RD_FileURL = 'file-server服务的地址';
 ```
 
 ### 配置后端服务地址

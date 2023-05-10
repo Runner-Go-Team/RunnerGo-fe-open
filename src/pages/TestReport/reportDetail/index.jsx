@@ -46,6 +46,7 @@ const TestReportDetail = () => {
                     report_start_time,
                     report_end_time,
                     report_run_time,
+                    report_name,
                     task_mode,
                     test_case_run_order,
                     scene_run_order,
@@ -58,13 +59,15 @@ const TestReportDetail = () => {
                     scene_id_case_result_map,
 
                     report_status,
+                    
                 } } = res;
                 setHeader({
                     plan_name,
                     avatar,
                     nickname,
                     remark,
-                    report_status
+                    report_status,
+                    report_name
                 })
 
                 setInfo({

@@ -24,6 +24,7 @@ import { fetchTPlanEmailList } from '@services/auto_plan';
 import TestTaskConfig from '@modals/TestTaskConfig';
 import { Input } from '@arco-design/web-react';
 import { debounce } from 'lodash';
+import InputText from '@components/InputText';
 
 let auto_plan_task_t = null;
 
@@ -193,7 +194,14 @@ const TPlanDetailHeader = (props) => {
                                     content={<div>{planName}</div>}
                                 >
                                     <div style={{ marginLeft: '8px' }}>
-                                        <Input maxLength={30} disabled={planDetail.status === 2} value={planName} onBlur={(e) => changePlanInfo('plan_name', e.target.value)} onChange={(e) => setPlanName(e)} />
+                                        <InputText 
+                                            maxLength={30}
+                                            disabled={planDetail.status === 2}
+                                            value={planName}
+                                            onChange={(e) => {
+                                                changePlanInfo('plan_name', e.trim());
+                                            }}
+                                        />
                                     </div>
                                 </Tooltip>
                             </p>
@@ -215,7 +223,15 @@ const TPlanDetailHeader = (props) => {
                             </div>
                             <div className='item'>
                                 {t('plan.planDesc')}:
-                                <Input maxLength={50} disabled={planDetail.status === 2} value={planDesc} onBlur={(e) => changePlanInfo('remark', e.target.value)} onChange={(e) => setPlanDesc(e)} />
+                                <InputText 
+                                    maxLength={50}
+                                    maxWidth={200}
+                                    disabled={planDetail.status === 2}
+                                    value={planDesc}
+                                    onChange={(e) => {
+                                        changePlanInfo('remark', e.trim())
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>

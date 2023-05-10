@@ -86,12 +86,13 @@ const ReportContent = () => {
 
     useEffect(() => {
         if (report_info) {
-            const { report: { plan_name, plan_id, task_mode, control_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, scene_name, change_take_conf } } = report_info;
+            const { report: { plan_name, report_name, plan_id, task_mode, control_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, scene_name, change_take_conf } } = report_info;
             setPlanId(plan_id);
             setCreateTime(created_time_sec);
             setHeaderData({
                 plan_name,
-                scene_name
+                scene_name,
+                report_name
             })
             setInfoData({
                 user_avatar,

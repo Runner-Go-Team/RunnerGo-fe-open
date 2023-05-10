@@ -63,10 +63,11 @@ const ReportContent = () => {
         };
         fetchEmailReportInfo(query).subscribe({
             next: (res) => {
-                const { data: { report: { plan_name, task_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, plan_id } } } = res;
+                const { data: { report: { plan_name, report_name, task_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, plan_id } } } = res;
                 setPlanId(plan_id);
                 setHeaderData({
                     plan_name,
+                    report_name,
                 })
                 setInfoData({
                     user_avatar,

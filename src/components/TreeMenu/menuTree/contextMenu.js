@@ -33,7 +33,17 @@ export const handleShowContextMenu = (props, e, params) => {
     } else if (isArray(params)) {
         module = 'multi';
     } else {
-        module = params.target_type;
+        // 因为场景的目录类型由group改为folder, 但是支持的操作不同, 所以需要通过source和target_type两个字段来区分来源
+        const { source, target_type } = params;
+        if (source === 0 && target_type === 'api') {
+            module = 'api';
+        } else if (source === 0 && target_type === 'folder') {
+            module = 'folder';
+        } else if (source !== 0 && target_type === 'scene') {
+            module = 'scene';
+        } else if (source !== 0 && target_type === 'folder') {
+            module = 'group';
+        }
     }
     if (!isString(module) || !isArray(contextMenus?.[module])) {
         return;

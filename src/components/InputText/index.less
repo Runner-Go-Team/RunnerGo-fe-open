@@ -1,0 +1,44 @@
+.input-text-component {
+    overflow: hidden;
+    .arco-input {
+        width: 200px;
+        background-color: var(--bg);
+    }
+
+    .arco-input-inner-wrapper {
+        background-color: var(--bg);
+    }
+
+    .default-status {
+        display: flex;
+        align-items: center;
+        color: var(--font-1);
+        overflow: hidden;
+
+        .ellipsis {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        p {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        // p {
+        //     max-width: 200px;
+        // }
+
+        .arco-icon {
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
+            height: 16px;
+            color: var(--font-1);
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    }
+}

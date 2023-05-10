@@ -92,7 +92,7 @@ const DataView = (props) => {
                 style: {
                     text: showText ? `${text}\n${number}` : `${number}`,
                     textAlign: 'center',
-                    fill: '#fff',
+                    fill: theme === 'dark' ? '#fff' : '#000',
                     fontSize: 12,
                 }
             }],

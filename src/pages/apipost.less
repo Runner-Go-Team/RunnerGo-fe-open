@@ -3,6 +3,7 @@
 // 抽屉drawer
 .apipost-drawer {
     position: absolute !important;
+    z-index: 1001 !important;
 }
 
 .apipost-drawer-mask {
@@ -308,6 +309,10 @@
     .apipost-btn-primary {
         background-color: var(--theme-color) !important;
     }
+
+    .apipost-btn-default {
+        background-color: var(--border-line) !important;
+    }
 }
 
 .apipost-modal-header {
@@ -491,6 +496,7 @@
 
 .apipost-checkbox {
     border: 1px solid var(--border-line);
+    background-color: var(--scene-border);
 
     &.checked {
         border: 1px solid var(--base-color-info);
@@ -758,13 +764,13 @@
 
             .apipost-btn {
                 // height: 24px;
-                background-color: var(--module);
+                background-color: var(--border-line) !important;
                 min-width: 100px;
                 height: 32px;
                 color: var(--font-1);
 
                 &:last-child {
-                    background-color: var(--theme-color);
+                    background-color: var(--theme-color) !important;
                     color: var(--common-white);
                     font-weight: 500;
 

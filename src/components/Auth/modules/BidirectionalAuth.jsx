@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { Button, Upload, Message } from 'adesign-react';
 import { Add as SvgAdd } from 'adesign-react/icons';
-import { RD_FileURL, OSS_Config } from '@config';
+import { RD_FileURL, OSS_Config, USE_OSS, RD_FileURL } from '@config';
 import axios from 'axios';
 import { v4 } from 'uuid';
 import OSS from 'ali-oss';
@@ -15,9 +15,11 @@ const BidirectionalAuth = (props) => {
 
 
     const uploadFile = async (files, fileLists) => {
-        if (!OSS_Config.region || !OSS_Config.accessKeyId || !OSS_Config.accessKeySecret || !OSS_Config.bucket) {
-            Message('error', t('message.setOssConfig'));
-            return;
+        if (USE_OSS) {
+            if (!OSS_Config.region || !OSS_Config.accessKeyId || !OSS_Config.accessKeySecret || !OSS_Config.bucket) {
+                Message('error', t('message.setOssConfig'));
+                return;
+            }    
         }
 
         const fileMaxSize = 1024 * 1;
@@ -34,14 +36,24 @@ const BidirectionalAuth = (props) => {
             return;
         }
 
-        const client = new OSS(OSS_Config);
-        const { name: res_name, url } = await client.put(
-            `kunpeng/test/${v4()}.${nameType}`,
-            files[0].originFile,
-        )
+        if (USE_OSS) {
+            const client = new OSS(OSS_Config);
+            const { name: res_name, url } = await client.put(
+                `kunpeng/test/${v4()}.${nameType}`,
+                files[0].originFile,
+            )
+            handleAttrChange(type, 'ca_cert', url);
+            handleAttrChange(type, 'ca_cert_name', name);
+        } else {
+            let formData = new FormData();
+            formData.append('file', files[0].originFile);
 
-        handleAttrChange(type, 'ca_cert', url);
-        handleAttrChange(type, 'ca_cert_name', name);
+            const res = await axios.post(`${RD_FileURL}/api/upload`, formData);
+            const url = `${RD_FileURL}/${res.data[0].filename}`;
+
+            handleAttrChange(type, 'ca_cert', url);
+            handleAttrChange(type, 'ca_cert_name', name);
+        }
     };
 
     const deleteFile = () => {

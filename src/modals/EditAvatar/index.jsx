@@ -8,7 +8,7 @@ import cn from 'classnames';
 import { v4 } from 'uuid';
 import OSS from 'ali-oss';
 import { fetchUpdateAvatar } from '@services/user';
-import { OSS_Config } from '@config';
+import { OSS_Config, RD_FileURL, USE_OSS } from '@config';
 import axios from 'axios';
 import { RD_FileURL } from '@config';
 import LogoRight from '@assets/logo/info_right';
@@ -36,9 +36,11 @@ const EditAvatar = (props) => {
 
 
     const uploadFile = async (files, fileLists) => {
-        if (!OSS_Config.region || !OSS_Config.accessKeyId || !OSS_Config.accessKeySecret || !OSS_Config.bucket) {
-            Message('error', t('message.setOssConfig'));
-            return;
+        if (USE_OSS) {
+            if (!OSS_Config.region || !OSS_Config.accessKeyId || !OSS_Config.accessKeySecret || !OSS_Config.bucket) {
+                Message('error', t('message.setOssConfig'));
+                return;
+            }
         }
         const fileMaxSize = 1024 * 3;
         const fileType = ['jpg', 'jpeg', 'png'];
@@ -54,19 +56,23 @@ const EditAvatar = (props) => {
             return;
         }
 
-        // let formData = new FormData();
-        // formData.append('file', files[0].originFile);
+        if (USE_OSS) {
+            const client = new OSS(OSS_Config);
+            const { name: res_name, url } = await client.put(
+                "your oss bucket url",
+                files[0].originFile,
+            )
+            setAvatarNow(url);
+        } else {
+            let formData = new FormData();
+            formData.append('file', files[0].originFile);
 
-        // const res = await axios.post(`${RD_FileURL}/api/upload`, formData);
-        // const url = `${RD_FileURL}/${res.data[0].filename}`;
+            const res = await axios.post(`${RD_FileURL}/api/upload`, formData);
+            const url = `${RD_FileURL}/${res.data[0].filename}`;
 
+            setAvatarNow(url);
+        }
 
-        const client = new OSS(OSS_Config);
-        const { name: res_name, url } = await client.put(
-            "your oss bucket url",
-            files[0].originFile,
-        )
-        setAvatarNow(url);
     };
 
     const updateAvatar = () => {

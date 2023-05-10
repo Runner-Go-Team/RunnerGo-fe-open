@@ -15,8 +15,7 @@ export const RD_websocketUrl = {
 
 
 // 后端文件存储地址
-export const RD_FileURL = 'http://localhost:20004';
-
+export const RD_FileURL = 'http://(file-server服务的ip):(file-server服务的端口)';
 
 
 export const RD_BASE_URL = RD_BaseURL[NODE_ENV];

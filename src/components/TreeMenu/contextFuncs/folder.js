@@ -106,24 +106,16 @@ export const pasteToCurrent = ({ props, params }) => {
     });
 };
 export const pasteFolderToRoot = ({ props }) => { };
-export const deleteFolder = ({ target_id }) => {
-    // deleteMultiData(target_id);
+export const deleteFolder = ({ target_id }, props, open_scene, from, plan_id) => {
     Modal.confirm({
         title: i18next.t('modal.look'),
         content: i18next.t('modal.deleteFolder'),
         okText: i18next.t('btn.ok'),
         cancelText: i18next.t('btn.cancel'),
         onOk: () => {
-            Bus.$emit('toDeleteFolder', target_id, () => {
+            Bus.$emit('toDeleteFolder', target_id, from, plan_id, () => {
                 Message('success', i18next.t('message.deleteSuccess'));
-                global$.next({
-                    action: 'GET_APILIST',
-                    payload: {
-                        page: 1,
-                        size: 100,
-                        team_id: localStorage.getItem('team_id')
-                    },
-                });       
+  
             });
         }
     })

@@ -11,7 +11,7 @@ import PreviewFile from '../PreviewFile';
 import { useTranslation } from 'react-i18next';
 import OSS from 'ali-oss';
 
-import { RD_FileURL, OSS_Config } from '@config';
+import { RD_FileURL, OSS_Config, USE_OSS } from '@config';
 import { v4 } from 'uuid';
 import axios from 'axios';
 import { Tooltip } from '@arco-design/web-react';
@@ -116,7 +116,7 @@ const SceneConfig = (props) => {
         {
             title: t('apis.cookieName'),
             dataIndex: 'key',
-            width: 80,
+            width: 220,
             render: (text, rowData, rowIndex) => {
                 return (
                     <Input
@@ -336,7 +336,7 @@ const SceneConfig = (props) => {
                                 handleChange(rowData, rowIndex, { key: newVal });
                             }}
                         />
-                        {rowIndex !== varList.length && <SvgCopy className='copy-svg' onClick={() => copyStringToClipboard(varList[rowIndex].var)} />}
+                        {rowIndex !== varList.length && <SvgCopy className='copy-svg' onClick={() => copyStringToClipboard(varList[rowIndex].key)} />}
                     </div>
                 )
             }
@@ -652,9 +652,11 @@ const SceneConfig = (props) => {
     }
 
     const uploadFile = async (files, fileLists) => {
-        if (!OSS_Config.region || !OSS_Config.accessKeyId || !OSS_Config.accessKeySecret || !OSS_Config.bucket) {
-            Message('error', t('message.setOssConfig'));
-            return;
+        if (USE_OSS) {
+            if (!OSS_Config.region || !OSS_Config.accessKeyId || !OSS_Config.accessKeySecret || !OSS_Config.bucket) {
+                Message('error', t('message.setOssConfig'));
+                return;
+            }
         }
 
         const fileMaxSize = 1024 * 10;
@@ -680,26 +682,51 @@ const SceneConfig = (props) => {
             return;
         }
 
-        const client = new OSS(OSS_Config);
-        const { name: res_name, url } = await client.put(
-            "your oss bucket url",
-            files[0].originFile,
-        )
-
-        const params = {
-            team_id: localStorage.getItem('team_id'),
-            scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
-            name,
-            url,
-        };
-        fetchImportVar(params).subscribe({
-            next: (res) => {
-                const { code } = res;
-                if (code === 0) {
-                    getFileList();
+        if (USE_OSS) {
+            const client = new OSS(OSS_Config);
+            const { name: res_name, url } = await client.put(
+                "your oss bucket url",
+                files[0].originFile,
+            )
+    
+            const params = {
+                team_id: localStorage.getItem('team_id'),
+                scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
+                name,
+                url,
+            };
+            fetchImportVar(params).subscribe({
+                next: (res) => {
+                    const { code } = res;
+                    if (code === 0) {
+                        getFileList();
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            let formData = new FormData();
+            formData.append('file', files[0].originFile);
+
+            const res = await axios.post(`${RD_FileURL}/api/upload`, formData);
+            const url = `${RD_FileURL}/${res.data[0].filename}`;
+            
+            const params = {
+                team_id: localStorage.getItem('team_id'),
+                scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
+                name,
+                url,
+            };
+            fetchImportVar(params).subscribe({
+                next: (res) => {
+                    const { code } = res;
+                    if (code === 0) {
+                        getFileList();
+                    }
+                }
+            })
+
+        }
+
     };
 
     const saveCookie = (data) => {

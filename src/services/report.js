@@ -97,3 +97,8 @@ export const fetchContrastReport = (
 export const fetchUpdateDesc = (
     params
 ) => ajax('post', '/management/api/v1/report/update/description', 'json', false, params);
+
+// 修改报告名称
+export const fetchUpdateName = (
+    params
+) => ajax('post', '/management/api/v1/report/update_report_name', 'json', false, params);

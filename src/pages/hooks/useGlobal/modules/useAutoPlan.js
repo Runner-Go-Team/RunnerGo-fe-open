@@ -200,7 +200,7 @@ const useAutoPlan = () => {
     //     return arr;
     // }
 
-    const saveSceneAutoPlan = (id) => {
+    const saveSceneAutoPlan = (id, callback) => {
         const get_pre = (id, edges) => {
             const pre_list = [];
             edges && edges.forEach(item => {
@@ -262,6 +262,7 @@ const useAutoPlan = () => {
             param: JSON.stringify(params)
         }))
 
+        callback && callback();
         // fetchCreateSceneFlow(params).subscribe({
         //     next: (res) => {
         //         const { code } = res;
@@ -440,7 +441,6 @@ const useAutoPlan = () => {
                 });
             }
         });
-        return;
     };
 
     const runAutoPlan = (id, callback) => {

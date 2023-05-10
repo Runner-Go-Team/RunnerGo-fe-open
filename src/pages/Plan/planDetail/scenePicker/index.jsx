@@ -105,7 +105,7 @@ const ScenePicker = (props) => {
     const digTree = (nodeList) => {
       const sortedList = sortBy(nodeList, ['sort']);
       for (const nodeItem of sortedList) {
-        if (checkedData[nodeItem.target_id] === true && ['scene', 'group'].includes(nodeItem.target_type)) {
+        if (checkedData[nodeItem.target_id] === true && ['scene', 'folder'].includes(nodeItem.target_type)) {
           apiIds.push({
             id: nodeItem.target_id,
             name: nodeItem.name,
@@ -113,7 +113,7 @@ const ScenePicker = (props) => {
             type: nodeItem.target_type
           });
         }
-        if (nodeItem.target_type === 'group') {
+        if (nodeItem.target_type === 'folder') {
           digTree(nodeItem.children);
         }
       }
@@ -167,28 +167,31 @@ const ScenePicker = (props) => {
 
     Bus.$emit('importSceneList', _dataList.map(item => item.id), id, 'plan', (scene_id_list, code) => {
 
+      // 导入场景时, 接口才会返回信息, 导入目录不会, 所以需要判断下
+      if (scene_id_list.length > 0) {
+        if (from === 'plan') {
+          dispatch({
+            type: 'plan/updateOpenName',
+            payload: scene_id_list[0].name,
+          })
+          dispatch({
+            type: 'plan/updateOpenDesc',
+            payload: scene_id_list[0].description
+          })
+        } else {
+          dispatch({
+            type: 'scene/updateOpenName',
+            payload: scene_id_list[0].name,
+          })
+          dispatch({
+            type: 'scene/updateOpenDesc',
+            payload: scene_id_list[0].description
+          })
+        }
 
-      if (from === 'plan') {
-        dispatch({
-          type: 'plan/updateOpenName',
-          payload: scene_id_list[0].name,
-        })
-        dispatch({
-          type: 'plan/updateOpenDesc',
-          payload: scene_id_list[0].description
-        })
-      } else {
-        dispatch({
-          type: 'scene/updateOpenName',
-          payload: scene_id_list[0].name,
-        })
-        dispatch({
-          type: 'scene/updateOpenDesc',
-          payload: scene_id_list[0].description
-        })
+        Bus.$emit('addOpenPlanScene', { target_id: scene_id_list[0].target_id }, id_apis_plan, node_config_plan);
+
       }
-
-      Bus.$emit('addOpenPlanScene', { target_id: scene_id_list[0].target_id }, id_apis_plan, node_config_plan);
 
       if (code === 0) {
         onCancel();

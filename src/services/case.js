@@ -44,3 +44,8 @@ export const fetchStopCase = (
 export const fetchSwitchCase = (
     params
 ) => ajax('post', '/management/api/v1/case/change/check', 'json', false, params);
+
+// 拖拽排序
+export const fetchChangeSort = (
+    params
+) => ajax('post', '/management/api/v1/case/change_case_sort', 'json', false, params);

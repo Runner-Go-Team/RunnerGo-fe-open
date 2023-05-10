@@ -22,6 +22,7 @@ import InvitationModal from '@modals/ProjectInvitation';
 import { fetchEmailList } from '@services/plan';
 import { Tooltip, Input } from '@arco-design/web-react';
 import { debounce } from 'lodash';
+import InputText from '../../../../components/InputText';
 
 let plan_task_t = null;
 
@@ -225,7 +226,15 @@ const DetailHeader = (props) => {
                                     content={planName}
                                 >
                                     <div style={{ marginLeft: '8px' }}>
-                                        <Input maxLength={30} disabled={planDetail.status === 2} value={planName} onBlur={(e) => changePlanInfo('plan_name', e.target.value)} onChange={(e) => setPlanName(e)} />
+                                        <InputText
+                                            maxLength={30}
+                                            disabled={planDetail.status === 2}
+                                            value={planName}
+                                            onChange={(e) => {
+                                                changePlanInfo('plan_name', e.trim())
+                                            }}
+                                        />
+                                        {/* <Input maxLength={30} disabled={planDetail.status === 2} value={planName} onBlur={(e) => changePlanInfo('plan_name', e.target.value)} onChange={(e) => setPlanName(e)} /> */}
                                     </div>
                                 </Tooltip>
                             </p>
@@ -250,7 +259,15 @@ const DetailHeader = (props) => {
                             </div>
                             <div className='item'>
                                 {t('plan.planDesc')}:
-                                <Input maxLength={50} disabled={planDetail.status === 2} value={planDesc} onBlur={(e) => changePlanInfo('remark', e.target.value)} onChange={(e) => setPlanDesc(e)} />
+                                <InputText
+                                    maxLength={50}
+                                    maxWidth={200}
+                                    disabled={planDetail.status === 2}
+                                    value={planDesc}
+                                    onChange={(e) => {
+                                        changePlanInfo('remark', e.trim());
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>

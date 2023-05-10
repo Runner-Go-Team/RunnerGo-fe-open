@@ -88,7 +88,7 @@ const ScenePicker = (props) => {
     const digTree = (nodeList) => {
       const sortedList = sortBy(nodeList, ['sort']);
       for (const nodeItem of sortedList) {
-        if (checkedData[nodeItem.target_id] === true && ['scene', 'group'].includes(nodeItem.target_type)) {
+        if (checkedData[nodeItem.target_id] === true && ['scene', 'folder'].includes(nodeItem.target_type)) {
           apiIds.push({
             id: nodeItem.target_id,
             name: nodeItem.name,
@@ -96,7 +96,7 @@ const ScenePicker = (props) => {
             type: nodeItem.target_type
           });
         }
-        if (nodeItem.target_type === 'group') {
+        if (nodeItem.target_type === 'folder') {
           digTree(nodeItem.children);
         }
       }
@@ -114,7 +114,7 @@ const ScenePicker = (props) => {
 
     if (checkedApiKeys.length === 0) {
       return;
-    } 
+    }
 
     const dataList = await getApiDataItems(sceneDatas, checkedApiKeys);
 
@@ -143,22 +143,23 @@ const ScenePicker = (props) => {
 
 
     Bus.$emit('importSceneList', _dataList.map(item => item.id), id, 'auto_plan', (scene_id_list, code) => {
+      if (scene_id_list.length > 0) {
+        dispatch({
+          type: 'scene/updateOpenName',
+          payload: scene_id_list[0].name,
+        })
+        dispatch({
+          type: 'scene/updateOpenDesc',
+          payload: scene_id_list[0].description
+        })
 
-      dispatch({
-        type: 'scene/updateOpenName',
-        payload: scene_id_list[0].name,
-      })
-      dispatch({
-        type: 'scene/updateOpenDesc',
-        payload: scene_id_list[0].description
-      })
+        Bus.$emit('addOpenAutoPlanScene', { target_id: scene_id_list[0].target_id });
 
-      Bus.$emit('addOpenAutoPlanScene', { target_id: scene_id_list[0].target_id });
-
-      dispatch({
-        type: 'auto_plan/updateOpenInfo',
-        payload: { target_id: scene_id_list[0].target_id }
-      })
+        dispatch({
+          type: 'auto_plan/updateOpenInfo',
+          payload: { target_id: scene_id_list[0].target_id }
+        })
+      }
 
       if (code === 0) {
         onCancel();
@@ -188,7 +189,7 @@ const ScenePicker = (props) => {
         {renderPrefix(nodeItem)}
         {
           <Tooltip content={nodeTitle.props.children}>
-            { nodeTitle }
+            {nodeTitle}
           </Tooltip>
         }
         {checkbox}

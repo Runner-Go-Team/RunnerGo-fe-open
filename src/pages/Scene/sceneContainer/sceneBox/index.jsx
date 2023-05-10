@@ -258,33 +258,64 @@ const SceneBox = (props) => {
     const { t } = useTranslation();
 
 
-    // useEffect(() => {
-    //     if (_nodes && _nodes.length > 0 && beautify) {
-    //         setNodes(_nodes);
+    useEffect(() => {
+        if (_nodes && _nodes.length > 0 && beautify) {
+            let _open_data = cloneDeep(open_data);
+            _open_data.nodes = _nodes;
+            _open_data.edges = _edges;
 
-    //         if (from === 'scene') {
-    //             dispatch({
-    //                 type: 'scene/updateBeautify',
-    //                 payload: false
-    //             })
-    //         } else if (from === 'plan') {
-    //             dispatch({
-    //                 type: 'plan/updateBeautify',
-    //                 payload: false
-    //             })
-    //         } else if (from === 'auto_plan') {
-    //             dispatch({
-    //                 type: 'auto_plan/updateBeautify',
-    //                 payload: false
-    //             })
-    //         } else if (from === 'case') {
-    //             dispatch({
-    //                 type: 'case/updateBeautify',
-    //                 payload: false
-    //             })
-    //         }
-    //     }
-    // }, [_nodes]);
+            flowInstance.fitView();
+            if (from === 'scene') {
+                dispatch({
+                    type: 'scene/updateBeautify',
+                    payload: false
+                })
+                dispatch({
+                    type: 'scene/updateOpenScene',
+                    payload: _open_data,
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScene');
+                }, 100);
+            } else if (from === 'plan') {
+                dispatch({
+                    type: 'plan/updateBeautify',
+                    payload: false
+                })
+                dispatch({
+                    type: 'plan/updateOpenScene',
+                    payload: _open_data,
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveScenePlan', _nodes, _edges, id_apis, node_config, open_data, id, 'plan');
+                }, 100);
+            } else if (from === 'auto_plan') {
+                dispatch({
+                    type: 'auto_plan/updateBeautify',
+                    payload: false
+                })
+                dispatch({
+                    type: 'auto_plan/updateOpenScene',
+                    payload: _open_data,
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveSceneAutoPlan', id);
+                }, 100);
+            } else if (from === 'case') {
+                dispatch({
+                    type: 'case/updateBeautify',
+                    payload: false
+                })
+                dispatch({
+                    type: 'case/updateOpenScene',
+                    payload: _open_data,
+                })
+                setTimeout(() => {
+                    Bus.$emit('saveCase');
+                }, 100);
+            }
+        }
+    }, [_nodes, _edges, open_data, id, beautify]);
 
 
     const getFather = (a, b) => {
@@ -736,11 +767,11 @@ const SceneBox = (props) => {
         if (Object.entries(clone_node).length > 0) {
             const _open_data = cloneDeep(open_data);
             const _nodes = cloneDeep(nodes);
-  
+
             _nodes.push(clone_node);
             setNodes(_nodes);
             _open_data.nodes = _nodes;
-            
+
             if (from === 'scene') {
                 dispatch({
                     type: 'scene/updateOpenScene',
@@ -1088,9 +1119,9 @@ const SceneBox = (props) => {
                     type: 'case/updateOpenScene',
                     payload: _open_data
                 })
-               setTimeout(() => {
-                Bus.$emit('saveCase');
-               }, 100);
+                setTimeout(() => {
+                    Bus.$emit('saveCase');
+                }, 100);
             }
 
             setNodes((nds) => nds.concat(new_node));
@@ -1496,7 +1527,6 @@ const SceneBox = (props) => {
         debounce((drop_loading_time) => updateSceneWs(drop_loading_time), 1000)(drop_loading_time);
     };
 
-
     return (
         <div ref={refContainer} style={{ width: '100%', height: '100%', position: 'relative' }}>
             {/* <div className="scene-box" ref={refBox}>
@@ -1556,7 +1586,7 @@ const SceneBox = (props) => {
                     if (_index !== -1) {
                         _nodes.splice(_index, 1);
                     }
-                    
+
                     const edge_index = edges.map((item, index) => {
                         if (item.source === e[0].id || item.target === e[0].id) {
                             return index;
@@ -1652,8 +1682,8 @@ const SceneBox = (props) => {
                     const _index = _edges.findIndex(item => item.id === e[0].id);
                     if (_index !== -1) {
                         _edges.splice(_index, 1);
-                    } 
-        
+                    }
+
                     setEdges(_edges);
 
                     _open_data.edges = _edges;

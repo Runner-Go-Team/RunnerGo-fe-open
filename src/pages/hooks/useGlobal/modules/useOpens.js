@@ -780,6 +780,8 @@ const useOpens = () => {
 
             tempTarget.parent_id = tempTarget.parent_id;
             tempTarget.team_id = localStorage.getItem('team_id');
+            // 5月份开始, 所有接口管理的接口和目录都加上source字段, 值为0
+            tempTarget.source = 0;
 
             if (saveId && typeof id === 'string') {
                 tempTarget.target_id = saveId;
@@ -1140,7 +1142,13 @@ const useOpens = () => {
         const params = {
             targets: targetList,
         };
-        fetchChangeSort(params).subscribe();
+        fetchChangeSort(params).subscribe({
+            next: (res) => {
+                global$.next({
+                    action: 'GET_APILIST'
+                })
+            }
+        });
     }
 
     const sendAutoReportApi = (id) => {
@@ -1255,59 +1263,85 @@ const useOpens = () => {
         })
     }
 
-    const toDeleteFolder = (target_id, callback) => {
+    const toDeleteFolder = (target_id, from, plan_id, callback) => {
 
-        // const deleteIds = [target_id];
-        // const _apiDatas = cloneDeep(apiDatas);
-
-        // const loopGetChild = (parent_id, _apiDatas) => {
-        //     let arr = [];
-        //     let resArr = [];
-        //     for (let i in _apiDatas) {
-
-        //         if (`${_apiDatas[i].parent_id}` === `${parent_id}`) {
-        //             arr.push(_apiDatas[i].target_id);
-        //             if (_apiDatas[i].target_type === 'folder') {
-        //                 resArr = loopGetChild(_apiDatas[i].target_id, _apiDatas);
-        //             }
-        //         }
-        //     }
-
-        //     return arr.concat(resArr);
-        // };
-
-        // const _res = deleteIds.concat(loopGetChild(target_id, _apiDatas))
-
-        // _res.forEach(item => {
-        fetchDeleteApi({ target_id: target_id }).subscribe({
+        fetchDeleteApi({ target_id }).subscribe({
             next: (res) => {
                 if (res.code === 0) {
-                    let _open_apis = cloneDeep(open_apis);
-                    let localApi = JSON.parse(localStorage.getItem(`project_current:${localStorage.getItem('team_id')}`)).open_navs;
-                    for (let i in _open_apis) {
-                        if (_open_apis[i].parent_id === target_id) {
-                            delete _open_apis[i];
-                            let index = localApi.indexOf(i);
-                            localApi.splice(index, 1);
-                            if (open_api_now === i) {
-                                let newId = '';
-                                if (index > 0) {
-                                    newId = localApi[index - 1];
-                                } else {
-                                    newId = localApi[index + 1];
+                    if (from === 'scene') {
+                        dispatch({
+                            type: 'scene/updateOpenScene',
+                            payload: null,
+                        })
+                        dispatch({
+                            type: 'scene/updateRunStatus',
+                            payload: 'finish',
+                        })
+                        global$.next({
+                            action: 'RELOAD_LOCAL_SCENE',
+                        });
+                        localStorage.removeItem('open_scene');
+                    } else if (from === 'plan') {
+                        dispatch({
+                            type: 'plan/updateOpenScene',
+                            payload: null,
+                        })
+                        dispatch({
+                            type: 'plan/updateRunStatus',
+                            payload: 'finish',
+                        })
+                        global$.next({
+                            action: 'RELOAD_LOCAL_PLAN',
+                            id: plan_id
+                        });
+                    } else if (from === 'auto_plan') {
+                        dispatch({
+                            type: 'auto_plan/updateOpenScene',
+                            payload: null,
+                        })
+                        dispatch({
+                            type: 'auto_plan/updateRunStatus',
+                            payload: 'finish',
+                        })
+                        global$.next({
+                            action: 'RELOAD_LOCAL_AUTO_PLAN',
+                            id: plan_id
+                        });
+                    } else {
+
+                        let _open_apis = cloneDeep(open_apis);
+                        let localApi = JSON.parse(localStorage.getItem(`project_current:${localStorage.getItem('team_id')}`)).open_navs;
+                        for (let i in _open_apis) {
+                            if (_open_apis[i].parent_id === target_id) {
+                                delete _open_apis[i];
+                                let index = localApi.indexOf(i);
+                                localApi.splice(index, 1);
+                                if (open_api_now === i) {
+                                    let newId = '';
+                                    if (index > 0) {
+                                        newId = localApi[index - 1];
+                                    } else {
+                                        newId = localApi[index + 1];
+                                    }
+                                    dispatch({
+                                        type: 'opens/updateOpenApiNow',
+                                        payload: newId,
+                                    })
                                 }
-                                dispatch({
-                                    type: 'opens/updateOpenApiNow',
-                                    payload: newId,
-                                })
                             }
                         }
+                        dispatch({
+                            type: 'opens/coverOpenApis',
+                            payload: _open_apis
+                        })
+                        localStorage.setItem(`project_current:${localStorage.getItem('team_id')}`, JSON.stringify({ open_navs: localApi }));
+
+
+                        global$.next({
+                            action: 'GET_APILIST',
+                        });
                     }
-                    dispatch({
-                        type: 'opens/coverOpenApis',
-                        payload: _open_apis
-                    })
-                    localStorage.setItem(`project_current:${localStorage.getItem('team_id')}`, JSON.stringify({ open_navs: localApi }));
+
                     callback && callback();
                 }
             }
@@ -1445,7 +1479,7 @@ const useOpens = () => {
 
     useEventBus('sendApi', sendApi, [open_api_now]);
 
-    useEventBus('sendAutoReportApi', sendAutoReportApi,  [debug_target_id, open_res]);
+    useEventBus('sendAutoReportApi', sendAutoReportApi, [debug_target_id, open_res]);
 
     useEventBus('stopSend', stopSend);
 

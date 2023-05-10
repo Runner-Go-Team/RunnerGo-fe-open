@@ -228,6 +228,7 @@ const useCollection = () => {
         // 上传服务器 失败走异步任务
         newCollection['team_id'] = localStorage.getItem('team_id');
 
+        newCollection['source'] = 0;
         // return;
         fetchHandleFolder(newCollection).subscribe({
             next: async (resp) => {

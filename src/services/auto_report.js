@@ -34,3 +34,8 @@ export const fetchAutoReportApi = (
 export const fetchRunAutoReportApi = (
     params
 ) => ajax('post', '/management/api/v1/auto_plan/send_report_api', 'json', false, params);
+
+// 修改自动化报告的名称
+export const fetchUpdateName = (
+    params
+) => ajax('post', '/management/api/v1/auto_plan/update_report_name', 'json', false, params);

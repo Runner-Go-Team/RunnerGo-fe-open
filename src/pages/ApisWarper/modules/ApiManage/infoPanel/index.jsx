@@ -19,6 +19,7 @@ import useFolders from '@hooks/useFolders';
 import { DropWrapper } from './style';
 import { Button } from '@arco-design/web-react';
 import { IconDown } from '@arco-design/web-react/icon';
+import InputText from '@components/InputText';
 const ButtonGroup = Button.Group;
 
 const ApiInfoPanel = (props) => {
@@ -132,7 +133,19 @@ const ApiInfoPanel = (props) => {
                                 onChange('mark', value);
                             }}
                         ></ApiStatus> */}
-                        <Input
+                        <InputText
+                            maxLength={30}
+                            value={data.name || ''}
+                            placeholder={t('placeholder.apiName')}
+                            onChange={(e) => {
+                                if (e.trim().length === 0) {
+                                    Message('error', t('message.apiNameEmpty'));
+                                    return;
+                                }
+                                onChange('name', e);
+                            }}
+                        />
+                        {/* <Input
                             size="mini"
                             className="api-name"
                             maxLength={30}
@@ -146,7 +159,7 @@ const ApiInfoPanel = (props) => {
                                     Message('error', t('message.apiNameEmpty'))
                                 }
                             }}
-                        />
+                        /> */}
                     </div>
                     {/* <Button
                         className="api-explain"

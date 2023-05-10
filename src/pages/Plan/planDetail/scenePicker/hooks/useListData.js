@@ -53,7 +53,7 @@ const useListData = (props) => {
     });
     const dataList = [];
     Object.entries(newList).forEach(([target_id, data]) => {
-      if (['scene', 'group'].includes(data.target_type)) {
+      if (['scene', 'folder'].includes(data.target_type)) {
         dataList.push({
           ...data,
           target_id,

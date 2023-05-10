@@ -1,6 +1,8 @@
 const NAMESPACE = 'case';
 
 const initialState = {
+    // 用例列表
+    case_menu: {},
     // 准备添加接口或控制器
     add_new: '',
     // 添加接口或控制器
@@ -107,7 +109,8 @@ const actionTypes = {
     updateOpenInfo: 'updateOpenInfo',
     updateShowAssert: 'updateShowAssert',
     updateIsChanged: 'updateIsChanged',
-    updateHideDrop: 'updateHideDrop'
+    updateHideDrop: 'updateHideDrop',
+    updateCaseMenu: 'updateCaseMenu'
 };
 
 export const caseReducer = (state = initialState, action) => {
@@ -281,6 +284,11 @@ export const caseReducer = (state = initialState, action) => {
         return {
           ...state,
           hide_drop: action.payload
+        }
+      case `${NAMESPACE}/${actionTypes.updateCaseMenu}`:
+        return {
+          ...state,
+          case_menu: action.payload
         }
       default:
         return state;

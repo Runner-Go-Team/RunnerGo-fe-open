@@ -178,7 +178,7 @@ const LeftToolbar = () => {
                         <MenuItem key='/machine'><SvgMachine className="arco-icon arco-icon-robot" />{t('leftBar.machine')}</MenuItem>
                     </Link>
                     <MenuItem onClick={() => {
-                        window.open('https://rhl469webu.feishu.cn/docx/Rr0cdBuVUoskdkxE5t6cUo9vnOe', '_blank');
+                        window.open('https://wiki.runnergo.cn/docs/', '_blank');
                     }} key='/doc'><SvgDoc className="arco-icon arco-icon-robot" />{t('leftBar.docs')}</MenuItem>
 
                 </Menu>

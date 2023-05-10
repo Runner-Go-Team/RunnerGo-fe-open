@@ -20,6 +20,7 @@ import CreateScene from '@modals/CreateScene';
 import TPlanConfig from "./taskConfig";
 import CaseMenu from '@components/CaseMenu';
 import CreateCase from '@modals/CreateCase';
+import InputText from "@components/InputText";
 
 import SvgClose from '@assets/logo/close';
 
@@ -144,12 +145,18 @@ const TestPlanDetail = () => {
                         {/* <p style={{ fontSize: '16px' }}>x</p> */}
                         <SvgClose />
                     </Button>
-                    <Input size="mini" value={apiName} placeholder={t('placeholder.apiName')} onBlur={(e) => {
-                        if (e.target.value.trim().length === 0) {
-                            Message('error', t('message.apiNameEmpty'));
-                        }
-                        onTargetChange('name', e.target.value.trim());
-                    }} />
+                    <InputText 
+                        maxLength={30}
+                        value={apiName}
+                        placeholder={t('placeholder.apiName')}
+                        onChange={(e) => {
+                            if (e.trim().length === 0) {
+                                Message('error', t('message.apiNameEmpty'));
+                            }
+                            onTargetChange('name', e.trim());
+                        }}
+
+                    />
                 </div>
                 <div className='drawer-header-right'>
                     {/* <Button onClick={() => {

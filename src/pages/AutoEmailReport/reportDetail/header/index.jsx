@@ -30,7 +30,7 @@ const TReportDetailHeader = (props) => {
             </div>
             <div className="left">
                 <div className="left-top">
-                    <p className="name">{header ? header.plan_name : ''}</p>
+                    <p className="name">{header ? header.report_name : ''}</p>
                     <p className="status">{header ? statusList[header.report_status] : ''}</p>
                 </div>
                 <div className="left-bottom">

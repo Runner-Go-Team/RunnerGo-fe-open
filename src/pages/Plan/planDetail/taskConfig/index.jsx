@@ -80,7 +80,7 @@ const TaskConfig = (props) => {
                             setStepRunTime(step_run_time);
                             setModeConf(mode_conf);
                             setTaskType(task_type);
-                            setDebugMode(debug_mode ? debug_mode: 'stop');
+                            setDebugMode(debug_mode ? debug_mode : 'stop');
 
                             if (timed_task_conf) {
 
@@ -274,9 +274,71 @@ const TaskConfig = (props) => {
                     {
                         mode === 1 ? <div className="right-container-first">
 
-                            <div style={{ display: 'flex', marginLeft: '6px', width: '100%' }}>
-                                <span className='must-input' style={{ paddingTop: '8px' }}>*</span>
-                                <Group disabled={status === 2} className='radio-group' value={default_mode} onChange={(e) => {
+                            <div className='config-set-select-item'>
+                                <Select getPopupContainer={(triggerNode) => triggerNode.parentNode} disabled={status === 2} value={default_mode} onChange={(e) => {
+                                    setDefaultMode(e);
+                                    const _mode_conf = cloneDeep(mode_conf);
+                                    if (e === 'duration') {
+                                        _mode_conf.round_num = '';
+                                        setModeConf(_mode_conf);
+                                        updateTaskConfig('round_num', '');
+                                    } else if (e === 'round_num') {
+                                        _mode_conf.duration = '';
+                                        setModeConf(_mode_conf);
+                                        updateTaskConfig('duration', '');
+                                    }
+                                }}>
+                                    <Option value="duration">{t('plan.duration')}</Option>
+                                    <Option value="round_num">{t('plan.roundNum')}</Option>
+                                </Select>
+
+                                <Input
+                                    value={default_mode === 'duration' ? mode_conf.duration : mode_conf.round_num}
+                                    placeholder={default_mode === 'duration' ? t('placeholder.unitS') : t('placeholder.unitR')}
+                                    onChange={(e) => {
+                                        if (default_mode === 'duration') {
+                                            if (parseInt(e) > 0) {
+                                                const _mode_conf = cloneDeep(mode_conf);
+                                                _mode_conf.duration = parseInt(e);
+                                                // setDuration(parseInt(e.target.value));
+                                                setModeConf(_mode_conf);
+                                                // from === 'preset' && onChange('duration', parseInt(e.target.value));
+                                                // from === 'default' && 
+                                                setDuration(parseInt(e));
+                                                updateTaskConfig('duration', parseInt(e));
+                                            } else {
+                                                const _mode_conf = cloneDeep(mode_conf);
+                                                _mode_conf.duration = '';
+                                                // setDuration(parseInt(e.target.value));
+                                                setModeConf(_mode_conf);
+                                                // from === 'preset' && onChange('duration', parseInt(e.target.value));
+                                                // from === 'default' && 
+                                                setDuration('');
+                                                updateTaskConfig('duration', '');
+                                            }
+                                        } else if (default_mode === 'round_num') {
+                                            if (parseInt(e) > 0) {
+                                                const _mode_conf = cloneDeep(mode_conf);
+                                                _mode_conf.round_num = parseInt(e);
+                                                // setRoundNum(_mode_conf);
+                                                setModeConf(_mode_conf);
+                                                setRoundNum(parseInt(e));
+                                                // from === 'preset' && onChange('round_num', parseInt(e.target.value));
+                                                // from === 'default' && 
+                                                updateTaskConfig('round_num', parseInt(e));
+                                            } else {
+                                                const _mode_conf = cloneDeep(mode_conf);
+                                                _mode_conf.round_num = '';
+                                                // setRoundNum(_mode_conf);
+                                                setModeConf(_mode_conf);
+                                                setRoundNum('');
+                                                // from === 'preset' && onChange('round_num', parseInt(e.target.value));
+                                                // from === 'default' && 
+                                                updateTaskConfig('round_num', '');
+                                            }
+                                        }
+                                    }} />
+                                {/* <Group disabled={status === 2} className='radio-group' value={default_mode} onChange={(e) => {
                                     setDefaultMode(e);
                                     const _mode_conf = cloneDeep(mode_conf);
                                     if (e === 'duration') {
@@ -337,7 +399,7 @@ const TaskConfig = (props) => {
                                             }
                                         }} disabled={default_mode === 'duration'} />
                                     </Radio>
-                                </Group>
+                                </Group> */}
                             </div>
                             <div className="right-item">
                                 <span style={{ minWidth: '90px' }}><span className='must-input'>*&nbsp;</span>{t('plan.concurrency')}: </span>

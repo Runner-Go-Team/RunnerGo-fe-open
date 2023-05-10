@@ -18,9 +18,11 @@ import qs from 'qs';
 import { useSelector } from 'react-redux';
 import InvitationModal from '@modals/ProjectInvitation';
 import SvgSuccess from '@assets/logo/success';
+import InputText from '@components/InputText';
+import { fetchUpdateName } from '@services/report';
 
 const ReportHeader = (props) => {
-    const { data: { plan_name, scene_name }, status, plan_id } = props;
+    const { data: { plan_name, scene_name, report_name }, status, plan_id } = props;
     const { t } = useTranslation();
     const [showSendEmail, setSendEmail] = useState(false);
     const navigate = useNavigate();
@@ -156,7 +158,22 @@ const ReportHeader = (props) => {
                     <Button onClick={() => navigate('/report/list')}>
                         <SvgLeft />
                     </Button>
-                    <div className='report-name'>{plan_name} / {scene_name}</div>
+                    <div className='report-name'>
+                        <InputText 
+                            maxLength={61}
+                            value={report_name}
+                            placeholder={t('placeholder.reportName')}
+                            onChange={(e) => {
+                                if (e.trim().length > 0) {
+                                    const params = {
+                                        report_id,
+                                        report_name: e.trim()
+                                    };
+                                    fetchUpdateName(params).subscribe();
+                                }
+                            }}
+                        />    
+                    </div>
                     <div className='report-status'>{status === 1 ? t('btn.running') : t('btn.done')}</div>
                 </div>
                 <div className='report-header-right'>

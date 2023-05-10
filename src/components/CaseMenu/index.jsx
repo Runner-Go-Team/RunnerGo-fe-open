@@ -14,10 +14,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import CreateCase from "@modals/CreateCase";
 import Bus from '@utils/eventBus';
 import cn from 'classnames';
-import { debounce } from 'lodash';
+import { debounce, isArray } from 'lodash';
 import { handleShowContextMenu } from './contextMenu';
 import { Tooltip } from '@arco-design/web-react';
 import CaseList from "../CaseList";
+import DragNode from "../TreeMenu/menuTree/dragNode";
+import useNodeSort from "./useNodeSort";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const CaseMenu = (props) => {
     const { from } = props;
@@ -70,6 +74,16 @@ const CaseMenu = (props) => {
                         setCaseList(case_assemble_list);
                         if (open && case_assemble_list.length > 0) {
                             openCase(case_assemble_list[0])
+                        }
+                        const caseMenu = {};
+                        if (isArray(case_assemble_list)) {
+                            for (let i = 0; i < case_assemble_list.length; i++) {
+                                caseMenu[case_assemble_list[i].case_id] = case_assemble_list[i];
+                            }
+                            dispatch({
+                                type: 'case/updateCaseMenu',
+                                payload: caseMenu
+                            })
                         }
                     }
                 }
@@ -167,6 +181,8 @@ const CaseMenu = (props) => {
     const getSearchWord = debounce((e) => setKeyword(e), 500);
 
     const [editCase, setEditCase] = useState(null);
+
+    const { handleNodeDragEnd } = useNodeSort();
     return (
         <>
             <div className="case-menu">
@@ -187,47 +203,56 @@ const CaseMenu = (props) => {
                     beforeFix={<SvgSearch />}
                     placeholder={t('placeholder.searchCase')}
                 /> */}
-                <div className="case-menu-list">
-                    {
-                        caseList.map(item => (
-                            <div className={cn('item', {
-                                select: open_case ? (open_case.scene_case_id ? open_case.scene_case_id : open_case.target_id) === item.case_id : false
-                            })} onClick={() => openCase(item)}>
-                                <div className="item-left">
-                                    {
-                                        from === 'auto_plan' && <Tooltip content={t('case.isRun')}>
-                                            <Switch checked={item.is_checked === 1} onChange={(value, e) => changeSwitch(item.case_id, value, e)} />
-                                        </Tooltip>
-                                    }
-                                    <Tooltip content={item.case_name}>
-                                        <p className="case-name" style={{ maxWidth: from === 'auto_plan' ? '50px' : '120px' }}>{item.case_name}</p>
-                                    </Tooltip>
-                                </div>
-                                <Button className="more-btn" size="mini" onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-
-                                    handleShowContextMenu(
-                                        e,
-                                        item,
-                                        (state, editItem) => {
-                                            // 1: 编辑, 2: 删除
-                                            if (state === 1) {
-                                                setEditCase(editItem);
-                                                setShowCreate(true);
-                                            } else if (state === 2 || state === 3) {
-                                                getCaseList();
+                <DndProvider backend={HTML5Backend}>
+                    <div className="case-menu-list">
+                        {
+                            caseList.map((item, index) => (
+                                <DragNode
+                                    index={index}
+                                    nodeKey={item.case_id}
+                                    key={item.case_id}
+                                    moved={handleNodeDragEnd}
+                                >
+                                    <div className={cn('item', {
+                                        select: open_case ? (open_case.scene_case_id ? open_case.scene_case_id : open_case.target_id) === item.case_id : false
+                                    })} onClick={() => openCase(item)}>
+                                        <div className="item-left">
+                                            {
+                                                from === 'auto_plan' && <Tooltip content={t('case.isRun')}>
+                                                    <Switch checked={item.is_checked === 1} onChange={(value, e) => changeSwitch(item.case_id, value, e)} />
+                                                </Tooltip>
                                             }
-                                        }
-                                    );
-                                }}>
-                                    <SvgMore />
-                                </Button>
+                                            <Tooltip content={item.case_name}>
+                                                <p className="case-name" style={{ maxWidth: from === 'auto_plan' ? '50px' : '120px' }}>{item.case_name}</p>
+                                            </Tooltip>
+                                        </div>
+                                        <Button className="more-btn" size="mini" onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
 
-                            </div>
-                        ))
-                    }
-                </div>
+                                            handleShowContextMenu(
+                                                e,
+                                                item,
+                                                (state, editItem) => {
+                                                    // 1: 编辑, 2: 删除
+                                                    if (state === 1) {
+                                                        setEditCase(editItem);
+                                                        setShowCreate(true);
+                                                    } else if (state === 2 || state === 3) {
+                                                        getCaseList();
+                                                    }
+                                                }
+                                            );
+                                        }}>
+                                            <SvgMore />
+                                        </Button>
+
+                                    </div>
+                                </DragNode>
+                            ))
+                        }
+                    </div>
+                </DndProvider>
             </div>
             {
                 showCreate && <CreateCase from={from} case={editCase} onCancel={() => {

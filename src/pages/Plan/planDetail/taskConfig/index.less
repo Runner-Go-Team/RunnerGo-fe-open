@@ -83,6 +83,39 @@
     background-color: var(--bg);
   }
 
+  .config-set-select-item {
+    display: flex;
+    width: 100%;
+    margin-bottom: 8px;
+    .arco-select {
+      min-width: 84px;
+      width: 84px;
+
+      .arco-select-view-value {
+        font-size: 12px;
+      }
+
+      .arco-select-view {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+    }
+
+    .arco-select-option {
+      font-size: 12px;
+      padding: 0 9px;
+    }
+
+    .arco-input {
+      margin-left: 12px;
+      background-color: var(--bg);
+    }
+
+    .arco-input:hover {
+      background-color: var(--bg) !important;
+    }
+  }
+
   &-mask {
     position: absolute;
     width: 100%;
@@ -503,7 +536,7 @@
     &-container-first {
       min-height: 130px !important;
       align-items: flex-start;
-      padding: 12px 14px;
+      padding: 10px 12px;
       width: 100%;
 
       .apipost-input-inner-wrapper {

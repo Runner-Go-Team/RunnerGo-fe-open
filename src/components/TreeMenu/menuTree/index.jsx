@@ -381,11 +381,11 @@ const MenuTrees = (props, treeRef) => {
                     })
                     dispatch({
                         type: 'plan/updateOpenName',
-                        payload: filteredTreeList[0].name,
+                        payload: scene_data[0].name,
                     })
                     dispatch({
                         type: 'plan/updateOpenDesc',
-                        payload: filteredTreeList[0].description
+                        payload: scene_data[0].description
                     })
                     Bus.$emit('addOpenPlanScene', scene_data[0], id_apis_plan, node_config_plan);
                 } else if (type === 'auto_plan') {
@@ -395,11 +395,11 @@ const MenuTrees = (props, treeRef) => {
                     })
                     dispatch({
                         type: 'scene/updateOpenName',
-                        payload: filteredTreeList[0].name,
+                        payload: scene_data[0].name,
                     })
                     dispatch({
                         type: 'scene/updateOpenDesc',
-                        payload: filteredTreeList[0].description
+                        payload: scene_data[0].description
                     })
                     Bus.$emit('addOpenAutoPlanScene', scene_data[0]);
                     dispatch({

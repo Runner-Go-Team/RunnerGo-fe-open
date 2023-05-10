@@ -13,6 +13,7 @@ import { isArray } from 'lodash';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import cnUS from '@arco-design/web-react/es/locale/zh-CN';
 import { fetchBatchDelete } from '@services/plan';
+import InputText from '@components/InputText';
 
 import { DatePicker, ConfigProvider } from '@arco-design/web-react';
 const { RangePicker } = DatePicker;

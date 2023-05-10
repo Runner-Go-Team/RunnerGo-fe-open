@@ -368,7 +368,7 @@ const CreateGroup = (props) => {
                     Bus.$emit(
                         'addSceneGroupItem',
                         {
-                            type: 'group',
+                            type: 'folder',
                             pid: parent_id || '0',
                             param: {
                                 name: groupName,

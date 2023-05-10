@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { cloneDeep, isArray, set } from 'lodash';
 import { fetchApiDetail, fetchGetResult } from '@services/apis';
 import { fetchSceneFlowDetail, fetchGetSceneRes } from '@services/scene';
-import { fetchSaveFlow, fetchGetFlow, fetchRunCase, fetchStopCase, fetchCopyCase, fetchDeleteCase, fetchSwitchCase } from '@services/case';
+import { fetchSaveFlow, fetchGetFlow, fetchRunCase, fetchStopCase, fetchCopyCase, fetchDeleteCase, fetchSwitchCase, fetchChangeSort } from '@services/case';
 import { isURL, createUrl, GetUrlQueryToArray } from '@utils';
 import QueryString from 'qs';
 import { v4 } from 'uuid';
@@ -761,6 +761,31 @@ const useCase = () => {
         })
     }
 
+    const dragUpdateCase = ({ ids, targetList }) => {
+
+        const _ids = cloneDeep(ids);
+        _ids.forEach(item => {
+            if (typeof item.parent_id === 'string') {
+                item.parent_id = parseInt(item.parent_id);
+            }
+        })
+
+        const params = {
+            case_list: targetList,
+        };
+        fetchChangeSort(params).subscribe({
+            next: (res) => {
+                const { code, data } = res;
+                if (code === 0) {
+                    dispatch({
+                        type: 'case/updateRefreshMenu',
+                        payload: v4()
+                    })
+                }
+            }
+        });
+    }
+
 
 
     useEventBus('addNewCaseApi', addNewCaseApi, [id_apis, node_config]);
@@ -777,6 +802,7 @@ const useCase = () => {
     useEventBus('cloneCase', cloneCase);
     useEventBus('deleteCase', deleteCase);
     useEventBus('clearFetchCaseState', clearFetchCaseState);
+    useEventBus('dragUpdateCase', dragUpdateCase);
 
 };
 

@@ -23,6 +23,8 @@ import { global$ } from '@hooks/useGlobal/global';
 import SvgStart from '@assets/icons/Start';
 import SvgStop from '@assets/icons/Stop';
 
+import ResizableTable from '@components/ResizableTable';
+
 import { DatePicker, Table, Pagination } from '@arco-design/web-react';
 
 let plan_t = null;
@@ -240,18 +242,6 @@ const PlanList = () => {
 
                 return {
                     ...item,
-                    plan_name:
-                        <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{plan_name}</div>}>
-                            <div className='ellipsis'>{plan_name}</div>
-                        </Tooltip>,
-                    created_user_name:
-                        <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{created_user_name}</div>}>
-                            <div className='ellipsis'>{created_user_name}</div>
-                        </Tooltip>,
-                    remark:
-                        <Tooltip bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'} className='tooltip-diy' content={<div>{remark}</div>}>
-                            <div className='ellipsis'>{remark}</div>
-                        </Tooltip>,
                     task_type: taskList[task_type],
                     task_mode: modeList[task_mode],
                     status: statusList[status],
@@ -291,7 +281,7 @@ const PlanList = () => {
         {
             title: t('plan.rankId'),
             dataIndex: 'rank_id',
-            // width: 84,
+            width: 84,
         },
         {
             title: t('plan.status'),
@@ -305,13 +295,13 @@ const PlanList = () => {
                 setStatus(value);
                 return true;
             },
-            // width: 190,
+            width: 190,
         },
         {
             title: t('plan.planName'),
             dataIndex: 'plan_name',
-            ellipsis: true
-            // width: 190,
+            ellipsis: true,
+            width: 190,
         },
         {
             title: t('plan.taskType'),
@@ -361,14 +351,14 @@ const PlanList = () => {
         {
             title: t('plan.operator'),
             dataIndex: 'created_user_name',
-            ellipsis: true
-            // width: 190,
+            ellipsis: true,
+            width: 190,
         },
         {
             title: t('plan.remark'),
             dataIndex: 'remark',
-            ellipsis: true
-            // width: 190,
+            ellipsis: true,
+            width: 190,
         },
         {
             title: t('plan.handle'),
@@ -435,7 +425,7 @@ const PlanList = () => {
     return (
         <div className='plan'>
             <PlanHeader onChange={getNewkeyword} onDateChange={getSelectDate} selectPlan={selectPlan} />
-            <Table
+            <ResizableTable
                 className="plan-table"
                 showSorterTooltip={false}
                 border={{

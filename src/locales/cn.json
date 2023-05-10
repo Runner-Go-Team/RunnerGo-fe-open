@@ -131,6 +131,7 @@
         "sceneDesc": "请输入场景描述（最多50字）",
         "folderName": "请输入目录名称（最多30字）",
         "folderDesc": "请输入目录描述（最多50字）",
+        "reportName": "请输入报告名称",
         "apiName": "请输入接口名称",
         "apiUrl": "请输入接口地址",
         "bodyValue": "参数值",
@@ -182,7 +183,8 @@
         "openBank": "请填写公司基本开户银行",
         "openAddress": "请填写公司地址",
         "bankAccount": "请填写公司银行账户",
-        "acceptAddress": "请填写收件地址"
+        "acceptAddress": "请填写收件地址",
+        "clientName": "请输入客户端名称"
     },
     "btn": {
         "view": "查看",
@@ -736,6 +738,7 @@
         "placeholder": "搜索计划名称/场景名称/执行者",
         "reportId": "测试报告ID",
         "planName": "计划名称",
+        "reportName": "报告名称",
         "sceneName": "场景名称",
         "taskType": "任务模式",
         "mode": "压测模式",
@@ -902,11 +905,17 @@
         "unit": "次",
         "zeroExplain": "（0秒代表无限制）",
         "resTimeout": "响应读取超时限制",
-        "minute": "秒"
-
-
+        "minute": "秒",
+        "clientName": "客户端名称",
+        "maxFreeWaitTime": "最大空闲等待时间",
+        "maxConnectWaitTime": "最大连接等待时间",
+        "maxConnectNum": "最大连接数",
+        "number": "个",
+        "keepAlive": "keep-alive（http长连接）"
     },
     "scene": {
+        "fullScreen": "进入全屏",
+        "quitFullScreen": "退出全屏",
         "createGroup": "新建目录",
         "editGroup": "编辑目录",
         "deleteGroup": "删除目录",
