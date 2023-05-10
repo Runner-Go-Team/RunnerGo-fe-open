@@ -536,7 +536,7 @@ const SceneHeader = (props) => {
                         if (show_case && Object.entries(open_case || {}).length > 0) {
                             // 当前编辑的是用例
                             const params = {
-                                ...menuItem[open_scene.scene_case_id],
+                                ...menuItem[open_scene.scene_case_id ? open_scene.scene_case_id : open_scene.target_id],
                                 plan_id,
                                 name: e.trim(),
                                 source: from === 'auto_plan' ? 3 : 1

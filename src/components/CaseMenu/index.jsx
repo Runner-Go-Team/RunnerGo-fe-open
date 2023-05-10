@@ -74,6 +74,63 @@ const CaseMenu = (props) => {
                         setCaseList(case_assemble_list);
                         if (open && case_assemble_list.length > 0) {
                             openCase(case_assemble_list[0])
+                        } else {
+                            dispatch({
+                                type: 'case/updateRunRes',
+                                payload: null,
+                            })
+                            dispatch({
+                                type: 'case/updateRunningScene',
+                                payload: '',
+                            })
+                            dispatch({
+                                type: 'case/updateNodes',
+                                payload: [],
+                            });
+                            dispatch({
+                                type: 'case/updateEdges',
+                                payload: [],
+                            })
+                            dispatch({
+                                type: 'case/updateCloneNode',
+                                payload: [],
+                            })
+                            dispatch({
+                                type: 'case/updateSuccessEdge',
+                                payload: [],
+                            });
+                            dispatch({
+                                type: 'case/updateFailedEdge',
+                                payload: [],
+                            });
+                            dispatch({
+                                type: 'case/updateApiConfig',
+                                payload: false,
+                            })
+                            dispatch({
+                                type: 'case/updateBeautify',
+                                payload: false
+                            })
+                            dispatch({
+                                type: 'case/updateCaseName',
+                                payload: '',
+                            })
+                            dispatch({
+                                type: 'case/updateCaseDesc',
+                                payload: ''
+                            })
+                            dispatch({
+                                type: 'case/updateOpenInfo',
+                                payload: {}
+                            })
+                            dispatch({
+                                type: 'case/updateRunStatus',
+                                payload: 'finish',
+                            })
+                            dispatch({
+                                type: 'case/updateOpenCase',
+                                payload: {},
+                            })
                         }
                         const caseMenu = {};
                         if (isArray(case_assemble_list)) {
