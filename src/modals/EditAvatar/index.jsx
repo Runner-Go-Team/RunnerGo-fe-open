@@ -10,7 +10,6 @@ import OSS from 'ali-oss';
 import { fetchUpdateAvatar } from '@services/user';
 import { OSS_Config, RD_FileURL, USE_OSS } from '@config';
 import axios from 'axios';
-import { RD_FileURL } from '@config';
 import LogoRight from '@assets/logo/info_right';
 import SvgClose from '@assets/logo/close';
 

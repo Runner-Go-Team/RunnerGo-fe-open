@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { Button, Upload, Message } from 'adesign-react';
 import { Add as SvgAdd } from 'adesign-react/icons';
-import { RD_FileURL, OSS_Config, USE_OSS, RD_FileURL } from '@config';
+import { RD_FileURL, OSS_Config, USE_OSS } from '@config';
 import axios from 'axios';
 import { v4 } from 'uuid';
 import OSS from 'ali-oss';
