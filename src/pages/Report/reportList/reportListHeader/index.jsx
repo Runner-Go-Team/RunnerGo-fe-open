@@ -66,8 +66,8 @@ const ReportListHeader = (props) => {
         const _selectReport = selectReport.map((item, index) => {
             return {
                 report_id: item.report_id,
-                plan_name: item.plan_name.props.content.props.children,
-                scene_name: item.scene_name.props.content.props.children,
+                plan_name: item.plan_name,
+                scene_name: item.scene_name,
             }
         });
         navigate(`/reportContrast?contrast=${JSON.stringify(_selectReport)}`)
