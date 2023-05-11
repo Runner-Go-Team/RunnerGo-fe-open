@@ -67,33 +67,6 @@ const AutoReport = (props) => {
     }, [data]);
 
     const theme = useSelector((store) => store.user.theme);
-    const autoData = [
-        {
-            number: 20,
-            text: '计划数',
-            color: '#00ACD7'
-        },
-        {
-            number: 61,
-            text: '报告数',
-            color: '#35CAAF'
-        },
-        {
-            number: 98,
-            text: '总用例数',
-            color: '#FF7043'
-        },
-        {
-            number: 60,
-            text: '已测用例',
-            color: '#FFB443'
-        },
-        {
-            number: 35,
-            text: '通过用例',
-            color: '#AC43FF'
-        }
-    ];
 
     const getOption = (color, citeNum, totalNum) => {
         return {

@@ -70,6 +70,7 @@
         "asyncImport": "Sync Apipost",
         "otherImport": "Import other projects",
         "globalVar": "Global param",
+        "globalParam": "Global param",
         "commonFunc": "Common Func",
         "envManage": "Env Manage",
         "running": "Running",
@@ -99,7 +100,11 @@
         "resourceManage": "Resource manage",
         "myResource": "My Resources",
         "orderManage": "Order manage",
-        "invoiceManage": "Invoice manage"
+        "invoiceManage": "Invoice manage",
+        "darkMode": "Dark mode",
+        "whiteMode": "Light mode",
+        "language": "language",
+        "theme": "theme"
     },
     "placeholder": {
         "searchApis": "Search for Directory/API",
@@ -618,6 +623,9 @@
         "body": "Body",
         "auth": "Authentication",
         "assert": "Assertion",
+        "setting": "API settings",
+        "assertBody": "Assertion body",
+        "condition": "condition",
         "regular": "Association extraction",
         "key": "Key",
         "value": "Value",
@@ -1053,7 +1061,8 @@
         "normalPlan": "Common Tasks",
         "timedPlan": "Scheduled Tasks",
         "apiNum": "Apis",
-        "sceneNum": "Scenes"
+        "sceneNum": "Scenes",
+        "rankId": "Id"
     },
     "invoice": {
         "openInvoice": "draw a bill",
