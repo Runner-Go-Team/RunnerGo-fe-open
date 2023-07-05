@@ -1,14 +1,21 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { CheckBox } from 'adesign-react';
+import React, { useState } from 'react';
 import produce from 'immer';
-import { isArray, isFunction, isNumber, isObject, isString, isUndefined } from 'lodash';
-import ItemKey from '../itemKey';
+import {
+  isArray,
+  isEmpty,
+  isNumber,
+  isObject,
+  isPlainObject,
+  isString,
+  isUndefined,
+  trim,
+} from 'lodash';
+import { useMemoizedFn } from 'apt-hooks';
 import NodeList from '../nodeList';
-import { getItemType } from '../../common';
-import ItemType from '../itemType';
-import ItemMock from '../itemMock';
-import ItemDescription from '../itemDescription';
-import ItemManage from '../itemManage';
+import { getItemType } from '../common';
+import EditRow from './edting';
+import EmptyRow from './empty';
+import DataModel from './dataModel';
 
 const ItemNode = (props) => {
   const {
@@ -22,80 +29,88 @@ const ItemNode = (props) => {
     onSetRequired = () => undefined,
     onDeleteNode,
     enableDelete = true,
+    onAddSiblingNode = () => undefined,
+    onLinkSchema = () => undefined,
+    singleOnly = false,
+    onCancelLinkSchema,
+    isModelItem,
+    onChangeRefs,
+    overrideData,
+    linkSchema,
+    parentModels,
   } = props;
-  const [expand, setExpand] = useState(false);
+  const [expand, setExpand] = useState(true);
 
   const nodeType = getItemType(value);
 
-  const refKey = useRef(null);
-  useEffect(() => {
-    refKey.current = nodeKey;
-  }, [nodeKey]);
-
-  const refData = useRef(null);
-  useEffect(() => {
-    refData.current = value;
-  }, [value]);
+  const txtKeyRef = React.useRef(null);
 
   // 修改单个属性
-  const handleChange = (attr, newVal) => {
-    const preData = isObject(refData?.current) ? refData.current : {};
+  const handleChange = useMemoizedFn((attr, newVal) => {
+    const preData = isObject(value) ? value : {};
     const newObject = produce(preData, (draft) => {
       draft[attr] = newVal;
+      if (attr === 'type') {
+        delete draft.mock;
+      }
     });
-    const preKey = refKey.current;
-    onChange(preKey, newObject);
-  };
+    onChange(nodeKey, newObject);
+  });
 
   // 修改多个属性
-  const handleMultiChange = (params) => {
-    const preKey = refKey.current;
-    const preData = isObject(refData?.current) ? refData.current : {};
-    if (isArray(params) && (isString(preKey) || isNumber(preKey))) {
+  const handleMultiChange = useMemoizedFn((params) => {
+    const preData = isObject(value) ? value : {};
+    if (isArray(params) && (isString(nodeKey) || isNumber(nodeKey))) {
       const newObject = produce(preData, (draft) => {
         params.forEach(([key, newVal]) => {
           draft[key] = newVal;
         });
       });
-      onChange(preKey, newObject);
+      onChange(nodeKey, newObject);
     }
-  };
+  });
 
   // 设置/取消设置必填
-  const handleSetRequired = () => {
-    onSetRequired(nodeKey, !isRequired);
-  };
+  const handleSetRequired = useMemoizedFn((required) => {
+    onSetRequired(nodeKey, required);
+  });
 
-  const handleSaveChanges = (newObject) => {
-    const preKey = refKey.current;
-    onChange(preKey, newObject);
-  };
+  const handleSaveChanges = useMemoizedFn((newObject) => {
+    onChange(nodeKey, newObject);
+  });
 
   // 删除节点
-  const handleDeleteNode = () => {
-    const preKey = refKey.current;
-    onDeleteNode(preKey);
+  const handleDeleteNode = useMemoizedFn(() => {
+    onDeleteNode(nodeKey, false);
+  });
+
+  // 删除模型引用
+  const handleDeleteModel = () => {
+    onDeleteNode(nodeKey, true);
   };
 
   // 添加新节点
-  const handleAddNode = () => {
-    const preKey = refKey.current;
-    const preData = isObject(refData?.current) ? refData?.current : {};
+  const handleAddNode = useMemoizedFn(() => {
+    const preData = isPlainObject(value) ? value : {};
     if (nodeType === 'object') {
-      const initData = isObject(preData?.properties) ? preData : { ...preData, properties: {} };
+      const initData = isPlainObject(preData?.properties)
+        ? preData
+        : { ...preData, properties: {} };
+
+      // 如果存在已有key为空的项，禁止添加
+      if (Object.keys(initData?.properties)?.some((item) => isEmpty(trim(item)))) {
+        return;
+      }
+
+      const newKey = ``;
       const newObject = produce(initData, (draft) => {
-        const newIndex = (index) => {
-          if (isUndefined(draft.properties[`filed${index}`])) {
-            return index;
-          }
-          return newIndex(index + 1);
-        };
-        const addIndex = newIndex(1);
-        draft.properties[`filed${addIndex}`] = {
+        // const addIndex = newIndex(1);
+        draft.properties[newKey] = {
           type: 'string',
+          APIPOST_NEW_EMPTY_ROW: true,
         };
       });
-      onChange(preKey, newObject);
+      onChange(nodeKey, newObject);
     }
     if (nodeType === 'array') {
       if (!isUndefined(preData?.items)) {
@@ -107,7 +122,7 @@ const ItemNode = (props) => {
           title: 'Items',
         };
       });
-      onChange(preKey, newObject);
+      onChange(nodeKey, newObject);
     }
     if (nodeType === 'oneOf') {
       const initData = isArray(preData?.oneOf) ? preData : { ...preData, oneOf: [] };
@@ -116,7 +131,7 @@ const ItemNode = (props) => {
           type: 'string',
         });
       });
-      onChange(preKey, newObject);
+      onChange(nodeKey, newObject);
     }
     if (nodeType === 'anyOf') {
       const initData = isArray(preData?.anyOf) ? preData : { ...preData, anyOf: [] };
@@ -125,7 +140,7 @@ const ItemNode = (props) => {
           type: 'string',
         });
       });
-      onChange(preKey, newObject);
+      onChange(nodeKey, newObject);
     }
     if (nodeType === 'allOf') {
       const initData = isArray(preData?.allOf) ? preData : { ...preData, allOf: [] };
@@ -134,59 +149,124 @@ const ItemNode = (props) => {
           type: 'string',
         });
       });
-      onChange(preKey, newObject);
+      onChange(nodeKey, newObject);
     }
     setExpand(true);
+  });
+
+  const handleAddSiblingNode = useMemoizedFn(() => {
+    onAddSiblingNode(nodeKey);
+  });
+
+  const handleEmptyKeyChange = useMemoizedFn((oldKey, newKey) => {
+    onNodeKeyChange(oldKey, newKey);
+    setTimeout(() => {
+      txtKeyRef.current?.focus();
+    }, 0);
+  });
+
+  const handleLinkSchema = useMemoizedFn((schema) => {
+    onLinkSchema(nodeKey, schema);
+  });
+
+  const handleCancelLinkSchema = useMemoizedFn(() => {
+    onCancelLinkSchema(nodeKey);
+  });
+
+  function handleChangeRef(...args) {
+    onChangeRefs.apply(null, [nodeKey, ...args]);
+  }
+
+  const itemKeyProps = {
+    nodeType,
+    nodeKey,
+    deepIndex,
+    onNodeKeyChange,
+    readOnly,
+    expand,
+    setExpand,
+    onChange: handleChange,
+    isRequired,
+    onUpdateRequired: handleSetRequired,
+    txtKeyRef,
+  };
+
+  if (value === undefined) {
+    return <></>;
+  }
+
+  if (value.type === 'dataModel') {
+    return (
+      <DataModel
+        {...{
+          deepIndex,
+          nodeKey,
+          nodeValue: value,
+          onLinkSchema: handleLinkSchema,
+          onDeleteModel: handleDeleteModel,
+          onCancelLinkSchema: handleCancelLinkSchema,
+          onChangeRefs: handleChangeRef,
+          linkSchema,
+          parentModels,
+        }}
+      />
+    );
+  }
+
+  const renderRowItem = (value) => {
+    if (isUndefined(value?.APIPOST_NEW_EMPTY_ROW)) {
+      return (
+        <EditRow
+          {...{
+            value,
+            nodeKey,
+            itemKeyProps,
+            handleChange,
+            enableDelete,
+            handleDeleteNode,
+            handleAddNode,
+            handleSaveChanges,
+            handleAddSiblingNode,
+            singleOnly,
+            isModelItem,
+            onChangeRef: handleChangeRef,
+            overrideData,
+          }}
+        />
+      );
+    }
+    return (
+      <EmptyRow
+        {...{
+          deepIndex,
+          nodeKey,
+          onNodeKeyChange: handleEmptyKeyChange,
+          onDeleteNode: handleDeleteNode,
+          onAddSiblingNode: handleAddSiblingNode,
+          onLinkSchema: handleLinkSchema,
+        }}
+      />
+    );
   };
 
   return (
     <>
-      <div className="data-item" style={{ width: '100%' }}>
-        <ItemKey
-          {...{
-            nodeType,
-            nodeKey,
-            deepIndex,
-            onNodeKeyChange,
-            readOnly,
-            expand,
-            setExpand,
-          }}
-          style={{ flex: 3 }}
-        />
-        <CheckBox
-          checked={isRequired === true ? 'checked' : 'uncheck'}
-          disabled={readOnly === true}
-          className="ckb-require"
-          onChange={handleSetRequired}
-        />
-        <ItemType value={nodeType} onChange={handleChange.bind(null, 'type')} />
-        <ItemMock
-          disabled={['object', 'array', 'oneOf', 'anyOf', 'allOf'].includes(nodeType)}
-          value={value?.mock?.mock}
-          onChange={handleChange.bind(null, 'mock')}
-        />
-        <ItemDescription
-          value={value?.description}
-          onChange={handleChange.bind(null, 'description')}
-        />
-        <ItemManage
-          enableDelete={enableDelete}
-          value={value}
-          onChange={handleSaveChanges}
-          onDeleteNode={handleDeleteNode}
-          onAddNode={handleAddNode}
-        />
-      </div>
-
-      {expand && (
+      {renderRowItem(value)}
+      {(expand || value.type === 'dataModel') && (
         <NodeList
           {...{
             deepIndex,
+            nodeKey,
             nodeType,
             nodeValue: value,
             onChange: handleChange,
             onMultiChange: handleMultiChange,
+            onLinkSchema: handleLinkSchema,
+            onDeleteModel: handleDeleteModel,
+            onCancelLinkSchema: handleCancelLinkSchema,
+            onChangeRefs: handleChangeRef,
+            linkSchema,
+            parentModels,
           }}
         />
       )}

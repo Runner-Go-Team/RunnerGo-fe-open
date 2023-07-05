@@ -31,6 +31,15 @@ const initialState = {
   failed_edge: [], // 运行失败的线
 
   task_config: {
+    control_mode: 0,
+    debug_mode: "stop",
+    is_open_distributed: 0,
+    machine_dispatch_mode_conf: {
+      machine_allot_type: 0,
+      usable_machine_list: []
+    },
+    mode: 1,
+    task_type: 1,
     mode_conf: {},
     timed_task_conf: {}
   }, // 任务配置
@@ -65,6 +74,8 @@ const initialState = {
 
 
   plan_detail: null, //计划详情顶部的基本信息
+
+  show_mysql_config: false, // 是否弹出mysql的编辑抽屉
 };
 
 // action名称
@@ -117,9 +128,9 @@ const actionTypes = {
   updateHideConfig: 'updateHideConfig',
 
   updatePlanList: 'updatePlanList',
-  updatePlanDetail: 'updatePlanDetail'
+  updatePlanDetail: 'updatePlanDetail',
 
-
+  updateShowMysqlConfig: 'updateShowMysqlConfig'
 }
 
 export const plansReducer = (state = initialState, action) => {
@@ -319,6 +330,11 @@ export const plansReducer = (state = initialState, action) => {
       return {
         ...state,
         plan_detail: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateShowMysqlConfig}`:
+      return {
+        ...state,
+        show_mysql_config: action.payload
       }
     default:
       return state;

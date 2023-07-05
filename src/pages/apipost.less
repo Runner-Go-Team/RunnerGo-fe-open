@@ -4,6 +4,7 @@
 .apipost-drawer {
     position: absolute !important;
     z-index: 1001 !important;
+    border: none !important;
 }
 
 .apipost-drawer-mask {
@@ -34,6 +35,7 @@
         font-size: 14px;
         color: var(--font-1);
         background-color: var(--module);
+        padding-right: 10px !important;
 
 
         svg {
@@ -382,6 +384,7 @@
     height: 20px;
     right: 32px;
     top: 32px;
+    background-color: transparent;
 
     svg {
         width: 12px;
@@ -486,7 +489,7 @@
 
 // 复选框checkbox
 .apipost-checkbox.halfcheck {
-    background-color: var(--sub-color-1) !important;
+    background-color: var(--theme-color) !important;
 }
 
 .apipost-checkbox.checked {
@@ -517,6 +520,10 @@
 
     .tabs-item.active {
         background-color: var(--border-line);
+    }
+
+    .apipost-tabs-content {
+        height: inherit !important;
     }
 }
 
@@ -667,6 +674,10 @@
 
         svg {
             fill: var(--content-color-secondary);
+        }
+
+        .arco-checkbox-mask-icon {
+            fill: var(--common-white);
         }
 
         input {
@@ -891,6 +902,6 @@
 }
 
 .apipost-select-popup {
-    min-width: 60px !important;
+    // min-width: 60px !important;
     width: auto !important;
 }

@@ -64,7 +64,7 @@
 
 .arco-table-td {
     padding: 6px 8px !important;
-    padding-left: 16px !important;
+    // padding-left: 16px !important;
 }
 
 .arco-table-filters:hover,
@@ -72,6 +72,25 @@
     background-color: var(--module);
 }
 
+.arco-table-border-cell .arco-table-th, .arco-table-border-cell .arco-table-td {
+    border-color: var(--border-line);
+}
+
+thead > .arco-table-tr > .arco-table-th {
+    border-color: var(--border-line);
+}
+
+.arco-table-border .arco-table-container {
+    border-color: var(--border-line);
+}
+
+.arco-table-border .arco-table-container::before {
+    background-color: var(--border-line);
+}
+
+.arco-table-border .arco-table-th:first-child, .arco-table-border .arco-table-td:first-child {
+    border-color: var(--border-line);
+}
 
 // 分页pagination
 .arco-pagination {
@@ -111,6 +130,7 @@
 // 弹窗modal
 .arco-modal {
     border-radius: 5px !important;
+    background-color: var(--module);
 }
 
 .arco-modal-mask {
@@ -143,10 +163,19 @@
     border-radius: 2px;
 }
 
+.arco-dropdown-menu {
+    border: none;
+    overflow: overlay;
+}
+
 
 // 复选框checkbox
 .arco-checkbox-mask {
     background-color: transparent;
+}
+
+.arco-checkbox-checked .arco-checkbox-mask {
+    background-color: var(--theme-color);
 }
 
 
@@ -219,9 +248,26 @@
 
 
 // 下拉框select
+.arco-select {
+    .arco-select-view {
+        background-color: var(--bg);
+        color: var(--font-1);
+    }
+}
+
+.arco-select:hover {
+    .arco-select-view {
+        background-color: var(--bg);
+        color: var(--font-1);
+    }
+}
+
 .arco-select.arco-select-focused .arco-select-view {
     border-color: var(--theme-color);
+    background-color: var(--bg);
+    color: var(--font-1);
 }
+
 
 .arco-select-popup {
     border: none !important;
@@ -285,13 +331,13 @@
 
 // 提示框tooltip
 .arco-tooltip-content {
-    background-color: var(--select-hover) !important;
+    background-color: var(--bg) !important;
     border: none !important;
     color: var(--font-1) !important;
 }
 
 .arco-tooltip-arrow {
-    background-color: var(--select-hover) !important;
+    background-color: var(--bg) !important;
     border: none !important;
 }
 
@@ -337,3 +383,48 @@
     color: var(--theme-color) !important;
 }
 
+
+// message
+.arco-message-success {
+    background-color: var();
+}
+
+.arco-message-wrapper{
+    z-index: 1026;
+}
+
+// tabs
+.arco-tabs-header-nav::before {
+    background-color: var(--bg);
+}
+
+.arco-tabs-header-title-text {
+    color: var(--font-1);
+}
+
+.arco-tabs-header-title-active {
+    .arco-tabs-header-title-text {
+        color: var(--theme-color);
+    }
+}
+
+.arco-tabs-header-ink {
+    background-color: var(--theme-color);
+}
+
+.arco-tabs-content {
+    height: 100%;
+}
+
+.arco-tabs-content-inner {
+    height: 100%;
+}
+
+.arco-tabs-pane {
+    height: 100%;
+    overflow: overlay;
+}
+
+.arco-tabs {
+    height: 100%;
+}

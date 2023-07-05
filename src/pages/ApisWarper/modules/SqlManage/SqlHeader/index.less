@@ -1,0 +1,147 @@
+.sql-manage-detail-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--module);
+    padding: 8px 16px 10px 8px;
+    margin-top: 2px;
+
+    .header-left {
+        .arco-select {
+            width: 120px !important;
+            margin-right: 10px;
+
+            .arco-select-view {
+                background-color: var(--bg);
+            }
+        }
+
+        .arco-select:hover {
+            .arco-select-view {
+                border-color: transparent;
+            }
+        }
+
+        .mysql {
+            color: var(--mysql);
+
+            .arco-select-view {
+                color: var(--mysql);
+            }
+        }
+
+        .oracle {
+            color: var(--oracle);
+
+            .arco-select-view {
+                color: var(--oracle);
+            }
+        }
+
+        .postgresql {
+            color: var(--postgresql);
+
+            .arco-select-view {
+                color: var(--postgresql);
+            }
+        }
+    }
+
+    .header-right {
+        display: flex;
+
+        .run-btn {
+            min-width: 58px;
+            height: 32px !important;
+            background-color: var(--sub-color-1-10) !important;
+            border: none !important;
+            border-radius: 3px;
+            margin-right: 10px;
+            font-size: 12px;
+            color: var(--sub-color-1) !important;
+
+            svg {
+                width: 14px;
+                height: 14px;
+                fill: var(--sub-color-1) !important;
+            }
+        }
+
+        .run-btn:hover {
+            background-color: var(--sub-color-1-10) !important;
+            color: var(--sub-color-1) !important;
+        }
+
+        .arco-btn-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .arco-btn:hover {
+            background-color: transparent;
+            border-color: var(--theme-color);
+            color: var(--font-1);
+        }
+
+        .save-btn {
+            background: var(--theme-10) !important;
+            border-radius: 3px 0px 0px 3px;
+            border: none !important;
+            height: 32px !important;
+            margin-right: 0;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            width: 66px;
+            color: var(--theme-color) !important;
+            border-right: 2px solid var(--theme-20) !important;
+
+            svg {
+                min-width: 14px;
+                min-height: 14px;
+                fill: var(--theme-color) !important;
+            }
+
+            span {
+                margin-left: 4px;
+            }
+        }
+
+        .save-more-btn {
+            background: var(--theme-10) !important;
+            border-radius: 0px 3px 3px 0px;
+            border: none !important;
+            height: 32px !important;
+            width: 24px;
+
+            svg {
+                stroke: var(--theme-color) !important;
+                width: 14px;
+                height: 14px;
+            }
+        }
+    }
+
+    .drop-folder {
+        padding: 8px;
+        background-color: var(--bg);
+        max-width: 267px;
+        max-height: 260px;
+        overflow: overlay;
+
+        .drop-item {
+            width: 100%;
+            height: 32px;
+            white-space: nowrap;
+            line-height: 32px;
+            cursor: pointer;
+            text-align: center;
+            color: var(--font-1);
+            font-size: var(--size-12px);
+            padding: 8px;
+        
+            &:hover {
+                background-color: var(--module)
+            }
+        }
+    }
+}

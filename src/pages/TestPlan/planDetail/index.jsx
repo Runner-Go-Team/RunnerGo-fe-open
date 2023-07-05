@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Scale, Drawer, Input, Button, Message } from 'adesign-react';
-import { Download as SvgDownload, Explain as SvgExplain } from 'adesign-react/icons';
+import { Download as SvgDownload, Explain as SvgExplain, CaretRight as SvgCaretRight } from 'adesign-react/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import Bus from '@utils/eventBus';
 import TreeMenu from '@components/TreeMenu';
@@ -10,7 +10,10 @@ import SceneHeader from '@pages/Scene/sceneHeader';
 import SceneContainer from '@pages/Scene/sceneContainer';
 import TPlanDetailHeader from "./detailHeader";
 import { global$ } from '@hooks/useGlobal/global';
-import ApiPicker from '@pages/Scene/sceneContainer/apiPicker';
+import ApiPicker from '@components/ApiPicker';
+import SqlPicker from "@components/SqlPicker";
+import { getSqlDataItems } from '@components/SqlPicker/commons';
+import { getApiDataItems } from '@components/ApiPicker/commons';
 import ApiManage from '@pages/ApisWarper/modules/ApiManage';
 import { getPathExpressionObj } from '@constants/pathExpression';
 import ScenePicker from './scenePicker';
@@ -21,6 +24,7 @@ import TPlanConfig from "./taskConfig";
 import CaseMenu from '@components/CaseMenu';
 import CreateCase from '@modals/CreateCase';
 import InputText from "@components/InputText";
+import SqlManage from "@pages/ApisWarper/modules/SqlManage";
 
 import SvgClose from '@assets/logo/close';
 
@@ -35,15 +39,20 @@ const TestPlanDetail = () => {
     const [sceneName, setSceneName] = useState('');
     const [importApi, setImportApi] = useState(false);
     const [importScene, setImportScene] = useState(false);
+    const [importSql, setImportSql] = useState(false);
     const [configApi, setConfigApi] = useState(false);
+    const [showSqlDrawer, setShowSqlDrawer] = useState(false);
     const open_plan_scene = useSelector((store) => store.auto_plan.open_plan_scene);
-    const api_now = useSelector((store) => store.auto_plan.api_now);
     const apiConfig = useSelector((store) => store.auto_plan.showApiConfig);
+    console.log(apiConfig, '111111111111');
+    const { status, type, api_now = {}, id: id_now } = apiConfig || {};
     const id_apis = useSelector((store) => store.auto_plan.id_apis);
     const show_assert = useSelector((store) => store.auto_plan.show_assert);
     const nodes = useSelector((store) => store.auto_plan.nodes);
     const edges = useSelector((store) => store.auto_plan.edges);
     const node_config = useSelector((store) => store.auto_plan.node_config);
+
+    const scene_env_id = useSelector((store) => store.env.scene_env_id);
 
     // const node_config = useSelector((store) => store.plan.node_config);
 
@@ -60,14 +69,15 @@ const TestPlanDetail = () => {
 
     const open_auto_plan_res = useSelector((store) => store.auto_plan.run_api_res);
 
-    const id_auto_plan_now = useSelector((store) => store.auto_plan.id_now);
 
     const response_list = {
-        'auto_plan': open_auto_plan_res && open_auto_plan_res[id_auto_plan_now],
+        'auto_plan': open_auto_plan_res && open_auto_plan_res[id_now],
     }
 
-    const scene_result = run_res && run_res.filter(item => item.event_id === (id_auto_plan_now))[0];
+    const scene_result = run_res && run_res.filter(item => item.event_id === (id_now))[0];
     const response_data = response_list['auto_plan'];
+
+    const api_now_auto = useSelector((store) => store.auto_plan.api_now);
 
     useEffect(() => {
 
@@ -85,16 +95,29 @@ const TestPlanDetail = () => {
 
 
     useEffect(() => {
-        if (apiConfig !== configApi) {
-            setConfigApi(apiConfig);
+        console.log(apiConfig, '222222222222');
+
+        if (apiConfig) {
+
+            setConfigApi(Boolean(status));
+            dispatch({
+                type: 'auto_plan/updateApiNow',
+                payload: api_now
+            })
+
+            // dispatch({
+            //     type: 'auto_plan/updateIdNow',
+            //     payload: id_now
+            // })
         }
     }, [apiConfig]);
+
 
     useEffect(() => {
         return () => {
             dispatch({
                 type: 'auto_plan/updateApiConfig',
-                payload: false
+                payload: {}
             })
         }
     }, []);
@@ -104,29 +127,31 @@ const TestPlanDetail = () => {
     }, [api_now])
 
     const onTargetChange = (type, value, extension) => {
-
-        Bus.$emit('updateAutoPlanApi', {
-            id: api_now.id,
-            pathExpression: getPathExpressionObj(type, extension),
-            value,
-        }, closeApiConfig);
+        if (api_now && api_now.id) {
+            Bus.$emit('updateAutoPlanApi', {
+                id: api_now.id,
+                pathExpression: getPathExpressionObj(type, extension),
+                value,
+            }, closeApiConfig);
+        }
     };
 
     const closeApiConfig = (close) => {
         Bus.$emit('saveAutoPlanApi', () => {
             // setDrawer(false)
             Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_plan_scene, id, 'auto_plan', () => {
+
                 if (close) {
                     dispatch({
                         type: 'auto_plan/updateApiConfig',
-                        payload: false
+                        payload: {}
                     })
                     dispatch({
                         type: 'auto_plan/updateApiRes',
                         payload: null
                     })
                 }
-            })
+            }, scene_env_id)
         }, id_apis);
     };
 
@@ -145,7 +170,7 @@ const TestPlanDetail = () => {
                         {/* <p style={{ fontSize: '16px' }}>x</p> */}
                         <SvgClose />
                     </Button>
-                    <InputText 
+                    <InputText
                         maxLength={30}
                         value={apiName}
                         placeholder={t('placeholder.apiName')}
@@ -163,8 +188,8 @@ const TestPlanDetail = () => {
                         Bus.$emit('savePlanApi', api_now);
                     }}>{ t('btn.save') }</Button> */}
 
-{
-                        (response_data || scene_result) ? <p>{ t('scene.runTime') }：{ response_data ? response_data.response_time : (scene_result ? scene_result.response_time : '') }</p> : <></>
+                    {
+                        (response_data || scene_result) ? <p>{t('scene.runTime')}：{response_data ? response_data.response_time : (scene_result ? scene_result.response_time : '')}</p> : <></>
                     }
                 </div>
             </div>
@@ -258,24 +283,82 @@ const TestPlanDetail = () => {
         }
     }, [show_case, open_case]);
 
+    const onApiPickerSubmit = (checkedApiKeys, apiDatas) => {
+        const dataList = getApiDataItems(apiDatas, checkedApiKeys);
+        dispatch({
+            type: 'auto_plan/updateIsChanged',
+            payload: true
+        })
+        Bus.$emit('importSceneApi', dataList, 'auto_plan');
+        setImportApi(false)
+    };
+
+    const onSqlPickerSubmit = (checkedApiKeys, apiDatas) => {
+        const dataList = getSqlDataItems(apiDatas, checkedApiKeys);
+
+        Bus.$emit('importSceneApi', dataList, 'auto_plan');
+        setImportSql(false)
+    };
+
+    const runSceneMysql = () => {
+        Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_plan_scene, id, 'auto_plan', () => {
+            Bus.$emit('sendSceneMysql', open_plan_scene.scene_id || open_plan_scene.target_id, id_now, open_auto_plan_res || {}, 'auto_plan');
+        }, scene_env_id)
+    }
+
+    const MysqlDrawerHeader = () => (
+        <div className="mysql-drawer-header">
+            <div className="left">
+                <Button className='close-btn' onClick={() => {
+                    if (api_now.name.trim().length === 0) {
+                        Message('error', t('message.apiNameEmpty'));
+                    } else {
+                        closeApiConfig(true);
+                    }
+                }}>
+                    <SvgClose />
+                </Button>
+                <InputText
+                    maxLength={30}
+                    value={api_now ? api_now.name : ''}
+                    placeholder={t('placeholder.sqlName')}
+                    onChange={(e) => {
+                        if (e.trim().length === 0) {
+                            Message('error', t('message.sqlNameEmpty'));
+                            return;
+                        }
+                        onTargetChange('name', e.trim());
+                    }}
+                />
+            </div>
+            <div className='right'>
+                <Button preFix={<SvgCaretRight />} className='run-btn' onClick={runSceneMysql}>执行</Button>
+                {/* <Button preFix={<SvgSave />} className='save-btn' onClick={() => saveScene()}>保存</Button> */}
+            </div>
+        </div>
+    );
+
     return (
         <div className='tplan-detail'>
             <TPlanDetailHeader onGetDetail={(e) => setPlanDetail(e)} />
             {/* <TPlanConfig /> */}
-            {importApi && <ApiPicker from='auto_plan' onCancel={() => setImportApi(false)} />}
+            {importApi && <ApiPicker onSubmit={onApiPickerSubmit} onCancel={() => setImportApi(false)} />}
             {importScene && <ScenePicker from='auto_plan' onCancel={() => setImportScene(false)} />}
+            {importSql && <SqlPicker onSubmit={onSqlPickerSubmit} onCancel={() => setImportSql(false)} />}
             {
-                configApi &&
                 <div className='api-config'>
                     <Drawer
                         className='plan-drawer'
-                        visible={true}
-                        title={<DrawerHeader />}
-                        // onCancel={() => setDrawer(false)}
+                        visible={configApi}
+                        title={type === 'sql' ? <MysqlDrawerHeader /> : <DrawerHeader />}
+                        // onCancel={() => setDrawer(false)} 
                         footer={null}
                         mask={false}
                     >
-                        <ApiManage from="auto_plan" apiInfo={api_now} showInfo={false} showAssert={show_assert} onChange={(type, val, extension) => onTargetChange(type, val, extension)} />
+                        {
+                            type === 'sql' ? <SqlManage from='auto_plan' apiInfo={api_now_auto ? api_now_auto : api_now} showInfo={false} onChange={(type, val, extension) => onTargetChange(type, val, extension)} />
+                                : <ApiManage from="auto_plan" apiInfo={api_now_auto ? api_now_auto : api_now} showInfo={false} showAssert={show_assert} onChange={(type, val, extension) => onTargetChange(type, val, extension)} />
+                        }
                     </Drawer>
                 </div>
             }
@@ -315,6 +398,8 @@ const TestPlanDetail = () => {
                                             setImportApi(e)
                                         } else if (type === 'scene') {
                                             setImportScene(e)
+                                        } else if (type === 'sql') {
+                                            setImportSql(e);
                                         }
                                     }} />
                                 </> : <CaseEmpty />
@@ -339,6 +424,8 @@ const TestPlanDetail = () => {
                                                 setImportApi(e)
                                             } else if (type === 'scene') {
                                                 setImportScene(e)
+                                            } else if (type === 'sql') {
+                                                setImportSql(e);
                                             }
                                         }} />
                                     </> : <EmptyContent />

@@ -23,6 +23,7 @@ const useCase = () => {
     const open_case = useSelector((store) => store.case.open_case);
     const open_info = useSelector((store) => store.case.open_info);
     const refresh = useSelector((store) => store.case.refresh);
+    const env_id = useSelector((store) => store.env.scene_env_id);
 
     const dispatch = useDispatch();
     const { t } = useTranslation();
@@ -82,6 +83,60 @@ const useCase = () => {
         callback && callback();
     };
 
+    const addNewCaseMysql = (id, api, config, callback) => {
+        let ids = isArray(id) ? id : [id];
+        let apis = isArray(api) ? api : [api];
+        let configs = isArray(config) ? config : [config];
+        let new_apis = cloneDeep(id_apis);
+        let new_config = cloneDeep(node_config);
+        for (let i = 0; i < apis.length; i++) {
+            let newApi = cloneDeep(apis[i]);
+
+            if (Object.entries(apis[i]).length < 2) {
+                newApi = getBaseCollection('sql');
+                newApi.is_changed = false;
+                newApi.id = apis[i].id;
+
+                delete newApi['target_id'];
+                delete newApi['parent_id'];
+            }
+            new_apis[newApi.id] = newApi;
+        }
+        // ids.forEach(id => {
+        //     let newApi = {};
+        //     newApi = getBaseCollection('api');
+        //     newApi.method = 'POST';
+        //     newApi.request.body.mode = 'none';
+        //     newApi.is_changed = false;
+        //     newApi.id = id;
+
+        //     delete newApi['target_id'];
+        //     delete newApi['parent_id'];
+
+        //     new_apis[id] = newApi;
+        //     new_config[id] = {};
+        // })
+
+        dispatch({
+            type: 'case/updateIdApis',
+            payload: new_apis
+        });
+
+
+        for (let i = 0; i < configs.length; i++) {
+
+            new_config[ids[i]] = configs[i];
+
+            dispatch({
+                type: 'case/updateNodeConfig',
+                payload: new_config,
+            })
+        }
+
+
+        callback && callback(new_apis);
+    };
+
     const addNewCaseControl = (id) => {
         const new_nodes = cloneDeep(node_config);
         new_nodes[id] = {};
@@ -102,6 +157,30 @@ const useCase = () => {
                 const { code, data: { targets } } = res;
                 // 1. 添加nodes节点
                 // 2. 添加id_apis映射
+                if (env_id === 0) {
+                    for (let item of targets) {
+                        item.env_info = {
+                            env_id: 0,
+                            env_name: "",
+                            service_id: 0,
+                            service_name: "",
+                            pre_url: "",
+                            database_id: 0
+                        }
+                        if (item.target_type === 'sql') {
+                            item.sql_detail.sql_database_info = {
+                                charset: 'utf8mb4',
+                                db_name: '',
+                                host: '',
+                                password: '',
+                                port: 0,
+                                server_name: '',
+                                user: '',
+                                type: item.sql_detail.sql_database_info.type || 'mysql'
+                            }
+                        }
+                    }
+                }
                 dispatch({
                     type: 'case/updateImportNode',
                     payload: targets,
@@ -397,7 +476,7 @@ const useCase = () => {
             return next_list;
         };
 
-        const _nodes = nodes && nodes.map(item => {
+        const _nodes = nodes && nodes.filter(item => item.type !== 'sql').map(item => {
             const api = id_apis[item.id];
             if (api) {
                 return {
@@ -424,6 +503,15 @@ const useCase = () => {
             version: 1,
             nodes: _nodes,
             edges,
+            env_id,
+            prepositions: nodes.filter(item => item.type === 'sql').map(item => {
+                const api = id_apis[item.id];
+                return {
+                    ...item,
+                    api,
+                    ...node_config[item.id],
+                }
+            })
             // nodes_round: getNodesByLevel(_nodes, edges ? edges : [])
         };
 
@@ -547,6 +635,12 @@ const useCase = () => {
                     Bus.$emit('addNewCaseApi', idList, apiList, configList);
                 }
 
+                const { env_id } = data;
+                dispatch({
+                    type: 'env/updateSceneEnvId',
+                    payload: env_id
+                })
+
                 dispatch({
                     type: 'case/updateOpenCase',
                     payload: data || { target_id: id, },
@@ -587,8 +681,7 @@ const useCase = () => {
                                     payload: scenes,
                                 })
 
-
-                                if (data.scenes.length === length) {
+                                if (data.scenes.filter(item => item.request_type === 'api').length === length) {
                                     clearInterval(case_t);
                                     dispatch({
                                         type: 'case/updateRunStatus',
@@ -789,10 +882,11 @@ const useCase = () => {
 
 
     useEventBus('addNewCaseApi', addNewCaseApi, [id_apis, node_config]);
+    useEventBus('addNewCaseMysql', addNewCaseMysql, [id_apis, node_config]);
     useEventBus('addNewCaseControl', addNewCaseControl, [node_config]);
     useEventBus('importCaseApi', importCaseApi);
     useEventBus('updateCaseApi', updateCaseApi, [id_apis]);
-    useEventBus('saveCaseApi', saveCaseApi, [api_now, id_apis]);
+    useEventBus('saveCaseApi', saveCaseApi, [api_now, id_apis, env_id]);
     useEventBus('cloneCaseNode', cloneCaseNode, [id_apis, nodes, node_config]);
     useEventBus('updateCaseNodeConfig', updateCaseNodeConfig, [node_config])
     useEventBus('saveCase', saveCase, [nodes, edges, id_apis, open_case, node_config, open_info])

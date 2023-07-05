@@ -1,0 +1,39 @@
+.sql-manage-detail-response {
+    padding: 8px;
+    background-color: var(--module);
+    height: 100%;
+    box-sizing: border-box;
+    margin-top: 4px;
+
+    .apipost-tabs {
+        height: 100%;
+    }
+
+    .sql-response-assert-title {
+        position: relative;
+        display: flex;
+
+        .title {
+            margin-right: 8px;
+        }
+
+        .success,
+        .fail {
+            position: absolute;
+            min-width: 6px;
+            min-height: 6px;
+            border-radius: 50%;
+            top: 0;
+            right: 0;
+        }
+
+        .fail {
+            background-color: #f00;
+        }
+
+        .success {
+            background-color: #0f0;
+        }
+    }
+
+}

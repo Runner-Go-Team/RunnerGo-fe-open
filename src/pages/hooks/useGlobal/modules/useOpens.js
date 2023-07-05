@@ -34,13 +34,47 @@ import * as jsondiffpatch from 'jsondiffpatch';
 import { urlParseLax } from '@utils/common';
 import { from, lastValueFrom, tap, map, concatMap, of } from 'rxjs';
 import { CONFILCTURL } from '@constants/confilct';
-import { SaveTargetRequest, saveApiBakRequest, fetchHandleApi, fetchApiDetail, fetchSendApi, fetchGetResult, fetchDeleteApi, fetchChangeSort } from '@services/apis';
+import {
+    SaveTargetRequest,
+    saveApiBakRequest,
+    fetchHandleApi,
+    fetchApiDetail,
+    fetchSendApi,
+    fetchGetResult,
+    fetchDeleteApi,
+    fetchChangeSort,
+    fetchRunSql,
+    fetchConnectDB,
+    fetchGetSqlResult,
+    fetchRunTcp,
+    fetchGetTcpResult,
+    fetchRunWebSocket,
+    fetchGetWebSocketResult,
+    fetchRunDubbo,
+    fetchGetDubboResult,
+    fetchSendOrStopWs,
+    fetchSendOrStopTcp
+} from '@services/apis';
 import { fetchRunAutoReportApi } from '@services/auto_report';
 import { getBaseCollection } from '@constants/baseCollection';
 import QueryString from 'qs';
 
 // 发送api时轮询的参数
 var send_api_t = null;
+
+// 发送mysql时轮询的参数
+var send_mysql_t = null;
+
+// 发送tcp时轮询的参数
+var send_tcp_t = null;
+var send_tcp_ret_id = null;
+
+// 发送websocket时轮询的参数
+var send_ws_t = null;
+var send_ws_ret_id = null;
+
+// 发送dubbo时轮询的参数
+var send_dubbo_t = null;
 
 // 新建接口
 const useOpens = () => {
@@ -53,6 +87,11 @@ const useOpens = () => {
     const workspace = useSelector((store) => store?.workspace);
     const debug_target_id = useSelector((store) => store.auto_report.debug_target_id);
     const auto_report_redux = useSelector((store) => store.auto_report);
+
+    const sql_res = useSelector((store) => store.opens.sql_res);
+    const tcp_res = useSelector((store) => store.opens.tcp_res);
+    const ws_res = useSelector((store) => store.opens.ws_res);
+    const dubbo_res = useSelector((store) => store.opens.dubbo_res);
     const { CURRENT_PROJECT_ID, CURRENT_TARGET_ID } = workspace;
 
     const getSort = (apiDatas) => {
@@ -218,7 +257,8 @@ const useOpens = () => {
     };
 
     // 小红点判断
-    const targetIfChanged = async (newTarget, pathExpression) => {
+    const targetIfChanged = async (newTarget, pathExpression, ignore) => {
+        console.log(newTarget, pathExpression, ignore);
         const diffPaths = {
             name: 'name',
             method: 'method',
@@ -230,10 +270,13 @@ const useOpens = () => {
             socketConfig: 'socketConfig',
             script: 'script',
         };
+
         if (
             isString(pathExpression) &&
-            pathExpression.length > 0 &&
-            diffPaths.hasOwnProperty(pathExpression.split('.')[0])
+            pathExpression.length > 0
+            &&
+            !ignore
+            // diffPaths.hasOwnProperty(pathExpression.split('.')[0])
         ) {
             const path = pathExpression.split('.')[0];
             const updateData = newTarget[diffPaths[path]];
@@ -339,7 +382,8 @@ const useOpens = () => {
     };
 
     const updateTarget = async (data) => {
-        const { target_id, pathExpression, value } = data;
+        console.log(data);
+        const { target_id, pathExpression, value, ignore } = data;
         const tempOpenApis = open_apis;
         if (!tempOpenApis.hasOwnProperty(target_id)) {
             return;
@@ -440,7 +484,7 @@ const useOpens = () => {
             }
         }
         // 小红点判断
-        await targetIfChanged(tempOpenApis[target_id], pathExpression);
+        await targetIfChanged(tempOpenApis[target_id], pathExpression, ignore);
         // 修改opens 数据 （包括indexedDB和redux）
         await updateOpensById({ id: target_id, data: tempOpenApis[target_id] });
     };
@@ -614,7 +658,6 @@ const useOpens = () => {
                     err: (err) => {
                     }
                 })
-                    ;
             }
             // await Collection.get(id).then((res) => {
             //     newApi = completionTarget(res);
@@ -720,6 +763,211 @@ const useOpens = () => {
         apGlobalConfigStore.set(`project_current:${team_id}`, { open_navs: openNavs });
         // });
     };
+
+    const saveDubboById = (data) => {
+        const { id, pid, callback } = data;
+        const target_id = id;
+        const tempOpenApis = cloneDeep(open_apis);
+        let tempTarget = tempOpenApis[target_id];
+
+        if (pid && isObject(tempTarget)) tempTarget.parent_id = pid;
+
+        if (!isUndefined(tempTarget) && isObject(tempTarget)) {
+            tempTarget.is_changed = -1;
+        }
+
+        if (tempTarget.sort == -1) {
+            tempTarget = targetReorder(tempTarget);
+        }
+
+        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.source = 0;
+
+        fetchHandleApi(tempTarget).subscribe({
+            next: async (res) => {
+                const { code, data } = res;
+
+                if (code === 0) {
+                    await updateOpensById({
+                        id: tempTarget?.target_id,
+                        data: tempTarget,
+                    });
+
+                    global$.next({
+                        action: 'GET_APILIST',
+                    });
+
+                    if (callback) {
+                        callback && callback(code, data.target_id);
+                    }
+                }
+            }
+        })
+    }
+
+    const saveWsById = (data) => {
+        const { id, pid, callback } = data;
+        const target_id = id;
+        const tempOpenApis = cloneDeep(open_apis);
+        let tempTarget = tempOpenApis[target_id];
+
+        if (pid && isObject(tempTarget)) tempTarget.parent_id = pid;
+
+        if (!isUndefined(tempTarget) && isObject(tempTarget)) {
+            tempTarget.is_changed = -1;
+        }
+
+        if (tempTarget.sort == -1) {
+            tempTarget = targetReorder(tempTarget);
+        }
+
+        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.source = 0;
+
+        fetchHandleApi(tempTarget).subscribe({
+            next: async (res) => {
+                const { code, data } = res;
+
+                if (code === 0) {
+                    await updateOpensById({
+                        id: tempTarget?.target_id,
+                        data: tempTarget,
+                    });
+
+                    global$.next({
+                        action: 'GET_APILIST',
+                    });
+
+                    if (callback) {
+                        callback && callback(code, data.target_id);
+                    }
+                }
+            }
+        })
+    }
+
+    const saveMqttById = (data) => {
+        const { id, pid, callback } = data;
+        const target_id = id;
+        const tempOpenApis = cloneDeep(open_apis);
+        let tempTarget = tempOpenApis[target_id];
+
+        if (pid && isObject(tempTarget)) tempTarget.parent_id = pid;
+
+        if (!isUndefined(tempTarget) && isObject(tempTarget)) {
+            tempTarget.is_changed = -1;
+        }
+
+        if (tempTarget.sort == -1) {
+            tempTarget = targetReorder(tempTarget);
+        }
+
+        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.source = 0;
+
+        fetchHandleApi(tempTarget).subscribe({
+            next: async (res) => {
+                const { code, data } = res;
+
+                if (code === 0) {
+                    await updateOpensById({
+                        id: tempTarget?.target_id,
+                        data: tempTarget,
+                    });
+
+                    global$.next({
+                        action: 'GET_APILIST',
+                    });
+
+                    if (callback) {
+                        callback && callback(code, data.target_id);
+                    }
+                }
+            }
+        })
+    }
+
+    const saveTcpById = (data) => {
+        const { id, pid, callback } = data;
+        const target_id = id;
+        const tempOpenApis = cloneDeep(open_apis);
+        let tempTarget = tempOpenApis[target_id];
+
+        if (pid && isObject(tempTarget)) tempTarget.parent_id = pid;
+
+        if (!isUndefined(tempTarget) && isObject(tempTarget)) {
+            tempTarget.is_changed = -1;
+        }
+
+        if (tempTarget.sort == -1) {
+            tempTarget = targetReorder(tempTarget);
+        }
+
+        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.source = 0;
+
+        fetchHandleApi(tempTarget).subscribe({
+            next: async (res) => {
+                const { code, data } = res;
+
+                if (code === 0) {
+                    await updateOpensById({
+                        id: tempTarget?.target_id,
+                        data: tempTarget,
+                    });
+
+                    global$.next({
+                        action: 'GET_APILIST',
+                    });
+
+                    if (callback) {
+                        callback && callback(code, data.target_id);
+                    }
+                }
+            }
+        })
+    }
+
+    const saveSqlById = (data) => {
+        const { id, pid, callback } = data;
+        const target_id = id;
+        const tempOpenApis = cloneDeep(open_apis);
+        let tempTarget = tempOpenApis[target_id];
+
+        if (pid && isObject(tempTarget)) tempTarget.parent_id = pid;
+
+        if (!isUndefined(tempTarget) && isObject(tempTarget)) {
+            tempTarget.is_changed = -1;
+        }
+
+        if (tempTarget.sort == -1) {
+            tempTarget = targetReorder(tempTarget);
+        }
+
+        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.source = 0;
+
+        fetchHandleApi(tempTarget).subscribe({
+            next: async (res) => {
+                const { code, data } = res;
+
+                if (code === 0) {
+                    await updateOpensById({
+                        id: tempTarget?.target_id,
+                        data: tempTarget,
+                    });
+
+                    global$.next({
+                        action: 'GET_APILIST',
+                    });
+
+                    if (callback) {
+                        callback && callback(code, data.target_id);
+                    }
+                }
+            }
+        })
+    }
 
     const saveTargetById = async (data, options = { is_socket: 1 }, callbacks) => {
         const { id, saveId, pid, callback } = data;
@@ -1227,14 +1475,23 @@ const useOpens = () => {
                     send_api_t = setInterval(() => {
                         fetchGetResult(query).subscribe({
                             next: (res) => {
-                                const { data } = res;
-                                if (data) {
+                                const { data, code } = res;
+
+                                if (code !== 0 || data) {
                                     clearInterval(send_api_t);
                                     const _open_res = cloneDeep(open_res);
-                                    _open_res[id] = {
-                                        ...data,
-                                        status: 'finish',
-                                    };
+
+                                    if (data) {
+                                        _open_res[id] = {
+                                            ...data,
+                                            status: 'finish',
+                                        };
+                                    } else {
+                                        _open_res[id] = {
+                                            status: 'finish',
+                                        };
+                                    }
+
                                     dispatch({
                                         type: 'opens/updateOpenRes',
                                         payload: _open_res
@@ -1429,6 +1686,426 @@ const useOpens = () => {
         }
     }
 
+
+    const runSql = (callback) => {
+        if (!open_api_now) {
+            return;
+        }
+        const params = {
+            target_id: open_api_now,
+            team_id: localStorage.getItem('team_id'),
+        };
+
+        fetchRunSql(params).subscribe({
+            next: (res) => {
+                const { data: { ret_id }, code } = res;
+                if (code === 0 && ret_id) {
+                    clearInterval(send_mysql_t);
+
+                    const params = {
+                        ret_id,
+                    };
+
+                    send_mysql_t = setInterval(() => {
+                        fetchGetSqlResult(params).subscribe({
+                            next: (res) => {
+                                const { code, data } = res;
+
+                                if (code !== 0) {
+                                    clearInterval(send_mysql_t);
+
+                                    let _sql_res = cloneDeep(sql_res);
+
+                                    _sql_res[open_api_now] = {
+                                        status: 'finish',
+                                    };
+
+                                    dispatch({
+                                        type: 'opens/updateSqlRes',
+                                        payload: _sql_res
+                                    })
+
+                                    callback && callback();
+                                }
+
+                                if (data) {
+                                    clearInterval(send_mysql_t);
+
+                                    let _sql_res = cloneDeep(sql_res);
+
+                                    _sql_res[open_api_now] = {
+                                        status: 'finish',
+                                        ...data
+                                    };
+
+                                    dispatch({
+                                        type: 'opens/updateSqlRes',
+                                        payload: _sql_res
+                                    })
+
+                                    callback && callback();
+                                }
+                            }
+                        })
+                    }, 1000);
+                }
+            }
+        })
+    };
+
+
+    const connectTestDB = (data, callback) => {
+        fetchConnectDB(data).subscribe({
+            next: (res) => {
+                const { code, data } = res;
+                callback && callback(code, data);
+            }
+        })
+    }
+
+
+    // 连接tcp接口
+    const connectTcp = (callback) => {
+        if (!open_api_now) {
+            return;
+        }
+        const params = {
+            team_id: localStorage.getItem('team_id'),
+            target_id: open_api_now
+        };
+        fetchRunTcp(params).subscribe({
+            next: (res) => {
+                const { data: { ret_id }, code } = res;
+
+                if (code === 0 && ret_id) {
+                    send_tcp_ret_id = ret_id;
+                    clearInterval(send_tcp_t);
+
+                    const params = {
+                        ret_id,
+                    };
+
+                    send_tcp_t = setInterval(() => {
+                        fetchGetTcpResult(params).subscribe({
+                            next: (res) => {
+                                const { code, data } = res;
+
+                                if (code !== 0) {
+                                    clearInterval(send_tcp_t);
+                                    let _tcp_res = cloneDeep(tcp_res);
+
+                                    _tcp_res[open_api_now] = {
+                                        status: 'finish',
+                                        result: data || []
+                                    };
+
+                                    dispatch({
+                                        type: 'opens/updateTcpRes',
+                                        payload: _tcp_res
+                                    })
+
+                                    send_tcp_ret_id = null;
+
+                                    callback && callback();
+                                } else if (data) {
+                                    let index = data.findIndex(item => item.is_stop);
+
+                                    if (index !== -1) {
+                                        clearInterval(send_tcp_t);
+
+                                        let _tcp_res = cloneDeep(tcp_res);
+
+                                        _tcp_res[open_api_now] = {
+                                            status: 'finish',
+                                            result: data || []
+                                        };
+
+                                        dispatch({
+                                            type: 'opens/updateTcpRes',
+                                            payload: _tcp_res
+                                        })
+
+                                        send_tcp_ret_id = null;
+
+                                        callback && callback();
+                                    } else {
+                                        let _tcp_res = cloneDeep(tcp_res);
+
+                                        _tcp_res[open_api_now] = {
+                                            status: 'running',
+                                            result: data || []
+                                        };
+
+                                        dispatch({
+                                            type: 'opens/updateTcpRes',
+                                            payload: _tcp_res
+                                        })
+
+                                    }
+
+                                }
+                            }
+                        })
+                    }, 1000);
+
+                }
+            }
+        })
+    }
+
+    // 停止轮询tcp
+    const stopRunTcp = () => {
+
+        const params = {
+            ret_id: send_ws_ret_id,
+            connection_status_change: {
+                type: 1,
+            }
+        };
+
+        fetchSendOrStopTcp(params).subscribe({
+            next: (res) => {
+                const { code } = res;
+
+                if (code === 0) {
+                    let _tcp_res = cloneDeep(tcp_res);
+
+                    if (_tcp_res[open_api_now]) {
+                        _tcp_res[open_api_now].status = 'finish';
+                    }
+
+                    dispatch({
+                        type: 'opens/updateTcpRes',
+                        payload: _tcp_res
+                    })
+                    clearInterval(send_tcp_t);
+                    send_tcp_ret_id = null;
+                }
+            }
+        })
+    }
+
+    // 发送tcp消息
+    const sendTcpMsg = (msg_type, msg) => {
+        const params = {
+            ret_id: send_tcp_ret_id,
+            connection_status_change: {
+                type: 2,
+                message_type: msg_type,
+                message: msg
+            }
+        };
+
+        fetchSendOrStopTcp(params).subscribe();
+    }
+
+    // 连接websocket接口
+    const connectWs = (callback) => {
+        if (!open_api_now) {
+            return;
+        }
+        const params = {
+            team_id: localStorage.getItem('team_id'),
+            target_id: open_api_now
+        };
+        fetchRunWebSocket(params).subscribe({
+            next: (res) => {
+                const { data: { ret_id }, code } = res;
+
+                if (code === 0 && ret_id) {
+                    send_ws_ret_id = ret_id;
+                    clearInterval(send_ws_t);
+
+                    const params = {
+                        ret_id,
+                    };
+
+                    send_ws_t = setInterval(() => {
+                        fetchGetWebSocketResult(params).subscribe({
+                            next: (res) => {
+                                const { code, data } = res;
+
+                                if (code !== 0) {
+                                    clearInterval(send_ws_t);
+                                    let _ws_res = cloneDeep(ws_res);
+
+                                    _ws_res[open_api_now] = {
+                                        status: 'finish',
+                                        result: data || []
+                                    };
+
+                                    dispatch({
+                                        type: 'opens/updateWsRes',
+                                        payload: _ws_res
+                                    })
+
+                                    send_ws_ret_id = null;
+
+                                    callback && callback();
+                                } else if (data) {
+                                    let index = data.findIndex(item => item.is_stop);
+
+                                    if (index !== -1) {
+                                        clearInterval(send_ws_t);
+
+                                        let _ws_res = cloneDeep(ws_res);
+
+                                        _ws_res[open_api_now] = {
+                                            status: 'finish',
+                                            result: data || []
+                                        };
+
+                                        dispatch({
+                                            type: 'opens/updateWsRes',
+                                            payload: _ws_res
+                                        })
+
+                                        send_ws_ret_id = null;
+
+
+                                        callback && callback();
+                                    } else {
+                                        let _ws_res = cloneDeep(ws_res);
+
+                                        _ws_res[open_api_now] = {
+                                            status: 'running',
+                                            result: data || []
+                                        };
+
+                                        dispatch({
+                                            type: 'opens/updateWsRes',
+                                            payload: _ws_res
+                                        })
+
+                                    }
+
+                                }
+                            }
+                        })
+                    }, 1000);
+
+                }
+            }
+        })
+    }
+
+    // 停止轮询websocket
+    const stopRunWs = () => {
+
+        const params = {
+            ret_id: send_ws_ret_id,
+            connection_status_change: {
+                type: 1,
+            }
+        };
+
+        fetchSendOrStopWs(params).subscribe({
+            next: (res) => {
+                const { code } = res;
+
+                if (code === 0) {
+                    let _ws_res = cloneDeep(ws_res);
+
+                    if (_ws_res[open_api_now]) {
+                        _ws_res[open_api_now].status = 'finish';
+                    }
+
+                    dispatch({
+                        type: 'opens/updateWsRes',
+                        payload: _ws_res
+                    })
+                    clearInterval(send_ws_t);
+                    send_ws_ret_id = null;
+                }
+            }
+        })
+    }
+
+    // 发送websocket消息
+    const sendWsMsg = (msg_type, msg) => {
+        const params = {
+            ret_id: send_ws_ret_id,
+            connection_status_change: {
+                type: 2,
+                message_type: msg_type,
+                message: msg
+            }
+        };
+
+        fetchSendOrStopWs(params).subscribe();
+    }
+
+    // 运行dubbo接口
+    const runDubbo = (callback) => {
+        if (!open_api_now) {
+            return;
+        }
+        const params = {
+            team_id: localStorage.getItem('team_id'),
+            target_id: open_api_now
+        };
+        fetchRunDubbo(params).subscribe({
+            next: (res) => {
+                const { data: { ret_id }, code } = res;
+
+                if (code === 0 && ret_id) {
+                    clearInterval(send_dubbo_t);
+
+                    const params = {
+                        ret_id,
+                    };
+
+                    send_dubbo_t = setInterval(() => {
+                        fetchGetDubboResult(params).subscribe({
+                            next: (res) => {
+                                const { code, data } = res;
+
+                                if (code !== 0 || data) {
+                                    clearInterval(send_dubbo_t);
+                                    let _dubbo_res = cloneDeep(dubbo_res);
+
+                                    if (data) {
+                                        _dubbo_res[open_api_now] = {
+                                            ...data,
+                                            status: 'finish'
+                                        };
+                                    } else {
+                                        _dubbo_res[open_api_now] = {
+                                            status: 'finish'
+                                        };
+                                    }
+
+                                    dispatch({
+                                        type: 'opens/updateDubboRes',
+                                        payload: _dubbo_res
+                                    })
+
+                                    callback && callback();
+                                }
+                            }
+                        })
+                    }, 1000);
+
+                }
+            }
+        })
+    }
+
+    // 停止轮询dubbo
+    const stopRunDubbo = () => {
+        let _dubbo_res = cloneDeep(dubbo_res);
+
+        if (_dubbo_res[open_api_now]) {
+            _dubbo_res[open_api_now].status = 'finish';
+        }
+
+        dispatch({
+            type: 'opens/updateDubboRes',
+            payload: _dubbo_res
+        })
+        clearInterval(send_dubbo_t);
+    }
+
     // 新建open tabs item   参数 type:api/doc/websocket/folder/grpc id:打开的target_id
     useEventBus('addOpenItem', addOpenItem, [CURRENT_PROJECT_ID, open_apis, apiDatas]);
 
@@ -1494,6 +2171,36 @@ const useOpens = () => {
     useEventBus('openRecordApi', openRecordApi, [open_apis]);
 
     useEventBus('updateAutoReportApi', updateAutoReportApi, [debug_target_id]);
+
+    useEventBus('saveSqlById', saveSqlById, [open_apis]);
+
+    useEventBus('saveTcpById', saveTcpById, [open_apis]);
+
+    useEventBus('saveMqttById', saveMqttById, [open_apis]);
+
+    useEventBus('saveWsById', saveWsById, [open_apis]);
+
+    useEventBus('saveDubboById', saveDubboById, [open_apis]);
+
+    useEventBus('runSql', runSql, [open_api_now, sql_res]);
+
+    useEventBus('connectTestDB', connectTestDB);
+
+    useEventBus('connectTcp', connectTcp, [open_api_now, tcp_res]);
+
+    useEventBus('stopRunTcp', stopRunTcp, [open_api_now, tcp_res]);
+
+    useEventBus('sendTcpMsg', sendTcpMsg);
+
+    useEventBus('connectWs', connectWs, [open_api_now, ws_res]);
+
+    useEventBus('stopRunWs', stopRunWs, [open_api_now, ws_res]);
+
+    useEventBus('sendWsMsg', sendWsMsg);
+
+    useEventBus('runDubbo', runDubbo, [open_api_now, dubbo_res]);
+
+    useEventBus('stopRunDubbo', stopRunDubbo, [open_api_now, dubbo_res]);
     // 初始化tabs
     // useEffect(() => {
     //     reloadOpens();

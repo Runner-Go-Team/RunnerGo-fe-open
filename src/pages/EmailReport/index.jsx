@@ -7,14 +7,14 @@ import qs from 'qs';
 
 const EmailReport = () => {
     const { search } = useLocation();
-    const { team_id } = qs.parse(search.slice(1));
+    const { team_id, report_id } = qs.parse(search.slice(1));
     sessionStorage.setItem('team_id', team_id);
 
     const ContentRender = () => {
         return (
             <Routes>
                 <Route path='detail' element={<ReportContent />}></Route>
-                <Route path='/*' element={<Navigate to="/report/detail?id=1288&team_id=9" />}></Route>
+                <Route path='/*' element={<Navigate to={`/report/detail?team_id=${team_id}&report_id=${report_id}`} />}></Route>
             </Routes>
         )
     }

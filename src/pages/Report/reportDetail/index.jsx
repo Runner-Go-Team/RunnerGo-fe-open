@@ -29,7 +29,8 @@ const ReportDetail = (props) => {
 	const [tab, setTab] = useState('1');
 	// const [runTime, setRunTime] = useState(0);
 	const select_plan = useSelector((store) => (store.plan.select_plan));
-	const report_detail = useSelector((store) => store.report.report_detail);
+	// const report_detail = useSelector((store) => store.report.report_detail);
+	const [report_detail, setReportDetail] = useState({});
 
 	useEffect(() => {
 		if (report_id && plan_id) {
@@ -110,16 +111,22 @@ const ReportDetail = (props) => {
 	}, [report_detail]);
 
 	const getReportDetail = (plan_id) => {
-		const query = {
+		const params = {
 			report_id: report_id ? report_id : JSON.parse(contrast)[select_plan].report_id,
 			plan_id,
 			team_id: localStorage.getItem('team_id')
 		};
-		
-		Bus.$emit('sendWsMessage', JSON.stringify({
-            route_url: "stress_report_detail",
-            param: JSON.stringify(query)
-        }))
+
+		fetchReportDetail(params).subscribe({
+			next: (res) => {
+				console.log(res);
+				const { code, data } = res;
+				
+				if (code === 0) {
+					setReportDetail(data ? data: {})
+				}
+			}
+		})
 	}
 
 	useEffect(() => {

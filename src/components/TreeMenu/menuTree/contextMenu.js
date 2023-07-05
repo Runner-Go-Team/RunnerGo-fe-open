@@ -7,6 +7,7 @@ import contextMenus from '../contextMenus';
 import contextFuncs from '../contextFuncs';
 
 const handleMenuItemClick = ({ module, action, target_id, props, open_scene, from, plan_id, running_scene }) => {
+    console.log(contextFuncs, module, action);
     const funcModule = contextFuncs[module][action];
     if (isFunction(funcModule) === false) {
         Message('error', '无效操作');
@@ -16,13 +17,14 @@ const handleMenuItemClick = ({ module, action, target_id, props, open_scene, fro
 };
 
 export const handleShowContextMenu = (props, e, params) => {
-    console.log(props, e, params);
-
     let target_id = null;
+    const { is_disabled } = params;
     if (params) {
         target_id = params;
     }
-    const { open_scene, from, plan_id, menu, running_scene } = props;
+    const { open_scene, from, plan_id, menu, running_scene, getSceneMenuList } = props;
+
+    menu['scene'] = getSceneMenuList(from, is_disabled);
 
     let module = '';
     if (isUndefined(params)) {
@@ -35,7 +37,8 @@ export const handleShowContextMenu = (props, e, params) => {
     } else {
         // 因为场景的目录类型由group改为folder, 但是支持的操作不同, 所以需要通过source和target_type两个字段来区分来源
         const { source, target_type } = params;
-        if (source === 0 && target_type === 'api') {
+        const type_list = ['api', 'mysql', 'tcp', 'mqtt', 'websocket', 'dubbo', 'sql'];
+        if (source === 0 && type_list.includes(target_type)) {
             module = 'api';
         } else if (source === 0 && target_type === 'folder') {
             module = 'folder';
@@ -50,7 +53,6 @@ export const handleShowContextMenu = (props, e, params) => {
     }
     const contextMenuRef = React.createRef(null);
     const menuList = menu?.[module];
-    console.log(menu, menuList);
 
     const HoverMenu = (
         <div>

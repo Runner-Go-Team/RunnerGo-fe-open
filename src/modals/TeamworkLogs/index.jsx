@@ -68,17 +68,38 @@ const TeamworkLogs = (props) => {
     "32": t('index.logType.32'),
     "33": t('index.logType.33'),
     "34": t('index.logType.34'),
+    "35": t('index.logType.35'),
+    "36": t('index.logType.36'),
+    "37": t('index.logType.37'),
+    "38": t('index.logType.38'),
+    "39": t('index.logType.39'),
+    "40": t('index.logType.40'),
+    "41": t('index.logType.41'),
+    "42": t('index.logType.42'),
+    "43" : t('index.logType.43'),
+    "44" : t('index.logType.44'),
+    "45" : t('index.logType.45'),
+    "46" : t('index.logType.46'),
+    "47" : t('index.logType.47'),
+    "48" : t('index.logType.48'),
+    "49" : t('index.logType.49'),
+    "50" : t('index.logType.50'),
+    "51" : t('index.logType.51'),
+    "52" : t('index.logType.52'),
+    "53" : t('index.logType.53'),
+    "54" : t('index.logType.54'),
+    "101": t('index.logType.101'),
+    "102": t('index.logType.102'),
+    "103": t('index.logType.103'),
+    "104": t('index.logType.104'),
+    "105": t('index.logType.105'),
+    "106": t('index.logType.106'),
+    "107": t('index.logType.107'),
+    "108": t('index.logType.108'),
+    "109": t('index.logType.109'),
   }
-
+ 
   const refTooltip = useRef(null);
-
-  useEffect(() => {
-
-  }, []);
-
-  const handleJumpPage = () => {
-    setPage(tempPage);
-  };
 
   // 按日期对数据进行处理
   const sortArrByDate = function (arr) {

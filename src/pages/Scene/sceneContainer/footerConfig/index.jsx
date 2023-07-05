@@ -10,6 +10,8 @@ import SvgScreen from '@assets/icons/full_screen';
 import SvgBeautify from '@assets/icons/beautify';
 import dagre from 'dagre';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
+import { Tooltip } from '@arco-design/web-react';
+import { isArray } from 'lodash';
 
 
 const dagreGraph = new dagre.graphlib.Graph();
@@ -53,7 +55,11 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
 const FooterConfig = (props) => {
     const { onChange, from = 'scene', fullScreenChange, full } = props;
     const { t } = useTranslation();
+
     const [showControl, setShowControl] = useState(false);
+    const [showPre, setShowPre] = useState(false);
+    const [canNotCreatePre, setCanNotCreatePre] = useState(false);
+
     const dispatch = useDispatch();
     const scene_nodes = useSelector((store) => store.scene.nodes);
     const plan_nodes = useSelector((store) => store.plan.nodes);
@@ -92,11 +98,23 @@ const FooterConfig = (props) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (nodes && isArray(nodes)) {
+            let mysql_node = nodes.find(item => item.type === 'sql');
+            if (mysql_node) {
+                setCanNotCreatePre(true);
+            } else {
+                setCanNotCreatePre(false);
+            }
+        }
+    }, [nodes]);
+
     const clickOutSide = (e) => {
         let _box = document.querySelector('.footer-config');
 
         if (_box && !_box.contains(e.target)) {
             setShowControl(false);
+            setShowPre(false);
         }
     }
 
@@ -302,138 +320,207 @@ const FooterConfig = (props) => {
 
     };
 
+    // 点击前置条件
+    const clickPreCondition = () => {
+        if (!canNotCreatePre && from !== 'case') {
+            if (run_status === 'running') {
+                Message('error', t('message.runningSceneCanNotHandle'));
+                return;
+            }
+    
+            setShowPre(!showPre);
+        }
+    }
+
+    // 点击新建测试对象
+    const clickCreateTestObj = () => {
+        if (run_status === 'running') {
+            Message('error', t('message.runningSceneCanNotHandle'));
+            return;
+        }
+
+        if (from === 'scene') {
+            dispatch({
+                type: 'scene/updateAddNew',
+                payload: 'api'
+            })
+        } else if (from === 'plan') {
+            dispatch({
+                type: 'plan/updateAddNew',
+                payload: 'api'
+            })
+        } else if (from === 'auto_plan') {
+            dispatch({
+                type: 'auto_plan/updateAddNew',
+                payload: 'api'
+            })
+        } else if (from === 'case') {
+            dispatch({
+                type: 'case/updateAddNew',
+                payload: 'api'
+            })
+        }
+        initScene();
+    }
+
+    // 点击添加控制器
+    const clickCreateControl = () => {
+        if (run_status === 'running') {
+            Message('error', t('message.runningSceneCanNotHandle'));
+            return;
+        }
+
+        setShowControl(!showControl);
+    }
+
+    // 点击添加控制器中的等待控制器
+    const createWaitControl = () => {
+        if (run_status === 'running') {
+            Message('error', t('message.runningSceneCanNotHandle'));
+            return;
+        }
+
+        if (from === 'scene') {
+            dispatch({
+                type: 'scene/updateAddNew',
+                payload: 'wait_controller'
+            })
+        } else if (from === 'plan') {
+            dispatch({
+                type: 'plan/updateAddNew',
+                payload: 'wait_controller'
+            })
+        } else if (from == 'auto_plan') {
+            dispatch({
+                type: 'auto_plan/updateAddNew',
+                payload: 'wait_controller'
+            })
+        } else if (from === 'case') {
+            dispatch({
+                type: 'case/updateAddNew',
+                payload: 'wait_controller'
+            })
+        }
+        initScene();
+    }
+
+    // 点击添加控制器中的条件控制器
+    const createConditionControl = () => {
+        if (run_status === 'running') {
+            Message('error', t('message.runningSceneCanNotHandle'));
+            return;
+        }
+
+        if (from === 'scene') {
+            dispatch({
+                type: 'scene/updateAddNew',
+                payload: 'condition_controller'
+            })
+        } else if (from === 'plan') {
+            dispatch({
+                type: 'plan/updateAddNew',
+                payload: 'condition_controller'
+            })
+        } else if (from === 'auto_plan') {
+            dispatch({
+                type: 'auto_plan/updateAddNew',
+                payload: 'condition_controller'
+            })
+        } else if (from === 'case') {
+            dispatch({
+                type: 'case/updateAddNew',
+                payload: 'condition_controller'
+            })
+        }
+        initScene();
+    }
+
+    // 点击引入测试对象
+    const clickImportTestObj = () => {
+        if (run_status === 'running') {
+            Message('error', t('message.runningSceneCanNotHandle'));
+            return;
+        }
+        initScene();
+
+        onChange('api', true);
+    }
+
+    // 点击前置条件中的新建
+    const createPreCondition = () => {
+        if (run_status === 'running') {
+            Message('error', t('message.runningSceneCanNotHandle'));
+            return;
+        }
+
+        if (from === 'scene') {
+            dispatch({
+                type: 'scene/updateType',
+                payload: ['add', 'sql']
+            })
+        } else if (from === 'plan') {
+            dispatch({
+                type: 'plan/updateType',
+                payload: ['add', 'sql']
+            })
+        } else if (from === 'auto_plan') {
+            dispatch({
+                type: 'auto_plan/updateType',
+                payload: ['add', 'sql']
+            })
+        } else if (from === 'case') {
+            dispatch({
+                type: 'case/updateType',
+                payload: ['add', 'sql']
+            })
+        }
+        initScene();
+
+        setShowPre(false);
+    }
+
+    // 点击前置条件中的引入
+    const importPreCondition = () => {
+        setShowPre(false);
+        if (run_status === 'running') {
+            Message('error', t('message.runningSceneCanNotHandle'));
+            return;
+        }
+        initScene();
+
+        onChange('sql', true);
+    }
+
+    console.log(nodes, canNotCreatePre);
+
     return (
-        <div 
+        <div
             className='footer-config'
         >
             {
                 showContent ? <>
-                    {showControl && <div className='add-controller'>
-                        <div className='wait' onClick={() => {
-                            if (run_status === 'running') {
-                                Message('error', t('message.runningSceneCanNotHandle'));
-                                return;
-                            }
 
-                            if (from === 'scene') {
-                                dispatch({
-                                    type: 'scene/updateAddNew',
-                                    payload: 'wait_controller'
-                                })
-                            } else if (from === 'plan') {
-                                dispatch({
-                                    type: 'plan/updateAddNew',
-                                    payload: 'wait_controller'
-                                })
-                            } else if (from == 'auto_plan') {
-                                dispatch({
-                                    type: 'auto_plan/updateAddNew',
-                                    payload: 'wait_controller'
-                                })
-                            } else if (from === 'case') {
-                                dispatch({
-                                    type: 'case/updateAddNew',
-                                    payload: 'wait_controller'
-                                })
-                            }
-                            initScene();
-                        }}>
-                            <SvgAdd />
-                            <span>{t('scene.waitControl')}</span>
-                        </div>
-                        <div className='condition' onClick={() => {
-                            if (run_status === 'running') {
-                                Message('error', t('message.runningSceneCanNotHandle'));
-                                return;
-                            }
-
-                            if (from === 'scene') {
-                                dispatch({
-                                    type: 'scene/updateAddNew',
-                                    payload: 'condition_controller'
-                                })
-                            } else if (from === 'plan') {
-                                dispatch({
-                                    type: 'plan/updateAddNew',
-                                    payload: 'condition_controller'
-                                })
-                            } else if (from === 'auto_plan') {
-                                dispatch({
-                                    type: 'auto_plan/updateAddNew',
-                                    payload: 'condition_controller'
-                                })
-                            } else if (from === 'case') {
-                                dispatch({
-                                    type: 'case/updateAddNew',
-                                    payload: 'condition_controller'
-                                })
-                            }
-                            initScene();
-                        }}>
-                            <SvgAdd />
-                            <span>{t('scene.conditionControl')}</span>
-                        </div>
-                    </div>
-                    }
                     <div className='common-config'>
                         <div className='config-item'>
                             <IconMenuUnfold onClick={() => setShowContent(false)} />
                         </div>
-                        <div className='config-item' onClick={() => {
-                            if (run_status === 'running') {
-                                Message('error', t('message.runningSceneCanNotHandle'));
-                                return;
-                            }
-
-                            if (from === 'scene') {
-                                dispatch({
-                                    type: 'scene/updateAddNew',
-                                    payload: 'api'
-                                })
-                            } else if (from === 'plan') {
-                                dispatch({
-                                    type: 'plan/updateAddNew',
-                                    payload: 'api'
-                                })
-                            } else if (from === 'auto_plan') {
-                                dispatch({
-                                    type: 'auto_plan/updateAddNew',
-                                    payload: 'api'
-                                })
-                            } else if (from === 'case') {
-                                dispatch({
-                                    type: 'case/updateAddNew',
-                                    payload: 'api'
-                                })
-                            }
-                            initScene();
-
-                        }}>
-                            <SvgApis />
-                            <span>{t('scene.createApi')}</span>
+                        <Tooltip content={ canNotCreatePre ? t('scene.onlyOnePreCond') : '' }>
+                            <div className='config-item' style={{ cursor: (canNotCreatePre || from === 'case') ? 'not-allowed' : 'pointer' }} onClick={clickPreCondition}>
+                                <SvgAdd />
+                                <span>{t('scene.preCondition')}</span>
+                            </div>
+                        </Tooltip>
+                        <div className='config-item' onClick={clickCreateTestObj}>
+                            <SvgAdd />
+                            <span>{t('scene.createTestObj')}</span>
                         </div>
-                        <div className='config-item' onClick={() => {
-                            if (run_status === 'running') {
-                                Message('error', t('message.runningSceneCanNotHandle'));
-                                return;
-                            }
-
-                            setShowControl(!showControl);
-                        }}>
+                        <div className='config-item' onClick={clickCreateControl}>
                             <SvgAdd />
                             <span>{t('scene.createControl')}</span>
                         </div>
-                        <div className='config-item' onClick={() => {
-                            if (run_status === 'running') {
-                                Message('error', t('message.runningSceneCanNotHandle'));
-                                return;
-                            }
-                            initScene();
-
-                            onChange('api', true);
-                        }}>
+                        <div className='config-item' onClick={clickImportTestObj}>
                             <SvgDownload />
-                            <span>{t('scene.importApi')}</span>
+                            <span>{t('scene.importTestObj')}</span>
                         </div>
                         <div className='config-item' onClick={toBeautify}>
                             <SvgBeautify />
@@ -441,9 +528,34 @@ const FooterConfig = (props) => {
                         </div>
                         <div className='config-item' onClick={fullScreenChange}>
                             <SvgScreen />
-                            <span>{ full ? t('scene.quitFullScreen') : t('scene.fullScreen') }</span>
+                            <span>{full ? t('scene.quitFullScreen') : t('scene.fullScreen')}</span>
                         </div>
                     </div>
+
+                    {
+                        showPre && <div className='add-pre-condition'>
+                            <div className='create' onClick={createPreCondition}>
+                                <SvgAdd />
+                                <span>{t('btn.create')}</span>
+                            </div>
+                            <div className='import' onClick={importPreCondition}>
+                                <SvgDownload />
+                                <span>{t('scene.introduce')}</span>
+                            </div>
+                        </div>
+                    }
+
+                    {showControl && <div className='add-controller'>
+                        <div className='wait' onClick={createWaitControl}>
+                            <SvgAdd />
+                            <span>{t('scene.waitControl')}</span>
+                        </div>
+                        <div className='condition' onClick={createConditionControl}>
+                            <SvgAdd />
+                            <span>{t('scene.conditionControl')}</span>
+                        </div>
+                    </div>
+                    }
                 </> : <IconMenuFold className='default-tool-icon' onClick={() => setShowContent(true)} />
             }
         </div>

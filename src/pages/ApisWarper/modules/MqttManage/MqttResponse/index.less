@@ -1,0 +1,58 @@
+.mqtt-manage-response {
+    margin-top: 4px;
+    background-color: var(--module);
+    flex: 1;
+    padding: 8px 12px;
+    height: 100%;
+
+    &-header {
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        color: var(--font-3);
+        font-size: 12px;
+
+        .arco-input-group-wrapper{
+            margin-left: 14px;
+            width: 238px;
+
+            .arco-input-group {
+                background-color: var(--bg);
+
+                .arco-input-inner-wrapper {
+                    background-color: var(--bg);
+                }
+
+                .arco-input-inner-wrapper-focus {
+                    border-color: var(--theme-color);
+                }
+            }
+
+            svg {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        .arco-select {
+            margin-left: 10px;
+            width: 82px;
+        }
+
+        .clear-message {
+            margin-left: 18px;
+            display: flex;
+            align-items: center;
+
+            svg {
+                width: 14px;
+                height: 14px;
+                color: var(--font-3);
+                margin-right: 4px;
+                cursor: pointer;
+
+            }
+        }
+
+    }
+}

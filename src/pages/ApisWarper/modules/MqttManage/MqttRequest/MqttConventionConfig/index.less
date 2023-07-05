@@ -1,0 +1,67 @@
+.mqtt-manage-request-convention {
+    .item {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+
+        .label {
+            width: 70px;
+            color: var(--font-1);
+            font-size: 14px;
+        }
+
+        .arco-input {
+            border-radius: 2px;
+            border: 1px solid var(--scene-border);
+            width: 132px;
+            height: 28px;
+            background-color: transparent;
+        }
+
+        .right {
+            margin-left: 30px;
+
+        }
+
+        .file-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 132px;
+            height: 28px;
+            color: var(--font-3);
+            border-radius: 2px;
+            border: 1px solid var(--scene-border);
+            cursor: pointer;
+            padding: 0 10px;
+
+            svg {
+                width: 16px;
+                height: 16px;
+                min-width: 16px;
+                min-height: 16px;
+                fill: var(--font-3);
+            }
+
+            p {
+                margin: 0 4px;
+
+            }
+
+        }
+
+        .file-box-fill {
+            p {
+                color: var(--font-1);
+                flex: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            svg {
+                fill: var(--font-1);
+            }
+        }
+    }
+}

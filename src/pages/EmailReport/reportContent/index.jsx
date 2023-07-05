@@ -63,7 +63,7 @@ const ReportContent = () => {
         };
         fetchEmailReportInfo(query).subscribe({
             next: (res) => {
-                const { data: { report: { plan_name, report_name, task_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, plan_id } } } = res;
+                const { data: { report: { plan_name, report_name, task_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, plan_id, is_open_distributed, machine_allot_type, change_take_conf } } } = res;
                 setPlanId(plan_id);
                 setHeaderData({
                     plan_name,
@@ -77,7 +77,10 @@ const ReportContent = () => {
                 setConfigData({
                     task_mode,
                     task_type,
-                    mode_conf
+                    mode_conf,
+                    is_open_distributed,
+                    machine_allot_type,
+                    change_take_conf
                 });
                 setReportStatus(task_status);
                 if (task_status === 2) {

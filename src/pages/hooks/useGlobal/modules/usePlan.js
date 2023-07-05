@@ -19,6 +19,7 @@ import { v4 } from 'uuid';
 
 const usePlan = () => {
     const dispatch = useDispatch();
+    const env_id = useSelector((store) => store.env.scene_env_id);
 
     const savePreConfig = ({ task_type, mode, cron_expr, mode_conf }, callback, plan_id) => {
         const params = {
@@ -227,6 +228,12 @@ const usePlan = () => {
                     Bus.$emit('addNewPlanApi', idList, id_apis, node_config, apiList, configList, 'plan');
                 }
 
+                const { env_id } = data;
+                dispatch({
+                    type: 'env/updateSceneEnvId',
+                    payload: env_id
+                })
+
 
                 dispatch({
                     type: 'plan/updateOpenScene',
@@ -300,6 +307,68 @@ const usePlan = () => {
         callback && callback(new_apis, new_nodes);
     };
 
+    const addNewPlanMysql = (id, id_apis, node_config, api = {}, config = {}, from, callback) => {
+        let newApi = cloneDeep(api);
+
+        let _id = isArray(id) ? id : [id];
+        let _api = isArray(api) ? api : [api];
+        let _config = isArray(config) ? config : [config];
+        let length = _config.length;
+        let new_apis = cloneDeep(id_apis);
+        let new_nodes = cloneDeep(node_config);
+
+        for (let i = 0; i < _api.length; i++) {
+            let newApi = cloneDeep(_api[i]);
+            if (Object.entries(_api[i]).length < 2) {
+                newApi = getBaseCollection('sql');
+                newApi.is_changed = false;
+                newApi.id = _api[i].id;
+
+                delete newApi['target_id'];
+                delete newApi['parent_id'];
+            } else {
+
+            }
+
+            new_apis[newApi.id] = newApi;
+
+            console.log(new_apis);
+
+            if (from === 'scene') {
+                dispatch({
+                    type: 'scene/updateIdApis',
+                    payload: new_apis,
+                })
+            } else {
+                dispatch({
+                    type: 'plan/updateIdApis',
+                    payload: new_apis,
+                })
+            }
+        }
+
+        for (let i = 0; i < _config.length; i++) {
+
+            new_nodes[_id[i]] = _config[i];
+
+            if (from === 'scene') {
+                dispatch({
+                    type: 'scene/updateNodeConfig',
+                    payload: new_nodes,
+                })
+            } else {
+                dispatch({
+                    type: 'plan/updateNodeConfig',
+                    payload: new_nodes,
+                })
+            }
+
+        }
+
+        callback && callback(new_apis, new_nodes);
+    };
+
+
     // function getNodesByLevel(nodes, edges) {
     //     let arr = [];
     //     while (nodes.length > 0) {
@@ -313,7 +382,7 @@ const usePlan = () => {
     //     return arr;
     // }
 
-    const saveScenePlan = (nodes, edges, id_apis, node_config, open_scene, id, from, callback) => {
+    const saveScenePlan = (nodes, edges, id_apis, node_config, open_scene, id, from, callback, env_id = 0) => {
         const get_pre = (id, edges) => {
             const pre_list = [];
             edges && edges.forEach(item => {
@@ -336,7 +405,7 @@ const usePlan = () => {
             return next_list;
         };
 
-        const _nodes = nodes ? nodes.map(item => {
+        const _nodes = nodes && nodes.filter(item => item.type !== 'sql').map(item => {
             const api = id_apis[item.id];
             if (api) {
                 return {
@@ -355,7 +424,7 @@ const usePlan = () => {
                     next_list: get_next(item.id, edges),
                 }
             }
-        }) : null;
+        });
 
         const from_list = {
             'scene': 1,
@@ -372,6 +441,15 @@ const usePlan = () => {
             edges,
             source: 2,
             plan_id: id,
+            env_id,
+            prepositions: nodes.filter(item => item.type === 'sql').map(item => {
+                const api = id_apis[item.id];
+                return {
+                    ...item,
+                    api,
+                    ...node_config[item.id],
+                }
+            })
             // nodes_round: getNodesByLevel(_nodes, edges ? edges : [])
             // multi_level_nodes: JSON.stringify(formatSceneData(nodes, edges))
             // songsong: formatSceneData(nodes, edges),
@@ -628,6 +706,30 @@ const usePlan = () => {
                 const { code, data: { targets } } = res;
                 // 1. 添加nodes节点
                 // 2. 添加id_apis映射
+                if (env_id === 0) {
+                    for (let item of targets) {
+                        item.env_info = {
+                            env_id: 0,
+                            env_name: "",
+                            service_id: 0,
+                            service_name: "",
+                            pre_url: "",
+                            database_id: 0
+                        }
+                        if (item.target_type === 'sql') {
+                            item.sql_detail.sql_database_info = {
+                                charset: 'utf8mb4',
+                                db_name: '',
+                                host: '',
+                                password: '',
+                                port: 0,
+                                server_name: '',
+                                user: '',
+                                type: item.sql_detail.sql_database_info.type || 'mysql'
+                            }
+                        }
+                    }
+                }
                 if (from === 'plan') {
                     dispatch({
                         type: 'plan/updateImportNode',
@@ -695,12 +797,13 @@ const usePlan = () => {
     useEventBus('deleteTPlan', deleteTPlan);
     useEventBus('addOpenPlanScene', addOpenPlanScene);
     useEventBus('addNewPlanApi', addNewPlanApi);
+    useEventBus('addNewPlanMysql', addNewPlanMysql);
     useEventBus('saveScenePlan', saveScenePlan);
     useEventBus('copyPlan', copyPlan);
     useEventBus('dragUpdatePlan', dragUpdatePlan);
     useEventBus('importSceneList', importSceneList);
     useEventBus('addNewPlanControl', addNewPlanControl);
-    useEventBus('importSceneApi', importSceneApi);
+    useEventBus('importSceneApi', importSceneApi, [env_id]);
     useEventBus('savePlanApi', savePlanApi);
     useEventBus('updatePlanApi', updatePlanApi);
     useEventBus('runPlan', runPlan);

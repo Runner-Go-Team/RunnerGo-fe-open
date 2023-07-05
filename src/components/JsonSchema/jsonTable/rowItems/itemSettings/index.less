@@ -1,0 +1,81 @@
+.modal-schema-settings {
+
+  display: flex;
+  flex-direction: column;
+
+  .set-title {
+    height: 26px;
+    line-height: 26px;
+    padding-left: 10px;
+    border-left: 3px solid var(--base-color-brand);
+  }
+
+  .base-setting {
+    padding: 10px 0;
+
+    .item-line {
+      padding: 10px 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .apipost-input-number {
+        .apipost-input-inner-wrapper {
+          height: 24px;
+        }
+      }
+
+      .case-title {
+        display: flex;
+        align-items: center;
+        width: 120px;
+        justify-content: flex-end;
+        padding-right: 10px;
+        text-align: right;
+
+        .apipost-checkbox {
+          margin-right: 8px;
+        }
+      }
+
+      .case-value {
+        flex: 1;
+
+        .apipost-input,
+        .apipost-textarea {
+          color: var(--content-color-secondary);
+        }
+
+        .apipost-input-inner-wrapper {
+          height: 24px;
+        }
+
+        .apipost-textarea:focus {
+          background-color: transparent;
+        }
+      }
+    }
+
+  }
+
+  .source-setting {
+    flex: 1;
+    height: 100px;
+    padding-top: 10px;
+
+  }
+
+
+
+}
+
+.apipost_json_schema_item_editor {
+  .apipost-modal-body{
+    padding: 8px 32px 61px;
+  }
+  .apipost-modal-container {
+    width: 70vw;
+    max-width: 880px;
+    max-height: 80vh;
+  }
+}

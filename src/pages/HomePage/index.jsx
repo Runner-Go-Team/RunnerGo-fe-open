@@ -9,6 +9,7 @@ import StressReport from "./StressReport";
 import { fetchGetIndex } from '@services/dashboard';
 import { useSelector } from 'react-redux';
 import Bus from '@utils/eventBus';
+import { getCookie } from '@utils';
 
 let index_t = null;
 
@@ -79,7 +80,7 @@ const HomePage = () => {
     const getIndex = () => {
         const params = {
             team_id: localStorage.getItem('team_id'),
-            token: localStorage.getItem('runnergo-token')
+            token: getCookie('token'),
         };
         Bus.$emit('sendWsMessage', JSON.stringify({
             route_url: "home_page",

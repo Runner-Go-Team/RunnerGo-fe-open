@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import cn from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
-import { Tabs as TabComponent, Select, Button } from 'adesign-react';
+import { Select, Button } from 'adesign-react';
 import Resclose from '@assets/apis/resclose.svg';
 // import { User } from '@indexedDB/user';
 import { openUrl } from '@utils';
-import { isArray, isPlainObject, isString } from 'lodash';
+import { isArray, isEmpty, isPlainObject, isString } from 'lodash';
 import CookiesTable from './coms/cookies';
 import ReqTable from './coms/reqTable';
 import ResTable from './coms/resTable';
@@ -19,11 +19,12 @@ import ResRegex from './regex';
 import Bus from '@utils/eventBus';
 import { useTranslation } from 'react-i18next';
 import './index.less';
+import { Tabs } from '@arco-design/web-react';
 
-const { Tabs, TabPan } = TabComponent;
+const { TabPane } = Tabs;
 const Option = Select.Option;
 const ResPonsePanel = (props) => {
-  let { data, tempData, onChange, direction, from = 'apis', showAssert, showRight = true } = props;
+  let { data, resData , tempData, onChange, direction, from = 'apis', showAssert, showRight = true } = props;
   const { t } = useTranslation();
   const open_res = useSelector((store) => store.opens.open_res);
   const open_scene_res = useSelector((store) => store.scene.run_api_res);
@@ -76,9 +77,7 @@ const ResPonsePanel = (props) => {
 
   const scene_result = run_res && run_res.filter(item => item.event_id === (id_now_list[from]))[0];
 
-
-
-  const response_data = response_list[from];
+  const response_data = resData ? resData : response_list[from];
   tempData = {
     "request": {
       "header": "POST /api/demo/login HTTP/1.1\r\nUser-Agent: kp-runner\r\nHost: 59.110.10.84:30008\r\nContent-Type: application/json\r\nContent-Length: 44\r\n\r\n",
@@ -153,7 +152,7 @@ const ResPonsePanel = (props) => {
               response_data && response_data.assertion
                 ?
                 (
-                  response_data.assertion.filter(item => !item.isSucceed).length > 0
+                  response_data.assertion.filter(item => !item.is_succeed).length > 0
                     ? <p style={{ 'min-width': '6px', 'min-height': '6px', borderRadius: '50%', top: '0', right: '0', backgroundColor: '#f00', position: 'absolute' }}></p>
                     : <p style={{ 'min-width': '6px', 'min-height': '6px', borderRadius: '50%', top: '0', right: '0', backgroundColor: '#0f0', position: 'absolute' }}></p>
                 )
@@ -161,7 +160,7 @@ const ResPonsePanel = (props) => {
               : scene_result && scene_result.assertion
                 ?
                 (
-                  scene_result.assertion.filter(item => !item.isSucceed).length > 0
+                  scene_result.assertion.filter(item => !item.is_succeed).length > 0
                     ? <p style={{ 'min-width': '6px', 'min-height': '6px', borderRadius: '50%', top: '0', right: '0', backgroundColor: '#f00', position: 'absolute' }}></p>
                     : <p style={{ 'min-width': '6px', 'min-height': '6px', borderRadius: '50%', top: '0', right: '0', backgroundColor: '#0f0', position: 'absolute' }}></p>
                 )
@@ -190,10 +189,10 @@ const ResPonsePanel = (props) => {
     setDiyVisible(false);
   };
 
-  const renderTabPanel = ({ headerTabItems, handleMouseWeel }) => {
+  const renderTabPanel = (tabProps, DefaultTabHeader) => {
     return (
       <>
-        <div className="apipost-tabs-header apipost-tabs-response-header" onWheel={handleMouseWeel}>
+        <div className="apipost-tabs-header apipost-tabs-response-header">
           {APIS_TAB_DIRECTION > 0 ? (
             <Select
               className="apipost-tabs-response-select"
@@ -207,7 +206,7 @@ const ResPonsePanel = (props) => {
               ))}
             </Select>
           ) : (
-            headerTabItems
+            <DefaultTabHeader />
           )}
           {
             showRight ? <ResponseStatus
@@ -272,7 +271,6 @@ const ResPonsePanel = (props) => {
       setActiveIndex('5');
     }
   }, [showAssert]);
-
   return (
     <>
       {response_data && response_data.status === 'running' && (
@@ -286,6 +284,8 @@ const ResPonsePanel = (props) => {
               onClick={() => {
                 if (from === 'apis') {
                   Bus.$emit('stopSend', data.target_id);
+                }else if(from === 'mock'){
+                  Bus.$emit('mock/stopSend', data.target_id);
                 } else {
                   Bus.$emit('stopSceneApi', data.id);
                 }
@@ -319,24 +319,22 @@ const ResPonsePanel = (props) => {
       )}
       <Tabs
         itemWidth={88}
-        activeId={activeIndex}
+        activeTab={activeIndex}
         className={responseTabs}
         onChange={handleTabChange}
-        headerRender={renderTabPanel}
-        contentRender={contentRender}
+        renderTabHeader={renderTabPanel}
         style={{ padding: '0 16px', marginTop: '2px', paddingTop: '8px' }}
       >
         {defaultList.map((d) => (
-          <TabPan
+          <TabPane
             className="response-tabs-content"
             style={{ padding: '0 15px' }}
             key={d.id}
-            id={d.id}
             title={d.title}
           // disabled={}
           >
-            <>{scene_result || response_data ? d.content : <NotResponse text={t('apis.resEmpty')} />}</>
-          </TabPan>
+            <>{!isEmpty(scene_result) || !isEmpty(response_data) ? d.content : <NotResponse text={t('apis.resEmpty')} />}</>
+          </TabPane>
         ))}
       </Tabs>
     </>

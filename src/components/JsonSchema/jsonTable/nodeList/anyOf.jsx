@@ -1,10 +1,19 @@
 import { isArray, isNumber } from 'lodash';
 import React, { useCallback, useEffect, useRef } from 'react';
 import produce from 'immer';
+import { useMemoizedFn } from 'apt-hooks';
 import ItemNode from '../itemNode';
 
+// interface AnyOfItemProps {
+//   deepIndex: number;
+//   nodeValue: any;
+//   onChange: (nodeKey: string, val: any) => void;
+//   linkSchema: 'enable' | 'disable';
+//   parentModels: React.MutableRefObject<string[]>;
+// }
+
 const AnyOfItem = (props) => {
-  const { deepIndex, nodeValue, onChange } = props;
+  const { deepIndex, nodeValue, onChange, linkSchema, parentModels } = props;
 
   // 修改数据时，保证能取到最新值
   const refData = useRef(null);
@@ -35,6 +44,13 @@ const AnyOfItem = (props) => {
 
   const dataList = isArray(nodeValue?.anyOf) ? nodeValue.anyOf : [];
 
+  const handleAddSiblingNode = useMemoizedFn((nodeKey) => {
+    const newData = produce(dataList, (draft) => {
+      draft.splice(nodeKey + 1, 0, { type: 'string' });
+    });
+    onChange('anyOf', newData);
+  });
+
   return (
     <>
       {dataList.map((item, index) => (
@@ -48,6 +64,9 @@ const AnyOfItem = (props) => {
             onNodeKeyChange: () => void 0,
             onChange: handleChange,
             onDeleteNode: handleDeleteNode,
+            onAddSiblingNode: handleAddSiblingNode,
+            linkSchema,
+            parentModels,
           }}
         />
       ))}

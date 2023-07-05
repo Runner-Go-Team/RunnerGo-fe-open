@@ -16,7 +16,9 @@ import {
     Right as SvgRight,
     LogoutRight as SvgLogout,
     Down as SvgDown,
-    Left as SvgLeft
+    Left as SvgLeft,
+    Environment as SvgEnv,
+    Mock as SvgMock
 } from 'adesign-react/icons';
 import SvgHome from '@assets/icons/Home';
 import SvgScene from '@assets/icons/Scene1';
@@ -30,6 +32,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Menu, Dropdown } from '@arco-design/web-react';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
+import { setCookie } from '@utils';
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -66,6 +69,7 @@ const LeftToolbar = () => {
         const url = `/skins/${color}.css`;
         document.querySelector(`link[name="apt-template-link"]`).setAttribute('href', url);
         localStorage.setItem('theme_color', color);
+        setCookie('theme', color);
         dispatch({
             type: 'user/updateTheme',
             payload: color
@@ -89,6 +93,7 @@ const LeftToolbar = () => {
                         type: 'user/updateLanGuaGe',
                         payload: 'cn'
                     })
+                    setCookie('i18nextLng', 'cn');
                     setVisible(false);
                 }}>简体中文</MenuItem>
                 <MenuItem key="1-2" onClick={() => {
@@ -97,6 +102,7 @@ const LeftToolbar = () => {
                         type: 'user/updateLanGuaGe',
                         payload: 'en'
                     })
+                    setCookie('i18nextLng', 'en');
                     setVisible(false);
                 }}>English</MenuItem>
             </SubMenu>
@@ -174,15 +180,22 @@ const LeftToolbar = () => {
                         </Link>
                     </SubMenu>
 
+                    <Link to="/env">
+                        <MenuItem key="/env"><SvgEnv className="arco-icon arco-icon-robot" />{t('leftBar.env')}</MenuItem>
+                    </Link>
+
                     <Link to="/machine">
                         <MenuItem key='/machine'><SvgMachine className="arco-icon arco-icon-robot" />{t('leftBar.machine')}</MenuItem>
+                    </Link>
+                    <Link to="/mockservice">
+                        <MenuItem key='/mockservice'><SvgMock className="arco-icon arco-icon-robot" />{t('leftBar.mockservice')}</MenuItem>
                     </Link>
                     <MenuItem onClick={() => {
                         window.open('https://wiki.runnergo.cn/docs/', '_blank');
                     }} key='/doc'><SvgDoc className="arco-icon arco-icon-robot" />{t('leftBar.docs')}</MenuItem>
 
                 </Menu>
-
+{/* 
                 <div className="settings">
                     {
                         collapseStatus ? <Dropdown trigger="click" droplist={dropList} position="bl">
@@ -192,7 +205,7 @@ const LeftToolbar = () => {
                         </Dropdown>
                     }
 
-                </div>
+                </div> */}
 
                 {
                     collapseStatus ? <IconMenuFold onClick={() => setCollapseStatus(!collapseStatus)} className="open-icon" /> : <IconMenuUnfold onClick={() => setCollapseStatus(!collapseStatus)} className="open-icon" />

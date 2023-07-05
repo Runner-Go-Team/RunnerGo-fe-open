@@ -184,33 +184,33 @@ const useProject = () => {
     };
 
     const getProjectDescList = async (key) => {
-        const currentProjectInfo = await UserProjects.get(
-            `${CURRENT_PROJECT_ID}/${localStorage.getItem('uuid')}`
-        );
+        // const currentProjectInfo = await UserProjects.get(
+        //     `${CURRENT_PROJECT_ID}/${localStorage.getItem('uuid')}`
+        // );
 
-        const { details } = currentProjectInfo;
+        // const { details } = currentProjectInfo;
         let descList = [];
-        // 获取当前项目参数描述
-        if (isArray(details?.globalDescriptionVars)) {
-            descList = descList.concat(details.globalDescriptionVars);
-        }
-        // 获取当前项目临时参数描述
-        if (isArray(tempParamsDesc)) {
-            descList = descList.concat(tempParamsDesc);
-        }
-        if (isString(key) && trim(key).length > 0) {
-            if (isArray(descList) && descList.length > 0) {
-                const keyObj = descList.find((i) => i?.key === key);
-                if (
-                    isPlainObject(keyObj) &&
-                    isString(keyObj?.description) &&
-                    keyObj.description.length > 0
-                ) {
-                    return keyObj.description;
-                }
-            }
-            return '';
-        }
+        // // 获取当前项目参数描述
+        // if (isArray(details?.globalDescriptionVars)) {
+        //     descList = descList.concat(details.globalDescriptionVars);
+        // }
+        // // 获取当前项目临时参数描述
+        // if (isArray(tempParamsDesc)) {
+        //     descList = descList.concat(tempParamsDesc);
+        // }
+        // if (isString(key) && trim(key).length > 0) {
+        //     if (isArray(descList) && descList.length > 0) {
+        //         const keyObj = descList.find((i) => i?.key === key);
+        //         if (
+        //             isPlainObject(keyObj) &&
+        //             isString(keyObj?.description) &&
+        //             keyObj.description.length > 0
+        //         ) {
+        //             return keyObj.description;
+        //         }
+        //     }
+        //     return '';
+        // }
 
         return descList;
     };

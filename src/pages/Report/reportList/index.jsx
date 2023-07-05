@@ -11,7 +11,7 @@ import {
 } from 'adesign-react/icons';
 import { useNavigate } from 'react-router-dom';
 import { fetchReportList, fetchDeleteReport } from '@services/report';
-import { debounce } from 'lodash';
+import { debounce, cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 // import Pagination from '@components/Pagination';
 import SvgEmpty from '@assets/img/empty';
@@ -51,6 +51,7 @@ const ReportList = () => {
         '3': t('plan.modeList.3'),
         '4': t('plan.modeList.4'),
         '5': t('plan.modeList.5'),
+        '6': t('plan.modeList.6'),
         '7': t('plan.modeList.7')
     };
 
@@ -66,7 +67,7 @@ const ReportList = () => {
     }
 
     const HandleContent = (props) => {
-        const { report_id } = props;
+        const { report_id, status } = props;
         return (
             <div className='handle-content'>
                 <Tooltip bgColor="var(--select-hover)" content={t('tooltip.view')}>
@@ -77,7 +78,11 @@ const ReportList = () => {
                 {/* <SvgCopy /> */}
                 <Tooltip bgColor="var(--select-hover)" content={t('tooltip.delete')}>
                     <div>
-                        <SvgDelete className='delete-svg' onClick={() => {
+                        <SvgDelete className='delete-svg' style={{ cursor: status === 1 ? 'not-allowed' : 'pointer' }} onClick={() => {
+                            if (status === 1) {
+                                Message('error', t('plan.cantDelete'));
+                                return;
+                            }
                             Modal.confirm({
                                 title: t('modal.look'),
                                 content: t('modal.deleteReport'),
@@ -148,12 +153,11 @@ const ReportList = () => {
                 return {
                     ...item,
                     task_mode: modeList[task_mode],
-                    status: statusList[status],
                     canDelete: status === 2,
                     task_type: taskList[task_type],
                     run_time_sec: dayjs(run_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
                     last_time_sec: status === 1 ? '-' : dayjs(last_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                    handle: <HandleContent report_id={report_id} />
+                    handle: <HandleContent report_id={report_id} status={status} />
                 }
             }) : [];
 
@@ -199,6 +203,10 @@ const ReportList = () => {
                 setStatus(value);
                 return true;
             },
+            render: (col, index) => {
+
+                return statusList[col];
+            }
         },
         {
             title: t('index.reportName'),
@@ -289,24 +297,6 @@ const ReportList = () => {
         size !== pageSize && setPageSize(size);
     }
 
-    const renderRow = (tableData, renderRowItem) => {
-        return (
-            <tbody>
-                {tableData.map((tableRowData, rowIndex) => {
-                    const rowComp = React.cloneElement(renderRowItem(tableRowData, rowIndex), {
-                        key: rowIndex,
-                        onDoubleClick(tableRowData) {
-
-                            const { report_id } = tableData[rowIndex]
-                            navigate(`/report/detail/${report_id}`)
-                        },
-                    });
-                    return rowComp;
-                })}
-            </tbody>
-        );
-    };
-
     const getSelectDate = (startTime, endTime) => {
         setStartTime(startTime);
         setEndTime(endTime);
@@ -373,9 +363,33 @@ const ReportList = () => {
                     {
                         type: 'checkbox',
                         selectedRowKeys,
-                        onChange: (selectedRowKeys, selectedRows) => {
-                            setSelectedRowKeys(selectedRowKeys);
-                            setSelectReport(selectedRows);
+                        checkboxProps: (record) => {
+                            return {
+                                disabled: record.status === 1,
+                                onChange: (checked) => {
+                                    const { report_id } = record;
+
+                                    let _arr1 = cloneDeep(selectedRowKeys);
+                                    let _arr2 = cloneDeep(selectReport);
+                                    if (checked) {
+                                        if (!selectedRowKeys.find(item => item === report_id)) {
+
+                                            _arr1.push(report_id);
+                                            setSelectedRowKeys(_arr1);
+
+                                            _arr2.push(record);
+                                            setSelectReport(_arr2);
+                                        }
+                                    } else {
+                                        let index1 = selectedRowKeys.findIndex(item => item === report_id);
+                                        _arr1.splice(index1, 1);
+                                        setSelectedRowKeys(_arr1);
+                                        let index2 = selectReport.findIndex(item => item.report_id === report_id);
+                                        _arr2.splice(index2, 1);
+                                        setSelectReport(_arr2);
+                                    }
+                                }
+                            }
                         },
                     }
                 }

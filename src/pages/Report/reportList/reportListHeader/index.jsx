@@ -8,6 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
+import SvgSendEmail from '@assets/icons/SendEmail';
 import { fetchBatchDelete } from '@services/report';
 
 import { isArray } from 'lodash';
@@ -15,6 +16,7 @@ import enUS from '@arco-design/web-react/es/locale/en-US';
 import cnUS from '@arco-design/web-react/es/locale/zh-CN';
 
 import { DatePicker, ConfigProvider } from '@arco-design/web-react';
+import Bus from '@utils/eventBus';
 const { RangePicker } = DatePicker;
 
 const ReportListHeader = (props) => {
@@ -48,8 +50,8 @@ const ReportListHeader = (props) => {
 
     const toContrast = () => {
         let task_mode = '';
-
-        if (selectReport.filter(item => item.status === t('report.statusList.2')).length !== selectReport.length) {
+        console.log(selectReport);
+        if (selectReport.filter(item => item.status === 2).length !== selectReport.length) {
             Message('error', t('message.contrastRunning'));
             return;
         }
@@ -156,12 +158,24 @@ const ReportListHeader = (props) => {
                         </Button>
                 }
                 {
-                    selectReport.length > 0 ? <Button
-                        className='delete-btn'
-                        onClick={() => toDelete()}
-                    >
-                        {t('btn.delete')}
-                    </Button> : null
+                    selectReport.length > 0 ? (
+                        <>
+                          <Button
+                                className='notice'
+                                type='primary'
+                                onClick={() => Bus.$emit('openModal', 'Notice', { event_id: 102,batch:true ,options: { report_ids: selectReport.map(item => item.report_id) } })}
+                                preFix={<SvgSendEmail width="16" height="16" />}
+                            >
+                                {t('btn.batch_notif')}
+                            </Button>
+                            <Button
+                                className='delete-btn'
+                                onClick={() => toDelete()}
+                            >
+                                {t('btn.delete')}
+                            </Button>
+                        </>
+                    ) : null
                 }
 
             </div>

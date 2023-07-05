@@ -16,12 +16,10 @@ import { fetchStopReport } from '@services/report';
 import { useTranslation } from 'react-i18next';
 import qs from 'qs';
 import { useSelector } from 'react-redux';
-import InvitationModal from '@modals/ProjectInvitation';
 
 const ReportHeader = (props) => {
     const { data: { plan_name, report_name }, status } = props;
     const { t } = useTranslation();
-    const [showSendEmail, setSendEmail] = useState(false);
     const navigate = useNavigate();
     const ref1 = useRef(null);
     const refs = [ref1];
@@ -157,7 +155,6 @@ const ReportHeader = (props) => {
                 <div className='report-status'>{ status === 1 ? t('btn.running') : t('btn.done')}</div>
             </div>
             <div className='email-report-header-right'>
-                {/* <Button className='notice' preFix={<SvgSendEmail width="16" height="16" />} onClick={() => setSendEmail(true)}>{ t('btn.notifyEmail') }</Button> */}
                 {/* <Button className='download' onClick={() => donwloadReport()}>下载</Button> */}
                 {/* {
                     status === 1 
@@ -165,7 +162,6 @@ const ReportHeader = (props) => {
                     : <Button disabled={true}>{ t('btn.done') }</Button>
                 } */}
             </div>
-            {showSendEmail && <InvitationModal from="report" email={true} onCancel={() => setSendEmail(false)} />}
         </div>
     )
 };

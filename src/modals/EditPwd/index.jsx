@@ -8,7 +8,8 @@ import { Input } from '@arco-design/web-react';
 import LogoRight from '@assets/logo/info_right';
 import SvgClose from '@assets/logo/close';
 import Bus from '@utils/eventBus';
-
+import { RD_ADMIN_URL } from '@config';
+import { setCookie } from '@utils';
 
 
 const EditPwd = (props) => {
@@ -62,7 +63,9 @@ const EditPwd = (props) => {
                     localStorage.removeItem('open_scene');
                     localStorage.removeItem('open_plan');
                     localStorage.removeItem("package_info");
-                    navigate('/login');
+                    
+                    setCookie('token', '');
+                    window.location.href = `${RD_ADMIN_URL}/#/login`;
                 }
             }
         })

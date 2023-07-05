@@ -8,12 +8,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
+import SvgSendEmail from '@assets/icons/SendEmail';
 import { fetchDeleteReport } from '@services/auto_report';
 import { isArray } from 'lodash';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import cnUS from '@arco-design/web-react/es/locale/zh-CN';
 
 import { DatePicker, ConfigProvider } from '@arco-design/web-react';
+import Bus from '@utils/eventBus';
 const { RangePicker } = DatePicker;
 
 const TReportListHeader = (props) => {
@@ -105,12 +107,17 @@ const TReportListHeader = (props) => {
                 />
 
                 {
-                    selectReport.length > 0 ? <Button
+                    selectReport.length > 0 ? (
+                        <>
+                        <Button className='notice' preFix={<SvgSendEmail width="16" height="16" />} onClick={() => Bus.$emit('openModal', 'Notice', { event_id: 104,batch:true ,options: { report_ids: selectReport.map(item => item.report_id) } })}>{t('btn.batch_notif')}</Button>
+                        <Button
                         className='delete-btn'
                         onClick={() => toDelete()}
                     >
                         {t('btn.delete')}
-                    </Button> : null
+                    </Button>
+                        </>
+                        ) : null
                 }
             </div>
             {/* <div className='report-header-right'>

@@ -104,3 +104,13 @@ export const fetchEditImport = (
 export const fetchCopyScene = (
     params
 ) => ajax('post', '/management/api/v1/auto_plan/clone_scene', 'json', false, params);
+
+// 禁用/启用场景
+export const fetchDisableOrEnableScene = (
+    params
+) => ajax('post', '/management/api/v1/scene/change_disabled_status', 'json', false, params);
+
+// 调试场景内的mysql
+export const fetchRunSceneMysql = (
+    params
+) => ajax('post', '/management/api/v1/scene/send_mysql', 'json', false, params);

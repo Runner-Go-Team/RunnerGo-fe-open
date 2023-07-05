@@ -11,6 +11,7 @@ const useNodeSort = (props) => {
     const { treeData, type, id } = props;
     const dispatch = useDispatch();
     const sceneDatas = useSelector((store) => store.scene.sceneDatas);
+    const mockApiData = useSelector((d) => d.mock.mock_apis);
     const apiDatas = useSelector((store) => store?.apis?.apiDatas);
     const planDatas = useSelector((store) => store.plan.planMenu);
     const autoPlanDatas = useSelector((store) => store.auto_plan.planMenu);
@@ -18,7 +19,8 @@ const useNodeSort = (props) => {
         'apis': apiDatas,
         'scene': sceneDatas,
         'plan': planDatas,
-        'auto_plan': autoPlanDatas
+        'auto_plan': autoPlanDatas,
+        "mock": mockApiData
     };
     const data = dataList[type];
     const project_id = useSelector((store) => store?.workspace?.CURRENT_PROJECT_ID);
@@ -146,7 +148,25 @@ const useNodeSort = (props) => {
                             type: 'apis/updateApiDatas',
                             payload: { ...newDatas },
                         });
-                    } else {
+                    }else if(type === 'mock'){
+                        targetList.forEach((item) => {
+                            newDatas[item.target_id] = {
+                                ...newDatas[item.target_id],
+                                sort: item.sort,
+                                parent_id,
+                            };
+
+                            Bus.$emit('mock/updateOpensById', {
+                                id: item.target_id,
+                                data: { sort: item.sort, parent_id },
+                            });
+                        });
+                        dispatch({
+                            type: 'mock/coverMockApis',
+                            payload: { ...newDatas },
+                        });
+                    } 
+                    else {
                         // dispatch({
                         //     type: 'apis/updateSceneDatas',
                         //     payload: { ...newDatas },
@@ -181,6 +201,10 @@ const useNodeSort = (props) => {
                             ids,
                             targetList,
                             id
+                        })
+                    }else if(type === 'mock'){
+                        Bus.$emit('mock/dragUpdateTarget', {
+                            targetList
                         })
                     }
                 })

@@ -11,12 +11,75 @@ export const MenuWrapper = styled.div`
   flex-direction: column;
   background-color: var(--module);
 
+  div {
+
+    &:hover {
+        &::-webkit-scrollbar-thumb {
+            border-radius: var(--border-radius-default);
+            background: var(--bg);
+        }
+    }
+  }
+
   .menus-header {
     // margin: 0 8px 0 8px;
     border-bottom: 1px solid var(--background-color-3);
     // height: 92px;
     .apistatus {
       border: 0;
+    }
+    .mock-btns{
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      margin-bottom: 16px;
+      .line {
+                border: 1px solid var(--border-line);
+                height: 18px;
+            }
+    .button-list {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &-item {
+            display: flex;
+            align-items: center;
+
+            svg {
+                fill: var(--font-3);
+            }
+    
+            .apipost-btn:hover {
+                background-color: var(--select-hover) !important;
+
+                svg {
+                    background: var(--select-hover) !important;
+                }
+            }
+        }
+
+    }
+      /* .apipost-btn{
+        height: 28px;
+        line-height: 28px;
+        width: 110px;
+      } */
+      /* .apipost-btn-primary{
+        color: var(--common-white);
+        background-color: var(--theme-color);
+      }
+      .apipost-btn-primary:hover{
+        background-color: var(--theme-color);
+      }
+      .apipost-btn-default{
+        border: 1px solid var(--theme-color);
+        color: var(--theme-color);
+      }
+      .apipost-btn-default:hover{
+        background-color: transparent;
+      } */
     }
     .apistatus-current {
       background-color: transparent;

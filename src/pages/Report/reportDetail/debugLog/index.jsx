@@ -30,7 +30,7 @@ const DebugLog = (props) => {
         if (report_id && plan_id) {
 
             getDebug();
-            if (end && tab !== '2') {
+            if (end) {
                 if (setIntervalList) {
                     let _index = setIntervalList.findIndex(item => item === debug_t);
                     setIntervalList.splice(_index, 1);
@@ -108,11 +108,19 @@ const DebugLog = (props) => {
                             {
                                 log.length > 0 ? log.map(item => (
                                     <div className={`debug-log-list-item ${selectApi.uuid === item.uuid ? 'select' : ''}`} onClick={() => {
-                                        dispatch({
-                                            type: 'report/updateDebugRes',
-                                            payload: item
-                                        })
-                                        setSelectApi(item);
+                                        if (selectApi === item) {
+                                            dispatch({
+                                                type: 'report/updateDebugRes',
+                                                payload: null
+                                            })
+                                            setSelectApi(null);
+                                        } else {
+                                            dispatch({
+                                                type: 'report/updateDebugRes',
+                                                payload: item
+                                            })
+                                            setSelectApi(item);
+                                        }
                                     }}>
                                         <div className='left'>
                                             <p className='name'>{item.api_name}：</p>

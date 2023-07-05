@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs as TabComponent, Select } from 'adesign-react';
+import { Select } from 'adesign-react';
 import Authen from '@components/Auth';
 import ScriptBox from '@components/ScriptBox';
 import { isArray, isObject } from 'lodash';
@@ -12,8 +12,11 @@ import Regular from '@components/Request/regular';
 import Setting from '@components/Request/setting';
 import { RequestWrapper } from './style';
 import { useTranslation } from 'react-i18next';
+import { Tabs } from '@arco-design/web-react';
 
-const { Tabs, TabPan } = TabComponent;
+const { TabPane }  = Tabs;
+
+// const { Tabs, TabPan } = TabComponent;
 const Option = Select.Option;
 
 const RequestPanel = (props) => {
@@ -65,31 +68,30 @@ const RequestPanel = (props) => {
     {
       id: '5',
       title: t('apis.assert'),
-      content: <Assert parameter={isArray(data?.assert) ? data.assert : []} onChange={onChange}></Assert>,
+      content: <Assert parameter={isArray(data?.request?.assert) ? data?.request?.assert : []} onChange={onChange}></Assert>,
     },
     {
       id: '6',
       title: t('apis.regular'),
-      content: <Regular parameter={isArray(data?.regex) ? data.regex : []} onChange={onChange}></Regular>,
+      content: <Regular parameter={isArray(data?.request?.regex) ? data?.request?.regex : []} onChange={onChange}></Regular>,
     },
     {
       id: '7',
       title: t('apis.setting'),
-      content: <Setting parameter={isObject(data.http_api_setup) ? data.http_api_setup : {}} onChange={onChange}></Setting>
+      content: <Setting parameter={isObject(data?.request?.http_api_setup) ? data?.request?.http_api_setup : {}} onChange={onChange}></Setting>
     }
   ];
   return (
-    <RequestWrapper style={{ padding: '0 16px', paddingTop: '8px'}}>
-      <Tabs defaultActiveId={ showAssert ? '5' : '3' } itemWidth={80}>
+    <RequestWrapper style={{ padding: '0 16px' }}>
+      <Tabs defaultActiveTab={ showAssert ? '5' : '3' } itemWidth={80}>
         {defaultList.map((d) => (
-          <TabPan
+          <TabPane
             style={{ padding: '0 15px', width: 'auto !impoertant' }}
             key={d.id}
-            id={d.id}
             title={d.title}
           >
             {d.content}
-          </TabPan>
+          </TabPane>
         ))}
       </Tabs>
     </RequestWrapper>

@@ -383,7 +383,7 @@ const TReportDetailResult = (props) => {
                                 Object.entries(checkDetail || {}).length > 0 ?
                                     checkDetail.assertion_msg ?
                                         checkDetail.assertion_msg.map(item => (
-                                            <div className={`assert-container-item ${item.isSucceed ? 'success' : 'fail'}`}>
+                                            <div className={`assert-container-item ${item.is_succeed ? 'success' : 'fail'}`}>
                                                 {item.msg}
                                             </div>
                                         ))

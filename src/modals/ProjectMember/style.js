@@ -7,7 +7,42 @@ export const ProjectMemberModal = css`
     .apipost-modal-header {
         padding: 30px;
     }
-
+    .apipost-modal-body{
+        margin-bottom: 58px;
+        overflow-y: hidden;
+        .search-input{
+            margin-bottom: 8px;
+            .arco-input-group-wrapper{
+                width: 238px;
+                height: 28px;
+                vertical-align: top;
+                .arco-input-inner-wrapper{
+                        background-color: var(--bg) !important;
+                        .arco-input-group-prefix svg {
+                            color: var(--font-1);
+                        }
+                 }
+            }
+        }
+        .arco-table-body{
+            max-height: 49vh;
+        }
+        .arco-table-header::-webkit-scrollbar,
+        .arco-table-header::-webkit-scrollbar-thumb{
+            background: transparent;
+            color: transparent;
+            border-color: transparent;
+            background-color: transparent;
+        }
+        .arco-table-header{
+            background-color: var(--module) !important;
+            margin-bottom: 0;
+            overflow-x: hidden;
+        }
+    }
+    .arco-select-popup{
+        padding: 4px 0 !important;
+    }
     .apipost-table-tr, .apipost-table-th {
         border: none;
     }

@@ -6,6 +6,7 @@ import Bus from '@utils/eventBus';
 import { getCoverData, getFullData, deleteMultiData } from './common';
 import { fetchSceneDetail } from '@services/scene';
 import i18next from 'i18next';
+import { global$ } from '@hooks/useGlobal/global';
 
 export const createApi = ({ params, props }) => {
     Bus.$emit('addOpenItem', { type: 'api', pid: params.target_id });
@@ -46,6 +47,41 @@ export const modifyFolder = async ({target_id}, props, a, from) => {
 export const cloneScene = async ({target_id}, props, a, from, plan_id) => {
     Bus.$emit('cloneScene', target_id, from, plan_id);
 };
+
+export const disableScene = async({target_id}, props, a, from, plan_id) => {
+    Bus.$emit('changeSceneDisable', target_id, 1, () => {
+        Message('success', i18next.t('message.disableSceneSuccess'));
+        if (from === 'plan') {
+            global$.next({
+                action: 'RELOAD_LOCAL_PLAN',
+                id: plan_id
+            })
+        } else if (from === 'auto_plan') {
+            global$.next({
+                action: 'RELOAD_LOCAL_AUTO_PLAN',
+                id: plan_id
+            })
+        }
+    });
+};
+
+export const enableScene = async({target_id}, props, a, from, plan_id) => {
+    Bus.$emit('changeSceneDisable', target_id, 0, () => {
+        Message('success', i18next.t('message.enableSceneSuccess'));
+        if (from === 'plan') {
+            global$.next({
+                action: 'RELOAD_LOCAL_PLAN',
+                id: plan_id
+            })
+        } else if (from === 'auto_plan') {
+            global$.next({
+                action: 'RELOAD_LOCAL_AUTO_PLAN',
+                id: plan_id
+            })
+        }
+    });
+}
+
 export const shareFolder = ({ props, params, showModal }) => {
     Bus.$emit('openModal', 'CreateShare', {
         defaultShareName: params.name,
@@ -141,4 +177,6 @@ export default {
     deleteFolder,
     createGrpc,
     cloneScene,
+    enableScene,
+    disableScene
 };

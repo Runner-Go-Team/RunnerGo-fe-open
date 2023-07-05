@@ -16,7 +16,7 @@ import {
 } from 'adesign-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Handle, MarkerType } from 'react-flow-renderer';
-import { cloneDeep, isNumber } from 'lodash';
+import { cloneDeep, isBoolean, isNumber } from 'lodash';
 import Bus from '@utils/eventBus';
 import SvgSuccess from '@assets/logo/success';
 import SvgFailed from '@assets/logo/failed';
@@ -131,6 +131,8 @@ const Box = (props) => {
     const case_hide = useSelector((store) => store.case.hide_drop);
     const id_now_case = useSelector((store) => store.case.id_now);
     const run_status_case = useSelector((store) => store.case.run_status);
+
+    const scene_env_id = useSelector((store) => store.env.scene_env_id);
 
     const nodes_list = {
         'scene': nodes_scene,
@@ -323,6 +325,8 @@ const Box = (props) => {
     }, [hide_drop]);
 
     const DropContent = () => {
+        const api_now = cloneDeep(id_apis[id]);
+        api_now.id = id;
         return (
             <div className='drop-content'>
                 <p onClick={() => {
@@ -349,7 +353,12 @@ const Box = (props) => {
                         if (id_now === id) {
                             dispatch({
                                 type: 'scene/updateApiConfig',
-                                payload: false
+                                payload: {
+                                    type: 'api',
+                                    status: false,
+                                    id,
+                                    api_now,
+                                }
                             })
                         }
                     } else if (from === 'plan') {
@@ -361,7 +370,12 @@ const Box = (props) => {
                         if (id_now === id) {
                             dispatch({
                                 type: 'plan/updateApiConfig',
-                                payload: false
+                                payload: {
+                                    type: 'api',
+                                    status: false,
+                                    id,
+                                    api_now,
+                                }
                             })
                         }
                     } else if (from === 'auto_plan') {
@@ -373,7 +387,12 @@ const Box = (props) => {
                         if (id_now === id) {
                             dispatch({
                                 type: 'auto_plan/updateApiConfig',
-                                payload: false
+                                payload: {
+                                    type: 'api',
+                                    status: false,
+                                    id,
+                                    api_now,
+                                }
                             })
                         }
                     } else if (from === 'case') {
@@ -385,7 +404,12 @@ const Box = (props) => {
                         if (id_now === id) {
                             dispatch({
                                 type: 'case/updateApiConfig',
-                                payload: false
+                                payload: {
+                                    type: 'api',
+                                    status: false,
+                                    id,
+                                    api_now,
+                                }
                             })
                         }
                     }
@@ -502,7 +526,7 @@ const Box = (props) => {
 
     const Header = () => {
         return (
-            <div className={cn('box-item', { 'white-run-color': theme === 'white' ? status === 'success' || status === 'failed' : false })} style={{ backgroundColor: topBgStyle[status] }}>
+            <div className={cn('box-item', { 'white-run-color': theme === 'white' ? (status === 'success' || status === 'failed') : false })} style={{ backgroundColor: topBgStyle[status] }}>
                 <div className='box-item-left'>
                     <SvgApi />
                     <span className='name'>{id_apis[id] ? id_apis[id]?.name : '新建接口'}</span>
@@ -602,42 +626,33 @@ const Box = (props) => {
 
         if (from === 'scene') {
             dispatch({
-                type: 'scene/updateApiNow',
-                payload: api_now,
-            })
-            dispatch({
                 type: 'scene/updateApiConfig',
-                payload: true
-            })
-            dispatch({
-                type: 'scene/updateIdNow',
-                payload: id,
+                payload: {
+                    type: 'api',
+                    status: true,
+                    id,
+                    api_now
+                }
             })
         } else if (from === 'plan') {
             dispatch({
-                type: 'plan/updateApiNow',
-                payload: api_now,
-            })
-            dispatch({
                 type: 'plan/updateApiConfig',
-                payload: true
-            })
-            dispatch({
-                type: 'plan/updateIdNow',
-                payload: id,
+                payload: {
+                    type: 'api',
+                    status: true,
+                    id,
+                    api_now
+                }
             })
         } else if (from === 'auto_plan') {
             dispatch({
-                type: 'auto_plan/updateApiNow',
-                payload: api_now,
-            })
-            dispatch({
                 type: 'auto_plan/updateApiConfig',
-                payload: true
-            })
-            dispatch({
-                type: 'auto_plan/updateIdNow',
-                payload: id,
+                payload: {
+                    type: 'api',
+                    status: true,
+                    id,
+                    api_now
+                }
             })
             dispatch({
                 type: 'auto_plan/updateShowAssert',
@@ -645,16 +660,13 @@ const Box = (props) => {
             })
         } else if (from === 'case') {
             dispatch({
-                type: 'case/updateApiNow',
-                payload: api_now,
-            })
-            dispatch({
                 type: 'case/updateApiConfig',
-                payload: true
-            })
-            dispatch({
-                type: 'case/updateIdNow',
-                payload: id,
+                payload: {
+                    type: 'api',
+                    status: true,
+                    id,
+                    api_now
+                }
             })
             dispatch({
                 type: 'case/updateShowAssert',
@@ -671,7 +683,7 @@ const Box = (props) => {
                 }, 100);
             } else if (from === 'plan') {
                 setTimeout(() => {
-                    Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan');
+                    Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan', null, scene_env_id);
                 }, 100);
             } else if (from === 'auto_plan') {
                 setTimeout(() => {
@@ -725,7 +737,7 @@ const Box = (props) => {
 
     useEffect(() => {
 
-        if (select_box === id && selectBox === false) {
+        if (select_box === id && !selectBox) {
 
             setSelectBox(true);
         } else if (select_box !== id) {
@@ -991,7 +1003,7 @@ const Box = (props) => {
                                 <div className='box-container'>
                                     <p className='label'>{t('scene.apiAssert')}</p>
                                     <div className='assert-num'>
-                                        <p className='num'>{id_apis[id] ? (id_apis[id].assert ? id_apis[id].assert.length : 0) : 0}</p>
+                                        <p className='num'>{id_apis[id] ? (id_apis[id].request.assert ? id_apis[id].request.assert.length : 0) : 0}</p>
                                         <Button onClick={() => changeApiConfig(id, true)}>
                                             <SvgRight />
                                         </Button>

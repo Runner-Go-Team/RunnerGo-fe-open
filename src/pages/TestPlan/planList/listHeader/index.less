@@ -3,15 +3,32 @@
     justify-content: space-between;
     align-items: center;
     padding-right: 8px;
-    
+
+    .plan-header-left {
+        .notice {
+            margin-left: 8px;
+            margin-right: 0px;
+            background-color: var(--theme-color);
+            height: 30px;
+            border-radius: 2px;
+            color: var(--common-white);
+            svg{
+                margin-right: 5px;
+                fill: var(--common-white);
+            }
+        }
+    }
+
     svg {
         width: 16px;
         height: 16px;
         fill: var(--font-1);
     }
+
     &-left {
         display: flex;
         align-items: center;
+
         .textBox {
             min-width: 216px;
             max-width: 280px;
@@ -25,6 +42,7 @@
                 margin-right: 6px;
             }
         }
+
         .searchBtn {
             height: 25px;
             background-color: var(--log-blue);
@@ -40,7 +58,7 @@
             border-radius: 2px;
             color: var(--common-white);
             margin-left: 8px;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .arco-picker {
@@ -56,6 +74,7 @@
             }
         }
     }
+
     &-right {
         .createBtn {
             min-width: 84px;
@@ -64,6 +83,7 @@
             border-radius: 3px;
             padding: 12px 8px;
             color: #fff;
+
             svg {
                 margin-right: 4px;
                 fill: #fff;

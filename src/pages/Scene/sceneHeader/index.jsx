@@ -22,6 +22,7 @@ import { fetchCreateScene } from '@services/scene';
 import { fetchSaveCase } from '@services/case';
 import { global$ } from '@hooks/useGlobal/global';
 import { v4 } from 'uuid';
+import EnvView from '@components/EnvView';
 
 
 
@@ -197,6 +198,8 @@ const SceneHeader = (props) => {
     const open_scene_name = from === 'plan' ? plan_scene_name : scene_name;
     const open_scene_desc = from === 'plan' ? plan_scene_desc : scene_desc;
 
+    const scene_env_id = useSelector((store) => store.env.scene_env_id);
+
 
     const runScene = () => {
         const { scene_id, target_id } = open_scene;
@@ -366,7 +369,7 @@ const SceneHeader = (props) => {
             Bus.$emit('saveScene', callback);
         } else if (from === 'plan') {
 
-            Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan', callback);
+            Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan', callback, scene_env_id);
         } else if (from === 'auto_plan') {
             Bus.$emit('saveSceneAutoPlan', id, callback);
         } else if (from === 'case') {
@@ -519,6 +522,7 @@ const SceneHeader = (props) => {
         ) : null;
     };
 
+
     return (
         <div className='scene-header'>
             <div className='scene-header-left'>
@@ -622,6 +626,42 @@ const SceneHeader = (props) => {
                 }
             </div>
             <div className='scene-header-right'>
+                {
+                    <EnvView env_id={scene_env_id} from={from} onChange={(key, value) => {
+                        if (key === 'env_id') {
+                            Bus.$emit('changeSceneEnv', value, id_apis, from, (id_apis) => {
+                                setTimeout(() => {
+                                    if (from === 'scene') {
+                                        Bus.$emit('saveScene');
+                                    } else if (from === 'plan') {
+                                        Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan', null, scene_env_id);
+                                    } else if (from === 'auto_plan') {
+                                        Bus.$emit('saveSceneAutoPlan', id);
+                                    } else if (from === 'case') {
+                                        Bus.$emit('saveCase');
+                                    }
+                                }, 100);
+                            });
+                        }
+                        // dispatch({
+                        //     type: 'env/updateSceneEnvId',
+                        //     payload: value
+                        // })
+
+                        // setTimeout(() => {
+                        //     if (from === 'scene') {
+                        //         Bus.$emit('saveScene');
+                        //     } else if (from === 'plan') {
+                        //         Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan', null, scene_env_id);
+                        //     } else if (from === 'auto_plan') {
+                        //         Bus.$emit('saveSceneAutoPlan', id);
+                        //     } else if (from === 'case') {
+                        //         Bus.$emit('saveCase');
+                        //     }
+                        // }, 100);
+                    }} />
+                }
+
                 {
                     !(show_case && Object.entries(open_case || {}).length > 0) && <div className='config' onClick={() => setSceneConfig(true)}>
                         <SvgSetting />

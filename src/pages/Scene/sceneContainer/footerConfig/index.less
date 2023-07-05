@@ -20,9 +20,39 @@
     height: 18px;
   }
 
-  .add-controller {
-    margin-bottom: 20px;
+  .add-pre-condition {
     display: flex;
+    margin-top: 10px;
+    margin-right: 70%;
+
+    .create,
+    .import {
+      min-width: 64px;
+      height: 24px;
+      border-radius: 3px;
+      background-color: var(--border-line);
+      color: var(--font-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--font-1);
+        margin-right: 4px;
+      }
+    }
+
+    .create {
+      margin-right: 8px;
+    }
+  }
+
+  .add-controller {
+    display: flex;
+    margin-top: 10px;
 
     .assert,
     .wait,
@@ -81,7 +111,7 @@
 
   .common-config {
     // width: 360px;
-    min-width: 572px;
+    min-width: 616px;
     height: 32px;
     padding: 8px 10px;
     background: var(--border-line);

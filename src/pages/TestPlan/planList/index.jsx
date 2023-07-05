@@ -10,7 +10,7 @@ import {
 } from 'adesign-react/icons';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { debounce } from 'lodash';
+import { debounce, cloneDeep } from 'lodash';
 import Bus from '@utils/eventBus';
 // import Pagination from '@components/Pagination';
 import SvgEmpty from '@assets/img/empty';
@@ -197,7 +197,7 @@ const TestPlanList = () => {
                 </Tooltip>
                 <Tooltip bgColor="var(--select-hover)" content={t('tooltip.delete')}>
                     <div>
-                        <SvgDelete style={{ fill: '#f00', marginRight: 0 }} onClick={() => {
+                        <SvgDelete style={{ fill: 'var(--table-delete)', marginRight: 0 }} onClick={() => {
                             Modal.confirm({
                                 title: t('modal.look'),
                                 content: t('modal.deletePlan'),
@@ -418,9 +418,32 @@ const TestPlanList = () => {
                     {
                         type: 'checkbox',
                         selectedRowKeys,
-                        onChange: (selectedRowKeys, selectedRows) => {
-                            setSelectedRowKeys(selectedRowKeys);
-                            setSelectPlan(selectedRows);
+                        checkboxProps: (record) => {
+                            return {
+                                onChange:(checked)=>{
+                                    const { plan_id } = record;
+
+                                    let _arr1 = cloneDeep(selectedRowKeys);
+                                    let _arr2 = cloneDeep(selectPlan);
+                                    if (checked) {
+                                        if (!selectedRowKeys.find(item => item === plan_id)) {
+
+                                            _arr1.push(plan_id);
+                                            setSelectedRowKeys(_arr1);
+
+                                            _arr2.push(record);
+                                            setSelectPlan(_arr2);
+                                        }
+                                    } else {
+                                        let index1 = selectedRowKeys.findIndex(item => item === plan_id);
+                                        _arr1.splice(index1, 1);
+                                        setSelectedRowKeys(_arr1);
+                                        let index2 = selectPlan.findIndex(item => item.plan_id === plan_id);
+                                        _arr2.splice(index2, 1);
+                                        setSelectPlan(_arr2);
+                                    }
+                                }
+                            }
                         },
                     }
                 }

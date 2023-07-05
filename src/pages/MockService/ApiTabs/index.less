@@ -1,0 +1,216 @@
+.mock-service-api-manage-wrapper {
+  height: 0;
+  flex: 1;
+
+  &>.apipost-tabs-content {
+    height: 100%;
+  }
+
+  &>.apipost-tabs-header {
+    height: 34px;
+    background-color: var(--bg);
+    // border-bottom: 1px solid var(--border-color-default);
+
+    .extra-panel {
+      margin-bottom: 14px;
+
+      .apipost-btn-default {
+        // background-color: var(--module) !important;
+        // margin-left: 8px;
+      }
+    }
+
+    .apipost-btn {
+      height: 28px;
+      line-height: 28px;
+      width: 28px;
+      background-color: var(--module);
+      margin-left: 8px;
+
+      svg {
+        fill: var(--font-1);
+      }
+    }
+
+    .apipost-btn:hover {
+      background-color: var(--default-button) !important;
+
+      svg {
+        fill: var(--theme-color) !important;
+        background-color: transparent !important;
+      }
+
+    }
+
+    .add-request-btn {
+      padding: 4px !important;
+
+      svg {
+        width: 18px;
+        height: 18px;
+        fill: var(--content-color-primary);
+      }
+    }
+
+    .api-sortable-warper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .apipost-btn:hover,
+    .apipost-btn:focus,
+    .apipost-btn-default:hover,
+    .apipost-btn-default:focus {
+      color: var(--content-color-primary);
+      border-color: 0;
+      background-color: var(--highlight-background-color-tertiary);
+
+      svg {
+        background-color: var(--highlight-background-color-tertiary);
+        fill: var(--content-color-primary);
+      }
+    }
+  }
+}
+
+.api-tab-item {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  position: relative;
+  cursor: pointer;
+  width: 150px;
+  height: 34px;
+  padding-right: 5px;
+  font-size: var(--size-12px);
+  background-color: var(--bg);
+  border-right: 1px solid var(--border-line);
+  border-right-style: calc(2);
+  // border-left: 1px solid transparent;
+  // border-right: 1px solid transparent;
+
+  &.is-sorting {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  &::after {
+    // content: "";
+    // height: 18px;
+    // width: 1px;
+    // background-color: var(--border-color-default);
+    // position: absolute;
+    // right: -2px;
+  }
+
+  .head-title {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin: 0 20px 0 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 16px;
+
+    .method {
+      margin-right: 4px;
+      margin-left: 0;
+    }
+  }
+
+
+  .btn-close {
+    width: 14px;
+    height: 14px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 2px;
+    background-color: transparent;
+    display: none;
+    position: absolute;
+    right: 10px;
+
+    svg {
+      width: 10px;
+      height: 10px;
+      fill: var(--font-1);
+    }
+  }
+
+  &:hover {
+    color: var(--font-1);
+
+    .btn-close {
+      display: flex;
+      color: var(--font-1);
+      background-color: var(--border-line);
+
+      svg {
+        fill: var(--font-1);
+      }
+
+    }
+  }
+
+  .newicon {
+    position: absolute;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    border-radius: 100%;
+    background-color: var(--sub-color-1);
+  }
+
+  &.active {
+    z-index: 999;
+    // border-top: 3px solid var(--base-color-brand);
+    position: relative;
+    color: var(--content-color-primary);
+    background-color: var(--module);
+    border-radius: 5px 5px 0px 0px;
+    border-right: none;
+
+    &::before {
+      content: "";
+      width: 100%;
+      height: 2px;
+      // border-bottom: 1px solid;
+
+      background-image: radial-gradient(65.2% 1878.95% at 47.3% 100%, #3C63EC 0%, rgba(58, 113, 255, 0) 100%);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+
+  :last-child {
+    ::after {
+      display: none;
+    }
+  }
+}
+
+
+
+.apis-tooltip {
+  width: 160px;
+  color: var(--content-color-secondary);
+  ;
+  background-color: var(--background-color-primary);
+  border: 1px solid var(--border-color-default);
+  box-shadow: inset 0 -1px 0 var(--border-color-strong);
+
+  &>div {
+    padding: 3px 0;
+  }
+}

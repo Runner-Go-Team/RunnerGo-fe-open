@@ -16,9 +16,11 @@ import { useParams } from 'react-router-dom';
 import './index.less';
 import { cloneDeep, debounce } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import EnvManage from '@modals/EnvManage';
-import { fetchEnvList, fetchDeleteEnv, fetchCopyEnv } from '@services/env';
+import ServicePreUrl from '@components/ServicePreUrl';
+import { fetchServiceList, fetchDeleteEnv } from '@services/env';
+
 import { Scale } from 'adesign-react';
+
 const { ScalePanel, ScaleItem } = Scale;
 
 import { Dropdown, Menu } from '@arco-design/web-react';
@@ -144,65 +146,37 @@ const ApiURLPanel = (props) => {
 
     const refDropdown = useRef(null);
     const [saveId, setSaveId] = useState(null);
-    const [searchEnv, setSearchEnv] = useState('');
-    const [envList, setEnvList] = useState([]);
+    const [serviceList, setServiceList] = useState([]);
     const [selectId, setSelectId] = useState(0);
 
     const [env, setEnv] = useState('');
 
 
-    const getSearchEnv = debounce((e) => setSearchEnv(e), 500);
-
     useEffect(() => {
-        getEnvList();
-    }, [searchEnv]);
+        if (data && data.request && data.request.env_id) {
+            getServiceList();
+        }
+    }, [data]);
 
-    const getEnvList = () => {
+    const getServiceList = () => {
         const params = {
             team_id: localStorage.getItem('team_id'),
-            name: searchEnv
+            env_id: data ? (data.request ? data.request.env_id : 0) : 0
         };
-        fetchEnvList(params).subscribe({
+        fetchServiceList(params).subscribe({
             next: (res) => {
-                const { data, code } = res;
+                const { data: { service_list }, code } = res;
                 if (code === 0) {
-                    setEnvList(data);
+                    setServiceList(service_list);
                 }
             }
-        })
-    }
-
-    const deleteEnv = (id) => {
-        setPopupVisible(false);
-        const deleteEnvFn = () => {
-            const params = {
-                id,
-                team_id: localStorage.getItem('team_id')
-            };
-            fetchDeleteEnv(params).subscribe({
-                next: (res) => {
-                    const { code } = res;
-                    if (code === 0) {
-                        Message('success', t('message.deleteSuccess'));
-                        getEnvList();
-                    }
-                }
-            })
-        }
-
-        Modal.confirm({
-            title: t('modal.look'),
-            content: t('modal.deleteEnv'),
-            okText: t('btn.ok'),
-            cancelText: t('btn.cancel'),
-            onOk: debounce(() => deleteEnvFn(), 300)
         })
     }
 
     const DropEnv1 = () => {
         return (
             <div className='drop-env'>
-                <Button onClick={() => {
+                {/* <Button onClick={() => {
                     setShowEnv(true);
                     setSelectId(0);
                     setPopupVisible(false);
@@ -213,77 +187,21 @@ const ApiURLPanel = (props) => {
                     onChange={getSearchEnv}
                     beforeFix={<SvgSearch />}
                     placeholder={t('placeholder.searchEnv')}
-                />
+                /> */}
                 <div className='env-list'>
                     <Menu mode='pop'>
                         {
-                            envList.map((item, index) => {
-                                if (item.service_list && item.service_list.length > 0) {
-                                    return (
-                                        <SubMenu triggerProps={{ trigger: "click" }} key={index} title={<div className='env-item'>
-                                            <p className='label'>{item.name}</p>
-                                            <div className='handle'>
-                                                <SvgCopy onClick={() => {
-                                                    const params = {
-                                                        id: item.id,
-                                                        team_id: localStorage.getItem('team_id')
-                                                    };
-                                                    fetchCopyEnv(params).subscribe({
-                                                        next: (res) => {
-                                                            const { code } = res;
-                                                            if (code === 0) {
-                                                                Message('success', t('message.copySuccess'));
-                                                                getEnvList();
-                                                            }
-                                                        }
-                                                    })
-                                                }} />
-                                                <SvgEye onClick={() => {
-                                                    setShowEnv(true);
-                                                    setSelectId(item.id);
-                                                }} />
-                                                <SvgDelete onClick={() => deleteEnv(item.id)} />
-                                            </div>
-                                        </div>}>
-                                            {
-                                                item.service_list &&
-                                                item.service_list.map(elem => (
-                                                    <MenuItem className='services-item' onClick={() => {
-                                                        onChange('pre_url', elem.content);
-                                                        onChange('env_service_id', elem.id);
-                                                        setPopupVisible(false);
-                                                    }}>{elem.name}: {elem.content}</MenuItem>
-                                                ))
-                                            }
-                                        </SubMenu>
-                                    )
-                                }
-                                return <div className='env-item'>
-                                    <p>{item.name}</p>
-                                    <div className='handle'>
-                                        <SvgCopy onClick={() => {
-                                            const params = {
-                                                id: item.id,
-                                                team_id: localStorage.getItem('team_id')
-                                            };
-                                            fetchCopyEnv(params).subscribe({
-                                                next: (res) => {
-                                                    const { code } = res;
-                                                    if (code === 0) {
-                                                        Message('success', t('message.copySuccess'));
-                                                        getEnvList();
-                                                    }
-                                                }
-                                            })
-                                        }} />
-                                        <SvgEye onClick={() => {
-                                            setShowEnv(true);
-                                            setSelectId(item.id);
-                                        }} />
-                                        <SvgDelete onClick={() => deleteEnv(item.id)} />
-                                    </div>
-                                </div>
-                            })
+                            serviceList.map((item, index) => (
+                                <SubMenu triggerProps={{ trigger: "click" }} key={index} title={<div className='env-item'>
+                                    <p className='label'>{item.service_name}</p>
+                                </div>}>
+                                    <MenuItem className='services-item' onClick={() => {
+                                        onChange('pre_url', item.content);
+                                        onChange('env_service_id', item.service_id);
+                                        setPopupVisible(false);
+                                    }}>{item.content}</MenuItem>
+                                </SubMenu>
+                            ))
                         }
                     </Menu>
                 </div>
@@ -299,15 +217,17 @@ const ApiURLPanel = (props) => {
         }
     }, [from]);
 
+    const scene_env_id = useSelector((store) => store.env.scene_env_id);
+
+    console.log(from, data, scene_env_id);
     return (
         <>
             {
                 showEnv && <EnvManage onCancel={() => {
                     setShowEnv(false);
-                    getEnvList();
                 }} select={selectId} />
             }
-            <div className="api-url-panel" style={{ paddingLeft: from === 'apis' ? '16px' : '' }}>
+            <div className="api-url-panel" style={{ paddingLeft: from === 'apis' ? '8px' : '' }}>
                 <div className="api-url-panel-group">
                     <Select
                         className="api-status"
@@ -315,6 +235,7 @@ const ApiURLPanel = (props) => {
                         value={data?.method || 'GET'}
                         onChange={(value) => {
                             onChange('method', value);
+                            onChange('request_method', value);
                         }}
                     >
                         {API_METHODS.map((item) => (
@@ -323,43 +244,44 @@ const ApiURLPanel = (props) => {
                             </Option>
                         ))}
                     </Select>
-                    <ScalePanel
-                        className="flex-style"
-                        defaultLayouts={{ 0: { width: 147, marginLeft: '2px', marginRight: '4px' }, 1: { flex: 1, width: 0 } }}
-                    >
-                        <ScaleItem>
-                            <div className='env-input'>
-                                <Input value={data.request ? data.request.pre_url : ''} onChange={(e) => onChange('pre_url', e)} placeholder={t('placeholder.envBeforeUrl')} />
-                                <Dropdown
-                                    ref={refDropdown}
-                                    placement="br"
-                                    popupVisible={popupVisible}
-                                    onVisibleChange={(visible) => {
-                                        setPopupVisible(visible);
-                                    }}
-                                    droplist={<DropEnv1 />}
-                                >
-                                    <Button className="down-btn" onClick={() => getEnvList()}>
-                                        <SvgDown />
-                                    </Button>
-                                </Dropdown>
-                            </div>
-                        </ScaleItem>
-                        <ScaleItem enableScale={false}>
-                            <UrlInput
+                    {
+                        (
+                            (from === 'apis' || from === 'auto_report') ? (data && data.env_info && data.env_info.env_id) : scene_env_id
+                        )
+                            ?
+                            <ScalePanel
+                                className="flex-style"
+                                defaultLayouts={{ 0: { width: 147, marginLeft: '2px', marginRight: '4px' }, 1: { flex: 1, width: 0 } }}
+                            >
+                                <ScaleItem>
+                                    <ServicePreUrl
+                                        onChange={onChange}
+                                        from={from}
+                                        scene_env_id={scene_env_id}
+                                        env_info={data ? data.env_info : {}}
+                                    />
+                                </ScaleItem>
+                                <ScaleItem enableScale={false}>
+                                    <UrlInput
+                                        placeholder={t('placeholder.apiUrl')}
+                                        onChange={(value) => onChange('url', value)}
+                                        value={data?.url || ''}
+                                    />
+                                </ScaleItem>
+                            </ScalePanel>
+                            : <UrlInput
                                 placeholder={t('placeholder.apiUrl')}
                                 onChange={(value) => onChange('url', value)}
                                 value={data?.url || ''}
                             />
-                        </ScaleItem>
-                    </ScalePanel>
+                    }
 
                 </div>
                 <div style={{ marginLeft: '10px' }} className="btn-send">
                     <Button
                         type="primary"
                         size="middle"
-                        style={{ marginRight: from === 'apis' ? '16px' : '' }}
+                        // style={{ marginRight: from === 'apis' ? '8px' : '' }}
                         disabled={btnName === t('btn.sending')}
                         onClick={() => {
 
@@ -372,9 +294,9 @@ const ApiURLPanel = (props) => {
                                 Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_plan_scene, id, from, () => {
                                     setBtnName(t('btn.sending'));
                                     Bus.$emit('sendSceneApi', open_plan_scene.scene_id || open_plan_scene.target_id, id_now_plan, open_plan_res || {}, 'plan');
-                                });
+                                }, scene_env_id);
                             } else if (from === 'auto_plan') {
-                                Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_auto_plan_scene, id, from, () => {
+                                Bus.$emit('saveSceneAutoPlan',  id, () => {
                                     setBtnName(t('btn.sending'));
                                     Bus.$emit('sendSceneApi', open_auto_plan_scene.scene_id || open_auto_plan_scene.target_id, id_now_auto_plan, open_auto_plan_res || {}, 'auto_plan');
                                 });

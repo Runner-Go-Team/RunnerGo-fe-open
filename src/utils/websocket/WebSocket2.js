@@ -1,6 +1,7 @@
 import { STATIC_TIME } from '@constants/websocket';
 import { onlineStatus } from '@utils/common';
 import Bus, { useEventBus } from '@utils/eventBus';
+import { getCookie } from '@utils';
 
 class WebSocket2 {
   WEB_SOCKET;
@@ -61,14 +62,14 @@ class WebSocket2 {
     try {
       return new Promise((resolve, reject) => {
         const that = this;
-        if (onlineStatus() && localStorage.getItem('runnergo-token')) {
+        if (onlineStatus() && getCookie('token')) {
           if (that.WEB_SOCKET == null) {
             that.WEB_SOCKET = new WebSocket(url);
             that.WEB_SOCKET.onopen = function () {
               that.WEB_SOCKET.send(JSON.stringify({
                 route_url: "start_heartbeat",
                 param: JSON.stringify({
-                  token: localStorage.getItem('runnergo-token')
+                  token: getCookie('token')
                 })
               }));
               that.PingStart();
@@ -149,7 +150,7 @@ class WebSocket2 {
         that.WEB_SOCKET.send(JSON.stringify({
           route_url: "start_heartbeat",
           param: JSON.stringify({
-            token: localStorage.getItem('runnergo-token'),
+            token: getCookie('token'),
             team_id: localStorage.getItem('team_id')
           })
         }));

@@ -18,7 +18,6 @@ import SvgSendEmail from '@assets/icons/SendEmail';
 import SvgStop from '@assets/icons/Stop';
 import SvgTask from '@assets/icons/taskConfig';
 import { useTranslation } from 'react-i18next';
-import InvitationModal from '@modals/ProjectInvitation';
 import { fetchEmailList } from '@services/plan';
 import { fetchTPlanEmailList } from '@services/auto_plan';
 import TestTaskConfig from '@modals/TestTaskConfig';
@@ -238,7 +237,7 @@ const TPlanDetailHeader = (props) => {
                 </div>
                 <div className='detail-header-right'>
                     {/* <Button className='notice' onClick={() => setPreSet(true)}>{t('plan.preinstall')}</Button> */}
-                    <Button className='notice' disabled={planDetail.status === 2} preFix={<SvgSendEmail width="16" height="16" />} onClick={() => setShowEmail(true)}>{t('btn.notifyEmail')}</Button>
+                    <Button className='notice' disabled={planDetail.status === 2} preFix={<SvgSendEmail width="16" height="16" />} onClick={() => Bus.$emit('openModal','Notice',{event_id:103,plan_id ,options:{plan_ids:[plan_id]}})}>{t('btn.notif')}</Button>
                     {
                         planDetail.status === 1
                             ?
@@ -266,10 +265,6 @@ const TPlanDetailHeader = (props) => {
                     }
                 </div>
             </div>
-
-            {
-                showEmail && <InvitationModal from="auto_plan" email={true} onCancel={() => setShowEmail(false)} />
-            }
             {
                 showTaskConfig && <TestTaskConfig plan_id={plan_id} onCancel={() => setTaskConfig(false)} />
             }

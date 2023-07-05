@@ -1,0 +1,84 @@
+.sql-db-info {
+    background-color: var(--bg);
+    margin-bottom: 40px;
+    
+    &-header {
+        padding: 16px 8px 16px 0;
+        background-color: var(--module);
+        display: flex;
+        justify-content: space-between;
+
+        &-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: var(--font-1);
+
+            .title {
+                font-size: 16px;
+            }
+
+            .select-db {
+                display: flex;
+                margin-top: 10px;
+                align-items: center;
+
+                .label {
+                    font-size: 14px;
+                    white-space: nowrap;
+                }
+
+                .arco-select {
+                    margin-left: 6px;
+                    width: 232px;
+                    height: 32px;
+                }
+            }
+        }
+
+        &-right {
+            .arco-btn {
+                width: 144px;
+                height: 40px;
+                background-color: var(--theme-color);
+                color: var(--common-white);
+                border-radius: 5px;
+            }
+
+            .arco-btn:hover {
+                background-color: var(--theme-color) !important;
+                color: var(--common-white) !important;
+            }
+        }
+    }
+
+    &-container {
+        margin-top: 2px;
+        background-color: var(--module);
+        padding-top: 16px;
+        color: var(--font-1);
+
+        .title {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .item {
+            display: flex;
+            margin-bottom: 4px;
+            align-items: center;
+
+            .label {
+                font-size: 14px;
+                min-width: 74px;
+                margin-right: 16px;
+            }
+
+            .arco-input {
+                width: 379px;
+                height: 32px;
+                background-color: var(--scene-api-line);
+            }
+        }
+    }
+}

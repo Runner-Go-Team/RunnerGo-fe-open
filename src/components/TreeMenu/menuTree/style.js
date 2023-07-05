@@ -4,12 +4,14 @@ import { css } from '@emotion/css';
 export const MenuTreeNode = styled.div`
   & .btn-more {
     display: none;
+    margin-left: 8px;
+    background-color: transparent !important;
   }
   &:hover {
     // background: var(--highlight-background-color-secondary);
     .btn-more {
       display: flex;
-      background-color: var(--select-hover);
+      background-color: transparent;
     }
   }
   .tree-node-inner {
@@ -23,6 +25,9 @@ export const MenuTreeNode = styled.div`
 
     svg {
       fill: var(--font-3);
+    }
+    .mock-btn-open{
+      /* fill:var(--scene-border) */
     }
   }
 
@@ -58,6 +63,9 @@ export const MenuTreeNode = styled.div`
 
     .apipost-btn {
         background-color: var(--border-line);
+    }
+    .btn-more{
+      display: flex;
     }
 }
 `;

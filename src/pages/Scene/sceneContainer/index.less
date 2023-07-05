@@ -109,25 +109,28 @@
         // width: 84px;
         height: 25px;
         padding: 8px;
-        background-color: rgba(76, 203, 126, 0.2);
-        border: 1px solid var(--sub-color-1);
-        color: var(--font-1);
-        margin-right: 20px;
+        background-color: var(--sub-color-1-10);
+        border: none;
+        color: var(--sub-color-1);
+        // margin-right: 20px;
 
         svg {
           width: 14px;
           height: 14px;
+          fill: var(--sub-color-1);
         }
       }
 
       .stopBtn {
-        background-color: rgba(237, 120, 71, 0.1);
-        border: 1px solid var(--sub-color-4);
+        background-color: var(--sub-color-4-10);
+        border: none;
         border-radius: 3px;
+        color: var(--sub-color-4);
 
         svg {
           width: 14px;
           height: 14px;
+          fill: var(--sub-color-4);
         }
       }
 
@@ -151,4 +154,68 @@
 .full-screen-container {
   width: 100%;
   height: 100%;
+}
+
+.mysql-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+
+  .left {
+    display: flex;
+    align-items: center;
+
+    .close-btn {
+      margin-right: 30px;
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      border-radius: 3px;
+      background-color: var(--border-line);
+
+      svg {
+        width: 8px;
+        height: 8px;
+        fill: var(--font-1);
+      }
+    }
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+
+    .run-btn {
+      background-color: var(--sub-color-1-10);
+      border: none;
+      color: var(--sub-color-1);
+      min-width: 58px;
+      min-height: 26px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--sub-color-1);
+        margin-right: 4px;
+      }
+    }
+
+    .save-btn {
+      background-color: var(--theme-20);
+      border: 1px solid var(--theme-color);
+      color: var(--font-1);
+      min-width: 60px;
+      min-height: 26px;
+      margin-left: 10px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--font-1);
+      }
+    }
+  }
 }

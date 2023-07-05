@@ -12,20 +12,11 @@ import {
     Save as SvgSave,
     CaretRight as SvgCaretRight
 } from 'adesign-react/icons';
-import SvgStop from '@assets/icons/Stop';
 import { useTranslation } from 'react-i18next';
-import SvgClose from '@assets/logo/close';
-import CaseBox from "./CaseBox";
-import CaseFooterConfig from "./footerConfig";
-import ApiPicker from './apiPicker';
 import { getPathExpressionObj } from '@constants/pathExpression';
 import { useSelector, useDispatch } from 'react-redux';
-import ApiManage from '@pages/ApisWarper/modules/ApiManage';
-import { fetchSceneList } from '@services/scene';
 import { useParams } from 'react-router-dom';
 import Bus from '@utils/eventBus';
-
-import { Table } from '@arco-design/web-react';
 
 
 const CaseList = (props) => {
@@ -135,22 +126,22 @@ const CaseList = (props) => {
 
         dispatch({
             type: 'auto_plan/updateApiConfig',
-            payload: false
+            payload: {}
         })
 
         dispatch({
             type: 'plan/updateApiConfig',
-            payload: false
+            payload: {}
         })
 
         dispatch({
             type: 'scene/updateApiConfig',
-            payload: false
+            payload: {}
         })
 
         dispatch({
             type: 'case/updateApiConfig',
-            payload: false
+            payload: {}
         })
 
         if (style) {

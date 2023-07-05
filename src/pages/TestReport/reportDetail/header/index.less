@@ -42,9 +42,10 @@
                 min-width: 52px;
                 min-height: 21px;
 
-                background-color: var(--select);
+                background-color: var(--sub-color-1-10);
                 border-radius: 3px;
-                color: var(--run-green);
+               color: var(--sub-color-1);
+               border: 1px solid var(--sub-color-1);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -84,16 +85,19 @@
     .right {
         
         .notice {
-            height: 26px;
-            background-color: var(--default-button);
+            height: 32px;
+            background-color: var(--theme-color);
             border-radius: 3px;
-            min-width: 98px;
-            color: var(--font-1);
-            border: 1px solid var(--theme-color);
+            // min-width: 98px;
+            color: var(--common-white);
             svg {
-                fill: var(--font-1);
+                fill: var(--common-white);
                 margin-right: 5px;
             }
+        }
+        .notice:hover{
+            color: var(--common-white);
+            background-color: var(--theme-color);
         }
     }
 }

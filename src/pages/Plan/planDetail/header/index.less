@@ -127,16 +127,25 @@
     }
 
     .notice {
-      height: 25px;
-      background: var(--default-button);
-      border: 1px solid var(--theme-color);
+      height: 32px;
+      background: var(--theme-color);
       border-radius: 3px;
       padding: 8px;
+      color: var(--common-white);
+
+      svg {
+        fill: var(--common-white);
+      }
+    }
+
+    .notice:hover {
+      color: var(--common-white);
+      background-color: var(--theme-color);
     }
 
     .save {
       width: 60px;
-      height: 25px;
+      height: 32px;
       background: var(--log-blue);
       border-radius: 3px;
       padding: 8px;
@@ -144,22 +153,21 @@
 
     .run {
       width: 84px;
-      height: 25px;
-      background: var(--run);
-      border: 1px solid var(--sub-color-1);
+      height: 32px;
+      background: var(--sub-color-1);
       border-radius: 3px;
       padding: 8px;
-      color: var(--font-1);
+      color: var(--common-white);
 
       svg {
-        fill: var(--font-1);
+        fill: var(--common-white);
       }
     }
 
     .stop {
       width: 84px;
-      height: 25px;
-      background: var(--delete-red);
+      height: 32px;
+      background: var(--sub-color-4);
       border-radius: 3px;
       padding: 8px;
       color: var(--common-white);

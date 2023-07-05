@@ -1,10 +1,18 @@
 import { isArray, isNumber } from 'lodash';
 import React, { useCallback, useEffect, useRef } from 'react';
 import produce from 'immer';
+import { useMemoizedFn } from 'apt-hooks';
 import ItemNode from '../itemNode';
 
+// interface OneOfItemProps {
+//   deepIndex: number;
+//   nodeValue: any;
+//   onChange: (nodeKey: string, val: any) => void;
+//   parentModels: React.MutableRefObject<string[]>;
+// }
+
 const OneOfItem = (props) => {
-  const { deepIndex, nodeValue, onChange } = props;
+  const { deepIndex, nodeValue, onChange, parentModels } = props;
 
   // 修改数据时，保证能取到最新值
   const refData = useRef(null);
@@ -13,13 +21,13 @@ const OneOfItem = (props) => {
   }, [nodeValue]);
 
   // 修改内容
-  const handleChange = useCallback((attrName, newVal) => {
-    const preData = refData.current;
+  const handleChange = useMemoizedFn((attrName, newVal) => {
+    const preData = isArray(nodeValue?.oneOf) ? nodeValue.oneOf : [];
     const newData = produce(preData, (draft) => {
       draft[attrName] = newVal;
     });
     onChange('oneOf', newData);
-  }, []);
+  });
 
   // 删除属性
   const handleDeleteNode = useCallback((removeIndex) => {
@@ -35,6 +43,13 @@ const OneOfItem = (props) => {
 
   const dataList = isArray(nodeValue?.oneOf) ? nodeValue.oneOf : [];
 
+  const handleAddSiblingNode = useMemoizedFn((nodeKey) => {
+    const newData = produce(dataList, (draft) => {
+      draft.splice(nodeKey + 1, 0, { type: 'string' });
+    });
+    onChange('oneOf', newData);
+  });
+
   return (
     <>
       {dataList.map((item, index) => (
@@ -48,6 +63,8 @@ const OneOfItem = (props) => {
             onNodeKeyChange: () => void 0,
             onChange: handleChange,
             onDeleteNode: handleDeleteNode,
+            onAddSiblingNode: handleAddSiblingNode,
+            parentModels,
           }}
         />
       ))}

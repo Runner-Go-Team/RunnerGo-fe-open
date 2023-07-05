@@ -1,0 +1,71 @@
+.ws-manage-request {
+    padding: 8px;
+    box-sizing: border-box;
+    margin-top: 2px;
+    flex: 1;
+    background-color: var(--module);
+    height: 100%;
+
+    .apipost-tabs {
+        height: 100%;
+    }
+
+    .apipost-table-td {
+        border-color: var(--border-line) !important;
+    }
+
+    .apipost-table-th {
+        .apipost-table-td {
+            .apipost-table-cell {
+                background-color: var(--bg);
+            }
+        }
+    }
+
+    .apipost-table-tr {
+        .apipost-table-td {
+            background-color: var(--module) !important;
+
+            svg {
+                fill: var(--font-1);
+            }
+
+            .apipost-input-inner-wrapper:hover {
+                background-color: var(--select-hover) !important;
+            }
+        }
+    }
+
+    .apipost-table-td {
+        color: var(--font-1);
+        height: 24px;
+
+        .apipost-table-cell {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            height: 24px;
+            font-size: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .apipost-input-inner-wrapper {
+                height: 24px;
+            }
+
+            .apipost-select {
+                height: 24px;
+            }
+
+            .apipost-textarea-wrapper,
+            .apipost-textarea {
+                width: 100%;
+            }
+        }
+    }
+
+    .apipost-tabs-header {
+        margin-bottom: 8px;
+    }
+}

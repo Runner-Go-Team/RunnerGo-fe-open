@@ -1,0 +1,66 @@
+.user-card {
+    // width: 192px;
+    min-width: 164px;
+    height: 232px;
+    border-radius: 5px;
+    background: var(--module);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    p{
+      padding: 10px 2px 0 2px;
+      cursor: pointer;
+    }
+    .line {
+      height: 0px;
+      border-bottom: 1px solid var(--border-line);
+      padding-top: 10px;
+    }
+  
+    .user_info {
+      display: flex;
+      align-items: center;
+  
+      .l {
+        img {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+        }
+      }
+  
+      .r {
+        margin-left: 8px;
+        .name {
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+          font-weight: 600;
+          .name-text{
+            // min-width: 36px;
+            margin-right: 10px;
+          }
+          .role {
+            height: 21px;
+            background: var(--theme-10);
+            border: 1px solid var(--theme-color);
+            border-radius: 3px;
+            color: var(--theme-color);
+            padding: 0 4px;
+            font-size: 12px;
+            font-weight: 400;
+            text-align: center;
+            line-height: 21px;
+          }
+        }
+  
+        .email {
+          margin-top: 4px;
+          max-width: 180px;
+        }
+      }
+    }
+    .languageActive{
+      color: var(--theme-color);
+    }
+  }
+  

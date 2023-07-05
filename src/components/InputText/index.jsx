@@ -33,8 +33,8 @@ const InputText = (props) => {
         <div className="input-text-component">
             {
                 showInput ?
-                    <Input ref={inputRef} showWordLimit disabled={disabled} placeholder={placeholder} maxLength={maxLength} value={text} onChange={(e) => setText(e)} onBlur={() => {
-                        if (isFunction(onChange)) {
+                    <Input autoFocus ref={inputRef} showWordLimit disabled={disabled} placeholder={placeholder} maxLength={maxLength} value={text} onChange={(e) => setText(e)} onBlur={() => {
+                        if (isFunction(onChange) && text !== value) {
                             onChange(text);
                             toggleView()
                         }

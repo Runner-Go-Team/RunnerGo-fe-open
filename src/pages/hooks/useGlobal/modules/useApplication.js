@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { of } from 'rxjs';
+import { of, lastValueFrom } from 'rxjs';
 import { tap, filter, concatMap, map, switchMap, mergeMap, catchError } from 'rxjs/operators';
 import { getUserConfig$, getProjectUserList$, getIndexPage$, getRunningPlan$ } from '@rxUtils/user';
 import { getUserTeamList$ } from '@rxUtils/team';
@@ -14,7 +14,7 @@ import { getReportList$ } from '@rxUtils/runner/testReports';
 import { getLocalTargets } from '@busLogics/projects';
 import { useEventCallback } from 'rxjs-hooks';
 import { getLocalEnvsDatas } from '@rxUtils/env';
-import { isArray, isPlainObject, cloneDeep, concat } from 'lodash';
+import { isArray, isPlainObject, cloneDeep, concat, isString } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { webSocket } from '@utils/websocket/websocket';
 import WebSocket2 from '@utils/websocket/WebSocket2';
@@ -22,6 +22,7 @@ import WebSocket2 from '@utils/websocket/WebSocket2';
 import { isElectron } from '@utils';
 import { APP_VERSION } from '@config/base';
 import { fetchTeamMemberList, fetchTeamList, fetchUserConfig } from '@services/user';
+import { fetchGetMockPreUrl } from '@services/mock';
 import Bus, { useEventBus } from '@utils/eventBus';
 import { useNavigate } from 'react-router-dom';
 import { getSceneList$ } from '@rxUtils/scene';
@@ -32,17 +33,22 @@ import { fetchDashBoardInfo, fetchRunningPlan } from '@services/dashboard';
 import { fetchApiList } from '@services/apis';
 import { fetchTeamPackage } from '@services/pay';
 import { useLocation } from 'react-router-dom';
-
+import { getCookie } from '@utils';
+import { useTranslation } from 'react-i18next';
+import { getUserAllPermissionMarks } from '@services/permission';
 
 import { global$ } from '../global';
 import { Message } from 'adesign-react';
 
-const useProject = () => {
+const useProject = (props) => {
+    const {refGlobal}=props;
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const userInfo = useSelector((store) => store.user.userInfo);
     const apiDatas = useSelector((store) => store.apis.apiDatas);
+    const CURRENT_TEAM_ID = useSelector((store) => store?.user?.team_id);
     const location = useLocation();
+    const { t, i18n } = useTranslation();
     const ws = useSelector((store) => store.websocket.ws);
     // const userData = useSelector((store) => store.dashboard.userData);
 
@@ -109,12 +115,17 @@ const useProject = () => {
     }
 
     // 展示用户配置信息
-    const handleInitUserConfig = ({ data: { settings, user_info } }) => {
+    const handleInitUserConfig = ({ data  }) => {
+        const { settings, user_info } = data;
         if (user_info) {
             dispatch({
                 type: 'user/updateUserInfo',
                 payload: user_info
             })
+            dispatch({
+                type: 'user/updateConfig',
+                payload: data,
+            });
         }
     };
 
@@ -156,42 +167,35 @@ const useProject = () => {
             type: 'apis/recoverApiDatas',
         });
 
-        const ininTheme = (userConfig) => {
-            // 用户配置放入redux中
-            isPlainObject(userConfig?.config) &&
-                dispatch({
-                    type: 'user/updateConfig',
-                    payload: userConfig.config,
-                });
-            let linkThemeName = '';
-            const theme_color = localStorage.getItem('theme_color');
-
-            if (theme_color) {
-                linkThemeName = theme_color;
-                dispatch({
-                    type: 'user/updateTheme',
-                    payload: theme_color
-                })
-            } else {
-                linkThemeName = 'dark'
-            }
-
-
-            if (theme_color === 'dark' || !theme_color) {
-                document.body.setAttribute('arco-theme', 'dark');
-            } else if (theme_color === 'white') {
-                document.body.removeAttribute('arco-theme');
-            }
-
-            const url = `/skins/${linkThemeName}.css`;
-            document.querySelector(`link[name="apt-template-link"]`).setAttribute('href', url);
-        };
 
         const initLanguage = () => {
-            const language = localStorage.getItem('i18nextLng');
+            // const language = localStorage.getItem('i18nextLng');
+            const language = getCookie('i18nextLng') || 'cn';
+            i18n.changeLanguage(language);
             dispatch({
                 type: 'user/updateLanGuaGe',
                 payload: language
+            })
+        }
+
+        const initPermission = () => {
+            getUserAllPermissionMarks().subscribe({
+                next: (res) => {
+                    const { code, data: { company, teams } } = res;
+
+                    if (code === 0) {
+                        const companyMarks = Object.values(company)[0] || [];
+                        const teamMarks = teams || {};
+
+                        dispatch({
+                            type: 'permission/updatePermission',
+                            payload: {
+                                companyPermissions: isArray(companyMarks) ? companyMarks : [],
+                                teamPermissions: isPlainObject(teamMarks) ? teamMarks : {},
+                            }
+                        })
+                    }
+                }
             })
         }
 
@@ -199,11 +203,10 @@ const useProject = () => {
         return getUserConfig$().pipe(
             tap(handleInitUserConfig),
             concatMap((userConfig) => {
-                // 初始化主题色
-                ininTheme(userConfig);
                 initLanguage();
                 // getPackageInfo();
                 getTeamMemberList();
+                initPermission();
                 Bus.$emit('getTeamList');
                 Bus.$emit('initWebSocket');
                 Bus.$emit('reloadOpens');
@@ -235,6 +238,7 @@ const useProject = () => {
                                 id: _pathname[3]
                             })
                         }
+                        Bus.$emit('mock/getMockList')
                     }),
                 );
             })
@@ -384,7 +388,7 @@ const useProject = () => {
             }
         })
     }
-
+   
     useEventBus('getTeamMemberList', getTeamMemberList);
     useEventBus('getTeamList', getTeamList);
     useEventBus('getRunningPlan', getRunningPlan);
@@ -392,6 +396,19 @@ const useProject = () => {
     useEventBus('sendWsMessage', sendWsMessage, [ws]);
     useEventBus('closeWs', closeWs, [ws]);
     useEventBus('initWebSocket', initWebSocket);
+    useEffect(() => {
+        if (CURRENT_TEAM_ID && CURRENT_TEAM_ID != null) {
+            lastValueFrom(fetchGetMockPreUrl({ team_id: CURRENT_TEAM_ID })).then((res) => {
+                if (res?.code == 0 && isString(res?.data?.http_pre_url)) {
+                    dispatch({
+                        type: 'user/updateMockUrl',
+                        payload: res?.data?.http_pre_url
+                    })
+                }
+            })
+        }
+
+    }, [CURRENT_TEAM_ID])
 
     useEffect(() => {
 

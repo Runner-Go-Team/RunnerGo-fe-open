@@ -62,21 +62,24 @@
         overflow: scroll;
 
         .select {
-            background-color: var(--theme-10);
+            background-color: var(--bg);
         }
 
         &-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 7px 40px;
+            padding: 10px 40px;
             box-sizing: border-box;
             width: 100%;
             font-size: 14px;
-            margin-bottom: 8px;
-            background-color: var(--border-line);
+            margin-bottom: 10px;
             border-radius: 2px;
             cursor: pointer;
+
+            &:hover {
+                background-color: var(--bg);
+            }
 
             .left {
                 display: flex;

@@ -54,11 +54,23 @@ export const USE_OSS = false;
 export const RD_FileURL = 'file-server服务的地址';
 ```
 
-### 配置后端服务地址
+### 配置服务地址
 
-在根目录的config文件夹中的server文件中
+#### config/client
 
-**http**
+**主要用于存储cookie**
+
+```js
+    const FE_Host = {
+        development: '',
+        test: '测试环境主域',
+        production: '线上环境主域',
+    };
+```
+
+#### config/server
+
+**http接口**
 
 ```js
     const RD_BaseURL = {
@@ -68,7 +80,7 @@ export const RD_FileURL = 'file-server服务的地址';
     };
 ```
 
-**websocket**
+**websocket接口**
 
 ```js
     const RD_websocketUrl = {
@@ -77,6 +89,17 @@ export const RD_FileURL = 'file-server服务的地址';
         production: '线上环境地址'
     };
 ```
+
+**后台权限系统地址(主要用于工作台和后台的跳转)**
+
+```js
+    const RD_AdminURL = {
+        development: '后台开发环境地址',
+        test: '后台测试环境地址',
+        production: '后台线上环境地址',
+    };
+```
+
 
 ## 技术栈
 

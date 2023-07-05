@@ -5,9 +5,6 @@ import {
     CaretLeft as SvgCaretLeft,
     CaretRight as SvgCaretRight,
     Apis as SvgHttp,
-    Mock as SvgMarkdown,
-    WS as SvgWebsocket,
-    Console as SvgGrpc,
 } from 'adesign-react/icons';
 import SvgClose from '@assets/apis/close.svg';
 import { isFunction, isUndefined } from 'lodash';
@@ -19,6 +16,12 @@ import MoreMenu from './moreMenu';
 import HeadTabs from './headTabs';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
+import SvgSql from '@assets/icons/sql';
+import SvgOracle from '@assets/icons/oracle';
+import SvgTcp from '@assets/icons/tcp';
+import SvgWs from '@assets/icons/websocket';
+import SvgMqtt from '@assets/icons/mqtt';
+import SvgDubbo from '@assets/icons/dubbo';
 
 const { Tabs, TabPan } = TabComponents;
 const ApiTabs = (props) => {
@@ -105,7 +108,7 @@ const ApiTabs = (props) => {
 
     const renderHeaderPanel = ({ renderScrollItems = () => { }, handleMouseWheel }) => {
         return (
-                apiList.length ? <div className="apipost-tabs-header" onWheel={handleMouseWheel}>
+            apiList.length ? <div className="apipost-tabs-header" onWheel={handleMouseWheel}>
                 {renderScrollItems(HeadTabsList)}
                 <div className="extra-panel">
                     <AddMenu />
@@ -123,16 +126,72 @@ const ApiTabs = (props) => {
 
     const emptyContent = (
         <div className="welcome-page">
-            <div className="newTarget">
-                <Button
-                    type="primary"
-                    onClick={() => {
-                        Bus.$emit('addOpenItem', { type: 'api' });
-                    }}
-                >
-                    <SvgHttp />
-                    <h3>{t('apis.createHttp')}</h3>
-                </Button>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="newTarget" style={{ justifyContent: 'flex-start' }}>
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            Bus.$emit('addOpenItem', { type: 'api' });
+                        }}
+                    >
+                        <SvgHttp />
+                        <h3>{t('apis.createHttp')}</h3>
+                    </Button>
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            Bus.$emit('addOpenItem', { type: 'sql' });
+                        }}
+                    >
+                        <SvgSql />
+                        <h3>{t('apis.createSql')}</h3>
+                    </Button>
+                    {/* <Button
+                        type="primary"
+                        onClick={() => {
+                            Bus.$emit('addOpenItem', { type: 'oracle' });
+                        }}
+                    >
+                        <SvgOracle />
+                        <h3>{t('apis.createOracle')}</h3>
+                    </Button> */}
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            Bus.$emit('addOpenItem', { type: 'tcp' });
+                        }}
+                    >
+                        <SvgTcp />
+                        <h3>{t('apis.createTcp')}</h3>
+                    </Button>
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            Bus.$emit('addOpenItem', { type: 'websocket' });
+                        }}
+                    >
+                        <SvgWs />
+                        <h3>{t('apis.createWs')}</h3>
+                    </Button>
+                    {/* <Button
+                        type="primary"
+                        onClick={() => {
+                            Bus.$emit('addOpenItem', { type: 'mqtt' });
+                        }}
+                    >
+                        <SvgMqtt />
+                        <h3>{t('apis.createMqtt')}</h3>
+                    </Button> */}
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            Bus.$emit('addOpenItem', { type: 'dubbo' });
+                        }}
+                    >
+                        <SvgDubbo />
+                        <h3>{t('apis.createDubbo')}</h3>
+                    </Button>
+                </div>
             </div>
         </div>
     );

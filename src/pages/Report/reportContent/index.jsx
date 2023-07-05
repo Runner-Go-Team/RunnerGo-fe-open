@@ -86,7 +86,7 @@ const ReportContent = () => {
 
     useEffect(() => {
         if (report_info) {
-            const { report: { plan_name, report_name, plan_id, task_mode, control_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, scene_name, change_take_conf } } = report_info;
+            const { report: { plan_name, report_name, plan_id, task_mode, control_mode, task_type, mode_conf, user_name, user_avatar, created_time_sec, task_status, scene_name, change_take_conf, is_open_distributed, machine_allot_type } } = report_info;
             setPlanId(plan_id);
             setCreateTime(created_time_sec);
             setHeaderData({
@@ -106,6 +106,8 @@ const ReportContent = () => {
                 plan_id,
                 control_mode,
                 change_take_conf,
+                is_open_distributed,
+                machine_allot_type
             });
             setReportStatus(task_status);
             if (task_status === 2) {

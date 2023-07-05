@@ -12,7 +12,6 @@ import {
     Down as SvgDown
 } from 'adesign-react/icons';
 import avatar from '@assets/logo/avatar.png'
-import InvitationModal from '@modals/ProjectInvitation';
 import ProjectMember from '@modals/ProjectMember';
 import TeamworkLogs from '@modals/TeamworkLogs';
 import InfoManage from '@modals/InfoManage';
@@ -27,7 +26,13 @@ import InvitateSuccess from '@modals/InvitateSuccess';
 import RunningShow from './runningShow';
 import GlobalConfig from './globalConfig';
 import { Dropdown, Tooltip } from '@arco-design/web-react';
+import { IconSunFill, IconMoonFill } from '@arco-design/web-react/icon';
 import Bus from '@utils/eventBus';
+import { RD_ADMIN_URL } from '@config';
+import { setCookie } from '@utils';
+import AddInternalMember from '@modals/AddInternalMember';
+import UserCard from '@components/UserCard';
+import cn from 'classnames';
 
 const HeaderRight = () => {
     const [showModal, setShowModal] = useState(false);
@@ -43,15 +48,9 @@ const HeaderRight = () => {
 
     const [outsideClose, setOutsideClose] = useState(true);
 
-    const [showInvitate, setShowInvitate] = useState(false);
-
-    const [addLength, setAddLength] = useState(0);
-    const [unRegister, setUnRegister] = useState(0);
-    const [unEmail, setUnEmail] = useState(0);
 
     const teamMember = useSelector((store) => store.teams.teamMember);
     const navigate = useNavigate();
-    const refDropdown = useRef();
     const refMenu = useRef();
     const dispatch = useDispatch();
     const theme = useSelector((store) => store.user.theme);
@@ -81,39 +80,9 @@ const HeaderRight = () => {
     const RenderMemberList = () => {
         return (
             <Dropdown
-                ref={refDropdown}
-                position="br"
+                position="bl"
                 trigger="click"
-                droplist={
-                    <div className='user-home'>
-                        <p className='name'>{userInfo.nickname}</p>
-                        <p className='email'>{userInfo.email}</p>
-                        <Button className='person-page' preFix={<SvgUserhome />} onClick={() => {
-                            // refDropdown.current.setPopupVisible(false);
-                            setShowInfo(true);
-                        }}>{t('header.myInfo')}</Button>
-                        <div className='line'></div>
-                        <div className='person-drop'>
-                            <div className='person-drop-item' onClick={() => {
-                                window.open('https://rhl469webu.feishu.cn/docx/Rr0cdBuVUoskdkxE5t6cUo9vnOe', '_blank');
-                                refDropdown.current.setPopupVisible(false);
-                            }}>
-                                <SvgDocs />
-                                <span>{t('header.doc')}</span>
-                            </div>
-                            <div onClick={() => {
-                                refDropdown.current.setPopupVisible(false);
-                            }}>
-                                <Tooltip content={<img style={{ width: '200px', height: '200px' }} src="https://apipost.oss-cn-beijing.aliyuncs.com/kunpeng/qrcode/qiyezhuanshukefu.png" />}>
-                                    <div className='person-drop-item'>
-                                        <SvgCustomer />
-                                        <span>{t('header.customer')}</span>
-                                    </div>
-                                </Tooltip>
-                            </div>
-                        </div>
-                    </div>
-                }
+                droplist={<UserCard setShowInfo={setShowInfo}/>}
             >
                 <div>
                     <div className='person-avatar'>
@@ -135,9 +104,26 @@ const HeaderRight = () => {
         localStorage.removeItem('open_plan');
         localStorage.removeItem("package_info");
         // localStorage.clear();
-        navigate('/login');
+        setCookie('token', '');
+        window.location.href = `${RD_ADMIN_URL}/#/login`;
         Message('success', t('message.quitSuccess'));
     };
+
+    const changeTheme = (color) => {
+        const url = `/skins/${color}.css`;
+        document.querySelector(`link[name="apt-template-link"]`).setAttribute('href', url);
+        localStorage.setItem('theme_color', color);
+        setCookie('theme', color);
+        dispatch({
+            type: 'user/updateTheme',
+            payload: color
+        });
+        if (color === 'dark') {
+            document.body.setAttribute('arco-theme', 'dark');
+        } else {
+            document.body.removeAttribute('arco-theme');
+        }
+    }
 
     return (
         <div className='header-right'>
@@ -152,19 +138,23 @@ const HeaderRight = () => {
             <Button className='invite' preFix={<SvgInvite />} onClick={() => setShowModal(true)}>{t('header.invitation')}</Button>
             <div className='more-btn'>
                 <Button className='handle-log' onClick={() => setShowLog(true)}>{t('header.handleLog')}</Button>
-                <Button className='handle-log' preFix={<SvgLogout />} onClick={() => loginOut()}>{t('header.signOut')}</Button>
+                {/* <Button className='handle-log' preFix={<SvgLogout />} onClick={() => loginOut()}>{t('header.signOut')}</Button> */}
             </div>
-            {showModal && <InvitationModal onCancel={({ addLength, unRegister, unEmail }) => {
+            <div className="theme">
+                <span onClick={() => changeTheme('white')} className={cn({
+                    active: theme == 'white'
+                })}>
+                    <IconSunFill style={{ 'color': 'var(--icon-sun-color)' }} />
+                </span>
+                <span onClick={() => changeTheme('dark')} className={cn({
+                    active: theme == 'dark'
+                })} >
+                    <IconMoonFill style={{ 'color': 'var(--icon-moon-color)' }} />
+                </span>
+            </div>
+
+            {showModal && <AddInternalMember onCancel={() => {
                 setShowModal(false);
-                setAddLength(0);
-                setUnRegister(0);
-                setUnEmail([]);
-                addLength && setAddLength(addLength);
-                unRegister && setUnRegister(unRegister);
-                unEmail && setUnEmail(unEmail);
-                if (addLength || unRegister || unEmail) {
-                    setShowInvitate(true);
-                }
             }} />}
             {showMember && <ProjectMember onCancel={() => {
                 setMemberModal(false);
@@ -176,9 +166,6 @@ const HeaderRight = () => {
                 showInfo && <InfoManage onCancel={() => {
                     setShowInfo(false);
                 }} />
-            }
-            {
-                showInvitate && <InvitateSuccess addLength={addLength} unRegister={unRegister} unEmail={unEmail} onCancel={() => setShowInvitate(false)} />
             }
         </div>
     )

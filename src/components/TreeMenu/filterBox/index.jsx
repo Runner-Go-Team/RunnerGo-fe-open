@@ -49,7 +49,7 @@ const FilterBox = (props) => {
                 //         // onChange={handleFilterStatus}
                 //     />
                 // }
-                placeholder={type === 'apis' ? t('placeholder.searchApis') : t('placeholder.searchScene')}
+                placeholder={type === 'apis' || type === 'mock' ? t('placeholder.searchApis') : t('placeholder.searchScene')}
             />
             {/* {
                 (type === 'apis') &&

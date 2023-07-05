@@ -1,0 +1,102 @@
+.env-menu {
+    background-color: var(--module);
+    display: flex;
+    flex-direction: column;
+    width: 291px;
+    padding: 16px;
+    box-sizing: border-box;
+    height: 100%;
+    overflow: scroll;
+    max-height: 100%;
+
+
+    .search-input {
+        width: 100%;
+
+        .arco-input-inner-wrapper {
+            height: 30px;
+            background-color: var(--bg);
+
+            svg {
+                width: 14px;
+                height: 14px;
+                fill: var(--font-1);
+                margin-right: 6px;
+            }
+        }
+    }
+
+    .create-env {
+        height: 30px;
+        width: 100%;
+        border: 1px solid var(--scene-border);
+        border-radius: 3px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--font-1);
+        margin-top: 16px;
+        cursor: pointer;
+
+        svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--font-1);
+            margin-right: 4px;
+        }
+    }
+
+    .env-list {
+        margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+
+        &-item {
+            width: 100%;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3px;
+            box-sizing: border-box;
+            padding-left: 30px;
+            color: var(--font-1);
+            cursor: pointer;
+
+            .btn-more {
+                display: none;
+            }
+        }
+
+        &-item:hover {
+            background-color: var(--select-hover);
+            
+            .btn-more {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 24px;
+                height: 24px;
+                background-color: var(--border-line);
+                border-radius: 3px;
+
+                svg {
+                    min-width: 12px;
+                    min-height: 12px;
+                    fill: var(--font-1);
+                }
+            }
+        }
+
+        .select-item {
+            background-color: var(--bg);
+        }
+
+        .arco-input {
+            width: 100%;
+            height: 30px;
+            background-color: var(--bg);
+            padding-left: 30px;
+        }
+    }
+}

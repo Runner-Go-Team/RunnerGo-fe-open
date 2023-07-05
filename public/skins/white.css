@@ -84,6 +84,7 @@
   --bg-4: #E9E9E9;
   --bg-5: #FEFEFE;
   --bg-6: #444448;
+  --bg-7: #FFFFFF;
   /* 字体 */
   --font-color: #2B2B2B;
   /* icon */
@@ -104,9 +105,9 @@
   /* 主题色 */
   --theme-color: #4052EC;
   /* 辅色1 */
-  --sub-color-1: #4CCB7E;
+  --sub-color-1: #0DA03F;
   /* 辅色1 10% */
-  --sub-color-1-10: rgba(76, 203, 126, 0.1);
+  --sub-color-1-10: rgba(13, 160, 63, 0.1);
   /* 辅色2 */
   --sub-color-2: #67C5F6;
   /* 辅色2 10% */
@@ -116,7 +117,7 @@
   /* 辅色3 10% */
   --sub-color-3-10: rgba(123, 64, 242, 0.1);
   /* 辅色4 */
-  --sub-color-4: #ED7847;
+  --sub-color-4: #D94525;
   /* 辅色4 10% */
   --sub-color-4-10: rgba(237, 120, 71, 0.1);
   /* 辅色5 */
@@ -125,7 +126,7 @@
   --sub-color-5-10: rgba(207, 81, 94, 0.1);
 
   /* 边框、线 */
-  --border-line: #F2F2F2;
+  --border-line: #F2F3F5;
   /* 场景里-选中 */
   --scene-select: rgba(192, 192, 192, 0.2);
   /* 场景接口控制器边框 */
@@ -163,4 +164,51 @@
   /* GET绿 */
   --get: #2BA58F;
 
+  /* MySQL */
+  --mysql: #0fb5df;
+
+  /* TCP */
+  --tcp: #6607DF;
+
+  /* WebSocket */
+  --ws: #FAC60C;
+
+  /* MQTT */
+  --mqtt: #FB965E;
+
+  /* DUBBO */
+  --dubbo: #5A94EB;
+
+  /* Oracle */
+  --oracle: #FF165D;
+
+  /* PostgreSQL */
+  --postgresql: #ebcc06;
+
+  /* sun color */
+  --icon-sun-color: #FFDA58;
+
+  /* moon color */
+  --icon-moon-color: rgba(10, 10, 32, 0.5);
+
+  /* 前置条件底色 */
+  --pre-condition-bg: #FAFAFA;
+
+  /* 浅色环境关闭 */
+  --env-close: #D8D8D8;
+
+  /* 场景节点头部 */
+  --scene-header: #F2F3F5;
+
+  /* 场景节点体 */
+  --scene-container: #FFFFFF;
+
+  /* 场景节点的上下连接点 */
+  --scene-handle: #B3B3B3;
+
+  /* 任务配置背景色 */
+  --task-config-bg: #FBFBFB;
+
+  /* 表格删除红色 */
+  --table-delete: #D94525;
 }

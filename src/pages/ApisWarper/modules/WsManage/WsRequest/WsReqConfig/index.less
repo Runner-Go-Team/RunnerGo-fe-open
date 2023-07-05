@@ -1,0 +1,58 @@
+.ws-manage-request-req-config {
+    padding-top: 14px;
+
+    .is-auto-send-item {
+        margin-top: 14px;
+        display: flex;
+        flex-direction: column;
+
+        .explain {
+            color: var(--font-3);
+            margin-top: 2px;
+            margin-left: 4px;
+        }
+
+        .arco-checkbox {
+            display: flex;
+            align-items: center;
+            line-height: 19.6px;
+        }
+    }
+
+    .item {
+        display: flex;
+        align-items: center;
+        margin-top: 14px;
+
+        &-left {
+            display: flex;
+            flex-direction: column;
+            min-width: 405px;
+
+            p:first-child {
+                color: var(--font-1);
+                font-size: 14px;
+                line-height: 19.6px;
+            }
+
+            p:last-child {
+                color: var(--font-3);
+                font-size: 12px;
+                margin-top: 2px;
+            }
+        }
+
+        &-right {
+            width: 112px;
+            height: 28px;
+            border-radius: 2px;
+            border: 1px solid var(--scene-border);
+            margin-left: 20px;
+
+            .arco-input {
+                background-color: transparent;
+                height: 100%;
+            }
+        }
+    }
+}

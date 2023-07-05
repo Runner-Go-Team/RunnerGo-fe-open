@@ -19,6 +19,7 @@ import Bus, { useEventBus } from '@utils/eventBus';
 import { isArray } from 'lodash';
 import SvgPayTeam from '@assets/icons/pay-team';
 import dayjs from 'dayjs';
+import { RD_ADMIN_URL } from '@config';
 
 const TeamProject = () => {
     const [filterValue, setFilterValue] = useState('');
@@ -31,7 +32,6 @@ const TeamProject = () => {
     const [teamExpirationDate, setTeamExpirationDate] = useState(0);
     const { t } = useTranslation();
 
-
     const currentTeamName = useMemo(() => {
         // let teamName = '离线团队';
         let team_id = localStorage.getItem('team_id');
@@ -41,6 +41,9 @@ const TeamProject = () => {
         // if (isString(currentTeamId) && isObject(userTeams) && currentTeamId !== '-1') {
         //     teamName = userTeams?.[currentTeamId]?.name;
         // }
+        if (teamName) {
+            document.title = teamName;
+        }
         
         return teamName;
     }, [userTeams, currentTeamId]);
@@ -68,8 +71,7 @@ const TeamProject = () => {
                         <div className="header">
                             <span>{t('modal.team')}</span>
                             <Button onClick={() => {
-                                setTeamList(true);
-                                refDropdown.current.setPopupVisible(false);
+                                window.open(RD_ADMIN_URL);
                             }}>{t('modal.teamManage')}</Button>
                         </div>
                         <Input

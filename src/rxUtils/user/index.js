@@ -43,7 +43,7 @@ const updateUserLocalConfig = async (data) => {
     const { settings } = data;
     const team_id = settings.current_team_id;
 
-    localStorage.setItem('team_id', team_id);
+    // localStorage.setItem('team_id', team_id);
     localStorage.setItem('settings', JSON.stringify(data))
     // dispatch({
         // type: 'user/updateTeamId',

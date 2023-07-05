@@ -129,6 +129,23 @@ export const fetchRegisterAndLogin = (
   params
 ) => ajax('post', '/management/api/register_or_login', 'json', false, params);
 
+// 获取团队 企业内成员邀请列表
+export const getTeamInviteMemberList = (
+  params
+) => ajax('post', '/management/api/permission/get_team_company_members', 'json', false, params);
+
+// 添加团队成员
+export const addTeamMember = (
+  params
+) => ajax('post', '/management/api/permission/team_members_save', 'json', false, params);
+
+// 获取我的角色信息
+export const ServiceGetUserRole = (
+  params
+) => ajax('post', '/management/api/permission/get_role_member_info', 'json', false, params);
+
+
+
 
 // 获取微信二维码
 export const fetchGetWxCodeRequest = (
@@ -205,6 +222,11 @@ export const fetchChangeBindWx = (
 export const fetchUpdateEmail = (
   params
 ) => ajax('post', '/management/api/v1/user/update_email', 'json', false, params);
+
+// 修改用户账号
+export const fetchUpdateAccount = (
+  params
+) => ajax('post', '/management/api/v1/user/update_account', 'json', false, params);
 
 // 开源版注册
 export const fetchOpenRegister = (

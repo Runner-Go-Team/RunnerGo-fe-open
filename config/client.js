@@ -2,8 +2,8 @@
 // 当前运行环境fe主域，主要用于cookie
 const FE_Host = {
     development: '',
-    test: 'runnergo.com',
-    production: 'runnergo.com',
+    test: '测试环境主域',
+    production: '线上环境主域',
 };
 
 

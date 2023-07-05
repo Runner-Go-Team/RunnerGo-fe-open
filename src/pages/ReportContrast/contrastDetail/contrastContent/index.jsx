@@ -87,7 +87,7 @@ const ContrastContent = (props) => {
         if (list1 && list1.length > 0) {
             const { task_mode } = list1[0];
             let column = [];
-            if (task_mode === 1) {
+            if (task_mode === 1 || task_mode === 6) {
                 column = [
                     {
                         title: t('index.sceneName'),
@@ -109,17 +109,17 @@ const ContrastContent = (props) => {
                         title: t('report.mode'),
                         dataIndex: 'task_mode'
                     },
-                    {
-                        title: t('plan.duration'),
-                        dataIndex: 'duration'
-                    },
+                    
                     {
                         title: t('plan.concurrency'),
                         dataIndex: 'concurrency'
                     },
-                    {
+                    task_mode === 1 ? {
+                        title: t('plan.duration'),
+                        dataIndex: 'duration'
+                    } : {
                         title: t('plan.roundNum'),
-                        dataIndex: 'round_num',
+                        dataIndex: 'round_num'
                     },
                     {
                         title: t('plan.reheatTime'),

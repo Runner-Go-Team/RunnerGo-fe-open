@@ -11,6 +11,7 @@
         "forgetPwd": "忘记/重置密码",
         "nologin": "30天内免登录",
         "errorEmail": "请输入正确的邮箱",
+        "errorAccount": "请输入正确的账号",
         "errorEmailOrPhone": "请输入正确的手机号码或电子邮箱",
         "errorPwd": "请输入正确的密码",
         "confirmError": "两次密码不一致",
@@ -21,6 +22,7 @@
         "findToLogin": "去登录",
         "emailSuccess": "找回密码邮件发送成功! 请登录您的邮箱查看",
         "email": "邮箱",
+        "account": "账号",
         "email_tips": "如果没有收到, 请尝试查看您的邮箱垃圾箱或者稍后再试",
         "send_again": "您可以通过以下按钮重新发送密码重置邮件",
         "reset": "重置密码",
@@ -60,7 +62,7 @@
         "wxLoginTitle": "微信登录/注册",
         "plsInputPwd": "请输入6-20位密码",
         "confirmPwdError": "输入的密码不匹配",
-        "newUserReward": "使用企业版-Sass可免费获取5000VUM",
+        "newUserReward": "使用企业版-SaaS可免费获取5000VUM",
         "toWebSite1": "欢迎进入",
         "runnergoWebSite": "RunnerGo官网",
         "toWebSite2": "了解更多"
@@ -98,11 +100,12 @@
         "customer": "企业专属客服",
         "offline": "离线团队",
         "teamNum": "团队成员数量",
-        "teamExpiration": "团队过期时间"
+        "teamExpiration": "团队过期时间",
+        "homePage": "个人主页"
     },
     "leftBar": {
         "index": "首页",
-        "apis": "接口管理",
+        "apis": "测试对象",
         "scene": "场景管理",
         "plan": "计划管理",
         "test": "自动化测试",
@@ -118,7 +121,9 @@
         "darkMode": "暗色模式",
         "whiteMode": "浅色模式",
         "language": "语言",
-        "theme": "主题"
+        "theme": "主题",
+        "env": "环境管理",
+        "mockservice": "Mock服务"
     },
     "placeholder": {
         "searchApis": "搜索目录或接口",
@@ -141,6 +146,7 @@
         "cronContent": "每隔5秒执行一次: */5 * * * * ?",
         "invitedEmail": "请输入被邀请人邮箱",
         "email": "请输入邮箱",
+        "account": "请输入账号",
         "password": "请输入6-20位的密码",
         "confirmPwd": "请输入确认密码",
         "nickname": "请输入不少于2位的昵称",
@@ -184,7 +190,28 @@
         "openAddress": "请填写公司地址",
         "bankAccount": "请填写公司银行账户",
         "acceptAddress": "请填写收件地址",
-        "clientName": "请输入客户端名称"
+        "clientName": "请输入客户端名称",
+        "sqlName": "请输入SQL名称",
+        "keyWord": "请输入搜索关键字",
+        "protocolType": "请选择通讯协议",
+        "serviceName": "请输入服务名",
+        "serviceContent": "请输入服务地址",
+        "dbName": "请输入数据库名称",
+        "diyName": "请输入自定义名称",
+        "dbIP": "请输入数据库所在的主机IP地址",
+        "dbPort": "请输入数据库服务器监听的端口号",
+        "dbUser": "请输入用户名",
+        "dbPwd": "请输入密码",
+        "dbCharset": "请输入数据库编码集",
+        "selectDb": "请选择数据库",
+        "selectEnv": "请选择环境",
+        "selectService": "请选择服务",
+        "tcpName": "请输入TCP名称",
+        "searchNickNameAccount": "搜索昵称/账号",
+        "wsName": "请输入WebSocket名称",
+        "wsUrl": "请输入WebSocket请求或路径",
+        "json_path":"JSON Path表达式,如: $.data.info.name",
+        "json_path_doc":"Json Path 使用文档"
     },
     "btn": {
         "view": "查看",
@@ -202,6 +229,8 @@
         "jump": "跳转",
         "switchLanguage": "中英文切换",
         "notifyEmail": "添加收件人",
+        "notif":"通知",
+        "batch_notif":"批量通知",
         "breakTask": "终止任务",
         "done": "已完成",
         "sending": "发送中...",
@@ -232,7 +261,7 @@
         "add": "添加",
         "seeResult": "查看结果",
         "updateConfig": "修改配置",
-        "toBeautify": "一键美化",
+        "toBeautify": "美化",
         "machineStart": "启用",
         "machineStop": "停用",
         "delete": "删除",
@@ -248,10 +277,15 @@
         "quit": "退出登录",
         "skip": "跳过",
         "estimateVum": "预估VUM",
-        "asyncApipostApi": "同步Apipost接口"
+        "asyncApipostApi": "同步Apipost接口",
+        "connect": "连接",
+        "stopConnect": "断开连接",
+        "connecting": "连接中..."
     },
     "message": {
         "saveSuccess": "保存成功!",
+        "saveToTargetSuccess": "保存至测试对象成功!",
+        "syncToTargetSuccess": "同步至测试对象成功!",
         "saveError": "保存失败!",
         "stopSuccess": "停止成功!",
         "stopError": "停止失败!",
@@ -422,7 +456,14 @@
         "selectEmpty": "您未选择任何内容!",
         "cookieNameRepeat": "cookie名重复!",
         "keyRepeat": "参数名重复!",
-        "varRepeat": "变量名重复!"
+        "varRepeat": "变量名重复!",
+        "SqlNameEmpty": "SQL名称不能为空",
+        "tcpNameEmpty": "TCP名称不能为空",
+        "connectTestSuccess": "连接测试成功!",
+        "didNotSelectMember": "您未选择任何成员!",
+        "disableSceneSuccess": "禁用成功!",
+        "enableSceneSuccess": "启用成功!",
+        "weightTotalErr": "机器权重总和必须等于100!"
     },
     "modal": {
         "globalCookieTip": "开启状态的全局cookie将自动带到该团队下的每一个接口内",
@@ -445,6 +486,7 @@
         "bindNow": "立即绑定",
         "bindEmail": "绑定邮箱",
         "updateEmail": "修改邮箱地址",
+        "updateAccount": "修改账号",
         "look": "注意",
         "deletePresetTitle": "删除配置",
         "deletePreset1": "确认删除",
@@ -456,6 +498,8 @@
         "deleteGroup": "是否确定要删除此目录？此操作会将目录下的场景一起删除!",
         "deleteFolder": "是否确定要删除此目录？此操作会将目录下的接口一起删除!",
         "deleteEnv": "是否确定要删除此环境？",
+        "deleteService": "是否确定要删除此服务？",
+        "deleteDb": "是否确定要删除此数据库",
         "invitation": "邀请",
         "roleList": {
             "0": "成员",
@@ -640,7 +684,13 @@
         "runPlanValidModal": "该团队的服务已过期, 如需执行计划, 请先为团队续费。如果遇到问题, 可以",
         "serviceName": "服务名",
         "domain": "域名",
-        "handle": "操作"
+        "handle": "操作",
+        "addCompanyMember": "添加企业内成员",
+        "companyRole": "企业角色",
+        "teamRole": "团队角色",
+        "function": "函数名称",
+        "functionName": "函数",
+        "remark": "备注"
     },
     "column": {
         "teamManage": {
@@ -788,7 +838,36 @@
             "31": "执行计划",
             "32": "调试接口",
             "33": "调试场景",
-            "34": "创建场景用例"
+            "34": "创建场景用例",
+            "35": "创建sql语句",
+            "36": "修改sql语句",
+            "37": "删除sql语句",
+            "38": "新建数据库",
+            "39": "删除数据库",
+            "40": "修改数据库",
+            "41": "新建服务",
+            "42": "修改服务",
+            "43": "创建websocket",
+            "44": "修改websocket",
+            "45": "删除websocket",
+            "46": "创建websocket",
+            "47": "修改websocket",
+            "48": "删除websocket",
+            "49": "创建mqtt",
+            "50": "修改mqtt",
+            "51": "删除mqtt",
+            "52": "创建dubbo",
+            "53": "修改dubbo",
+            "54": "删除dubbo",
+            "101": "创建mock文件夹",
+            "102": "创建mock接口",
+            "103": "修改mock文件夹",
+            "104": "修改mock接口",
+            "105": "调试mock接口",
+            "106": "删除mock文件夹",
+            "107": "删除mock接口",
+            "108": "mock接口保存至测试对象",
+            "109": "mock接口同步测试对象"
         }
     },
     "apis": {
@@ -861,8 +940,10 @@
         "resAssert": "断言结果",
         "resRegular": "提取结果",
         "resEmpty": "输入url点击发送按钮获取响应结果",
+        "resSqlEmpty": "输入sql点击发送按钮获取响应结果",
         "createApi": "新建接口",
         "createFolder": "新建目录",
+        "createObject": "新建测试对象",
         "importApi": "导入接口",
         "importProject": "导入项目",
         "expand": "全部展开 | 收起",
@@ -872,6 +953,13 @@
         "editFolder": "编辑目录",
         "deleteFolder": "删除目录",
         "createHttp": "新建Http接口",
+        "createMySQL": "新建MySQL",
+        "createSql": "新建SQL",
+        "createOracle": "新建Oracle",
+        "createTcp": "新建TCP",
+        "createWs": "新建WebSocket",
+        "createMqtt": "新建MQTT",
+        "createDubbo": "新建DUBBO",
         "parentFolder": "父级目录",
         "rootFolder": "根目录",
         "folderName": "目录名称",
@@ -911,7 +999,73 @@
         "maxConnectWaitTime": "最大连接等待时间",
         "maxConnectNum": "最大连接数",
         "number": "个",
-        "keepAlive": "keep-alive（http长连接）"
+        "keepAlive": "keep-alive（http长连接）",
+        "connectDb": "链接数据库",
+        "selectDb": "选择数据库",
+        "databaseConnectInfo": "数据库连接信息",
+        "dbDiyName": "名称",
+        "dbName": "数据库名",
+        "ip": "IP地址",
+        "port": "端口号",
+        "user": "用户名",
+        "pwd": "密码",
+        "charset": "编码集",
+        "index": "下标",
+        "connectTest": "连接测试",
+        "eventName": "事件名",
+        "eventDesc": "事件描述",
+        "tcp": {
+            "sendMessage": "发送消息",
+            "config": "设置",
+            "connectType": {
+                "1": "长连接",
+                "2": "短连接"
+            },
+            "autoSend": {
+                "label": "自动发送",
+                "explain": "勾选则连接成功后会根据配置自动发送消息"
+            },
+            "connectDuration": {
+                "label": "连接持续时长（最大100s）",
+                "explain": "本次tcp连接多长时间后断开（以秒为单位）"
+            },
+            "sendMessageInterval": {
+                "label": "发送消息间隔时长",
+                "explain": "发送消息间隔时长不可超过连接持续时长（以毫秒为单位）"
+            },
+            "connectTimeout": {
+                "label": "连接超时设置",
+                "explain": "设置socket请求连接等待超时时长（以毫秒为单位）。永不超时请设置为0。"
+            },
+            "retryNum": {
+                "label": "重连尝试",
+                "explain": "连接突然断开时的最大重新尝试连接次数。"
+            },
+            "retryInterval": {
+                "label": "重新连接间隔",
+                "explain": "每次重新连接尝试之间的时间间隔。（以毫秒为单位）"
+            },
+            "msgList": "消息列表",
+            "msgState": {
+                "0": "全部消息",
+                "1": "成功消息",
+                "2": "失败消息"
+            },
+            "clearMsg": "清除消息",
+            "requestMsg": "发送消息",
+            "responseMsg": "响应消息",
+            "connectSuccess": "连接成功"
+        },
+        "cloneCurrentTag": "克隆当前标签",
+        "ws": {
+            "reqTab": {
+                "0": "发送消息",
+                "1": "请求头",
+                "2": "请求参数",
+                "3": "事件",
+                "4": "设置"
+            }
+        }
     },
     "scene": {
         "fullScreen": "进入全屏",
@@ -923,10 +1077,14 @@
         "editScene": "编辑场景",
         "deleteScene": "删除场景",
         "cloneScene": "克隆场景",
+        "disableScene": "禁用场景",
+        "enableScene": "启用场景",
         "createApi": "新建接口",
         "createControl": "添加控制器",
         "waitControl": "等待控制器",
         "conditionControl": "条件控制器",
+        "createTestObj": "新建测试对象",
+        "importTestObj": "引入测试对象",
         "importApi": "引入接口",
         "groupName": "目录名称",
         "groupDesc": "目录描述",
@@ -964,12 +1122,18 @@
         "deleteApi": "删除接口",
         "copyApi": "克隆接口",
         "importApiTitle": "API添加器",
+        "importSqlTitle": "SQL添加器",
         "addApi": "添加接口",
+        "addSql": "添加SQL",
+        "addPreCondition": "添加前置条件",
+        "onlyOnePreCond": "只能配置一个前置条件",
         "errorRate": "示例: 0.0001",
         "avgTime": "平均响应时间",
         "apiAssert": "接口断言",
         "fileCnFormat": "上传csv、txt格式文件中包含中文字符时, 需将文件格式改成UTF-8编码",
-        "runTime": "执行时间"
+        "runTime": "执行时间",
+        "preCondition": "前置条件",
+        "introduce": "引入"
     },
     "plan": {
         "rankId": "序号",
@@ -1015,7 +1179,7 @@
             "3": "错误率模式",
             "4": "响应时间模式",
             "5": "每秒应答数模式",
-            "6": "每秒事务数模式",
+            "6": "轮次模式",
             "7": "混合模式"
         },
         "statusList": {
@@ -1056,7 +1220,22 @@
         "debugMode-0": "关闭",
         "debugMode-1": "开启-全部日志",
         "debugMode-2": "开启-仅成功日志",
-        "debugMode-3": "开启-仅错误日志"
+        "debugMode-3": "开启-仅错误日志",
+        "machineName": "机器名称",
+        "region": "区域",
+        "ip": "IP地址",
+        "weight": "使用权重（%）",
+        "seniorConfig": "高级设置",
+        "customDistributed": "自定义分布式",
+        "totalWeightTip": "默认分配机器运行, 总权重须为100%",
+        "useDiyRun": "默认分配机器运行，打开后将按照自定义分布运行",
+        "machineAllotType": {
+            "0": "权重",
+            "1": "自定义"
+        },
+        "switchDuration": "切换为轮次",
+        "switchRoundNum": "切换为持续时长",
+        "echartEmptyShow": "配置未完成无法生成阶梯图"
     },
     "report": {
         "done": "已完成",
@@ -1085,6 +1264,8 @@
         },
         "taskType": "任务类型",
         "dcs": "分布式",
+        "yes": "是",
+        "no": "否",
         "mode": "压测模式",
         "apiName": "接口名称",
         "totalReqNum": "总请求数",
@@ -1101,7 +1282,7 @@
         "errRate": "错误率",
         "acceptByte": "接受字节数",
         "sendByte": "发送字节数",
-        "tps": "每秒事务数",
+        "tps": "吞吐量",
         "qpsNum": "每秒应答数",
         "concurrency": "并发数",
         "vum-m": "并发时长（分钟）",
@@ -1125,14 +1306,16 @@
         "pressMonitorTips": "压力机监控数据只保留15天!",
         "unitMs": "单位(毫秒)",
         "unitNumber": "单位(个)",
-        "machineName": "机器名称"
+        "machineName": "机器名称",
+        "config": "配置"
     },
     "tooltip": {
         "start": "运行",
         "stop": "停止",
         "view": "查看",
         "copy": "复制",
-        "delete": "删除"
+        "delete": "删除",
+        "company_admin": "企业管理后台"
     },
     "machine": {
         "serverType": {
@@ -1177,6 +1360,7 @@
         "performer": "执行者",
         "planDesc": "计划描述",
         "notifyEmail": "通知收件人",
+
         "startTime": "开始时间",
         "endTime": "结束时间",
         "runTime": "执行时长",
@@ -1481,5 +1665,62 @@
         "renewNow": "立即续费",
         "openNow": "立即开通",
         "private": "预约演示"
+    },
+    "env": {
+        "addService": "添加服务",
+        "updateService": "修改服务",
+        "protocolType": "通讯协议",
+        "serviceName": "服务名",
+        "serviceContent": "服务地址",
+        "dbName": "库名",
+        "handle": "操作",
+        "addDb": "添加数据库",
+        "updateDb": "修改数据库",
+        "dbType": "数据库类型",
+        "name": "名称",
+        "ip": "IP地址",
+        "port": "端口号",
+        "user": "用户名",
+        "pwd": "密码",
+        "charset": "编码集",
+        "dbConnectInfo": "数据库连接信息",
+        "editEnv": "编辑环境",
+        "cloneEnv": "克隆环境",
+        "deleteEnv": "删除环境",
+        "createEnv": "新建环境",
+        "service": "服务",
+        "database": "数据库",
+        "empty": "暂无数据",
+        "envManage": "环境管理",
+        "serviceTabExplain": "若同一环境下的接口需要使用不同的前置URL或服务器地址，可以创建多个服务来满足需求。切换环境时，接口所使用的服务也会切换到新环境中对应的服务",
+        "dbTabExplain": "若同一环境下的SQL需要连接不同的数据库，可以创建多个数据库来满足需求。切换环境时，SQL所使用的数据库也会切换到新环境中对应的数据库"
+    },
+    "mock": {
+        "createMock": "新建Mock",
+        "createFolder": "新建分组",
+        "createMockApi": "新建Mock接口",
+        "pathPlaceholder": "请输入接口路径",
+        "saveTestObj": "保存至测试对象",
+        "syncToTestObj": "同步至测试对象",
+        "copyMockUrl": "复制Mock Url",
+        "createResponseExpect": "新建响应期望",
+        "expect_name_cannot_null": "期望名称不能为空",
+        "create_expect": "新建期望",
+        "expect_name": "期望名称",
+        "content_format": "内容格式",
+        "create_ecpect_input_placeholder": "请输入1-30位接口名称",
+        "open_mock": "开启Mock",
+        "close_mock": "关闭Mock",
+        "conditional_statement":"判断条件",
+        "return_data":"返回数据",
+        "visual_structure":"可视化结构",
+        "native_mode":"原生模式",
+        "parameter_position":"参数位置",
+        "comparison":"比较"
+    },
+    "import": {
+        "import_file": "导入文件",
+        "import_mock_api": "导入mock接口",
+        "mock_api": "Mock接口"
     }
 }

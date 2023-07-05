@@ -33,11 +33,39 @@
         display: flex;
         flex-direction: column;
 
-        .ip {
+        .info-title {
+            display: flex;
+            align-items: center;
             margin-left: 20px;
-            margin-top: 20px;
-            font-size: 14px;
-            color: var(--font-1);
+
+            .machine-name {
+                font-size: 14px;
+                color: var(--font-1);
+            }
+
+            .concurrency {
+                border-radius: 3px;
+                border: 1px solid var(--sub-color-1);
+                background-color: var(--run);
+                padding: 2.5px 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-left: 10px;
+                color: var(--sub-color-1);
+            }
+        }
+
+        .info-content {
+            display: flex;
+            align-items: center;
+            color: var(--font-3);
+            font-size: 12px;
+            margin: 8px 0 10px 20px;
+
+            .ip {
+                margin-left: 10px;
+            }
         }
 
         .monitor-list {

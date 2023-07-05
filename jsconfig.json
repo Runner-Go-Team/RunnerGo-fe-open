@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "checkJs": true,
+    "baseUrl": "./",
+    "paths": {
+      "@assets": ["src/assets"],
+      "@pages": ["src/pages"],
+      "@components": ["src/components"],
+      "@config": ["config"],
+      "@utils/eventBus":["src/utils/eventBus"],
+      "@utils": ["src/utils"],
+      "@services": ["src/services"],
+      "@modals": ["src/modals"],
+      "@constants":["src/constants"],
+    }
+  },
+  "exclude": ["node_modules"]
+}

@@ -10,7 +10,7 @@ import Bus from '@utils/eventBus';
 import SvgSuccess from '@assets/logo/success';
 import SvgFailed from '@assets/logo/failed';
 import SvgRunning from '@assets/logo/running';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isBoolean } from 'lodash';
 import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import SvgClose from '@assets/logo/close';
@@ -89,6 +89,8 @@ const ConditionController = (props) => {
     const select_box_case = useSelector((store) => store.case.select_box);
     const nodes_case = useSelector((store) => store.case.nodes);
     const id_apis_case = useSelector((store) => store.case.id_apis);
+
+    const scene_env_id = useSelector((store) => store.env.scene_env_id);
 
 
     const run_res_list = {
@@ -328,7 +330,7 @@ const ConditionController = (props) => {
             }, 100);
         } else if (from === 'plan') {
             setTimeout(() => {
-                Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan');
+                Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_scene, id, 'plan', null, scene_env_id);
             }, 100);
         } else if (from === 'auto_plan') {
             setTimeout(() => {

@@ -62,7 +62,66 @@ export const fetchApipostApi = (
 export const fetchAsyncData = (
     params
 ) => ajax('post', '/management/api/do_sync_data', 'json', false, params);
-
+// 获取团队下所有环境列表
+export const fetchEnvList = (
+    params
+) => ajax('post', '/management/api/v1/target/get_all_env_list', 'json', false, params);
+// 获取当前团队对应环境下的mysql数据库
+export const fetchEnvMysqlInfo = (
+    params
+) => ajax('post', '/management/api/v1/target/get_sql_database_list', 'json', false, params);
+// 运行sql
+export const fetchRunSql = (
+    params
+) => ajax('post', '/management/api/v1/target/send_sql', 'json', false, params);
+// 测试连接数据库接口
+export const fetchConnectDB = (
+    params
+) => ajax('post', '/management/api/v1/target/connection_database', 'json', false, params);
+// 获取运行sql语句结果
+export const fetchGetSqlResult = (
+    params
+) => ajax('post', '/management/api/v1/target/get_send_sql_result', 'json', false, params);
+// 运行tcp接口
+export const fetchRunTcp = (
+    params
+) => ajax('post', '/management/api/v1/target/send_tcp', 'json', false, params);
+// 获取运行tcp接口的结果
+export const fetchGetTcpResult = (
+    params
+) => ajax('post', '/management/api/v1/target/get_send_tcp_result', 'json', false, params);
+// 运行websocket接口
+export const fetchRunWebSocket = (
+    params
+) => ajax('post', '/management/api/v1/target/send_websocket', 'json', false, params);
+// 获取运行websocket接口的结果
+export const fetchGetWebSocketResult = (
+    params
+) => ajax('post', '/management/api/v1/target/get_send_websocket_result', 'json', false, params);
+// 运行dubbo接口
+export const fetchRunDubbo = (
+    params
+) => ajax('post', '/management/api/v1/target/send_dubbo', 'json', false, params);
+// 获取运行dubbo接口的结果
+export const fetchGetDubboResult = (
+    params
+) => ajax('post', '/management/api/v1/target/get_send_dubbo_result', 'json', false, params);
+// 运行mqtt接口
+export const fetchRunMqtt = (
+    params
+) => ajax('post', '/management/api/v1/target/send_mqtt', 'json', false, params);
+// 获取运行mqtt接口的结果
+export const fetchGetMqttResult = (
+    params
+) => ajax('post', '/management/api/v1/target/get_send_mqtt_result', 'json', false, params);
+// 发送或停止websocket消息
+export const fetchSendOrStopWs = (
+    params
+) => ajax('post', '/management/api/v1/target/ws_send_or_stop_message', 'json', false, params);
+// 发送或停止tcp消息
+export const fetchSendOrStopTcp = (
+    params
+) => ajax('post', '/management/api/v1/target/tcp_send_or_stop_message', 'json', false, params);
 
 
 // 获取用户目录简要信息列表

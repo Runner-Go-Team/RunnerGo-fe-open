@@ -8,7 +8,6 @@ import { ApisWrapper, ApiManageWrapper } from './style';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import ApiTabs from './ApiTabs';
 import RunPanel from './apis';
-import DesignPanel from './design';
 import { global$ } from '@hooks/useGlobal/global';
 
 
@@ -71,10 +70,6 @@ const Apis = (props) => {
         return (
             <Routes>
                 <Route path="run" element={<RunPanel {...{ tabsList: apiDataList, activeId }} />}></Route>
-                <Route
-                    path="design"
-                    element={<DesignPanel {...{ tabsList: apiDataList, activeId }} />}
-                ></Route>
                 <Route path="/*" element={<Navigate to="/apis/run" />} />
             </Routes>
         );

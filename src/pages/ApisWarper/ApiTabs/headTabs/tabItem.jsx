@@ -33,6 +33,24 @@ const renderPreText = (item) => {
         case 'grpc':
             result = 'GRPC';
             break;
+        case 'mysql':
+            result = 'MySQL';
+            break;
+        case 'tcp':
+            result = 'TCP';
+            break;
+        case 'mqtt':
+            result = 'MQTT';
+            break;
+        case 'dubbo':
+            result = 'DUBBO';
+            break;
+        case 'oracle':
+            result = 'ORACLE';
+            break;
+        case 'sql':
+            result = item.method;
+            break;
         default:
             break;
     }
@@ -70,6 +88,24 @@ const HeadTabItem = (props) => {
                 break;
             case 'doc':
                 className = 'method doc';
+                break;
+            case 'mysql':
+                className = 'method mysql';
+                break;
+            case 'tcp':
+                className = 'method tcp';
+                break;
+            case 'mqtt':
+                className = 'method mqtt';
+                break;
+            case 'dubbo':
+                className = 'method dubbo';
+                break;
+            case 'oracle':
+                className = 'method oracle';
+                break;
+            case 'sql':
+                className = `method ${item.method.toLowerCase()}`;
                 break;
             default:
                 break;

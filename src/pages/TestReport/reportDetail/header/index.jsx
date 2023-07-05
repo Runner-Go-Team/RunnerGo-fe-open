@@ -6,17 +6,16 @@ import avatar from '@assets/logo/avatar.png';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SvgSendEmail from '@assets/icons/SendEmail';
-import InvitationModal from '@modals/ProjectInvitation';
 import InputText from "@components/InputText";
 import { fetchUpdateName } from '@services/auto_report';
 import { useParams } from 'react-router-dom';
+import Bus from "@utils/eventBus";
 
 const TReportDetailHeader = (props) => {
     const { header } = props;
     const navigate = useNavigate();
     const { id } = useParams();
     const { t } = useTranslation();
-    const [showEmail, setShowEmail] = useState(false);
     const statusList = {
         '1': t('report.statusList.1'),
         '2': t('report.statusList.2'),
@@ -61,11 +60,9 @@ const TReportDetailHeader = (props) => {
                 </div>
             </div>
             <div className="right">
-                <Button className='notice' preFix={<SvgSendEmail width="16" height="16" />} onClick={() => setShowEmail(true)}>{t('autoReport.notifyEmail')}</Button>
+                <Button className='notice' preFix={<SvgSendEmail width="16" height="16" />} onClick={() => Bus.$emit('openModal','Notice',{event_id:104 ,options:{report_ids:[id]}})}>{t('btn.notif')}</Button>
             </div>
-            {
-                showEmail && <InvitationModal from="auto_report" email={true} onCancel={() => setShowEmail(false)} />
-            }
+
         </div>
     )
 };

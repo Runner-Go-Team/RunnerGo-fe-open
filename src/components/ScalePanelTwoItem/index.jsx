@@ -1,6 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Scale } from 'adesign-react';
 import { useSelector } from 'react-redux';
+import { isNumber } from 'lodash';
 
 // type TYPE_LAYOUT = {
 //   flex?: number;
@@ -20,8 +21,8 @@ import { useSelector } from 'react-redux';
 
 const { ScaleItem, ScalePanel } = Scale;
 const ScalePanelTwoItem = (props, forwardsRef) => {
-  const { leftMin, left, rightMin, right, minSize = 40, minContentSize = 100, refWrapper } = props;
-  const APIS_TAB_DIRECTION = 1;
+  const { leftMin, left, rightMin, right, minSize = 40, minContentSize = 100, refWrapper, direction } = props;
+  const APIS_TAB_DIRECTION = isNumber(direction) ? direction : 1;
   const [layouts, setLayouts] = useState(null);
 
   const refContainer = useRef(null);

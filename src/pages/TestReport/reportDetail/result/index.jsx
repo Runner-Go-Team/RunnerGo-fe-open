@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useRef, useImperativeHandle } from "react";
 import './index.less';
-import { Tabs as TabComponent } from 'adesign-react';
 
-const { Tabs, TabPan } = TabComponent;
-import { Collapse } from '@arco-design/web-react';
-const CollapseItem = Collapse.Item;
+import { Collapse, Tabs } from '@arco-design/web-react';
+
 import SvgSuccess from '@assets/logo/success';
 import SvgFailed from '@assets/logo/failed';
 import SvgNotRun from '@assets/logo/not_run';
@@ -19,6 +17,9 @@ import { Tooltip } from '@arco-design/web-react';
 
 import ScalePanelTwoItem from "@components/ScalePanelTwoItem";
 import { isArray } from "lodash";
+
+const { TabPane } = Tabs;
+const { Item: CollapseItem } = Collapse;
 
 const TReportDetailResult = (props) => {
     const { result } = props;
@@ -240,7 +241,7 @@ const TReportDetailResult = (props) => {
                 </div>}
                 left={<div className="scene-result">
                     <p className="title">{t('autoReport.sceneResult')}</p>
-                    <Tabs defaultActiveId="1" onChange={(e) => {
+                    <Tabs defaultActiveTab="1" onChange={(e) => {
                         let result = [];
                         if (e === '1') {
                             result = sceneResult;
@@ -256,7 +257,7 @@ const TReportDetailResult = (props) => {
                         setApiName('');
                     }}>
                         {defaultList1.map((d) => (
-                            <TabPan key={d.id} id={d.id} title={d.title}>
+                            <TabPane key={d.id} title={d.title}>
                                 <div className="scene-result-detail">
                                     {
                                         sceneResultNow.length > 0 &&
@@ -280,7 +281,7 @@ const TReportDetailResult = (props) => {
                                         ))
                                     }
                                 </div>
-                            </TabPan>
+                            </TabPane>
                         ))}
                     </Tabs>
                 </div>}
@@ -291,7 +292,7 @@ const TReportDetailResult = (props) => {
                 </div>}
                 right={<div className="api-result">
                     <p className="title">{t('autoReport.caseResult')}</p>
-                    <Tabs defaultActiveId="1" onChange={(e) => {
+                    <Tabs defaultActiveTab="1" onChange={(e) => {
                         setCaseTab(e);
                         if (e === '1') {
                             setFilterCase(checkCase || []);
@@ -355,7 +356,7 @@ const TReportDetailResult = (props) => {
                         }
                     }}>
                         {defaultList2.map((d) => (
-                            <TabPan key={d.id} id={d.id} title={d.title}>
+                            <TabPane key={d.id} id={d.id} title={d.title}>
                                 <div className="collapse-list">
                                     <Collapse accordion defaultActiveKey={0}>
                                         {
@@ -373,7 +374,7 @@ const TReportDetailResult = (props) => {
                                         }
                                     </Collapse>
                                 </div>
-                            </TabPan>
+                            </TabPane>
                         ))}
                     </Tabs>
                 </div>}
@@ -388,7 +389,7 @@ const TReportDetailResult = (props) => {
                                 Object.entries(checkDetail || {}).length > 0 ?
                                     checkDetail.assertion_msg ?
                                         checkDetail.assertion_msg.map(item => (
-                                            <div className={`assert-container-item ${item.isSucceed ? 'success' : 'fail'}`}>
+                                            <div className={`assert-container-item ${item.is_succeed ? 'success' : 'fail'}`}>
                                                 {item.msg}
                                             </div>
                                         ))

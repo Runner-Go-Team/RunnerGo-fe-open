@@ -19,4 +19,25 @@ export const COMPARE_TYPE = [
 ];
 
 // 响应类型
-export const EXPECT_CONTENT_TYPE = ['json', 'xml', 'html', 'binary'];
+export const EXPECT_CONTENT_TYPE = ['json', 'text', 'html'];
+
+// 期望条件默认
+export const EXPECT_CONDITION_DEFAULT = {
+  "path": "header",
+  "parameter_name": "",
+  "compare": "=",
+  "parameter_value": ""
+};
+// 条件参数位置集合
+export const EXPECT_CONDITION_PATH_LIST = ["cookie", "header", "query", "body-json", "body-form", "body-text"];
+// 条件比较集合
+export const EXPECT_CONDITION_COMPARE_LIST = {
+  "=": "等于",
+  ">": "大于",
+  ">=": "大于等于",
+  "<": "小于",
+  "<=": "小于等于",
+  "regex": "正则",
+  "contain": "包含",
+  "no_contain": "不包含"
+};

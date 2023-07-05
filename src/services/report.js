@@ -17,8 +17,8 @@ export const fetchDeleteReport = (
 
 // 获取报告详情
 export const fetchReportDetail = (
-    query
-) => ajax('get', '/management/api/v1/report/detail', 'json', false, {}, query);
+    params
+) => ajax('post', '/management/api/v1/report/detail', 'json', false, params);
 
 // 获取debug日志
 export const fetchDebugLog = (

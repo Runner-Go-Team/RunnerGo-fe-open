@@ -94,6 +94,35 @@
     }
   }
 
+  .theme {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 56px;
+    height: 30px;
+    background: var(--bg);
+    border-radius: 5px;
+    padding: 3px;
+
+    &>span {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border-radius: 2.5px;
+        cursor: pointer;
+        svg {
+            font-size: 16px;
+        }
+    }
+    &>span.active{
+        background: var(--bg-7);
+    }
+}
+
+
   .single-user {
     height: 50px;
     border-bottom: 1px solid var(--border-color-default);

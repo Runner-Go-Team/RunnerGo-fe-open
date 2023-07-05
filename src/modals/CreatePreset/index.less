@@ -6,6 +6,18 @@
         margin-right: 6px;
     }
 
+    .full-screen-icon-box {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        margin-bottom: 2px;
+
+        svg {
+            color: var(--font-1);
+            cursor: pointer;
+        }
+    }
+
     .apipost-modal-container {
         width: 800px;
         min-height: 570px;
@@ -108,8 +120,7 @@
     .config-name {
         display: flex;
         align-items: center;
-        margin-top: 26px;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
 
         p {
             white-space: nowrap;
@@ -118,7 +129,7 @@
         }
 
         .arco-input {
-            width: 300px;
+            width: 260px;
             height: 32px;
             border-radius: 3px;
             background-color: var(--bg);
@@ -132,7 +143,7 @@
         background-color: var(--module);
         border-radius: 5px;
         box-sizing: border-box;
-        padding-top: 12px;
+        padding-top: 30px;
         padding-left: 8px;
 
         &-left {
@@ -147,6 +158,8 @@
                     white-space: nowrap;
                     font-size: 14px;
                     font-weight: 600;
+                    min-width: 80px;
+                    text-align: right;
                 }
 
 
@@ -351,11 +364,87 @@
         }
 
         &-right {
-            width: 450px;
+            width: 330px;
             margin-left: 52px;
+
+            .empty-echarts-show {
+                height: 200px;
+                width: 330px;
+                border: 1px solid var(--border-line);
+                text-align: center;
+                line-height: 200px;
+                color: var(--font-1);
+                margin-top: 20px;
+            }
 
             .echarts {
                 margin-left: 20px;
+                margin-top: 20px;
+                height: 200px !important;
+            }
+
+            .senior-config {
+                .arco-collapse {
+                    border: none;
+
+                    .arco-collapse-item-header {
+                        background-color: var(--bg);
+                        border: none;
+                    }
+                }
+
+                .arco-collapse-item-content-box {
+                    padding: 0;
+                }
+
+                .arco-collapse-item-content {
+                    background-color: transparent;
+                }
+
+                .custom-distributed {
+                    .config {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 20px 22px;
+                        box-sizing: border-box;
+                        font-size: 12px;
+
+                        .arco-switch {
+                            margin-left: 8px;
+                        }
+
+                        .explain-icon {
+                            margin-left: 10px;
+                            cursor: pointer;
+                        }
+
+                        .arco-radio-group {
+                            margin-left: 22px;
+
+                            .arco-radio {
+                                font-size: 12px;
+                            }
+                        }
+                    }
+
+                    .arco-table-th {
+                        background-color: transparent;
+                        color: var(--font-3);
+                        font-size: 12px;
+
+                        .arco-table-th-item {
+                            padding: 3.58px 16px;
+                        }
+                    }
+
+                    .arco-table-td {
+                        background-color: transparent;
+                        color: var(--font-3);
+                        font-size: 12px;
+                        padding: 3.08px 16px;
+                    }
+                }
             }
         }
 
@@ -434,6 +523,7 @@
                 display: flex;
                 justify-content: flex-start;
                 flex-direction: column;
+                width: 326px;
 
                 .left {
                     display: flex;
@@ -485,9 +575,8 @@
                             }
 
                             .arco-input {
-                                width: 100px;
+                                width: 80px;
                                 height: 29px;
-                                margin-left: 2px;
                                 background-color: var(--bg);
                                 border: none;
                             }
@@ -537,7 +626,7 @@
                             }
 
                             .arco-input {
-                                width: 270px;
+                                width: 216px;
                                 height: 29px;
                                 background-color: var(--bg);
                                 border: none;
@@ -563,7 +652,7 @@
                             }
 
                             .arco-input {
-                                width: 270px;
+                                width: 216px;
                                 height: 29px;
                                 // margin-left: 8px !important;
                                 background-color: var(--bg);

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Tree, Modal, Message } from 'adesign-react';
+import { Tooltip } from '@arco-design/web-react';
 import {
     More as SvgMore,
     Apis as SvgApis,
     Folder as SvgFolder,
     WS as SvgWebSocket,
     Doc as SvgDoc,
+    Mock as SvgMock,
 } from 'adesign-react/icons';
 import GrpcSvg from '@assets/grpc/grpc.svg';
 import { DndProvider } from 'react-dnd';
@@ -25,15 +27,28 @@ import cn from 'classnames';
 import SvgScene from '@assets/icons/Scene1';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import SvgSQL from '@assets/icons/sql';
+import SvgTCP from '@assets/icons/tcp';
+import SvgWs from '@assets/icons/websocket';
+import SvgMQTT from '@assets/icons/mqtt';
+import SvgDubbo from '@assets/icons/dubbo';
+import SvgOracle from '@assets/icons/oracle';
+import SvgDisabled from '@assets/icons/disable';
 
 const NodeType = {
     api: SvgApis,
     scene: SvgScene,
     doc: SvgDoc,
-    websocket: SvgWebSocket,
+    websocket: SvgWs,
     folder: SvgFolder,
     grpc: GrpcSvg,
     group: SvgFolder,
+    mysql: SvgSQL,
+    tcp: SvgTCP,
+    mqtt: SvgMQTT,
+    dubbo: SvgDubbo,
+    oracle: SvgOracle,
+    sql: SvgSQL
 };
 
 
@@ -50,6 +65,7 @@ const MenuTrees = (props, treeRef) => {
     } = props;
     const dispatch = useDispatch();
     const apiData = useSelector((d) => d.apis.apiDatas);
+    const mockApiData = useSelector((d) => d.mock.mock_apis);
     const sceneData = useSelector((d) => d.scene.sceneDatas);
     const id_apis_scene = useSelector((d) => d.scene.id_apis);
     const id_apis_plan = useSelector((d) => d.plan.id_apis);
@@ -75,12 +91,15 @@ const MenuTrees = (props, treeRef) => {
         'apis': apiData,
         'scene': sceneData,
         'plan': planData,
-        'auto_plan': autoPlanData
+        'auto_plan': autoPlanData,
+        "mock": mockApiData
     }
+
     const treeData = treeDataList[type];
 
     const CURRENT_TARGET_ID = useSelector((store) => store?.workspace?.CURRENT_TARGET_ID);
     const CURRENT_PROJECT_ID = useSelector((store) => store?.workspace?.CURRENT_PROJECT_ID);
+    const mock_open_api_now = useSelector((store) => store.mock.open_api_now);
     const open_api_now = useSelector((store) => store.opens.open_api_now);
     const saveId = useSelector((store) => store.opens.saveId);
     const [defaultExpandKeys, setDefaultExpandKeys] = useState([]);
@@ -122,7 +141,6 @@ const MenuTrees = (props, treeRef) => {
 
     const [markObj, setMarkObj] = useState([]);
     const { t } = useTranslation();
-
     const api = [
         // {
         //     type: 'shareApi',
@@ -133,7 +151,6 @@ const MenuTrees = (props, treeRef) => {
         //     type: 'cloneApi',
         //     title: '克隆接口',
         //     action: 'cloneApi',
-        //     tips: `${ctrl} + D`,
         // },
         {
             type: 'cloneApi',
@@ -152,7 +169,6 @@ const MenuTrees = (props, treeRef) => {
             action: 'deleteApi',
         },
     ];
-
     const folder = [
         // {
         //     type: 'create',
@@ -229,6 +245,56 @@ const MenuTrees = (props, treeRef) => {
         },
     ];
 
+    const getSceneMenuList = (type, is_disabled) => {
+        if (type === 'scene') {
+            return [
+                {
+                    type: 'modifyFolder',
+                    title: t('scene.editScene'),
+                    action: 'modifyFolder',
+                },
+                {
+                    type: 'cloneScene',
+                    title: t('scene.cloneScene'),
+                    action: 'cloneScene',
+                },
+                {
+                    type: 'deleteFolder',
+                    title: t('scene.deleteScene'),
+                    action: 'deleteFolder',
+                },
+            ]
+        } else {
+            return [
+                {
+                    type: 'modifyFolder',
+                    title: t('scene.editScene'),
+                    action: 'modifyFolder',
+                },
+                {
+                    type: 'cloneScene',
+                    title: t('scene.cloneScene'),
+                    action: 'cloneScene',
+                },
+                is_disabled === 0 ? {
+                    type: 'disableScene',
+                    title: t('scene.disableScene'),
+                    action: 'disableScene',
+                } : {
+                    type: 'enableScene',
+                    title: t('scene.enableScene'),
+                    action: 'enableScene',
+                },
+                {
+                    type: 'deleteFolder',
+                    title: t('scene.deleteScene'),
+                    action: 'deleteFolder',
+                },
+            ]
+        }
+    }
+
+
     const root = [
         {
             type: 'createApis',
@@ -296,6 +362,24 @@ const MenuTrees = (props, treeRef) => {
             case 'grpc':
                 result = 'GRPC';
                 break;
+            case 'mysql':
+                result = 'MySQL';
+                break;
+            case 'tcp':
+                result = 'TCP';
+                break;
+            case 'mqtt':
+                result = 'MQTT';
+                break;
+            case 'dubbo':
+                result = 'DUBBO';
+                break;
+            case 'oracle':
+                result = 'ORACLE';
+                break;
+            case 'sql':
+                result = item.method;
+                break;
             default:
                 break;
         }
@@ -306,16 +390,34 @@ const MenuTrees = (props, treeRef) => {
         let className = '';
         switch (item.target_type) {
             case 'websocket':
-                className = 'method ws';
+                className = 'method menu-type ws';
                 break;
             case 'grpc':
-                className = 'method grpc';
+                className = 'method menu-type grpc';
                 break;
             case 'api':
-                className = `method ${item.method.toLowerCase()}`;
+                className = `method menu-type ${item.method.toLowerCase()}`;
                 break;
             case 'doc':
-                className = 'method doc';
+                className = 'method menu-type doc';
+                break;
+            case 'mysql':
+                className = 'method menu-type mysql';
+                break;
+            case 'tcp':
+                className = 'method menu-type tcp';
+                break;
+            case 'mqtt':
+                className = 'method menu-type mqtt';
+                break;
+            case 'dubbo':
+                className = 'method menu-type dubbo';
+                break;
+            case 'oracle':
+                className = 'method menu-type oracle';
+                break;
+            case 'sql':
+                className = `method menu-type ${item.method.toLowerCase()}`;
                 break;
             default:
                 break;
@@ -333,6 +435,18 @@ const MenuTrees = (props, treeRef) => {
     }, [CURRENT_TARGET_ID]);
 
     useEffect(() => {
+        if (type != 'mock') {
+            return;
+        }
+
+        if (isString(mock_open_api_now) && mock_open_api_now.length > 0) {
+            setSelectedKeys([mock_open_api_now]);
+        } else {
+            setSelectedKeys([]);
+        }
+    }, [mock_open_api_now]);
+
+    useEffect(() => {
         getWorkspaceCurrent(uuid, `${CURRENT_PROJECT_ID}.CURRENT_EXPAND_KEYS`).then((expandKeys) => {
             if (Array.isArray(expandKeys)) {
                 setDefaultExpandKeys(expandKeys);
@@ -345,6 +459,9 @@ const MenuTrees = (props, treeRef) => {
 
     const renderIcon = (icon) => {
         const NodeIcon = NodeType?.[icon];
+        if (icon == 'api' && type == 'mock') {
+            return <SvgMock width={12} style={{ marginLeft: 5 }} />
+        }
         if (isUndefined(NodeIcon)) {
             return '';
         }
@@ -355,9 +472,11 @@ const MenuTrees = (props, treeRef) => {
     };
 
     const renderPrefix = (treeNode) => {
-        if (treeNode.target_type !== 'api') {
+        const targetTypes = ['api', 'mysql', 'tcp', 'websocket', 'mqtt', 'dubbo', 'oracle', 'sql'];
+        if (!targetTypes.includes(treeNode.target_type)) {
             return null;
         }
+
         return <span className={getTargetMethodClassName(treeNode)}>{renderPreText(treeNode)}</span>;
     };
 
@@ -411,7 +530,19 @@ const MenuTrees = (props, treeRef) => {
         }
     }, [filteredTreeList, open_first]);
 
+    const treeIsSelected = (nodeItem) => {
+        if (type === 'apis') {
+            return `${nodeItem.nodeKey}` === `${open_api_now}`;
+        } else if (type === 'mock') {
+            return `${nodeItem.nodeKey}` === `${mock_open_api_now}`;
+        } else {
+            return `${nodeItem.nodeKey}` === `${open_scene ? open_scene.scene_id || open_scene.target_id : ''}`
+        }
+    }
+
     const renderTreeNode = (nodeItem, { indent, nodeTitle }) => {
+        const { data: { is_disabled } } = nodeItem;
+        const is_mock_open = nodeItem?.data?.is_mock_open
         return (
             <MenuTreeNode>
                 <DragNode
@@ -420,15 +551,21 @@ const MenuTrees = (props, treeRef) => {
                     key={nodeItem.nodeKey}
                     moved={handleNodeDragEnd}
                 >
-                    <div className={cn('tree-node-inner', { 'tree-node-inner-selected': type === 'apis' ? `${nodeItem.nodeKey}` === `${open_api_now}` : `${nodeItem.nodeKey}` === `${open_scene ? open_scene.scene_id || open_scene.target_id : ''}` })}>
+                    <div className={cn('tree-node-inner', { 'tree-node-inner-selected': treeIsSelected(nodeItem) })}>
                         {indent}
                         {renderIcon(nodeItem.target_type)}
                         {renderPrefix(nodeItem)}
                         {nodeTitle}
+                        {
+                            is_disabled === 1 && <SvgDisabled />
+                        }
                         {/* {nodeItem?.mark !== 'developing' && (
                             <MenuStatus value={nodeItem} markObj={markObj}></MenuStatus>
                         )} */}
                         {/* {nodeItem?.is_example > 0 && <Example value={nodeItem}></Example>} */}
+                        {type == 'mock' && is_mock_open == 2 && <Tooltip content='Mock已关闭'>
+                            <SvgDisabled className='mock-btn-open' />
+                        </Tooltip>}
                         <Button
                             className="btn-more"
                             size="mini"
@@ -442,12 +579,17 @@ const MenuTrees = (props, treeRef) => {
                                         plan_id: id,
                                         running_scene,
                                         menu: {
-                                            api,
+                                            api: type == 'mock' ? [{
+                                                type: 'updateApiStatus',
+                                                title: is_mock_open == 2 ? t('mock.open_mock') : t('mock.close_mock'),
+                                                action: 'updateApiStatus',
+                                            }, ...api] : api,
                                             folder,
                                             scene,
                                             group,
                                             root
-                                        }
+                                        },
+                                        getSceneMenuList
                                     },
                                     e,
                                     nodeItem.data,
@@ -566,7 +708,8 @@ const MenuTrees = (props, treeRef) => {
                         scene,
                         group,
                         root
-                    }
+                    },
+                    getSceneMenuList
                 })}
                 // defaultExpandKeys={defaultExpandKeys}
                 onExpandKeysChange={handleExpandsChange}
@@ -595,7 +738,6 @@ const MenuTrees = (props, treeRef) => {
                         _checkKeys.splice(index, 1);
                         setCheckKeys(_checkKeys)
                     }
-
                     if (type !== 'apis' && val.target_type !== 'group') {
 
                     }
@@ -677,6 +819,8 @@ const MenuTrees = (props, treeRef) => {
                             })
 
 
+                        } else if (type == 'mock') {
+                            Bus.$emit('mock/addOpenItem', { id: val.target_id });
                         }
                     }
                 }}

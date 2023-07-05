@@ -58,7 +58,9 @@ const initialState = {
 
   refresh_box: v4(),
 
-  scene_global_param: null
+  scene_global_param: null,
+
+  show_mysql_config: false, // 是否弹出mysql的编辑抽屉
 };
 
 // action名称
@@ -106,7 +108,9 @@ const actionTypes = {
   updateHideDrop: 'updateHideDrop',
 
   updateRefreshBox: 'updateRefreshBox',
-  updateSceneGlobalParam: 'updateSceneGlobalParam'
+  updateSceneGlobalParam: 'updateSceneGlobalParam',
+
+  updateShowMysqlConfig: 'updateShowMysqlConfig'
 };
 
 export const sceneReducer = (state = initialState, action) => {
@@ -297,6 +301,11 @@ export const sceneReducer = (state = initialState, action) => {
       return {
         ...state,
         scene_global_param: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateShowMysqlConfig}`:
+      return {
+        ...state,
+        show_mysql_config: action.payload
       }
     default:
       return state;

@@ -4,17 +4,20 @@ import { Modal, Button, Radio, Message } from 'adesign-react';
 import { useTranslation } from 'react-i18next';
 import SvgClose from '@assets/logo/close';
 import { useSelector } from 'react-redux';
-import { DatePicker, Tooltip, Select } from '@arco-design/web-react';
+import { DatePicker, Tooltip, Select, Collapse, Switch, Table, Input } from '@arco-design/web-react';
+import { IconSwap, IconFullscreen } from '@arco-design/web-react/icon';
 import dayjs from "dayjs";
-const { Group } = Radio;
-const { Option } = Select;
 import 'echarts/lib/echarts';
 import ReactEcharts from 'echarts-for-react';
-import { fetchSavePreset } from '@services/preset';
+import { fetchSavePreset, fetchMachineList } from '@services/preset';
 import SvgExplain from '@assets/icons/Explain';
-import { Input } from '@arco-design/web-react';
-import { isString } from "lodash";
-import { fetchTeamPackage } from '@services/pay';
+import { isString, cloneDeep } from "lodash";
+import FullScreenComp from '@components/FullScreenComp';
+
+const { Group } = Radio;
+const { Option } = Select;
+const { Item: CollapseItem } = Collapse;
+
 
 const CreatePreset = (props) => {
     const { onCancel, configDetail } = props;
@@ -22,20 +25,45 @@ const CreatePreset = (props) => {
     const { t } = useTranslation();
     const language = useSelector((store) => store.user.language);
     const [conf_name, setConfName] = useState('');
+    // 任务类型
     const [task_type, setTaskType] = useState(1);
+    // 任务模式
     const [task_mode, setMode] = useState(1);
+    // 控制模式
     const [control_mode, setControlMode] = useState(0);
+    // 持续时长
     const [duration, setDuration] = useState(null);
+    // 轮次
     const [round_num, setRoundNum] = useState(null);
+    // 并发数
     const [concurrency, setConcurrency] = useState(null);
+    // 起始并发数
     const [start_concurrency, setStartConcurrency] = useState(null);
+    // 步长
     const [step, setStep] = useState(null);
+    // 步长持续时长
     const [step_run_time, setStepRunTime] = useState(null);
+    // 最大并发数
     const [max_concurrency, setMaxConcurrency] = useState(null);
+    // 并发模式选的时间类型：持续时长/轮次
     const [default_mode, setDefaultMode] = useState('duration');
     const [id, setId] = useState(null);
+    // 当前打开的折叠面板key
+    const [activeCollapse, setActiveCollapse] = useState(0);
+    // 是否开启自定义分布式 0关闭 1开启
+    const [is_open_distributed, setIsOpenDistributed] = useState(0);
+    // 自定义分布式的模式 0权重 1自定义
+    const [machine_allot_type, setMachineAllotType] = useState(0);
+    // 自定义分布式的table column
+    const [machine_column, setMachineColumn] = useState([]);
+    // 自定义分布式的table data
+    const [usable_machine_list, setUsableMachineList] = useState([]);
+    // 自定义分布式 自定义 并发模式下, 当前选择的时间类型, 持续时长/轮次
+    const [select_column, setSelectColumn] = useState('duration');
+    // 是否全屏展示表格
+    const [fullScreenTable, setFullScreenTable] = useState(false);
 
-    const modeList = [t('plan.modeList.1'), t('plan.modeList.2'), t('plan.modeList.3'), t('plan.modeList.4'), t('plan.modeList.5')];
+    const modeList = [t('plan.modeList.1'), t('plan.modeList.2'), t('plan.modeList.3'), t('plan.modeList.4'), t('plan.modeList.5'), t('plan.modeList.6')];
     const controlModeList = [t('plan.controlModeList.0'), t('plan.controlModeList.1')];
     const controlExplain = {
         0: t('plan.controlExplain.0'),
@@ -82,6 +110,7 @@ const CreatePreset = (props) => {
 
 
     useEffect(() => {
+        console.log(configDetail);
         if (configDetail && Object.entries(configDetail).length > 0) {
             const {
                 id,
@@ -103,7 +132,12 @@ const CreatePreset = (props) => {
                     task_close_time,
                     task_exec_time
                 },
-                debug_mode
+                debug_mode,
+                is_open_distributed,
+                machine_dispatch_mode_conf: {
+                    machine_allot_type,
+                    usable_machine_list
+                }
             } = configDetail;
 
             setId(id);
@@ -122,12 +156,30 @@ const CreatePreset = (props) => {
             setTaskCloseTime(task_close_time);
             setControlMode(control_mode);
             setDebugMode(debug_mode ? debug_mode : "stop");
+            setIsOpenDistributed(is_open_distributed);
+            setActiveCollapse(is_open_distributed);
+            setMachineAllotType(machine_allot_type);
+            setUsableMachineList(usable_machine_list);
 
             if (round_num > 0) {
                 setDefaultMode('round_num');
             } else {
                 setDefaultMode('duration');
             }
+        } else {
+            const params = {
+                team_id: localStorage.getItem('team_id')
+            };
+
+            fetchMachineList(params).subscribe({
+                next: (res) => {
+                    const { code, data } = res;
+
+                    if (code === 0) {
+                        setUsableMachineList(data);
+                    }
+                }
+            })
         }
     }, [configDetail]);
 
@@ -141,60 +193,50 @@ const CreatePreset = (props) => {
                 </div>
                 <div className="right">
                     {
-                        task_mode === 1 ? <div className="right-container-first">
+                        (task_mode === 1 || task_mode === 6) ?
 
-                            <div style={{ display: 'flex', marginLeft: '6px' }}>
-                                <span className="must-input" style={{ marginTop: '4px', marginRight: 0 }}>*</span>
-                                <Group className='radio-group' value={default_mode} onChange={(e) => {
-                                    setDefaultMode(e);
-                                    if (e === 'duration') {
-                                        setRoundNum(0);
-                                    } else if (e === 'round_num') {
-                                        setDuration(0);
-                                    }
-                                }}>
-                                    <Radio className='radio-group-item' value="duration">
-                                        <span style={{ marginTop: '5px' }}>{t('plan.duration')}： </span>
-                                        <Input value={duration} placeholder={t('placeholder.unitS')} onChange={(e) => {
-                                            if (!e) {
-                                                setDuration('');
-                                                return;
-                                            }
-                                            if (parseInt(e) > 0) {
-                                                setDuration(parseInt(e));
-                                            } else if (`${parseInt(e)}` === `NaN`) {
-                                                setDuration(0);
-                                            }
-                                        }} disabled={default_mode === 'round_num'} />
-                                    </Radio>
-                                    <Radio className='radio-group-item' value="round_num">
-                                        <span style={{ marginTop: '5px' }}>{t('plan.roundNum')}： </span>
-                                        <Input value={round_num} placeholder={t('placeholder.unitR')} onChange={(e) => {
-                                            if (!e || `${parseInt(e)}` === 'NaN') {
-                                                setRoundNum('');
-                                            } else {
-                                                setRoundNum(parseInt(e))
-                                            }
-                                        }} disabled={default_mode === 'duration'} />
-                                    </Radio>
-                                </Group>
-                            </div>
-                            <div className="right-item">
+                            <div className="right-container-first">
 
-                                <span style={{ width: '90px', minWidth: 'auto' }}><span className="must-input">*</span>{t('plan.concurrency')}: </span>
-                                <Input value={concurrency} placeholder={t('placeholder.unitR')} onChange={(e) => {
-                                    if (!e) {
-                                        setConcurrency('');
-                                        return;
-                                    }
-                                    if (parseInt(e) > 0) {
-                                        setConcurrency(parseInt(e));
-                                    } else if (`${parseInt(e)}` === `NaN`) {
-                                        setConcurrency(0);
-                                    }
-                                }} />
+                                <div className='right-item'>
+
+                                    <span style={{ width: '78px', minWidth: 'auto' }}><span className="must-input">*</span>{task_mode === 1 ? t('plan.duration') : t('plan.roundNum')}: </span>
+
+                                    <Input
+                                        value={task_mode === 1 ? duration : round_num}
+                                        placeholder={task_mode === 1 ? t('placeholder.unitS') : t('placeholder.unitR')}
+                                        onChange={(e) => {
+                                            if (task_mode === 1) {
+                                                if (!e || `${parseInt(e)}` === `${NaN}`) {
+                                                    setDuration('');
+                                                } else {
+                                                    setDuration(parseInt(e))
+                                                }
+                                            } else if (task_mode === 6) {
+                                                if (!e || `${parseInt(e)}` === `${NaN}`) {
+                                                    setRoundNum('');
+                                                } else {
+                                                    setRoundNum(parseInt(e))
+                                                }
+                                            }
+                                        }} />
+                                </div>
+
+                                <div className="right-item">
+
+                                    <span style={{ width: '78px', minWidth: 'auto' }}><span className="must-input">*</span>{t('plan.concurrency')}: </span>
+                                    <Input value={concurrency} placeholder={t('placeholder.unitR')} onChange={(e) => {
+                                        if (!e) {
+                                            setConcurrency('');
+                                            return;
+                                        }
+                                        if (parseInt(e) > 0) {
+                                            setConcurrency(parseInt(e));
+                                        } else if (`${parseInt(e)}` === `NaN`) {
+                                            setConcurrency(0);
+                                        }
+                                    }} />
+                                </div>
                             </div>
-                        </div>
                             : <div className="right-container">
                                 <div className="right-item">
                                     <span><span className="must-input">*</span>{t('plan.startConcurrency')}：</span>
@@ -431,83 +473,127 @@ const CreatePreset = (props) => {
             return;
         }
 
-        if (task_mode === 1) {
-            if (task_type === 2) {
-                if (frequency === 0 && task_exec_time === 0) {
-                    Message('error', t('message.taskConfigEmpty'));
-                    return;
-                } else if (frequency !== 0 && (task_exec_time === 0 || task_close_time === 0)) {
-                    Message('error', t('message.taskConfigEmpty'));
-                    return;
-                }
+        if (is_open_distributed === 1 && machine_allot_type === 0) {
+            // 处理自定义分布式的权重模式
 
-                if (frequency !== 0 && task_close_time <= task_exec_time) {
-                    Message('error', t('message.endGTstart'));
-                    return;
-                }
+            let count = usable_machine_list.reduce((sum, item) => sum + item.weight, 0);
+            if (count !== 100) {
+                Message('error', t('message.weightTotalErr'));
+                return;
             }
-            if (!duration && !round_num) {
-                Message('error', t('message.taskConfigEmpty'));
-                return;
-            } else if (!concurrency) {
-                Message('error', t('message.taskConfigEmpty'));
-                return;
+        } else if (is_open_distributed === 1 && machine_allot_type === 1) {
+            // 处理自定义分布式的自定义模式
+
+            let _usable_machine_list = usable_machine_list.filter(item => item.machine_status === 1);
+            if (task_mode === 1) {
+                for (let i = 0; i < _usable_machine_list.length; i++) {
+                    const { concurrency, duration, round_num } = _usable_machine_list[i];
+                    if (!concurrency || (!duration && !round_num)) {
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    }
+                }
+            } else {
+                for (let i = 0; i < _usable_machine_list.length; i++) {
+                    const { start_concurrency, step, step_run_time, max_concurrency, duration } = _usable_machine_list[i];
+
+                    if (!start_concurrency || !step || !step_run_time || !max_concurrency || !duration) {
+
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    }
+
+                    if (max_concurrency < start_concurrency) {
+                        Message('error', t('message.maxConcurrencyLessStart'));
+                        return;
+                    }
+                }
             }
         } else {
-            if (!start_concurrency || !step || !step_run_time || !max_concurrency || !duration) {
-                Message('error', t('message.taskConfigEmpty'));
-                return;
+            if (task_mode === 1) {
+                if (task_type === 2) {
+                    if (frequency === 0 && task_exec_time === 0) {
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    } else if (frequency !== 0 && (task_exec_time === 0 || task_close_time === 0)) {
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    }
+
+                    if (frequency !== 0 && task_close_time <= task_exec_time) {
+                        Message('error', t('message.endGTstart'));
+                        return;
+                    }
+                }
+                if (!duration) {
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                } else if (!concurrency) {
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                }
+            } else if (task_mode === 6) {
+                if (task_type === 2) {
+                    if (frequency === 0 && task_exec_time === 0) {
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    } else if (frequency !== 0 && (task_exec_time === 0 || task_close_time === 0)) {
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    }
+
+                    if (frequency !== 0 && task_close_time <= task_exec_time) {
+                        Message('error', t('message.endGTstart'));
+                        return;
+                    }
+                }
+                if (!round_num) {
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                } else if (!concurrency) {
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                }
+            } else {
+                if (!start_concurrency || !step || !step_run_time || !max_concurrency || !duration) {
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                }
             }
         }
-        let params = {};
+
+        let params = {
+            team_id: localStorage.getItem('team_id'),
+            conf_name,
+            task_type,
+            task_mode,
+            debug_mode,
+            mode_conf: {
+                concurrency: isString(concurrency) ? 0 : concurrency,
+                duration: isString(duration) ? 0 : duration,
+                max_concurrency: isString(max_concurrency) ? 0 : max_concurrency,
+                round_num: isString(round_num) ? 0 : round_num,
+                start_concurrency: isString(start_concurrency) ? 0 : start_concurrency,
+                step: isString(step) ? 0 : step,
+                step_run_time: isString(step_run_time) ? 0 : step_run_time,
+                threshold_value: 0
+            },
+            timed_task_conf: {
+                frequency,
+                task_exec_time,
+                task_close_time
+            },
+            control_mode,
+            is_open_distributed,
+            machine_dispatch_mode_conf: {
+                machine_allot_type,
+                usable_machine_list
+            }
+        };
         if (id) {
             params = {
-                id,
-                team_id: localStorage.getItem('team_id'),
-                conf_name,
-                task_type,
-                task_mode,
-                debug_mode,
-                mode_conf: {
-                    concurrency: isString(concurrency) ? 0 : concurrency,
-                    duration: isString(duration) ? 0 : duration,
-                    max_concurrency: isString(max_concurrency) ? 0 : max_concurrency,
-                    round_num: isString(round_num) ? 0 : round_num,
-                    start_concurrency: isString(start_concurrency) ? 0 : start_concurrency,
-                    step: isString(step) ? 0 : step,
-                    step_run_time: isString(step_run_time) ? 0 : step_run_time,
-                    threshold_value: 0
-                },
-                timed_task_conf: {
-                    frequency,
-                    task_exec_time,
-                    task_close_time
-                },
-                control_mode,
-            };
-        } else {
-            params = {
-                team_id: localStorage.getItem('team_id'),
-                conf_name,
-                task_type,
-                task_mode,
-                debug_mode,
-                mode_conf: {
-                    concurrency,
-                    duration,
-                    max_concurrency,
-                    round_num,
-                    start_concurrency,
-                    step,
-                    step_run_time,
-                    threshold_value: 0
-                },
-                timed_task_conf: {
-                    frequency,
-                    task_exec_time,
-                    task_close_time
-                },
-                control_mode
+                ...params,
+                id
             };
         }
 
@@ -523,6 +609,177 @@ const CreatePreset = (props) => {
         })
     }
 
+
+
+    const updateChange = (list, index, field, value) => {
+        let _data = cloneDeep(list);
+
+        if (`${parseInt(value)}` === `${NaN}`) {
+            _data[index][field] = null;
+            setUsableMachineList(_data);
+        } else {
+            _data[index][field] = parseInt(value);
+            setUsableMachineList(_data);
+        }
+    }
+
+    const updateBlur = (list, index, field, value) => {
+        if (value === null) {
+            let _data = cloneDeep(list);
+            _data[index][field] = 0;
+            setUsableMachineList(_data);
+        }
+    }
+
+    const senior_config_column = [
+        {
+            title: t('plan.machineName'),
+            dataIndex: 'machine_name',
+            width: 100,
+        },
+        {
+            title: t('plan.region'),
+            dataIndex: 'region',
+            width: 60,
+        },
+        {
+            title: t('plan.ip'),
+            dataIndex: 'ip',
+            width: 100,
+        },
+    ];
+
+    useEffect(() => {
+
+        if (machine_allot_type === 0) {
+            setMachineColumn([
+                ...senior_config_column,
+                {
+                    title: t('plan.weight'),
+                    dataIndex: 'weight',
+                    width: 120,
+                    render: (col, item, index) => (
+                        <Input
+                            value={col}
+                            onChange={(e) => updateChange(usable_machine_list, index, 'weight', e)}
+                            onBlur={(e) => updateBlur(usable_machine_list, index, 'weight', e.target.value)}
+                        />
+                    )
+                }
+            ])
+        } else if (machine_allot_type === 1) {
+            if (task_mode === 1) {
+                setMachineColumn([
+                    ...senior_config_column,
+                    {
+                        title: t('plan.concurrency'),
+                        dataIndex: 'concurrency',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'concurrency', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'concurrency', e.target.value)}
+                            />
+                        )
+                    },
+                    {
+                        title:
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <p>{select_column === 'duration' ? `${t('plan.duration')}(s)` : `${t('plan.roundNum')}(s)`}</p>
+                                <Tooltip content={select_column === 'duration' ? t('plan.switchDuration') : t('plan.switchRoundNum')}>
+                                    <IconSwap
+                                        style={{ cursor: 'pointer', marginLeft: '4px', width: '14px', height: '14px' }}
+                                        onClick={() => {
+                                            setSelectColumn(select_column === 'duration' ? 'round_num' : 'duration');
+                                            let _data = cloneDeep(usable_machine_list);
+                                            _data.forEach((item) => {
+                                                item[select_column === 'duration' ? 'round_num' : 'duration'] = 0;
+                                            });
+                                            setUsableMachineList(_data);
+                                        }}
+                                    />
+                                </Tooltip>
+                            </div>,
+                        dataIndex: select_column,
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                onChange={(e) => updateChange(usable_machine_list, index, select_column, e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, select_column, e.target.value)}
+                            />
+                        )
+                    }
+                ])
+            } else {
+                setMachineColumn([
+                    ...senior_config_column,
+                    {
+                        title: t('plan.startConcurrency'),
+                        dataIndex: 'start_concurrency',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'start_concurrency', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'start_concurrency', e.target.value)}
+                            />
+                        )
+                    },
+                    {
+                        title: t('plan.step'),
+                        dataIndex: 'step',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'step', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'step', e.target.value)}
+                            />
+                        )
+                    },
+                    {
+                        title: t('plan.stepRunTime'),
+                        dataIndex: 'step_run_time',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'step_run_time', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'step_run_time', e.target.value)}
+                            />
+                        )
+                    },
+                    {
+                        title: t('plan.maxConcurrency'),
+                        dataIndex: 'max_concurrency',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'max_concurrency', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'max_concurrency', e.target.value)}
+                            />
+                        )
+                    },
+                    {
+                        title: t('plan.duration'),
+                        dataIndex: 'duration',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'duration', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'duration', e.target.value)}
+                            />
+                        )
+                    },
+                ])
+            }
+        }
+    }, [machine_allot_type, task_mode, select_column, usable_machine_list])
+
     return (
         <div>
             <Modal
@@ -531,30 +788,30 @@ const CreatePreset = (props) => {
                 title={null}
                 okText={t('btn.save')}
                 cancelText={t('btn.close')}
-                onOk={() => saveConfig()}
+                onOk={saveConfig}
                 onCancel={onCancel}
             >
                 <div className="top">
                     <p className="top-left">{t('leftBar.preset')}</p>
                     <Button className='top-right' onClick={onCancel}><SvgClose /></Button>
                 </div>
-                <div className="config-name item">
-                    <p><span className="must-input">*</span><span>{t('column.preset.name')}：</span></p>
-                    <Input value={conf_name} placeholder={t('placeholder.configName')} onChange={(e) => setConfName(e)} />
-                </div>
 
                 <div className='task-config-container'>
                     <div className="task-config-container-left">
+                        <div className="config-name item">
+                            <p><span className="must-input">*</span><span>{t('column.preset.name')}：</span></p>
+                            <Input value={conf_name} placeholder={t('placeholder.configName')} onChange={(e) => setConfName(e)} />
+                        </div>
                         <div className='item' style={{ marginBottom: '30px' }}>
                             <p style={{ marginTop: '2px' }}>{t('plan.taskType')}： </p>
-                            <Radio.Group style={{ marginLeft: '14px' }} value={task_type} onChange={(e) => setTaskType(e)}>
+                            <Radio.Group style={{ marginLeft: '10px' }} value={task_type} onChange={(e) => setTaskType(e)}>
                                 <Radio value={1}>{t('plan.taskList.commonTask')}</Radio>
                                 <Radio value={2}>{t('plan.taskList.cronTask')}</Radio>
                             </Radio.Group>
                         </div>
                         <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                            <p>{t('plan.debugMode')}: </p>
-                            <Select style={{ width: '300px', height: '32px', marginLeft: '14px' }} value={debug_mode} onChange={(e) => {
+                            <p>{t('plan.debugMode')}： </p>
+                            <Select style={{ width: '260px', height: '32px', marginLeft: '10px' }} value={debug_mode} onChange={(e) => {
                                 setDebugMode(e);
                             }}>
                                 <Option value="stop">{t('plan.debugMode-0')}</Option>
@@ -564,10 +821,10 @@ const CreatePreset = (props) => {
                             </Select>
                         </div>
                         <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                            <p>{t('plan.controlMode')}:</p>
+                            <p>{t('plan.controlMode')}： </p>
                             <Tooltip content={controlExplain[control_mode]}>
                                 <div>
-                                    <Select value={control_mode} style={{ width: '300px', height: '32px', marginLeft: '14px' }} onChange={(e) => {
+                                    <Select value={control_mode} style={{ width: '260px', height: '32px', marginLeft: '10px' }} onChange={(e) => {
                                         setControlMode(e);
                                     }}>
                                         {
@@ -582,7 +839,7 @@ const CreatePreset = (props) => {
                         {
                             task_type === 2 ? <div className="item" style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                                 <p>{t('plan.frequency')}</p>
-                                <Select style={{ width: '300px', height: '32px', marginLeft: '14px' }} value={frequency} onChange={(e) => {
+                                <Select style={{ width: '260px', height: '32px', marginLeft: '10px' }} value={frequency} onChange={(e) => {
                                     setFrequency(e);
                                     if (e === 0) {
                                         setTaskCloseTime(0);
@@ -627,8 +884,8 @@ const CreatePreset = (props) => {
                         }
 
                         <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                            <p >{t('plan.mode')}:</p>
-                            <Select value={task_mode} style={{ width: '300px', height: '32px', marginLeft: '14px' }} onChange={(e) => {
+                            <p >{t('plan.mode')}：</p>
+                            <Select value={task_mode} style={{ width: '260px', height: '32px', marginLeft: '10px' }} onChange={(e) => {
                                 setDuration(0);
                                 setRoundNum(0);
                                 setConcurrency(0);
@@ -651,23 +908,86 @@ const CreatePreset = (props) => {
                         </div>
                         <div className='other-config'>
                             {
-                                // <TaskConfig />
+                                !(is_open_distributed === 1 && machine_allot_type === 1)
+                                &&
                                 taskConfig()
                             }
                         </div>
                     </div>
                     <div className="task-config-container-right">
+                        <div className='senior-config'>
+                            <Collapse activeKey={activeCollapse} onChange={(e) => {
+                                setActiveCollapse(activeCollapse === 1 ? 0 : 1)
+                            }}>
+                                <CollapseItem name={1} header={t('plan.seniorConfig')}>
+                                    <div className='custom-distributed'>
+                                        <div className='config' style={{ justifyContent: is_open_distributed === 1 ? 'center' : 'flex-start' }}>
+                                            <p>{t('plan.customDistributed')}</p>
+                                            <Switch checked={Boolean(is_open_distributed)} size='small' onChange={(e) => {
+                                                setIsOpenDistributed(Number(e));
+                                                setActiveCollapse(Number(e));
+                                            }} />
+                                            <Tooltip content={is_open_distributed === 0 ? t('plan.useDiyRun') : t('plan.totalWeightTip')}>
+                                                <SvgExplain className='explain-icon' />
+                                            </Tooltip>
+                                            {
+                                                is_open_distributed === 1 && <Group value={machine_allot_type} onChange={(e) => {
+                                                    setMachineAllotType(e);
+                                                }}>
+                                                    <Radio value={0}>{t('plan.machineAllotType.0')}</Radio>
+                                                    <Radio value={1}>{t('plan.machineAllotType.1')}</Radio>
+                                                </Group>
+                                            }
+                                        </div>
+                                        {Boolean(is_open_distributed) && (
+                                            <div className='full-screen-icon-box'>
+                                                <IconFullscreen onClick={() => setFullScreenTable(true)} />
+                                            </div>
+                                        )}
+                                        {
+                                            is_open_distributed === 1 &&
+                                            <Table
+                                                border
+                                                borderCell
+                                                columns={machine_column}
+                                                data={usable_machine_list}
+                                                pagination={false}
+                                                scroll={{
+                                                    x: 350,
+                                                }}
+                                            />
+                                        }
+                                    </div>
+                                </CollapseItem>
+                            </Collapse>
+                        </div>
                         {
                             ((x_echart[0] || x_echart[1]) && (y_echart[0] || y_echart[1])) ?
                                 <>
                                     <ReactEcharts className='echarts' option={getOption(t('plan.configEchart'), x_echart, y_echart)} />
                                     <p style={{ marginLeft: '20px' }}>{t('plan.xUnit')}</p>
                                 </>
-                                : ''
+                                : <div className="empty-echarts-show">
+                                    {t('plan.echartEmptyShow')}
+                                </div>
                         }
                     </div>
                 </div>
             </Modal>
+            {
+                fullScreenTable ? <FullScreenComp onChange={() => setFullScreenTable(false)}>
+                    <Table
+                        border
+                        borderCell
+                        columns={machine_column}
+                        data={usable_machine_list}
+                        pagination={false}
+                        scroll={{
+                            x: 350,
+                        }}
+                    />
+                </FullScreenComp> : <></>
+            }
         </div>
     )
 };

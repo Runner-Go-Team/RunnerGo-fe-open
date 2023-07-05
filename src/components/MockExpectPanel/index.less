@@ -1,0 +1,196 @@
+.mock-expects-panel {
+  padding: 8px 16px;
+
+  .expects-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    .expect-list {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      background: var(--bg);
+      padding: 0 4px;
+      overflow: overlay;
+      overflow-y: hidden;
+      overflow-x: auto;
+      height: 33px;
+      max-width: 86%;
+      .expect-item {
+        position: relative;
+        line-height: 25px;
+        max-width: 150px;
+        min-width: 103px;
+        color: var(--content-color-primary);
+        padding: 0 12px;
+        cursor: pointer;
+        &:hover svg {
+          display: block;
+        }
+
+        svg {
+          display: none;
+          position: absolute;
+          right: 4px;
+          top: 4px;
+          transform: rotateZ(45deg);
+          cursor: pointer;
+        }
+      }
+
+      .expect-item.active,
+      .expect-item:hover {
+        background: var(--module);
+
+        svg {
+          display: block;
+        }
+      }
+    }
+
+    .apipost-btn-default {
+      border: 1px solid var(--theme-color);
+      color: var(--theme-color);
+      margin-left: 20px;
+      line-height: 25px;
+      height: 25px;
+      background-color: var(--theme-20);
+      svg {
+        fill: var(--theme-color);
+      }
+    }
+  }
+
+  .expects-content {
+    margin-top: 8px;
+
+    .expect-info {
+      display: flex;
+      align-items: center;
+
+      label {
+        color: var(--font-3);
+      }
+      .apipost-select{
+        height: 26px;
+      }
+      .apipost-select-view{
+        svg{
+          fill: var(--font-1);
+        }
+      }
+      .apipost-select-view-text{
+        margin-right: 16px;
+      }
+      input {
+        width: 144px;
+        height: 26px;
+        margin-right: 14px;
+        background-color: var(--bg);
+      }
+    }
+
+    .expect-conditions {
+      margin-top: 8px;
+
+      .condition-header {
+        border-left: 4px solid var(--theme-color);
+        font-size: 14px;
+        line-height: 24px;
+        padding-left: 8px;
+        margin-bottom: 8px;
+        color: var(--font-1);
+      }
+
+      .apipost-table-th .apipost-table-td {
+        background-color: var(--bg) !important;
+      }
+
+      .apipost-select {
+        width: 100%;
+      }
+
+      .apipost-table-td {
+        background-color: var(--module) !important;
+        border-color: var(--border-line) !important;
+      }
+
+      .apipost-table-td .apipost-table-cell,
+      .apipost-input-inner-wrapper,
+      .arco-select-view {
+        height: 34px;
+      }
+      .apipost-input-inner-wrapper:hover{
+        background-color: var(--scene-border);
+      }
+    }
+
+    .expect-response {
+      margin-top: 8px;
+
+      .response-header {
+        .apipost-btn-default {
+          border: 1px solid var(--theme-color);
+          color: var(--theme-color);
+          margin-left: 8px;
+          line-height: 24px;
+          height: 24px;
+        }
+
+        border-left: 4px solid var(--theme-color);
+        font-size: 14px;
+        line-height: 24px;
+        padding-left: 8px;
+        margin-bottom: 8px;
+        color: var(--font-1);
+      }
+
+      .response-tabs {
+        width: 212px;
+        height: 33px;
+        background: var(--bg);
+        border-radius: 4px;
+        padding: 4px;
+        display: flex;
+
+        .response-tabs-item {
+          display: flex;
+          align-items: center;
+          border-radius: 2px;
+          padding: 4px 12px;
+          color: var(--font-1);
+          cursor: pointer;
+          svg{
+            margin-right: 8px;
+            fill: var(--font-1);
+          }
+        }
+
+        .response-tabs-item.active {
+          background: var(--module);
+        }
+      }
+
+      .response-raw {
+        margin-top: 8px;
+
+        .protogenesis-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 8px;
+          .apipost-btn{
+            padding: 4px 12px;
+            color: var(--font-1);
+            // background: var(--select-hover);
+            svg{
+              margin-right: 8px;
+              fill: var(--font-1);
+            }
+          }
+        }
+      }
+    }
+  }
+}

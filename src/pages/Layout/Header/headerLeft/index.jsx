@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Dropdown } from 'adesign-react';
+import { Tooltip } from '@arco-design/web-react';
 import { Apis as SvgApis } from 'adesign-react/icons';
 import './index.less';
 import TeamProject from './teamProject';
@@ -14,6 +15,7 @@ import { isArray } from 'lodash';
 import SvgLogo1 from '@assets/logo/runner_dark';
 import SvgLogo2 from '@assets/logo/runner_white';
 import Bus from '@utils/eventBus';
+import { RD_ADMIN_URL } from '@config';
 
 const HeaderLeft = () => {
     const refDropdown = useRef();
@@ -47,10 +49,16 @@ const HeaderLeft = () => {
 
     const theme = useSelector((store) => store.user.theme);
 
+    const toAdmin = () => {
+        window.open(RD_ADMIN_URL);
+    }
+
 
     return (
         <div className='header-left'>
-            {theme === 'dark' ? <SvgLogo1 className="logo" /> : <SvgLogo2 className="logo" />}
+            <Tooltip content={t('tooltip.company_admin')}>
+            {theme === 'dark' ? <SvgLogo1 className="logo" onClick={toAdmin} /> : <SvgLogo2 className="logo" onClick={toAdmin} />}
+            </Tooltip>
 
             <TeamProject />
 

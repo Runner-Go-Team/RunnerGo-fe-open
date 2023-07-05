@@ -3,16 +3,11 @@ import { Message } from 'adesign-react';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';
 import Bus from '@utils/eventBus';
-import { isElectron, clearUserData } from '@utils';
 import { isLogin } from '@utils/common';
-import { RD_BASE_URL, APP_VERSION, REQUEST_TIMEOUT } from '@config/index';
-import { getCookie } from '../../utils/cookie';
-import { ContentType } from '@constants/ajax';
-import { fetchTokenRefresh } from '../user';
-import { tap } from 'rxjs';
-import i18next from 'i18next';
+import { RD_BASE_URL, APP_VERSION, REQUEST_TIMEOUT, RD_ADMIN_URL } from '@config/index';
 import { getUserConfig$ } from '@rxUtils/user';
 import { global$ } from '@hooks/useGlobal/global';
+import { getCookie, clearUserData } from '@utils';
 
 export const rxAjax = (
     method = 'GET',
@@ -27,7 +22,7 @@ export const rxAjax = (
         method,
         url: `${RD_BASE_URL}${url}`,
         headers: {
-            Authorization: localStorage.getItem('runnergo-token') ? localStorage.getItem('runnergo-token') : "",
+            Authorization: getCookie('token') || "",
             CurrentTeamID: localStorage.getItem('team_id') ? localStorage.getItem('team_id') : "0"
         },
         body: params,
@@ -55,15 +50,25 @@ export const rxAjax = (
                 }
 
                 if (resp.response.code === 20014) {
-                    getUserConfig$().subscribe({
-                        next: () => {
-                            global$.next({
-                                action: 'INIT_APPLICATION',
-                            });
-                        }
-                    })
+                    setTimeout(() => {
+                        window.location.href = RD_ADMIN_URL
+                    }, 1500);
+                    // getUserConfig$().subscribe({
+                    //     next: () => {
+                    //         global$.next({
+                    //             action: 'INIT_APPLICATION',
+                    //         });
+                    //     }
+                    // })
+
                 }
 
+                if(resp.response.code === 20072){
+                    setTimeout(()=>{
+                        clearUserData();
+                         window.location.href = `${RD_ADMIN_URL}/#/login`;
+                    },1000)
+                }
  
                 if (resp.response.code === 20024) {
                     window.location.href = '/#/Treport/list';
@@ -87,7 +92,7 @@ export const rxAjax = (
                     localStorage.removeItem('open_scene');
                     localStorage.removeItem('open_plan');
                     localStorage.removeItem("package_info");
-                    window.location.href = '/#/login';
+                    window.location.href = `${RD_ADMIN_URL}/#/login`;
                     Bus.$emit('closeWs');
                 }
 

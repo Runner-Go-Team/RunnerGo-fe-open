@@ -10,7 +10,8 @@ import SvgClose from '@assets/logo/close';
 import { EamilReg } from '@utils';
 import { useDispatch, useSelector } from 'react-redux';
 import Bus from '@utils/eventBus';
-
+import { RD_ADMIN_URL } from '@config';
+import { setCookie } from '@utils';
 
 
 const EditEmail = (props) => {
@@ -61,7 +62,9 @@ const EditEmail = (props) => {
                     localStorage.removeItem('open_scene');
                     localStorage.removeItem('open_plan');
                     localStorage.removeItem("package_info");
-                    navigate('/login');
+                    
+                    setCookie('token', '');
+                    window.location.href = `${RD_ADMIN_URL}/#/login`;
                 }
             }
         })

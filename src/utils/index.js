@@ -6,6 +6,7 @@ import { FE_HOST } from '@config/client';
 import Mock from 'mockjs';
 import ATools from 'apipost-tools';
 import IATools from 'apipost-inside-tools';
+import { v4 as uuidV4 } from 'uuid';
 import JSONbig from 'json-bigint';
 import { getBaseCollection } from '@constants/baseCollection';
 import JSON5 from 'json5';
@@ -36,6 +37,8 @@ import _, {
     cloneDeep,
     mergeWith,
 } from 'lodash';
+import Bus from './eventBus';
+import dayjs from 'dayjs';
 
 // 复制文本到剪切板
 export const copyStringToClipboard = (str, showMessage = true) => {
@@ -126,21 +129,10 @@ export const saveLocalData = (data) => {
 export const isElectron = IATools.isElectron;
 // 清除用户信息
 export const clearUserData = () => {
-    // 记住密码 保留 用户信息
-    let userInfo = '';
-    if (localStorage.getItem('userInfo')) {
-        userInfo = localStorage.getItem('userInfo') || '';
-    }
-    const machineID = localStorage.getItem('machineid') || '';
+    Bus.$emit('closeWs');
     localStorage.clear();
-    localStorage.setItem('machineid', machineID);
     sessionStorage.clear();
-    setCookie('token', '', 0);
-    localStorage.setItem('userInfo', userInfo);
-    // 初始化
-    global$.next({
-        action: 'INIT_APPLICATION',
-    });
+    setCookie('token', '');
 };
 
 export const getClipboardText = () =>
@@ -1268,6 +1260,116 @@ export const formatSceneData = (nodes, edges) => {
 
     return data;
 }
+// 将数据模型转换成json-schema
+export const parseModelToJsonSchema = async (model, parentModels = []) => {
+    const result = cloneDeep(model);
+    if (isString(result?.ref)) {
+        const md5Key = uuidV4().replace(/\-/g, '');
+        result.APIPOST_ORDERS = [md5Key];
+        result.APIPOST_REFS = {
+            [md5Key]: {
+                ref: result?.ref,
+            },
+        };
+        result.properties = {};
+        result.type = 'object';
+        delete result.ref;
+    }
+    if (isArray(result?.type) && result?.type.length > 0) {
+        result.type = result.type[0];
+    }
+    if (result?.type === 'array') {
+        result.items = await parseModelToJsonSchema(result.items, parentModels);
+    }
+    if (result?.type !== 'object') {
+        return result;
+    }
+
+    // 将所有的ref信息从库里读出来
+    const refData = {};
+
+    // const nodeRefsData = result?.APIPOST_REFS || {};
+    // for (const key in nodeRefsData) {
+    //   const data = nodeRefsData[key];
+    //   if (!isString(data?.ref)) {
+    //     continue;
+    //   }
+    //   // eslint-disable-next-line no-await-in-loop
+    //   const dataModel = await getModelItem(data?.ref);
+    //   const overrideData = data?.APIPOST_OVERRIDES ?? {};
+    //   if (parentModels?.includes(dataModel?.model_id)) {
+    //     continue;
+    //   }
+
+    //   // eslint-disable-next-line no-await-in-loop
+    //   const newData: any = await parseModelToJsonSchema(dataModel?.schema || {}, [
+    //     ...parentModels,
+    //     dataModel.model_id,
+    //   ]);
+    //   newData.properties = merge(overrideData, newData.properties || {});
+
+    //   //  重新排序
+    //   if (isArray(newData?.APIPOST_ORDERS)) {
+    //     const newProperties = [];
+    //     for (const dataKey of newData?.APIPOST_ORDERS) {
+    //       newProperties.push([dataKey, newData?.properties?.[dataKey]]);
+    //     }
+    //     newData.properties = Object.fromEntries(newProperties);
+    //   }
+    //   delete newData.APIPOST_OVERRIDES;
+    //   delete newData.APIPOST_REFS;
+    //   delete newData.APIPOST_ORDERS;
+    //   refData[key] = newData;
+    // }
+
+    //
+    if (isArray(result?.APIPOST_ORDERS)) {
+        // const newProperties = {};
+        const newProperties = [];
+        let requireds = isArray(result?.required) ? result.required : [];
+        for (const key of result?.APIPOST_ORDERS) {
+            if (isPlainObject(refData?.[key]?.properties)) {
+                Object.entries(refData?.[key]?.properties).forEach(([refKey, refValue]) => {
+                    newProperties.push([refKey, refValue]);
+                });
+            } else if (isPlainObject(result?.properties?.[key])) {
+                newProperties.push([key, result?.properties?.[key]]);
+            }
+
+            const required = refData?.[key]?.required;
+            if (isArray(required)) {
+                requireds = requireds.concat(required);
+            }
+        }
+        result.required = requireds;
+        result.properties = Object.fromEntries(newProperties);
+    }
+
+    // 递归对内部元素再次解析
+    for (const modelKey in result.properties) {
+        const modelData = result.properties[modelKey];
+        // eslint-disable-next-line no-await-in-loop
+        result.properties[modelKey] = await parseModelToJsonSchema(modelData, parentModels);
+    }
+    delete result.APIPOST_ORDERS;
+    delete result.APIPOST_REFS;
+    delete result.APIPOST_OVERRIDES;
+    return result;
+};
+
+export const FotmatTimeStamp = (timeStamp, format) => {
+    try {
+      let time_temp = `${timeStamp}`;
+      if (time_temp.length === 10) {
+        time_temp = time_temp * 1000;
+      }
+      time_temp = parseInt(time_temp, 10);
+  
+      return dayjs(time_temp).format(format);
+    } catch (error) {
+      return '-';
+    }
+  }
 
 export default {
     copyStringToClipboard, // 复制字符串
@@ -1312,4 +1414,6 @@ export default {
     spliceIntoChunks,
     customizer,
     PhoneReg,
+    parseModelToJsonSchema,
+    FotmatTimeStamp
 };

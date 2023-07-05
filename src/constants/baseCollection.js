@@ -1,6 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
 // import { User } from '@indexedDB/user';
-
+const typeName = {
+  api: '新建接口',
+  doc: '新建文本',
+  folder: '新建目录',
+  websocket: '新建websocket',
+  grpc: '新建grpc',
+  mysql: '新建MySQL',
+  tcp: '新建TCP',
+  mqtt: '新建MQTT',
+  dubbo: '新建DUBBO',
+  oracle: '新建ORACLE',
+  sql: '新建SQL',
+}
 const createTarget = (type, baseCollection) => {
   switch (type) {
     case 'api':
@@ -9,9 +21,11 @@ const createTarget = (type, baseCollection) => {
         method: 'POST',
         mock: '{}',
         mock_url: '',
+        mock_path: '', // mock 接口路径
         url: '',
         request: {
           url: '',
+          method: 'POST',
           description: '', // 接口说明 接口描述 针对整个接口
           auth: {
             type: 'noauth', // 认证类型  noauth无需认证 kv私密键值对 bearer认证 basic认证
@@ -116,6 +130,20 @@ const createTarget = (type, baseCollection) => {
           resful: {
             parameter: [],
           },
+          assert: [],
+          regex: [],
+          http_api_setup: {
+            is_redirects: 0,
+            redirects_num: 3,
+            read_time_out: 0,
+            write_time_out: 0,
+            client_name: '',
+            user_agent: true,
+            keep_alive: true,
+            max_idle_conn_duration: 5,
+            max_conn_wait_timeout: 5,
+            max_conn_per_host: 10000
+          },
         },
         response: {
           // 响应
@@ -131,26 +159,61 @@ const createTarget = (type, baseCollection) => {
             expect: {},
           },
         },
-        assert: [],
-        regex: [],
-        http_api_setup: {
-          is_redirects: 0,
-          redirects_num: 3,
-          read_time_out: 0,
-          write_time_out: 0,
-          client_name: '',
-          user_agent: true,
-          keep_alive: true,
-          max_idle_conn_duration: 5,
-          max_conn_wait_timeout: 5,
-          max_conn_per_host: 10000
-        },
+        expects: [], // 期望集合
+
         is_check_result: 1, // 是否开启校验返回结果 开关
         check_result_expectId: '', // 校验期望id
         is_example: -1,
         is_locked: -1,
+        is_mock_open: 1, //mock服务是否开启 1开始 2关闭
       };
       return api;
+      break;
+    case 'sql':
+      const mysql = {
+        ...baseCollection,
+        method: 'MySQL',
+
+        sql_detail: {
+          sql_string: '',
+          assert: [],
+          regex: [],
+          sql_database_info: {
+            server_name: '',
+            host: '',
+            user: '',
+            password: '',
+            port: 0,
+            db_name: '',
+            charset: ''
+          }
+        },
+      };
+      return mysql;
+      break;
+    case 'tcp':
+      const tcp = {
+        ...baseCollection,
+        method: "TCP",
+        assert: [],
+        regex: [],
+
+        tcp_detail: {
+          send_message: "",
+          url: "",
+          message_type: "json",
+          tcp_config: {
+            connect_type: 1,
+            is_auto_send: 0,
+            connect_duration_time: 10,
+            send_msg_duration_time: 500,
+            connect_timeout_time: 0,
+            retry_num: 5,
+            retry_interval: 5000,
+          }
+        },
+      };
+      return tcp;
       break;
     case 'doc':
       const doc = {
@@ -265,31 +328,109 @@ const createTarget = (type, baseCollection) => {
     case 'websocket':
       const websocket = {
         ...baseCollection,
-        method: 'Raw',
-        request: {
-          header: {
-            parameter: [],
-          },
-          query: {
-            parameter: [],
-          },
-          url: '',
-          description: '',
+        method: "WS",
+        target_type: 'websocket',
+        websocket_detail: {
+          send_message: "",
+          message_type: "json",
+          url: "",
+          ws_header: [],
+          ws_param: [],
+          ws_event: [],
+          ws_config: {
+            connect_type: 1,
+            is_auto_send: 0,
+            connect_duration_time: 10,
+            send_msg_duration_time: 500,
+            connect_timeout_time: 0,
+            retry_num: 5,
+            retry_interval: 5000
+          }
         },
-        socketConfig: {
-          informationSize: 5, // 最大可接收内容大小，单位（MB），0表示不限制
-          reconnectNum: 0, // 链接意外断开时，最大重新尝试链接次数
-          reconnectTime: 5000, // 重连时间间隔，单位毫秒
-          shakeHandsPath: '/socket.io', // 设置握手期间应使用的服务器路径
-          shakeHandsTimeOut: 0, // 链接超时等待时长，毫秒为单位，0表示用不超时
-          socketEventName: '', // 发送事件名
-          socketIoEventListeners: [], // 后端事件监听列表
-          socketIoVersion: 'v3', // method为Socket.IO类型时，用于链接服务器所使用的客户端版本
-        },
-        message: '', // 发送消息内容
-        messageType: 'Text', // 发送消息类型 Text/Json/Xml/Base64/Hexadecimal
       };
       return websocket;
+      break;
+    case 'mqtt':
+      const mqtt = {
+        ...baseCollection,
+        method: "MQTT",
+        target_type: "mqtt",
+        mqtt_detail: {
+          topic: "",
+          send_message: "",
+          common_config: {
+            client_name: "",
+            username: "",
+            password: "",
+            is_encrypt: true,
+            auth_file: {
+              file_name: "",
+              file_url: ""
+            }
+          },
+          higher_config: {
+            connect_timeout_time: 10,
+            keep_alive_time: 60,
+            is_auto_retry: true,
+            retry_num: 5,
+            retry_interval: 5000,
+            mqtt_version: "5.0",
+            dialogue_timeout: 0,
+            is_save_message: false,
+            service_quality: 0,
+            send_msg_interval_time: 0
+          },
+          will_config: {
+            will_topic: "",
+            is_open_will: true,
+            service_quality: 0
+          }
+        }
+      };
+      return mqtt;
+      break;
+    case 'dubbo':
+      const dubbo = {
+        ...baseCollection,
+        method: "DUBBO",
+        target_type: "dubbo",
+        dubbo_detail: {
+          api_name: "",
+          function_name: "",
+          dubbo_protocol: "dubbo",
+          dubbo_param: [],
+          dubbo_assert: [],
+          dubbo_regex: [],
+          dubbo_config: {
+            registration_center_name: "",
+            registration_center_address: "",
+            version: ""
+          }
+        }
+      }
+      return dubbo;
+      break;
+    case 'oracle':
+      const oracle = {
+        ...baseCollection,
+        method: "ORACLE",
+        target_type: "oracle",
+        oracle_detail: {
+          sql_string: '',
+          assert: [],
+          regex: [],
+          oracle_database_info: {
+            server_name: '',
+            host: '',
+            user: '',
+            password: '',
+            port: 0,
+            db_name: '',
+            charset: ''
+          }
+        }
+      };
+      return oracle;
       break;
     case 'grpc':
       const grpc = {
@@ -301,7 +442,6 @@ const createTarget = (type, baseCollection) => {
       };
       return grpc;
       break;
-    
     case 'scene':
       const scene = {
         ...baseCollection,
@@ -402,7 +542,7 @@ const createTarget = (type, baseCollection) => {
         },
       };
       return scene;
-      default:
+    default:
       return baseCollection;
       break;
   }
@@ -414,18 +554,7 @@ export const getBaseCollection = (type) => {
     // project_id: '-1',
     target_id: uuidv4(),
     target_type: type,
-    name:
-      type && type === 'api'
-        ? '新建接口'
-        : type === 'doc'
-        ? '新建文本'
-        : type === 'folder'
-        ? '新建目录'
-        : type === 'websocket'
-        ? '新建websocket'
-        : type === 'grpc'
-        ? '新建grpc'
-        : '新建未知',
+    name: type && (typeName[type] || '新建未知'),
     sort: -1,
     version: 1,
     // mark: 'developing',
@@ -433,7 +562,31 @@ export const getBaseCollection = (type) => {
     update_dtime: ~~(new Date().getTime() / 1000), // 更新当前时间戳
     create_dtime: ~~(new Date().getTime() / 1000), // 创建时间戳
     status: 1, // 1.正常 -1删除 -2    -99彻底删除
+    env_info: {
+      env_id: 0,
+      env_name: '',
+      service_id: 0,
+      service_name: '',
+      pre_url: '',
+      database_id: 0,
+      server_name: ''
+    }
     // modifier_id: localStorage.getItem('uuid') || '-1',
   };
   return createTarget(type, baseCollection);
 };
+
+export const getExpectNew = () => {
+  const EXPECT_NEW = {
+    "name": "新建期望",
+    "expect_id": uuidv4(),
+    "conditions": [],
+    "response": {
+      "content_type": "json",
+      "json_schema": '',
+      "json": "",
+      "raw": ""
+    }
+  }
+  return EXPECT_NEW;
+}

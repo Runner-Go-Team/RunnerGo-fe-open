@@ -17,6 +17,7 @@ import { HEADERTYPELIST } from '@constants/typeList';
 import Bus from '@utils/eventBus';
 import { newDataItem, dataItem } from '@constants/dataItem';
 import useFolders from '@hooks/useFolders';
+import useMockFolders from '@hooks/useMockFolders';
 import { findSon } from '@utils';
 import { cloneDeep, eq, isPlainObject, isString, set, trim, isArray } from 'lodash';
 import DescChoice from '@components/descChoice';
@@ -31,9 +32,9 @@ const Option = Select.Option;
 const Textarea = Input.TextArea;
 
 const CreateFolder = (props) => {
-    const { onCancel, folder } = props;
+    const { onCancel, folder, type = 'api' } = props;
 
-    const { apiFolders } = useFolders();
+    const apiFolders = type == 'mock' ? useMockFolders().apiFolders : useFolders().apiFolders
     const { t } = useTranslation();
     const [script, setScript] = useState({
         pre_script: '',
@@ -336,6 +337,74 @@ const CreateFolder = (props) => {
             </>
         );
     };
+    const onModalSumbit = () => {
+        if (trim(folderName).length <= 0) {
+            Message('error', t('message.folderNameEmpty'));
+            return;
+        }
+        if (type === 'mock') {
+            let option = {
+                param: {
+                    name: folderName,
+                    description,
+                    request,
+                    script,
+                    parent_id: parent_id || '0',
+                },
+            }
+            if (isPlainObject(folder)) {
+                option.oldFolder = folder;
+            }
+            Bus.$emit('mock/saveMockFolder', option,
+                () => {
+                    onCancel();
+                    if (isPlainObject(folder)) {
+                        Message('success', t('message.saveSuccess'));
+                    } else {
+                        Message('success', t('message.createFolderSuccess'));
+                    }
+                })
+            return;
+        }
+        if (isPlainObject(folder)) {
+            Bus.$emit(
+                'busUpdateCollectionById',
+                {
+                    id: folder.target_id,
+                    data: {
+                        name: folderName,
+                        description,
+                        request,
+                        script,
+                        parent_id: parent_id || '0',
+                    },
+                    oldValue: folder
+                },
+                () => {
+                    onCancel();
+                    Message('success', t('message.saveSuccess'));
+                }
+            );
+        } else {
+            Bus.$emit(
+                'addCollectionItem',
+                {
+                    type: 'folder',
+                    pid: parent_id || '0',
+                    param: {
+                        name: folderName,
+                        description,
+                        request,
+                        script,
+                    },
+                },
+                () => {
+                    onCancel();
+                    Message('success', t('message.createFolderSuccess'));
+                }
+            );
+        }
+    }
     return (
         <Modal
             title={isPlainObject(folder) ? t('apis.editFolder') : t('apis.createFolder')}
@@ -344,51 +413,7 @@ const CreateFolder = (props) => {
             className={FolderModal}
             cancelText={t('btn.cancel')}
             okText={t('btn.save')}
-            onOk={() => {
-                // return;
-                if (trim(folderName).length <= 0) {
-                    Message('error', t('message.folderNameEmpty'));
-                    return;
-                }
-                if (isPlainObject(folder)) {
-                    Bus.$emit(
-                        'busUpdateCollectionById',
-                        {
-                            id: folder.target_id,
-                            data: {
-                                name: folderName,
-                                description,
-                                request,
-                                script,
-                                parent_id: parent_id || '0',
-                            },
-                            oldValue: folder
-                        },
-                        () => {
-                            onCancel();
-                            Message('success', t('message.saveSuccess'));
-                        }
-                    );
-                } else {
-                    Bus.$emit(
-                        'addCollectionItem',
-                        {
-                            type: 'folder',
-                            pid: parent_id || '0',
-                            param: {
-                                name: folderName,
-                                description,
-                                request,
-                                script,
-                            },
-                        },
-                        () => {
-                            onCancel();
-                            Message('success', t('message.createFolderSuccess'));
-                        }
-                    );
-                }
-            }}
+            onOk={onModalSumbit}
         >
             <FolderWrapper>
                 <div className="article">

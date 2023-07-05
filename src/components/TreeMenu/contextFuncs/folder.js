@@ -5,10 +5,16 @@ import { isArray, isObject, isPlainObject, isString, isUndefined } from 'lodash'
 import Bus from '@utils/eventBus';
 import { getCoverData, getFullData, deleteMultiData } from './common';
 import { fetchFolderDetail } from '@services/apis';
+import { fetchMockFolderDetail } from '@services/mock';
 import { global$ } from '@hooks/useGlobal/global';
 import i18next from 'i18next';
 
-export const createApi = ({ target_id }) => {
+export const createApi = ({ target_id }, props) => {
+    const from = props?.from;
+    if (from == 'mock') {
+        Bus.$emit('mock/addOpenItem', { pid: target_id });
+        return;
+    }
     Bus.$emit('addOpenItem', { type: 'api', pid: target_id });
 };
 export const createText = ({ props, params }) => {
@@ -25,19 +31,28 @@ export const createChildFolder = ({ params, showModal, action }) => {
     Bus.$emit('addOpenItem', { type: 'folder', pid: params.target_id });
 };
 export const modifyFolder = async ({ target_id }, props) => {
-    // const folder = await Collection.get(params.target_id);
-    // if (!isUndefined(folder) && isPlainObject(folder)) {
-    fetchFolderDetail({
-        team_id: localStorage.getItem('team_id'),
-        target_id,
-    }).subscribe({
-        next(res) {
-            const { data: { folder } } = res;
-            props.showModal('addFolder', { folder });
-        }
-    })
-
-
+    const from = props?.from;
+    if (from == 'mock') {
+        fetchMockFolderDetail({
+            team_id: localStorage.getItem('team_id'),
+            target_id,
+        }).subscribe({
+            next(res) {
+                const { data: { folder } } = res;
+                props.showModal('addFolder', { folder, type: from });
+            }
+        })
+    } else {
+        fetchFolderDetail({
+            team_id: localStorage.getItem('team_id'),
+            target_id,
+        }).subscribe({
+            next(res) {
+                const { data: { folder } } = res;
+                props.showModal('addFolder', { folder });
+            }
+        })
+    }
     // }
 };
 export const shareFolder = ({ props, params, showModal }) => {
@@ -113,9 +128,15 @@ export const deleteFolder = ({ target_id }, props, open_scene, from, plan_id) =>
         okText: i18next.t('btn.ok'),
         cancelText: i18next.t('btn.cancel'),
         onOk: () => {
+            if(from == 'mock'){
+                Bus.$emit('mock/deleteMockItem', target_id, () => {
+                    Message('success', i18next.t('message.deleteSuccess'));
+                });
+                return;
+            }
             Bus.$emit('toDeleteFolder', target_id, from, plan_id, () => {
                 Message('success', i18next.t('message.deleteSuccess'));
-  
+
             });
         }
     })

@@ -1,0 +1,91 @@
+.scene-mysql-box {
+    width: 226px;
+    // height: 112px;
+    background-color: var(--pre-condition-bg);
+    border-radius: 5px;
+    padding: 16px;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        color: var(--font-1);
+
+        svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--font-1);
+            cursor: pointer;
+        }
+
+        .drag-content {
+            flex: 1;
+            height: 16px;
+        }
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: var(--bg);
+        padding: 12px;
+        margin-top: 14px;
+        border-radius: 5px;
+
+        .left {
+            display: flex;
+            align-items: center;
+            color: var(--font-1);
+
+            svg {
+                width: 14px;
+                height: 14px;
+                margin-right: 4px;
+                fill: var(--mysql);
+            }
+        }
+
+        svg {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            fill: var(--font-1);
+        }
+
+    }
+
+    .success {
+        background-color: var(--sub-color-1);
+        color: var(--common-white) !important;
+
+        svg {
+            fill: var(--common-white) !important;
+        }
+    }
+
+    .failed {
+        background-color: var(--sub-color-5);
+        color: var(--common-white) !important;
+
+        svg {
+            fill: var(--common-white) !important;
+        }
+    }
+
+    .view-result {
+        margin-top: 10px;
+
+        .arco-btn {
+            width: 60px;
+            height: 24px;
+            border-radius: 3px;
+            background-color: var(--scene-border);
+            color: var(--font-1);
+            font-size: 12px;
+            padding: 0;
+        }
+    }
+
+}

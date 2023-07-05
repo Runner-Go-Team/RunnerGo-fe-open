@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 export const ApisWrapper = css`
   .left-menus {
     background-color: var(--background-color-secondary);
-    margin-top: 14px;
+    margin-top: 10px;
   }
   .left-menus > .scale-item-content {
     height: 100%;
@@ -21,7 +21,7 @@ export const ApisWrapper = css`
   }
 
   .right-apis {
-    margin-top: 14px;
+    margin-top: 10px;
   }
 `;
 

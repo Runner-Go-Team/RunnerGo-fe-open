@@ -16,7 +16,6 @@ import { fetchStopReport } from '@services/report';
 import { useTranslation } from 'react-i18next';
 import qs from 'qs';
 import { useSelector } from 'react-redux';
-import InvitationModal from '@modals/ProjectInvitation';
 import SvgSuccess from '@assets/logo/success';
 import InputText from '@components/InputText';
 import { fetchUpdateName } from '@services/report';
@@ -24,7 +23,6 @@ import { fetchUpdateName } from '@services/report';
 const ReportHeader = (props) => {
     const { data: { plan_name, scene_name, report_name }, status, plan_id } = props;
     const { t } = useTranslation();
-    const [showSendEmail, setSendEmail] = useState(false);
     const navigate = useNavigate();
     const ref1 = useRef(null);
     const refs = [ref1];
@@ -177,7 +175,7 @@ const ReportHeader = (props) => {
                     <div className='report-status'>{status === 1 ? t('btn.running') : t('btn.done')}</div>
                 </div>
                 <div className='report-header-right'>
-                    <Button className='notice' preFix={<SvgSendEmail width="16" height="16" />} onClick={() => setSendEmail(true)}>{t('btn.notifyEmail')}</Button>
+                    <Button disabled={status === 1} className='notice' preFix={<SvgSendEmail width="16" height="16" />} onClick={() => Bus.$emit('openModal','Notice',{event_id:102 ,options:{report_ids:[report_id]}})}>{t('btn.notif')}</Button>
                     {/* <Button className='download' onClick={() => donwloadReport()}>下载</Button> */}
                     {
                         status === 1
@@ -186,7 +184,6 @@ const ReportHeader = (props) => {
                     }
                 </div>
             </div>
-            {showSendEmail && <InvitationModal from="report" email={true} onCancel={() => setSendEmail(false)} />}
         </>
     )
 };

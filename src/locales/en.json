@@ -21,6 +21,7 @@
         "findToLogin": "Go to login",
         "emailSuccess": "The email with password retrieved was sent successfully! Please log in to your email to view",
         "email": "Email",
+        "account": "Account",
         "email_tips": "If you don't receive it, please try to check your mailbox trash or try again later",
         "send_again": "You can resend the password reset email with the following buttons",
         "reset": "reset password",
@@ -60,7 +61,7 @@
         "wxLoginTitle": "WeChat login/registration",
         "plsInputPwd": "Please enter a 6-20 digit password",
         "confirmPwdError": "The passwords entered do not match",
-        "newUserReward": "Get 5000 VUM for free using Enterprise Edition - Pass",
+        "newUserReward": "Get 5000 VUM for free using Enterprise Edition - SaaS",
         "toWebSite1": "Welcome to",
         "runnergoWebSite": "RunnerGo official website",
         "toWebSite2": "Learn more"
@@ -84,11 +85,12 @@
         "doc": "Usage documents",
         "customer": "Customer service",
         "offline": "Off-line team",
-        "teamNum": "Number of team members"
+        "teamNum": "Number of team members",
+        "homePage": "Personal homepage"
     },
     "leftBar": {
         "index": "Home",
-        "apis": "APIs",
+        "apis": "Test object",
         "scene": "Scene",
         "plan": "Plan",
         "test": "Test",
@@ -104,7 +106,9 @@
         "darkMode": "Dark mode",
         "whiteMode": "Light mode",
         "language": "language",
-        "theme": "theme"
+        "theme": "theme",
+        "env": "Env",
+        "mockservice": "Mock server"
     },
     "placeholder": {
         "searchApis": "Search for Directory/API",
@@ -169,7 +173,28 @@
         "openBank": "Please fill in the company's basic bank of deposit",
         "openAddress": "Please fill in the company address",
         "bankAccount": "Please fill in the company's bank account",
-        "clientName": "Please enter the client name"
+        "clientName": "Please enter the client name",
+        "sqlName": "Please enter SQL name",
+        "keyWord": "Please enter search keywords",
+        "protocolType": "Please select a communication protocol",
+        "serviceName": "Please enter a service name",
+        "serviceContent": "Please enter the service address",
+        "dbName": "Please enter a database name",
+        "diyName": "Please enter a custom name",
+        "dbIP": "Please enter the IP address of the host where the database is located",
+        "dbPort": "Please enter the port number on which the database server is listening",
+        "dbUser": "Please input a username",
+        "dbPwd": "Please input a password",
+        "dbCharset": "Please enter the database encoding set",
+        "selectDb": "Please select your database",
+        "selectEnv": "Please select your env",
+        "selectService": "Please select your service",
+        "tcpName": "Please input a tcp name",
+        "searchNickNameAccount": "Search for nicknames/accounts",
+        "wsName": "Please input a websocket name",
+        "wsUrl": "Please enter the WebSocket request or path",
+        "json_path": "JSON Path Expression, e.g., $.data.info.name",
+        "json_path_doc": "JSON Path Documentation"
     },
     "btn": {
         "view": "View",
@@ -187,6 +212,8 @@
         "jump": "Go",
         "switchLanguage": "Chinese English switch",
         "notifyEmail": "Notify",
+        "notif": "Notify",
+        "batch_notif":"Batch Nofify",
         "breakTask": "Abort Task",
         "done": "Done",
         "sending": "Sending...",
@@ -228,10 +255,15 @@
         "next": "Next step",
         "contactMe": "contact us",
         "estimateVum": "Estimated VUM",
-        "asyncApipostApi": "Async Apipost Api"
+        "asyncApipostApi": "Async Apipost Api",
+        "connect": "Connect",
+        "stopConnect": "Disconnect",
+        "connecting": "Connecting..."
     },
     "message": {
         "saveSuccess": "Saving succeeded!",
+        "saveToTargetSuccess": "Saved to target successfully!",
+        "syncToTargetSuccess": "Synchronized to target successfully!",
         "saveError": "Save failed!",
         "stopSuccess": "Stop succeeded!",
         "stopError": "Stop failed!",
@@ -377,7 +409,7 @@
         "emptyData": "There are required items not filled in!",
         "submitSuccess": "Submitted successfully!",
         "plsInputTrueEmail": "Please enter the correct mailbox format!",
-        "apiNameEmpty": "Interface name cannot be empty",
+        "apiNameEmpty": "API name cannot be empty",
         "cloneSuccess": "Clone succeeded!",
         "runningSceneCanNotDelete": "The current scene is running, and cannot be deleted!",
         "runningSceneCanNotHandle": "Not editable during debugging!",
@@ -386,7 +418,14 @@
         "selectEmpty": "You have not selected any content!",
         "cookieNameRepeat": "Duplicate cookie name!",
         "keyRepeat": "Duplicate parameter name!",
-        "varRepeat": "Variable name duplication!"
+        "varRepeat": "Variable name duplication!",
+        "SqlNameEmpty": "SQL name cannot be empty",
+        "tcpNameEmpty": "TCP name cannot be empty",
+        "connectTestSuccess": "Connection test successful!",
+        "didNotSelectMember": "You have not selected any members!",
+        "disableSceneSuccess": "Disable Scene Success",
+        "enableSceneSuccess": "Enable Scene Success",
+        "weightTotalErr": "The total weight of the machine must be equal to 100!"
     },
     "modal": {
         "globalCookieTip": "The global cookie in the enabled state will automatically be brought to every interface under the team",
@@ -416,6 +455,8 @@
         "deleteGroup": "Are you sure you want to delete this group? This operation will delete the scenes under the group together!!",
         "deleteFolder": "Are you sure you want to delete this folder? This operation will delete the interface under the folder!",
         "deleteEnv": "Are you sure you want to delete this environment?",
+        "deleteService": "Are you sure you want to delete this service?",
+        "deleteDb": "Are you sure you want to delete this database?",
         "invitation": "Invite",
         "roleList": {
             "0": "Member",
@@ -494,7 +535,13 @@
         "cronExplain": "In the timing mode, only one scenario can be created in the plan at most",
         "linkTips": "The invitation link is valid within 24 hours",
         "deleteFile": "Are you sure to delete this file? It cannot be retrieved after deletion!",
-        "deleteOrderConfirm": "Are you sure to delete this order?"
+        "deleteOrderConfirm": "Are you sure to delete this order?",
+        "addCompanyMember": "Add members within the enterprise",
+        "companyRole": "Company role",
+        "teamRole": "Team role",
+        "function": "Function",
+        "functionName": "Function name",
+        "remark": "Remark"
     },
     "column": {
         "teamManage": {
@@ -610,7 +657,44 @@
             "23": "Edit environment",
             "24": "Delete environment",
             "25": "Clone environment",
-            "26": "Delete environment service"
+            "26": "Delete environment service",
+            "27": "Delete directory",
+            "28": "Delete API",
+            "29": "Delete directory",
+            "30": "Delete scenario use cases",
+            "31": "Run Plan",
+            "32": "Debug API",
+            "33": "Debug Scene",
+            "34": "Create scenario use cases",
+            "35": "Create SQL",
+            "36": "Update SQL",
+            "37": "Delete SQL",
+            "38": "New Database",
+            "39": "Drop Database",
+            "40": "Update Database",
+            "41": "New Service",
+            "42": "Update Service",
+            "43": "Create WebSocket",
+            "44": "Modify WebSocket",
+            "45": "Delete WebSocket",
+            "46": "Create WebSocket",
+            "47": "Modify WebSocket",
+            "48": "Delete WebSocket",
+            "49": "Create MQTT",
+            "50": "Modify MQTT",
+            "51": "Delete MQTT",
+            "52": "Create Dubbo",
+            "53": "Modify Dubbo",
+            "54": "Delete Dubbo",
+            "101": "Create mock folder",
+            "102": "Create mock interface",
+            "103": "Modify mock folder",
+            "104": "Modify mock interface",
+            "105": "Debug mock interface",
+            "106": "Delete mock folder",
+            "107": "Delete mock interface",
+            "108": "Save mock interface to target",
+            "109": "Sync mock interface to target"
         }
     },
     "apis": {
@@ -683,8 +767,10 @@
         "resAssert": "Assert",
         "resRegular": "Extract",
         "resEmpty": "Enter the url and click the Send button to get the response result",
+        "resSqlEmpty": "Enter SQL and click the send button to obtain the response result",
         "createApi": "New API",
         "createFolder": "New directory",
+        "createObject": "New Test Object",
         "importApi": "Import Interface",
         "importProject": "Import Project",
         "expand": "Expand | Collapse All",
@@ -700,6 +786,13 @@
         "editFolder": "Edit Directory",
         "deleteFolder": "Delete Directory",
         "createHttp": "New HTTP Request",
+        "createMySQL": "New MySQL",
+        "createSql": "New SQL",
+        "createOracle": "New Oracle",
+        "createTcp": "New TCP",
+        "createWs": "New WebSocket",
+        "createMqtt": "New MQTT",
+        "createDubbo": "New DUBBO",
         "parentFolder": "Parent directory",
         "rootFolder": "Root directory",
         "folderName": "Directory name",
@@ -739,7 +832,73 @@
         "maxConnectWaitTime": "Maximum connection waiting time",
         "maxConnectNum": "maximum connection",
         "number": "individual",
-        "keepAlive": "Keep alive (HTTP long connection)"
+        "keepAlive": "Keep alive (HTTP long connection)",
+        "connectDb": "linked database",
+        "selectDb": "Select Database",
+        "databaseConnectInfo": "Database Connect Information",
+        "dbDiyName": "name",
+        "dbName": "database name",
+        "ip": "IP Address",
+        "port": "PORT",
+        "user": "user name",
+        "pwd": "password",
+        "charset": "Charset",
+        "index": "Index",
+        "connectTest": "Connection testing",
+        "eventName": "Event name",
+        "eventDesc": "Event desc",
+        "tcp": {
+            "sendMessage": "send message",
+            "config": "set up",
+            "connectType": {
+                "1": "Long Connection",
+                "2": "Short connection"
+            },
+            "autoSend": {
+                "label": "Auto Send",
+                "explain": "Check to automatically send a message after successful connection"
+            },
+            "connectDuration": {
+                "label": "Connection duration (maximum 100s)",
+                "explain": "How long will the TCP connection be disconnected this time (in seconds)"
+            },
+            "sendMessageInterval": {
+                "label": "Interval length between sending messages",
+                "explain": "The interval between sending messages cannot exceed the duration of the connection (in milliseconds)"
+            },
+            "connectTimeout": {
+                "label": "Connection timeout setting",
+                "explain": "Set the timeout period (in milliseconds) for socket request connection waiting. Please set the never timeout to 0."
+            },
+            "retryNum": {
+                "label": "Reconnect attempt",
+                "explain": "The maximum number of attempts to reconnect when the connection suddenly disconnects."
+            },
+            "retryInterval": {
+                "label": "Reconnect interval",
+                "explain": "The time interval between each reconnection attempt. (in milliseconds)"
+            },
+            "msgList": "message list",
+            "msgState": {
+                "0": "All messages",
+                "1": "Success Message",
+                "2": "Failure Message"
+            },
+            "clearMsg": "clear message",
+            "requestMsg": "send message",
+            "responseMsg": "response message",
+            "connectSuccess": "connect success"
+        },
+        "cloneCurrentTag": "Clone current tag",
+        "ws": {
+            "reqTab": {
+                "0": "Send message",
+                "1": "Request header",
+                "2": "Request param",
+                "3": "Event",
+                "4": "Config"
+            }
+        }
     },
     "scene": {
         "fullScreen": "Full screen",
@@ -750,10 +909,14 @@
         "editScene": "Edit Scene",
         "deleteScene": "Delete Scene",
         "cloneScene": "Clone Scene",
+        "disableScene": "Disable Scene",
+        "enableScene": "Enable Scene",
         "createApi": "New API",
         "createControl": "Add Controller",
         "waitControl": "Delay controller",
         "conditionControl": "Condition Controller",
+        "createTestObj": "Create Test",
+        "importTestObj": "Import Test",
         "importApi": "Add API",
         "groupName": "Group Name",
         "groupDesc": "Group Description",
@@ -790,11 +953,19 @@
         "editApi": "Edit",
         "deleteApi": "Delete",
         "copyApi": "Copy",
-        "importApiTitle": "SingK AddIt",
+        "importApiTitle": "API AddIt",
+        "importSqlTitle": "SQL AddIt",
         "addApi": "Add API",
+        "addSql": "Add SQL",
+        "addPreCondition": "Add Preconditions",
+        "onlyOnePreCond": "Only one prerequisite can be configured",
         "errorRate": "eg: 0.0001",
         "avgTime": "avg res time",
-        "apiAssert": "API Assert"
+        "apiAssert": "API Assert",
+        "fileCnFormat": "When uploading CSV and txt files containing Chinese characters, the file format needs to be changed to UTF-8 encoding",
+        "runTime": "execution time",
+        "preCondition": "Preconditions",
+        "introduce": "introduce"
     },
     "plan": {
         "planId": "Plan ID",
@@ -838,7 +1009,7 @@
             "3": "Error Rate Mode",
             "4": "Res Time Mode",
             "5": "RPS Mode",
-            "6": "TPS Mode",
+            "6": "Round Mode",
             "7": "Mixed Mode"
         },
         "statusList": {
@@ -878,7 +1049,22 @@
         "debugMode-0": "close",
         "debugMode-1": "Enable - All Logs",
         "debugMode-2": "On - Success Log Only",
-        "debugMode-3": "On - only error logs"
+        "debugMode-3": "On - only error logs",
+        "machineName": "Machine Name",
+        "region": "Region",
+        "ip": "IP",
+        "weight": "Weight（%）",
+        "seniorConfig": "advanced setting",
+        "customDistributed": "Custom Distributed",
+        "totalWeightTip": "Default allocation of machine operation, total weight must be 100%",
+        "useDiyRun": "The default allocation machine runs, and when opened, it will run according to the custom distribution",
+        "machineAllotType": {
+            "0": "Weight",
+            "1": "Custom"
+        },
+        "switchDuration": "Switch to Round",
+        "switchRoundNum": "Switch to duration",
+        "echartEmptyShow": "Unable to generate ladder diagram due to incomplete configuration"
     },
     "report": {
         "done": "Completed",
@@ -907,6 +1093,8 @@
         },
         "taskType": "Task Type",
         "dcs": "Distributed",
+        "yes": "Yes",
+        "no": "No",
         "mode": "Pressure measurement mode",
         "apiName": "Api name",
         "totalReqNum": "Requests",
@@ -923,7 +1111,7 @@
         "errRate": "Error rate",
         "acceptByte": "Received bytes",
         "sendByte": "Send bytes",
-        "tps": "Transactions per second",
+        "tps": "throughput",
         "qpsNum": "Requests per second",
         "concurrency": "Concurrency",
         "avgList": "Average response time",
@@ -943,14 +1131,17 @@
         "stps": "stps",
         "debugLogTips": "Please open the debug log and view the log. Opening the debug log will consume the performance of the press. Please be careful! The debug log only retains the last 1000 data!",
         "unitMs": "Unit (ms)",
-        "unitNumber": "Unit (number)"
+        "unitNumber": "Unit (number)",
+        "machineName": "Machine Name",
+        "config": "Config"
     },
     "tooltip": {
         "start": "Run",
         "stop": "Stop",
         "view": "See",
         "copy": "Copy",
-        "delete": "Delete"
+        "delete": "Delete",
+        "company_admin": "Enterprise Admin Dashboard"
     },
     "machine": {
         "serverType": {
@@ -1087,5 +1278,62 @@
         },
         "acceptEmail": "Recipient mailbox",
         "emailFormatError": "Mailbox format error"
+    },
+    "env": {
+        "addService": "Add Service",
+        "updateService": "Update Service",
+        "protocolType": "Protocol",
+        "serviceName": "Service name",
+        "serviceContent": "Service content",
+        "dbName": "Database name",
+        "handle": "Handle",
+        "addDb": "Add Database",
+        "updateDb": "Update Database",
+        "dbType": "Type",
+        "name": "Name",
+        "ip": "IP",
+        "port": "Port",
+        "user": "User",
+        "pwd": "Password",
+        "charset": "Charset",
+        "dbConnectInfo": "Database Connect Info",
+        "editEnv": "Edit env",
+        "cloneEnv": "Clone env",
+        "deleteEnv": "Delete env",
+        "createEnv": "Create env",
+        "service": "Service",
+        "database": "Database",
+        "empty": "No Data",
+        "envManage": "Env Manage",
+        "serviceTabExplain": "If interfaces in the same environment require different pre URLs or server addresses, multiple services can be created to meet the requirements. When switching environments, the services used by the interface will also switch to the corresponding services in the new environment",
+        "dbTabExplain": "If SQL in the same environment needs to connect to different databases, multiple databases can be created to meet the requirements. When switching environments, the database used by SQL will also switch to the corresponding database in the new environment"
+    },
+    "mock": {
+        "createMock": "Create mock",
+        "createFolder": "Create folder",
+        "createMockApi": "Create mock API",
+        "pathPlaceholder": "Please enter the API path",
+        "saveTestObj": "Save to test object",
+        "syncToTestObj": "Sync to test object",
+        "copyMockUrl": "Copy Mock URL",
+        "createResponseExpect": "Create response expectation",
+        "expect_name_cannot_null": "Expectation name cannot be empty",
+        "create_expect": "Create expectation",
+        "expect_name": "Expectation name",
+        "content_format": "Content format",
+        "create_ecpect_input_placeholder": "Please enter an API name between 1-30 characters",
+        "open_mock": "Enable Mock",
+        "close_mock": "Disable Mock",
+        "conditional_statement": "Conditional Statement",
+        "return_data": "Return Data",
+        "visual_structure": "Visual Structure",
+        "native_mode": "Native Mode",
+        "parameter_position": "Parameter Position",
+        "comparison": "Comparison"
+    },
+    "import": {
+        "import_file": "Import file",
+        "import_mock_api": "Import mock API",
+        "mock_api": "Mock API"
     }
 }

@@ -9,6 +9,7 @@ import { Message } from 'adesign-react';
 import { getUserConfig$ } from '@rxUtils/user';
 import { global$ } from '@hooks/useGlobal/global';
 import { useNavigate } from 'react-router-dom';
+import { RD_ADMIN_URL } from '@config';
 
 
 
@@ -16,7 +17,7 @@ const useWebsocket = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-
+    const runningPlan = useSelector((store) => store.dashboard.runningPlan);
 
 
     // 处理协作推送的消息
@@ -32,7 +33,7 @@ const useWebsocket = () => {
             localStorage.removeItem('open_scene');
             localStorage.removeItem('open_plan');
             localStorage.removeItem("package_info");
-            window.location.href = '/#/login';
+            window.location.href = `${RD_ADMIN_URL}/#/login`;
         }
 
         if (code !== 0) {
@@ -102,10 +103,13 @@ const useWebsocket = () => {
                 payload: data
             })
         } else if (route_url === 'running_plan_count') {
-            dispatch({
-                type: 'dashboard/updateRunningPlan',
-                payload: data
-            })
+            const { run_plan_num } = data;
+            if (run_plan_num !== (runningPlan && runningPlan.run_plan_num)) {
+                dispatch({
+                    type: 'dashboard/updateRunningPlan',
+                    payload: data
+                })
+            }
         } else if (route_url === 'disband_team_notice') {
             let setIntervalList = window.setIntervalList;
 
@@ -141,7 +145,7 @@ const useWebsocket = () => {
             localStorage.removeItem('open_plan');
             localStorage.removeItem("package_info");
             // localStorage.clear();
-            navigate('/login');
+            window.location.href = `${RD_ADMIN_URL}/#/login`;
             Message('error', t('message.userLogout'));
         } else if (route_url === 'auto_plan_detail') {
             dispatch({
@@ -171,13 +175,13 @@ const useWebsocket = () => {
     }
 
     useEffect(() => {
-        Bus.$on('websocket_worker', handleWebSocket);
+        Bus.$on('websocket_worker', handleWebSocket, [runningPlan]);
         Bus.$on('websocket_change_state', handleWsState);
         return () => {
             Bus.$off('websocket_worker');
             Bus.$off('websocket_change_state');
         };
-    }, []);
+    }, [runningPlan]);
 };
 
 export default useWebsocket;

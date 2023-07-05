@@ -3,12 +3,28 @@ import Bus, { useEventBus } from '@utils/eventBus';
 import { cloneDeep, isArray, set, findIndex } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { concatMap, map, tap, from } from 'rxjs';
-import { fetchDeleteApi, fetchChangeSort } from '@services/apis';
-import { fetchCreateGroup, fetchCreateScene, fetchSceneDetail, fetchCreateSceneFlow, fetchSceneFlowDetail, fetchCreatePre, fetchRunScene, fetchGetSceneRes, fetchSendSceneApi, fetchStopScene, fetchDeleteScene, fetchCopyScene } from '@services/scene';
+import { fetchDeleteApi, fetchChangeSort, fetchGetSqlResult } from '@services/apis';
+import {
+    fetchCreateGroup,
+    fetchCreateScene,
+    fetchSceneDetail,
+    fetchCreateSceneFlow,
+    fetchSceneFlowDetail,
+    fetchCreatePre,
+    fetchRunScene,
+    fetchGetSceneRes,
+    fetchSendSceneApi,
+    fetchStopScene,
+    fetchDeleteScene,
+    fetchCopyScene,
+    fetchDisableOrEnableScene,
+    fetchRunSceneMysql
+} from '@services/scene';
 import { fetchGetTask, fetchSavePlan } from '@services/plan';
 import { formatSceneData, isURL, createUrl, GetUrlQueryToArray } from '@utils';
 import { getBaseCollection } from '@constants/baseCollection';
 import { fetchApiDetail, fetchGetResult } from '@services/apis';
+import { fetchServiceList } from '@services/env';
 import { v4 } from 'uuid';
 import QueryString from 'qs';
 import { useTranslation } from 'react-i18next';
@@ -34,6 +50,8 @@ const useScene = () => {
     const run_api_res = useSelector((store) => store.scene.run_api_res);
     const nodes = useSelector((store) => store.scene.nodes);
     const edges = useSelector((store) => store.scene.edges);
+    const env_id = useSelector((store) => store.env.scene_env_id);
+
 
     // const scene = useScene((store) => store.scene);
     const createApiNode = () => {
@@ -204,6 +222,7 @@ const useScene = () => {
     // }
 
     const saveScene = (callback) => {
+
         const get_pre = (id, edges) => {
             const pre_list = [];
             edges && edges.forEach(item => {
@@ -226,7 +245,7 @@ const useScene = () => {
             return next_list;
         };
 
-        const _nodes = nodes && nodes.map(item => {
+        const _nodes = nodes && nodes.filter(item => item.type !== 'sql').map(item => {
             const api = id_apis[item.id];
             if (api) {
                 return {
@@ -253,11 +272,22 @@ const useScene = () => {
             nodes: _nodes,
             edges,
             source: 1,
+            env_id,
+            prepositions: nodes.filter(item => item.type === 'sql').map(item => {
+                const api = id_apis[item.id];
+                return {
+                    ...item,
+                    api,
+                    ...node_config[item.id],
+                }
+            })
             // nodes_round: getNodesByLevel(_nodes, edges ? edges : [])
             // multi_level_nodes: JSON.stringify(formatSceneData(nodes, edges))
             // songsong: formatSceneData(nodes, edges),
         };
         // callback && callback();
+
+        console.log(params);
 
         // return;
         Bus.$emit('sendWsMessage', JSON.stringify({
@@ -325,6 +355,7 @@ const useScene = () => {
             }
         }
 
+
         for (let i = 0; i < _config.length; i++) {
 
             new_nodes[_id[i]] = _config[i];
@@ -343,7 +374,69 @@ const useScene = () => {
         }
 
 
+
         callback && callback();
+    }
+
+    const addNewSceneMysql = (id, api = {}, config = {}, from, callback) => {
+        let _id = isArray(id) ? id : [id];
+        let _api = isArray(api) ? api : [api];
+        let _config = isArray(config) ? config : [config];
+        let length = _config.length;
+        let new_apis = cloneDeep(id_apis);
+        let new_nodes = cloneDeep(node_config);
+
+        console.log(id, api, config, from);
+
+        for (let i = 0; i < _api.length; i++) {
+            let newApi = cloneDeep(_api[i]);
+
+            if (Object.entries(_api[i]).length < 2) {
+                newApi = getBaseCollection('sql');
+                newApi.is_changed = false;
+                newApi.id = _api[i].id;
+
+                delete newApi['target_id'];
+                delete newApi['parent_id'];
+            } else {
+
+            }
+
+            new_apis[newApi.id] = newApi;
+
+            console.log(new_apis);
+            if (from === 'scene') {
+                dispatch({
+                    type: 'scene/updateIdApis',
+                    payload: new_apis,
+                })
+            } else {
+                dispatch({
+                    type: 'plan/updateIdApis',
+                    payload: new_apis,
+                })
+            }
+        }
+
+        for (let i = 0; i < _config.length; i++) {
+
+            new_nodes[_id[i]] = _config[i];
+
+            if (from === 'scene') {
+                dispatch({
+                    type: 'scene/updateNodeConfig',
+                    payload: new_nodes,
+                })
+            } else {
+                dispatch({
+                    type: 'plan/updateNodeConfig',
+                    payload: new_nodes,
+                })
+            }
+        }
+
+
+        callback && callback(new_apis);
     }
 
     const updateNodeConfig = (type, value, id, node_config, from, callback) => {
@@ -504,6 +597,7 @@ const useScene = () => {
         let _api_now = cloneDeep(id_apis[id]);
         _api_now.id = id;
 
+    
 
 
         dispatch({
@@ -520,7 +614,6 @@ const useScene = () => {
             type: 'scene/updateRefreshBox',
             payload: v4()
         })
-
 
 
         callback && callback();
@@ -548,9 +641,34 @@ const useScene = () => {
         };
         fetchApiDetail(QueryString.stringify(query, { indices: false })).subscribe({
             next: (res) => {
-                const { code, data: { targets } } = res;
+                let { code, data: { targets } } = res;
                 // 1. 添加nodes节点
                 // 2. 添加id_apis映射
+                if (env_id === 0) {
+                    for (let item of targets) {
+                        item.env_info = {
+                            env_id: 0,
+                            env_name: "",
+                            service_id: 0,
+                            service_name: "",
+                            pre_url: "",
+                            database_id: 0
+                        }
+                        if (item.target_type === 'sql') {
+                            item.sql_detail.sql_database_info = {
+                                charset: 'utf8mb4',
+                                db_name: '',
+                                host: '',
+                                password: '',
+                                port: 0,
+                                server_name: '',
+                                user: '',
+                                type: item.sql_detail.sql_database_info.type || 'mysql'
+                            }
+                        }
+                    }
+                }
+
                 dispatch({
                     type: 'scene/updateImportNode',
                     payload: targets,
@@ -671,6 +789,13 @@ const useScene = () => {
                     });
                     Bus.$emit('addNewSceneApi', idList, apiList, configList, 'scene');
                 }
+
+                const { env_id } = data;
+
+                dispatch({
+                    type: 'env/updateSceneEnvId',
+                    payload: env_id
+                })
 
                 dispatch({
                     type: 'scene/updateOpenScene',
@@ -1006,7 +1131,39 @@ const useScene = () => {
 
                         fetchGetSceneRes(query).subscribe({
                             next: (res) => {
-                                const { data } = res;
+                                const { data, code } = res;
+
+                                if (code !== 0) {
+                                    clearInterval(scene_t);
+                                    if (from === 'scene') {
+                                        dispatch({
+                                            type: 'scene/updateRunStatus',
+                                            payload: 'finish',
+                                        })
+                                        dispatch({
+                                            type: 'scene/updateRunningScene',
+                                            payload: '',
+                                        })
+                                    } else if (from === 'plan') {
+                                        dispatch({
+                                            type: 'plan/updateRunStatus',
+                                            payload: 'finish',
+                                        })
+                                        dispatch({
+                                            type: 'plan/updateRunningScene',
+                                            payload: '',
+                                        })
+                                    } else if (from === 'auto_plan') {
+                                        dispatch({
+                                            type: 'auto_plan/updateRunStatus',
+                                            payload: 'finish',
+                                        })
+                                        dispatch({
+                                            type: 'auto_plan/updateRunningScene',
+                                            payload: '',
+                                        })
+                                    }
+                                }
 
                                 if (data.scenes) {
                                     const { scenes } = data;
@@ -1128,6 +1285,103 @@ const useScene = () => {
                 };
                 send_scene_api_t = setInterval(() => {
                     fetchGetResult(query).subscribe({
+                        next: (res) => {
+                            const { data } = res;
+                            if (data) {
+                                clearInterval(send_scene_api_t);
+                                const _run_api_res = cloneDeep(run_api_res);
+                                _run_api_res[node_id] = {
+                                    ...data,
+                                    status: 'finish',
+                                };
+                                if (from === 'scene') {
+                                    dispatch({
+                                        type: 'scene/updateApiRes',
+                                        payload: _run_api_res
+                                    })
+                                } else if (from === 'plan') {
+                                    dispatch({
+                                        type: 'plan/updateApiRes',
+                                        payload: _run_api_res
+                                    })
+                                } else if (from === 'auto_plan') {
+                                    dispatch({
+                                        type: 'auto_plan/updateApiRes',
+                                        payload: _run_api_res
+                                    })
+                                } else if (from === 'case') {
+                                    dispatch({
+                                        type: 'case/updateApiRes',
+                                        payload: _run_api_res
+                                    })
+                                }
+                            }
+                        }
+                    })
+                }, 1000);
+            })
+        )
+            .subscribe()
+    };
+
+    const sendSceneMysql = (scene_id, node_id, run_api_res, from, scene_case_id) => {
+        console.log(scene_id, node_id, run_api_res, from);
+        let params = {
+            scene_id: scene_id,
+            node_id,
+            team_id: localStorage.getItem('team_id'),
+        };
+        // if (from === 'case' && scene_case_id) {
+        //     params = {
+        //         scene_id: scene_id,
+        //         scene_case_id: scene_case_id,
+        //         node_id,
+        //         team_id: localStorage.getItem('team_id'),
+        //     };
+        // } else {
+        //     params = {
+        //         scene_id: scene_id,
+        //         node_id,
+        //         team_id: localStorage.getItem('team_id'),
+        //     };
+        // }
+        const _run_api_res = cloneDeep(run_api_res);
+        _run_api_res[node_id] = {
+            ..._run_api_res[node_id],
+            status: 'running',
+        };
+        console.log(_run_api_res);
+        if (from === 'scene') {
+            dispatch({
+                type: 'scene/updateApiRes',
+                payload: _run_api_res
+            })
+        } else if (from === 'plan') {
+            dispatch({
+                type: 'plan/updateApiRes',
+                payload: _run_api_res
+            })
+        } else if (from === 'auto_plan') {
+            dispatch({
+                type: 'auto_plan/updateApiRes',
+                payload: _run_api_res
+            })
+        } else if (from === 'case') {
+            dispatch({
+                type: 'case/updateApiRes',
+                payload: _run_api_res
+            })
+        }
+        fetchRunSceneMysql(params).pipe(
+            tap(res => {
+                const { data: { ret_id } } = res;
+                clearInterval(send_scene_api_t);
+
+                const query = {
+                    ret_id,
+                };
+                send_scene_api_t = setInterval(() => {
+                    fetchGetSqlResult(query).subscribe({
                         next: (res) => {
                             const { data } = res;
                             if (data) {
@@ -1311,17 +1565,145 @@ const useScene = () => {
         })
     }
 
+    const changeSceneDisable = (target_id, is_disabled, callback) => {
+        const params = {
+            target_id,
+            is_disabled
+        };
+        fetchDisableOrEnableScene(params).subscribe({
+            next: (res) => {
+                const { code, data } = res;
+
+                if (code === 0) {
+                    callback && callback();
+                }
+            }
+        })
+
+    }
+
+    const changeSceneEnv = (env_id, id_apis, from, callback) => {
+        let _id_apis = cloneDeep(id_apis);
+        dispatch({
+            type: 'env/updateSceneEnvId',
+            payload: env_id
+        })
+
+        // 定义一个辅助函数，用于设置env_info的属性
+        function setEnvInfo(node, item) {
+            const { service_id = 0, service_name = '', content = '', env_id = 0 } = item || {};
+            node.env_info.service_id = service_id;
+            node.env_info.service_name = service_name;
+            node.env_info.pre_url = content;
+            node.env_info.env_id = env_id;
+        }
+
+
+        if (env_id) {
+            const params = {
+                team_id: localStorage.getItem('team_id'),
+                env_id
+            };
+
+            fetchServiceList(params).subscribe({
+                next: (res) => {
+                    const { data: { service_list }, code } = res;
+
+                    if (code === 0) {
+
+                        // 遍历_nodes数组，根据service_list的情况设置env_info
+                        for (let key in _id_apis) {
+                            const { env_info: { service_name } } = _id_apis[key];
+
+                            if (isArray(service_list)) {
+                                // 在service_list中查找匹配的项
+                                const item = service_list.find(item => item.service_name === service_name);
+                                // 设置env_info
+                                setEnvInfo(_id_apis[key], item);
+                            } else {
+                                // 设置env_info为空值
+                                setEnvInfo(_id_apis[key]);
+                            }
+                        }
+
+
+
+                        if (from === 'scene') {
+                            dispatch({
+                                type: 'scene/updateIdApis',
+                                payload: _id_apis
+                            })
+                        } else if (from === 'plan') {
+                            dispatch({
+                                type: 'plan/updateIdApis',
+                                payload: _id_apis
+                            })
+                        } else if (from === 'auto_plan') {
+                            dispatch({
+                                type: 'auto_plan/updateIdApis',
+                                payload: _id_apis
+                            })
+                        } else if (from === 'case') {
+                            dispatch({
+                                type: 'case/updateIdApis',
+                                payload: _id_apis
+                            })
+                        }
+
+
+                        callback && callback(_id_apis);
+
+                    }
+                }
+            })
+        } else {
+            for (let key in _id_apis) {
+                setEnvInfo(_id_apis[key]);
+            }
+
+
+            if (from === 'scene') {
+                dispatch({
+                    type: 'scene/updateIdApis',
+                    payload: _id_apis
+                })
+            } else if (from === 'plan') {
+                dispatch({
+                    type: 'plan/updateIdApis',
+                    payload: _id_apis
+                })
+            } else if (from === 'auto_plan') {
+                dispatch({
+                    type: 'auto_plan/updateIdApis',
+                    payload: _id_apis
+                })
+            } else if (from === 'case') {
+                dispatch({
+                    type: 'case/updateIdApis',
+                    payload: _id_apis
+                })
+            }
+
+
+
+            callback && callback(_id_apis);
+        }
+
+
+    }
+
     useEventBus('createApiNode', createApiNode);
     useEventBus('updateSceneGroup', updateSceneGroup);
     useEventBus('updateSceneItem', updateSceneItem);
     useEventBus('dragUpdateScene', dragUpdateScene);
-    useEventBus('saveScene', saveScene, [nodes, edges, id_apis, node_config, open_scene]);
+    useEventBus('saveScene', saveScene, [nodes, edges, id_apis, node_config, open_scene, env_id]);
     useEventBus('addNewSceneApi', addNewSceneApi, [id_apis, node_config]);
+    useEventBus('addNewSceneMysql', addNewSceneMysql, [id_apis, node_config]);
     useEventBus('updateSceneApi', updateSceneApi, [id_apis]);
     useEventBus('saveSceneApi', saveSceneApi, [api_now, id_apis]);
     useEventBus('updateNodeConfig', updateNodeConfig);
     useEventBus('addNewSceneControl', addNewSceneControl);
-    useEventBus('importApiList', importApiList);
+    useEventBus('importApiList', importApiList, [env_id]);
     useEventBus('addOpenScene', addOpenScene, [id_apis, node_config]);
     useEventBus('deleteScene', deleteScene, [sceneDatas]);
     useEventBus('cloneScene', cloneScene);
@@ -1329,6 +1711,7 @@ const useScene = () => {
     useEventBus('cloneNode', cloneNode);
     useEventBus('runScene', runScene, [open_scene]);
     useEventBus('sendSceneApi', sendSceneApi);
+    useEventBus('sendSceneMysql', sendSceneMysql);
     useEventBus('toDeleteGroup', toDeleteGroup, [sceneDatas]);
     useEventBus('stopScene', stopScene);
     useEventBus('stopSceneApi', stopSceneApi, [run_api_res]);
@@ -1336,6 +1719,8 @@ const useScene = () => {
     useEventBus('recordOpenScene', recordOpenScene, [open_scene, open_scene_name]);
     useEventBus('cloneSceneTask', cloneSceneTask);
     useEventBus('clearFetchSceneState', clearFetchSceneState);
+    useEventBus('changeSceneDisable', changeSceneDisable);
+    useEventBus('changeSceneEnv', changeSceneEnv);
 };
 
 export default useScene;

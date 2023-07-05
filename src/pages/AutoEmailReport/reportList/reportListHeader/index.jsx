@@ -9,11 +9,13 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchDeleteReport } from '@services/auto_report';
+import SvgSendEmail from '@assets/icons/SendEmail';
 import { isArray } from 'lodash';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import cnUS from '@arco-design/web-react/es/locale/zh-CN';
 
 import { DatePicker, ConfigProvider } from '@arco-design/web-react';
+import Bus from '@utils/eventBus';
 const { RangePicker } = DatePicker;
 
 const TReportListHeader = (props) => {
@@ -105,29 +107,33 @@ const TReportListHeader = (props) => {
                 />
 
                 {
-                    selectReport.length > 0 && (!canDelete ?
-                        <Tooltip
-                            bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'}
-                            className='tooltip-diy'
-                            content={!canDelete ? t('plan.cantDelete') : ''}
-                        >
-                            <Button
-                                className='delete-btn'
-                                style={{ backgroundColor: !canDelete ? 'var(--bg-4)' : '', color: !canDelete ? 'var(--font-1)' : '' }}
-                                disabled={!canDelete}
-                                onClick={() => toDelete()}
-                            >
-                                {t('btn.delete')}
-                            </Button>
-                        </Tooltip>
-                        :
-                        <Button
-                            className='delete-btn'
-                            disabled={!canDelete}
-                            onClick={() => toDelete()}
-                        >
-                            {t('btn.delete')}
-                        </Button>
+                    selectReport.length > 0 && (
+                        <>
+                            <Button className='notice' preFix={<SvgSendEmail width="16" height="16" />} onClick={() => Bus.$emit('openModal', 'Notice', { event_id: 102, options: { report_ids: selectReport.map(item => item.report_id) } })}>{t('btn.notif')}</Button>
+                            {!canDelete ?
+                                <Tooltip
+                                    bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'}
+                                    className='tooltip-diy'
+                                    content={!canDelete ? t('plan.cantDelete') : ''}
+                                >
+                                    <Button
+                                        className='delete-btn'
+                                        style={{ backgroundColor: !canDelete ? 'var(--bg-4)' : '', color: !canDelete ? 'var(--font-1)' : '' }}
+                                        disabled={!canDelete}
+                                        onClick={() => toDelete()}
+                                    >
+                                        {t('btn.delete')}
+                                    </Button>
+                                </Tooltip>
+                                :
+                                <Button
+                                    className='delete-btn'
+                                    disabled={!canDelete}
+                                    onClick={() => toDelete()}
+                                >
+                                    {t('btn.delete')}
+                                </Button>}
+                        </>
                     )
                 }
             </div>

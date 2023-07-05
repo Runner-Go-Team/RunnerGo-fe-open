@@ -20,6 +20,7 @@ import { DropWrapper } from './style';
 import { Button } from '@arco-design/web-react';
 import { IconDown } from '@arco-design/web-react/icon';
 import InputText from '@components/InputText';
+import EnvView from '@components/EnvView';
 const ButtonGroup = Button.Group;
 
 const ApiInfoPanel = (props) => {
@@ -127,12 +128,6 @@ const ApiInfoPanel = (props) => {
             <div className="api-manage">
                 <div className="api-info-panel">
                     <div className="api-name-group">
-                        {/* <ApiStatus
-                            value={data?.mark}
-                            onChange={(value) => {
-                                onChange('mark', value);
-                            }}
-                        ></ApiStatus> */}
                         <InputText
                             maxLength={30}
                             value={data.name || ''}
@@ -145,34 +140,12 @@ const ApiInfoPanel = (props) => {
                                 onChange('name', e);
                             }}
                         />
-                        {/* <Input
-                            size="mini"
-                            className="api-name"
-                            maxLength={30}
-                            placeholder={t('placeholder.apiName')}
-                            value={data?.name || ''}
-                            onChange={(value) => {
-                                onChange('name', value);
-                            }}
-                            onBlur={(e) => {
-                                if (e.target.value.trim().length === 0) {
-                                    Message('error', t('message.apiNameEmpty'))
-                                }
-                            }}
-                        /> */}
                     </div>
-                    {/* <Button
-                        className="api-explain"
-                        size="mini"
-                        onClick={setModalType.bind(null, 'description')}
-                        afterFix={<SvgRight />}
-                    >
-                        接口说明
-                    </Button> */}
-                    {/* <ManageGroup target={data} showGenetateCode={showGenetateCode} /> */}
                 </div>
 
                 <div className='info-panel-right'>
+                    <EnvView env_id={data ? (data.env_info ? data.env_info.env_id : 0) : 0} onChange={onChange} />
+
                     <ButtonGroup>
                         <Button className="save-btn" onClick={() => saveApi(data.parent_id ? data.parent_id : '')}><SvgSave /> {t('btn.save')}</Button>
 

@@ -34,7 +34,8 @@
       // overflow: hidden;
       max-height: calc(100vh - 50px);
       height: calc(100vh - 50px);
-      padding-right: 16px;
+      padding-right: 10px;
+      padding-left: 10px;
     }
 
     .recycle {
@@ -212,7 +213,6 @@ svg {
 // .welcome-page
 .welcome-page {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
@@ -221,7 +221,7 @@ svg {
   .newTarget {
     flex: 1;
     display: flex;
-    // align-items: end;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
 
@@ -293,10 +293,15 @@ svg {
 }
 
 // method color
+.menu-type {
+  min-width: 48px;
+}
+
 .method {
   color: var(--content-color-primary);
   font-size: var(--size-12px);
   margin-left: 4px;
+
 
   &.post {
     color: var(--base-color-warning);
@@ -312,6 +317,34 @@ svg {
 
   &.delete {
     color: var(--base-color-error);
+  }
+
+  &.mysql {
+    color: var(--mysql);
+  }
+
+  &.tcp {
+    color: var(--tcp);
+  }
+
+  &.ws {
+    color: var(--ws);
+  }
+
+  &.mqtt {
+    color: var(--mqtt);
+  }
+
+  &.dubbo {
+    color: var(--dubbo);
+  }
+
+  &.oracle {
+    color: var(--oracle);
+  }
+
+  &.pgsql {
+    color: var(--postgresql);
   }
 }
 
@@ -356,4 +389,10 @@ svg {
 // .err_desc_go_index
 .err_desc_go_index {
   line-height: 2em;
+}
+
+.apipost-btn-primary {
+  border-radius: 5px;
+  color: var(--common-white);
+  background: var(--theme-color);
 }

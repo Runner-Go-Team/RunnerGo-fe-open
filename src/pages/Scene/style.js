@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 
 export const ApisWrapper = css`
-  margin-top: 14px;
+  margin-top: 10px;
   .left-menus {
     background-color: var(--background-color-secondary);
     margin-right: 2px;

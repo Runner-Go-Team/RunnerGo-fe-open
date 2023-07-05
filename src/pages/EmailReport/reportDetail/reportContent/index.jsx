@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import './index.less';
 // import {  } from 'adesign-react';
+import { Button, Input } from 'adesign-react';
+import { Add as SvgAdd } from 'adesign-react/icons';
 import 'echarts/lib/echarts';
 import ReactEcharts from 'echarts-for-react';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isArray } from 'lodash';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Table, Tooltip } from '@arco-design/web-react';
+import { Table, Tooltip, Collapse } from '@arco-design/web-react';
+
+const { Item: CollapseItem } = Collapse;
 
 
 const ReportContent = (props) => {
-    const { data: datas, config: { task_mode, task_type, mode_conf, change_take_conf }, status, plan_id, analysis, description } = props;
+    const { data: datas, config: { 
+        task_mode,
+        task_type,
+        control_mode,
+        is_open_distributed,
+        mode_conf,
+        change_take_conf,
+        machine_allot_type
+    }, status, plan_id, analysis, description 
+    } = props;
     const { t } = useTranslation();
     const [tableData, setTableData] = useState([]);
     const [tableData1, setTableData1] = useState([]);
@@ -35,6 +48,8 @@ const ReportContent = (props) => {
 
     const [configColumn, setConfigColumn] = useState([]);
     const [configData, setConfigData] = useState([]);
+    const [activeCollapse, setActiveCollapse] = useState(0);
+    const [config_list, setConfigList] = useState([]);
 
     const theme = useSelector((store) => store.user.theme);
 
@@ -49,6 +64,7 @@ const ReportContent = (props) => {
         '3': t('plan.modeList.3'),
         '4': t('plan.modeList.4'),
         '5': t('plan.modeList.5'),
+        '6': t('plan.modeList.6'),
     }
 
     useEffect(() => {
@@ -212,66 +228,6 @@ const ReportContent = (props) => {
         setTableData1(_datas);
     }, [datas]);
 
-    useEffect(() => {
-        if (mode_conf) {
-            const {
-                concurrency,
-                duration,
-                max_concurrency,
-                reheat_time,
-                round_num,
-                start_concurrency,
-                step,
-                step_run_time,
-                threshold_value
-            } = mode_conf;
-            setConfigData([{ concurrency, duration, max_concurrency, reheat_time, round_num, start_concurrency, step, step_run_time }]);
-            let _columns = [];
-            if (task_mode === 1) {
-                _columns = [
-                    duration ?
-                        {
-                            title: t('plan.duration'),
-                            dataIndex: 'duration',
-                        } :
-                        {
-                            title: t('plan.roundNum'),
-                            dataIndex: 'round_num',
-                        },
-                    {
-                        title: t('plan.concurrency'),
-                        dataIndex: 'concurrency',
-                    },
-                ];
-            } else {
-                _columns = [
-                    {
-                        title: t('plan.startConcurrency'),
-                        dataIndex: 'start_concurrency',
-                    },
-                    {
-                        title: t('plan.step'),
-                        dataIndex: 'step',
-                    },
-                    {
-                        title: t('plan.stepRunTime'),
-                        dataIndex: 'step_run_time',
-                    },
-                    {
-                        title: t('plan.maxConcurrency'),
-                        dataIndex: 'max_concurrency',
-                    },
-                    {
-                        title: t('plan.duration'),
-                        dataIndex: 'duration'
-                    }
-                ];
-            };
-            setConfigColumn(_columns);
-        }
-
-    }, [mode_conf]);
-
     const columns1 = [
         {
             title: t('report.apiName'),
@@ -411,27 +367,349 @@ const ReportContent = (props) => {
 
     const explainList = ["Max(ms): 最大响应时间", "Min(ms): 最小响应时间", "Avg(ms): 平均响应时长", "90%: 响应时间90%线", "95%: 响应时间95%线", "99%: 响应时间99%线", "RPS: 每秒应答数", "SRPS: 每秒应答成功数", "TPS: 每秒事务数", "STPS: 每秒成功事务数"];
 
+    const senior_config_column = [
+        {
+            title: t('plan.machineName'),
+            dataIndex: 'machine_name',
+            width: 100,
+        },
+        {
+            title: t('plan.region'),
+            dataIndex: 'region',
+            width: 60,
+        },
+        {
+            title: t('plan.ip'),
+            dataIndex: 'ip',
+            width: 100,
+        },
+    ];
+
+    const updateChange = (list, p_index, p_field, index, field, value) => {
+        let _data = cloneDeep(list);
+
+        if (`${parseInt(value)}` === `${NaN}`) {
+            if (index !== null && field !== null) {
+                _data[p_index][p_field][index][field] = null;
+            } else {
+                _data[p_index][p_field] = null;
+            }
+            setConfigList(_data);
+        } else {
+            if (index !== null && field !== null) {
+                _data[p_index][p_field][index][field] = parseInt(value);
+            } else {
+                _data[p_index][p_field] = parseInt(value);
+            }
+            setConfigList(_data);
+        }
+    }
+
+    const updateBlur = (list, p_index, p_field, index, field, value) => {
+        if (value === null) {
+            let _data = cloneDeep(list);
+            if (index !== null && field !== null) {
+                _data[p_index][p_field][index][field] = 0;
+            } else {
+                _data[p_index][p_field] = 0;
+            }
+            setUsableMachineList(_data);
+        }
+    }
+
+    const getMachineColumn = (p_index, created_time_sec) => {
+        if (is_open_distributed === 1) {
+            if (machine_allot_type === 0) {
+                return [
+                    ...senior_config_column,
+                    {
+                        title: t('plan.weight'),
+                        dataIndex: 'weight',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                disabled={item.machine_status === 2 || created_time_sec > 0}
+                                onChange={(e) => {
+                                    if (parseInt(e) > 100) {
+                                        updateChange(config_list, p_index, 'usable_machine_list', index, 'weight', 100);
+                                    } else {
+                                        updateChange(config_list, p_index, 'usable_machine_list', index, 'weight', e);
+                                    }
+                                }}
+                                onBlur={(e) => updateBlur(config_list, p_index, 'usable_machine_list', index, 'weight', e.target.value)}
+                            />
+                        )
+                    }
+                ]
+            } else if (machine_allot_type === 1) {
+                if (task_mode === 1 || task_mode === 6) {
+                    return [
+                        ...senior_config_column,
+                        {
+                            title: t('plan.concurrency'),
+                            dataIndex: 'concurrency',
+                            width: 120,
+                            render: (col, item, index) => (
+                                <Input
+                                    value={col}
+                                    disabled={item.machine_status === 2 || created_time_sec > 0}
+                                    onChange={(e) => updateChange(config_list, p_index, 'usable_machine_list', index, 'concurrency', e)}
+                                    onBlur={(e) => updateBlur(config_list, p_index, 'usable_machine_list', index, 'concurrency', e.target.value)}
+                                />
+                            )
+                        },
+                        task_mode === 1 ? {
+                            title: t('plan.duration'),
+                            dataIndex: 'duration',
+                            width: 120,
+                            render: (col, item, index) => (
+                                <Input
+                                    value={col}
+                                    disabled={item.machine_status === 2 || !item.duration || created_time_sec > 0}
+                                    onChange={(e) => updateChange(config_list, p_index, 'usable_machine_list', index, 'duration', e)}
+                                    onBlur={(e) => updateBlur(config_list, p_index, 'usable_machine_list', index, 'duration', e.target.value)}
+                                />
+                            )
+                        } :
+                            {
+                                title: t('plan.roundNum'),
+                                dataIndex: 'round_num',
+                                width: 120,
+                                render: (col, item, index) => (
+                                    <Input
+                                        value={col}
+                                        disabled={item.machine_status === 2 || !item.round_num || created_time_sec > 0}
+                                        onChange={(e) => updateChange(config_list, p_index, 'usable_machine_list', index, 'round_num', e)}
+                                        onBlur={(e) => updateBlur(config_list, p_index, 'usable_machine_list', index, 'round_num', e.target.value)}
+                                    />
+                                )
+                            },
+                    ];
+                } else {
+                    return [
+                        ...senior_config_column,
+                        {
+                            title: t('plan.startConcurrency'),
+                            dataIndex: 'start_concurrency',
+                            width: 120,
+                            render: (col, item, index) => (
+                                <Input
+                                    value={col}
+                                    disabled={item.machine_status === 2 || created_time_sec > 0}
+                                    onChange={(e) => updateChange(config_list, p_index, 'usable_machine_list', index, 'start_concurrency', e)}
+                                    onBlur={(e) => updateBlur(config_list, p_index, 'usable_machine_list', index, 'start_concurrency', e.target.value)}
+                                />
+                            )
+                        },
+                        {
+                            title: t('plan.step'),
+                            dataIndex: 'step',
+                            width: 120,
+                            render: (col, item, index) => (
+                                <Input
+                                    value={col}
+                                    disabled={item.machine_status === 2 || created_time_sec > 0}
+                                    onChange={(e) => updateChange(config_list, p_index, 'usable_machine_list', index, 'step', e)}
+                                    onBlur={(e) => updateBlur(config_list, p_index, 'usable_machine_list', index, 'step', e.target.value)}
+                                />
+                            )
+                        },
+                        {
+                            title: t('plan.stepRunTime'),
+                            dataIndex: 'step_run_time',
+                            width: 120,
+                            render: (col, item, index) => (
+                                <Input
+                                    value={col}
+                                    disabled={item.machine_status === 2 || created_time_sec > 0}
+                                    onChange={(e) => updateChange(config_list, p_index, 'usable_machine_list', index, 'step_run_time', e)}
+                                    onBlur={(e) => updateBlur(config_list, p_index, 'usable_machine_list', index, 'step_run_time', e.target.value)}
+                                />
+                            )
+                        },
+                        {
+                            title: t('plan.maxConcurrency'),
+                            dataIndex: 'max_concurrency',
+                            width: 120,
+                            render: (col, item, index) => (
+                                <Input
+                                    value={col}
+                                    disabled={item.machine_status === 2 || created_time_sec > 0}
+                                    onChange={(e) => updateChange(config_list, p_index, 'usable_machine_list', index, 'max_concurrency', e)}
+                                    onBlur={(e) => updateBlur(config_list, p_index, 'usable_machine_list', index, 'max_concurrency', e.target.value)}
+                                />
+                            )
+                        },
+                        {
+                            title: t('plan.duration'),
+                            dataIndex: 'duration',
+                            width: 120,
+                            render: (col, item, index) => (
+                                <Input
+                                    value={col}
+                                    disabled={item.machine_status === 2 || created_time_sec > 0}
+                                    onChange={(e) => updateChange(config_list, p_index, 'usable_machine_list', index, 'duration', e)}
+                                    onBlur={(e) => updateBlur(config_list, p_index, 'usable_machine_list', index, 'duration', e.target.value)}
+                                />
+                            )
+                        },
+                    ];
+                }
+            }
+        }
+    }
+
+    
+    const editConfig = () => {
+        let _config_list = cloneDeep(config_list);
+        let latest_data = _config_list[_config_list.length - 1];
+        _config_list.push({ ...latest_data, created_time_sec: 0 });
+        setConfigList(_config_list);
+        setActiveCollapse(_config_list.length - 1);
+    }
+
+    
+    useEffect(() => {
+        if (isArray(change_take_conf)) {
+            setConfigList(change_take_conf);
+            setActiveCollapse(change_take_conf.length - 1);
+        }
+    }, [change_take_conf, config_list]);
+
+
     return (
         <div className='report-content'>
             <div className='report-content-top'>
-                <div className='top-type'>
-                    <span>{t('report.taskType')}: {task_type === 1 ? t('plan.taskList.commonTask') : t('plan.taskList.cronTask')}</span>
-                    {/* <span>分布式: 是</span> */}
-                </div>
-                <div className='top-mode'>
-                    <span>{t('report.mode')}: {modeList[task_mode]}</span>
-                </div>
+                <p className='top-mode'>
+                    {t('report.taskType')}: {task_type === 1 ? t('report.taskList.1') : t('report.taskList.2')}
+                </p>
+                <p className='top-mode'>
+                    {t('report.mode')}: {modeList[task_mode]}
+                </p>
+                <p className='top-mode'>
+                    {t('plan.controlMode')}: {control_mode === 0 ? t('plan.controlModeList.0') : t('plan.controlModeList.1')}
+                </p>
+                <p className='top-mode'>
+                    {t('report.dcs')}: {is_open_distributed === 0 ? t('report.no') : t('report.yes')}
+                </p>
             </div>
-            <Table
-                style={{ width: '100%', marginTop: '32px' }}
-                border={{
-                    wrapper: true,
-                    cell: true,
-                }}
-                pagination={false}
-                columns={configColumn}
-                data={configData}
-            />
+            <div className='report-task-config'>
+                <Collapse activeKey={activeCollapse} onChange={(e) => {
+                    setActiveCollapse(e === activeCollapse ? '' : e);
+                }}>
+                    {
+                        config_list && config_list.map((item, index) => (
+                            <CollapseItem name={index} key={index} header={<div className='config-header' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                                <p>{`${t('report.config')}${index + 1}`}</p>
+                                {
+                                    item.created_time_sec > 0 ?
+                                        <p>{t('scene.runTime')}: {dayjs(item.created_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss')}</p> :
+                                        <Button onClick={updateConfig}>{t('report.configRun')}</Button>
+                                }
+                            </div>}>
+                                {
+                                    machine_allot_type !== 1 ? <div className='base-config'>
+                                        {
+                                            (task_mode === 1 || task_mode === 6) ? <>
+                                                {
+                                                    config_list[0].duration ? <div className='base-item'>
+                                                        <p>{t('plan.duration')}</p>
+                                                        <Input
+                                                            disabled={item.created_time_sec > 0}
+                                                            value={item.duration}
+                                                            onChange={(e) => updateChange(config_list, index, 'duration', null, null, e)}
+                                                            onBlur={(e) => updateBlur(config_list, index, 'duration', null, null, e.target.value)}
+                                                        />
+                                                    </div> : <div className='base-item'>
+                                                        <p>{t('plan.roundNum')}</p>
+                                                        <Input
+                                                            disabled={item.created_time_sec > 0}
+                                                            value={item.round_num}
+                                                            onChange={(e) => updateChange(config_list, index, 'round_num', null, null, e)}
+                                                            onBlur={(e) => updateBlur(config_list, index, 'round_num', null, null, e.target.value)}
+                                                        />
+                                                    </div>
+                                                }
+                                                <div className='base-item'>
+                                                    <p>{t('plan.concurrency')}</p>
+                                                    <Input
+                                                        disabled={item.created_time_sec > 0}
+                                                        value={item.concurrency}
+                                                        onChange={(e) => updateChange(config_list, index, 'concurrency', null, null, e)}
+                                                        onBlur={(e) => updateBlur(config_list, index, 'concurrency', null, null, e.target.value)}
+                                                    />
+                                                </div>
+                                            </> :
+                                                <>
+                                                    <div className='base-item'>
+                                                        <p>{t('plan.startConcurrency')}</p>
+                                                        <Input
+                                                            disabled={item.created_time_sec > 0}
+                                                            value={item.start_concurrency}
+                                                            onChange={(e) => updateChange(config_list, index, 'start_concurrency', null, null, e)}
+                                                            onBlur={(e) => updateBlur(config_list, index, 'start_concurrency', null, null, e.target.value)}
+                                                        />
+                                                    </div>
+                                                    <div className='base-item'>
+                                                        <p>{t('plan.step')}</p>
+                                                        <Input
+                                                            disabled={item.created_time_sec > 0}
+                                                            value={item.step}
+                                                            onChange={(e) => updateChange(config_list, index, 'step', null, null, e)}
+                                                            onBlur={(e) => updateBlur(config_list, index, 'step', null, null, e.target.value)}
+                                                        />
+                                                    </div>
+                                                    <div className='base-item'>
+                                                        <p>{t('plan.stepRunTime')}</p>
+                                                        <Input
+                                                            disabled={item.created_time_sec > 0}
+                                                            value={item.step_run_time}
+                                                            onChange={(e) => updateChange(config_list, index, 'step_run_time', null, null, e)}
+                                                            onBlur={(e) => updateBlur(config_list, index, 'step_run_time', null, null, e.target.value)}
+                                                        />
+                                                    </div>
+                                                    <div className='base-item'>
+                                                        <p>{t('plan.maxConcurrency')}</p>
+                                                        <Input
+                                                            disabled={item.created_time_sec > 0}
+                                                            value={item.max_concurrency}
+                                                            onChange={(e) => updateChange(config_list, index, 'max_concurrency', null, null, e)}
+                                                            onBlur={(e) => updateBlur(config_list, index, 'max_concurrency', null, null, e.target.value)}
+                                                        />
+                                                    </div>
+                                                    <div className='base-item'>
+                                                        <p>{t('plan.duration')}</p>
+                                                        <Input
+                                                            disabled={item.created_time_sec > 0}
+                                                            value={item.duration}
+                                                            onChange={(e) => updateChange(config_list, index, 'duration', null, null, e)}
+                                                            onBlur={(e) => updateBlur(config_list, index, 'duration', null, null, e.target.value)}
+                                                        />
+                                                    </div>
+                                                </>
+                                        }
+                                    </div> : <></>
+                                }
+                                {
+                                    is_open_distributed === 1 ? <div className='senior-config'>
+                                        <Table
+                                            border={{
+                                                wrapper: true,
+                                                cell: true,
+                                            }}
+                                            pagination={false}
+                                            columns={getMachineColumn(index, item.created_time_sec)}
+                                            data={item.usable_machine_list || []}
+                                        />
+                                    </div> : <></>
+                                }
+                            </CollapseItem>
+                        ))
+                    }
+                </Collapse>
+                {/* <Button className='update-config-btn' disabled={true} preFix={<SvgAdd />} onClick={editConfig}>{t('btn.updateConfig')}</Button> */}
+            </div>
             <div className='report-detail-config'>
                 <div className='table-explain'>
                     {

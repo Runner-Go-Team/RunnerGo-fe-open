@@ -1,0 +1,151 @@
+.arco-modal.runnerGo-addinternal-member-modal {
+    width: 948px;
+    height: 624px;
+
+    .arco-modal-header {
+        border: none;
+        padding: 0 20px;
+        padding-top: 32px;
+        margin-bottom: 0px;
+        height: inherit;
+
+        .arco-modal-title {
+            text-align: left;
+            color: inherit;
+        }
+    }
+
+    .arco-modal-footer {
+        border: none;
+        text-align: right;
+        padding: 13px 20px;
+        margin-top: 0px;
+        position: absolute;
+        bottom: 0;
+        right: 2px;
+        background: var(--modal-footer);
+
+        .btn-close,
+        &>.arco-btn:first-child {
+            background: var(--border-line) !important;
+        }
+    }
+
+    .arco-btn-secondary:not(.arco-btn-disabled) {
+        background-color: var(--theme-color);
+        color: var(--common-white);
+    }
+
+    .btn-close {
+        color: var(--font-1) !important;
+    }
+
+
+
+    .member-title {
+        height: 54px;
+        margin-top: 8px;
+        background: var(--bg);
+        border-radius: 2px;
+    }
+
+    .member-search-input {
+        .arco-input-inner-wrapper {
+            background-color: var(--bg) !important;
+        }
+    }
+
+    .arco-modal-content {
+        .arco-select-view {
+            height: 20px;
+            line-height: 20px;
+            padding: 0;
+        }
+
+        .member-title {
+            display: flex;
+            align-items: center;
+
+            .arco-checkbox {
+                width: 7%;
+                text-align: center;
+            }
+
+            .name {
+                width: 40%;
+            }
+
+            .company-role,
+            .team-role {
+                width: 23%;
+            }
+        }
+
+        .member-list {
+            max-height: 389px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+
+            .member-item {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                padding: 19px 0px;
+
+                .headPortrait {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .name {
+                    width: 41%;
+                    display: flex;
+
+                    .headPortrait {
+                        img {
+                            height: 30px;
+                            width: 30px;
+                            border-radius: 50%;
+                        }
+                    }
+                }
+
+                .company-role,
+                .team-role {
+                    width: 23%;
+                }
+
+                .userData {
+                    display: flex;
+                    flex-direction: column;
+                    margin-left: 8px;
+                }
+            }
+
+            .arco-checkbox {
+                width: 7%;
+                text-align: center;
+            }
+
+            .arco-checkbox:hover {
+                background-color: var(--select-hover);
+            }
+        }
+    }
+
+    .arco-modal-footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 32px;
+        // position: absolute;
+        // bottom: 0;
+        // right: 0;
+        .footer-btns{
+          &>.arco-btn{
+            margin: 0 12px;
+          }
+        }
+      }
+
+}

@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPlanList, fetchCopyPlan } from '@services/plan';
 import { fetchUseVum } from '@services/pay';
-import { debounce } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
 import dayjs from 'dayjs';
 import Bus from '@utils/eventBus';
 
@@ -173,7 +173,7 @@ const PlanList = () => {
                 </Tooltip>
                 <Tooltip bgColor="var(--select-hover)" content={t('tooltip.delete')}>
                     <div>
-                        <SvgDelete style={{ fill: '#f00', marginRight: 0 }} onClick={() => {
+                        <SvgDelete style={{ fill: 'var(--table-delete)', marginRight: 0, cursor: status === 2 ? 'not-allowed' : 'pointer' }} onClick={() => {
                             if (status === 2) {
                                 Message('error', t('plan.cantDelete'));
                                 return;
@@ -244,7 +244,6 @@ const PlanList = () => {
                     ...item,
                     task_type: taskList[task_type],
                     task_mode: modeList[task_mode],
-                    status: statusList[status],
                     canDelete: status === 1,
                     created_time_sec: dayjs(created_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
                     updated_time_sec: dayjs(updated_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
@@ -296,6 +295,10 @@ const PlanList = () => {
                 return true;
             },
             width: 190,
+            render: (col, index) => {
+
+                return statusList[col];
+            }
         },
         {
             title: t('plan.planName'),
@@ -444,9 +447,33 @@ const PlanList = () => {
                     {
                         type: 'checkbox',
                         selectedRowKeys,
-                        onChange: (selectedRowKeys, selectedRows) => {
-                            setSelectedRowKeys(selectedRowKeys);
-                            setSelectPlan(selectedRows);
+                        checkboxProps: (record) => {
+                            return {
+                                disabled: record.status === 2,
+                                onChange:(checked)=>{
+                                    const { plan_id } = record;
+
+                                    let _arr1 = cloneDeep(selectedRowKeys);
+                                    let _arr2 = cloneDeep(selectPlan);
+                                    if (checked) {
+                                        if (!selectedRowKeys.find(item => item === plan_id)) {
+
+                                            _arr1.push(plan_id);
+                                            setSelectedRowKeys(_arr1);
+
+                                            _arr2.push(record);
+                                            setSelectPlan(_arr2);
+                                        }
+                                    } else {
+                                        let index1 = selectedRowKeys.findIndex(item => item === plan_id);
+                                        _arr1.splice(index1, 1);
+                                        setSelectedRowKeys(_arr1);
+                                        let index2 = selectPlan.findIndex(item => item.plan_id === plan_id);
+                                        _arr2.splice(index2, 1);
+                                        setSelectPlan(_arr2);
+                                    }
+                                }
+                            }
                         },
                     }
                 }

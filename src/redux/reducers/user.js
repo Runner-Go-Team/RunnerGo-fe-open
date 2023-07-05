@@ -1,4 +1,5 @@
 import { Settings } from '@constants/user';
+import { getCookie } from '@utils';
 
 const NAMESPACE = 'user';
 
@@ -12,11 +13,14 @@ const initialState = {
         avatar: '',
         user_id: null,
         role_id: null,
-        mobile: ''
+        mobile: '',
+        account: '',
+        role_name: ''
     },
     team_id: null,
-    theme: 'dark',
-    language: 'cn',
+    theme: getCookie('theme') || 'dark',
+    language: getCookie('i18nextLng') || 'cn',
+    pre_mock_url: '',
 };
 
 // action名称
@@ -24,6 +28,7 @@ const actionTypes = {
     updateConfig: 'updateConfig',
     updateUserInfo: 'updateUserInfo',
     updateTeamId: 'updateTeamId',
+    updateMockUrl: 'updateMockUrl',
     updateTheme: 'updateTheme',
     updateLanGuaGe: 'updateLanGuaGe',
 };
@@ -36,6 +41,8 @@ export const userReducer = (state = initialState, action) => {
             return { ...state, userInfo: action.payload };
         case `${NAMESPACE}/${actionTypes.updateTeamId}`:
             return { ...state, team_id: action.payload };
+        case `${NAMESPACE}/${actionTypes.updateMockUrl}`:
+            return { ...state, pre_mock_url: action.payload };
         case `${NAMESPACE}/${actionTypes.updateTheme}`:
             return {
                 ...state,

@@ -51,13 +51,12 @@
 }
 
 .plan-task-config-body {
-  padding: 16px;
-  padding-left: 22px;
   position: relative;
   max-height: 100%;
   overflow: scroll;
   background: var(--module);
   height: 100%;
+  padding: 16px 0 16px 22px;
 }
 
 .task-config {
@@ -70,6 +69,80 @@
   background: var(--module);
   border-radius: 0px 5px 5px 0px;
   position: relative;
+
+  .senior-config {
+    .arco-collapse {
+      border: none;
+      
+      .arco-collapse-item-content {
+        background-color: transparent;
+      }
+
+      .arco-collapse-item-header {
+        background-color: var(--bg);
+        border: none;
+      }
+    }
+    .arco-collapse-item-content-box {
+      padding: 0;
+    }
+    .custom-distributed {
+      .config {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 22px;
+        box-sizing: border-box;
+        font-size: 12px;
+
+        .arco-switch {
+          margin-left: 8px;
+        }
+
+        .explain-icon {
+          margin-left: 10px;
+          cursor: pointer;
+        }
+
+        .arco-radio-group {
+          margin-left: 22px;
+
+          .arco-radio {
+            font-size: 12px;
+          }
+        }
+      }
+
+      .full-screen-icon-box {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        margin-bottom: 2px;
+
+        svg {
+          color: var(--font-1);
+          cursor: pointer;
+        }
+      }
+
+      .arco-table-th {
+        background-color: transparent;
+        color: var(--font-3);
+        font-size: 12px;
+
+        .arco-table-th-item {
+          padding: 3.58px 16px;
+        }
+      }
+
+      .arco-table-td {
+        background-color: transparent;
+        color: var(--font-3);
+        font-size: 12px;
+        padding: 3.08px 16px;
+      }
+    }
+  }
 
   .arco-select {
     background-color: var(--bg);
@@ -481,7 +554,7 @@
     &-container-first {
       width: 100%;
       // min-height: 229px;
-      background-color: var(--select-hover);
+      background-color: var(--task-config-bg) !important;
       border: 1px solid var(--border-line);
       padding: 10px 0;
       display: flex;

@@ -7,6 +7,7 @@ import useListData from './menuTree/hooks/useListData';
 import useSceneData from './menuTree/hooks/useSceneData';
 import usePlanData from './menuTree/hooks/usePlanData';
 import useAutoPlanData from './menuTree/hooks/useAutoPlanData';
+import useMenuTreeData from './menuTree/hooks/useMenuTreeData';
 import { Button } from 'adesign-react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,12 +16,13 @@ import FilterBox from './filterBox';
 import ButtonBox from './buttonBox';
 import MenuTrees from './menuTree';
 import SceneBox from './sceneBox';
+import MockBtns from './mockBtns';
 import RecycleBin from './recycleBin';
 
 import { MenuWrapper } from './style';
 
 const TreeMenu = (props) => {
-    const { type = 'apis', getSceneName, onChange, taskType } = props;
+    const { type = 'apis', getSceneName, onChange, taskType, value } = props;
     const { t } = useTranslation();
     const [filterParams, setFilterParams] = useState({ key: '', status: 'all' }); // 接口过滤参数
     const [selectedKeys, setSelectedKeys] = useState([]);
@@ -34,20 +36,29 @@ const TreeMenu = (props) => {
     const sceneDataParam = useSceneData({ filterParams, selectedKeys });
     const planDataParam = usePlanData({ filterParams, selectedKeys });
     const autoPlanDataParam = useAutoPlanData({ filterParams, selectedKeys });
-
+    const menuTreeDataParam = useMenuTreeData({ filterParams, selectedKeys, treeData: value });
+    console.log(selectedKeys,"selectedKeys");
     const dataList = {
         'apis': listDataParam,
         'scene': sceneDataParam,
         'plan': planDataParam,
         'auto_plan': autoPlanDataParam
     };
-
-    const dataParam = dataList[type];
+    const dataParam = dataList?.[type] || menuTreeDataParam;
 
     const handleShowModal = (mtype, mProps) => {
         setModalProps(mProps);
         setModalType(mtype);
     };
+    const headerButtonRender=()=>{
+        if(type === 'mock'){
+            return <MockBtns treeRef={treeRef}/>
+        }else if(type === 'apis'){
+            return <ButtonBox treeRef={treeRef} showModal={handleShowModal} />
+        }else{
+            return <SceneBox from={type} taskType={taskType} onChange={onChange} />
+        }
+    }
     return (
         <MenuWrapper>
             {modalType === 'addFolder' && !isUndefined(modalProps) && (
@@ -67,7 +78,7 @@ const TreeMenu = (props) => {
                     onChange={setFilterParams}
                     type={type}
                 />
-                {type === 'apis' ? <ButtonBox treeRef={treeRef} showModal={handleShowModal} /> : <SceneBox from={type} taskType={taskType} onChange={onChange} />}
+                {headerButtonRender()}
             </div>
             <MenuTrees
                 ref={treeRef}
@@ -77,7 +88,7 @@ const TreeMenu = (props) => {
                 selectedKeys={selectedKeys}
                 setSelectedKeys={setSelectedKeys}
                 type={type}
-                // getSceneName={getSceneName}
+            // getSceneName={getSceneName}
             />
             {/* { type === 'apis' && <RecycleBin /> } */}
         </MenuWrapper>

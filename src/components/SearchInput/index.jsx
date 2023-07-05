@@ -17,6 +17,7 @@ export const SearchInput = (props) => {
     listClassName, // 下拉列表class name
     maxPopupHeight = 200, // 下拉项目最大高度
     readonly = false,
+    wrapClassName = undefined,
     ...restProps
   } = props;
 
@@ -98,7 +99,7 @@ export const SearchInput = (props) => {
 
   return (
     <>
-      <div ref={setRefInput} style={{ width: '100%' }}>
+      <div className={wrapClassName} ref={setRefInput} style={{ width: '100%' }}>
         <Input
           style={{ width: '100%' }}
           readonly={readonly}

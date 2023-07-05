@@ -1,45 +1,108 @@
+.json-schema-template {
+  padding: 0 0 10px 0;
+  display: flex;
+  flex-direction: column;
 
-.json-schema-template{
-  padding: 10px;
+  .apipost-btn {
+    padding: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  .template-table {
+    flex: 1;
+    position: relative;
 
 
-  .template-table{
-    height: 400px;
-    display: flex;
-    .data-item{
-      width: 100%;
+    .table-tr {
+      height: 28px;
       display: flex;
-      align-items: center;
-      flex-direction: row;
-      padding: 4px 0;
-      &>div{
-        margin: 0 3px;
-      }
-      .item-name{
-        flex: 2;
-      }
-      .item-type{
-        flex: 1;
-        height: 28px;
-      }
-      .item-mock{
-        flex: 1;
-      }
-      .item-description{
-        flex: 1;
-      }
-      .item-manage{
-        width: 138px;
+      border-left: 1px solid var(--border-line);
+      border-top: 1px solid var(--border-line);
 
-        .apipost-btn{
-          height: 28px;
-        }
+      .table-td {
+        height: 28px;
+        border: 1px solid var(--border-line);
+        border-left: none;
+        border-top: none;
+        flex: 1;
       }
 
     }
 
+    tr,
+    td {
+      height: 28px;
+      border-collapse: collapse;
+    }
+
+    tr:hover {
+      background-color: var(--highlight-background-color-primary);
+    }
+
+    .is-hidden {
+
+      .schema-text-box,
+      .sel-title,
+      .apipost-input {
+        color: var(--content-color-fourth);
+        text-decoration: line-through !important;
+      }
+    }
+
+    tbody {
+      &>tr:nth-child(2) {
+        border-top: 0;
+
+        td {
+          border-top: 0;
+        }
+      }
+    }
+
+    .schema-td {
+      padding: 0;
+      border: 1px solid var(--border-color-default);
+
+      &-warper {
+        height: 100%;
+        width: 100%;
+        float: left;
+        display: flex;
+        position: relative;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .td-scale {
+        position: absolute;
+        content: '';
+        top: 0;
+        right: 0;
+        z-index: 200;
+        width: 15px;
+        height: 100%;
+        cursor: col-resize;
+        display: flex;
+        transform: translateX(-7.5px);
+        justify-content: center;
+
+        &::after {
+          visibility: hidden;
+          height: 100%;
+          width: 1px;
+          content: '';
+          background-color: var(--base-color-brand);
+        }
+
+        &:hover::after {
+          visibility: visible;
+        }
+
+        &.scaling::after {
+          visibility: visible;
+        }
+      }
+    }
   }
-
-
-
 }

@@ -11,7 +11,7 @@ const initialState = {
 
   id_apis: {},
   id_now: '', // 当前配置的node id
-  showApiConfig: false,
+  showApiConfig: {},
   node_config: {},
   type: [],
   nodes: [],
@@ -67,7 +67,9 @@ const initialState = {
   auto_plan_list: null,
 
   // 计划详情地顶部基本信息
-  auto_plan_detail: null
+  auto_plan_detail: null,
+
+  show_mysql_config: false, // 是否弹出mysql的编辑抽屉
 };
 
 // action名称
@@ -119,7 +121,9 @@ const actionTypes = {
   updateIsChanged: 'updateIsChanged',
   updateHideDrop: 'updateHideDrop',
   updateAutoPlanList: 'updateAutoPlanList',
-  updateAutoPlanDetail: 'updateAutoPlanDetail'
+  updateAutoPlanDetail: 'updateAutoPlanDetail',
+
+  updateShowMysqlConfig: 'updateShowMysqlConfig'
 }
 
 export const tPlansReducer = (state = initialState, action) => {
@@ -313,6 +317,11 @@ export const tPlansReducer = (state = initialState, action) => {
       return {
         ...state,
         auto_plan_detail: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateShowMysqlConfig}`:
+      return {
+        ...state,
+        show_mysql_config: action.payload
       }
     default:
       return state;

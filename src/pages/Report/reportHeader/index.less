@@ -35,7 +35,7 @@
 
         .report-status {
             height: 21px;
-            background-color: var(--run);
+            background-color: var(--sub-color-1-10);
             border-radius: 3px;
             padding: 2px 8px;
             color: var(--sub-color-1);
@@ -64,17 +64,20 @@
         .notice {
             // width: 96px;
             margin-right: 16px;
-            background-color: var(--default-button);
-            border: 1px solid var(--theme-color);
+            background-color: var(--theme-color);
             border-radius: 3px;
-            height: 26px;
-            color: var(--font-1);
+            height: 32px;
+            color: var(--common-white);
 
             svg {
+                fill: var(--common-white);
                 margin-right: 5px;
             }
         }
-
+        .notice:hover{
+            color: var(--common-white);
+            background-color: var(--theme-color);
+        }
         .download {
             width: 48px;
             margin-right: 16px;
@@ -82,11 +85,10 @@
 
         .stop {
             // width: 84px;
-            height: 26px;
-            background-color: var(--sub-color-1-10) !important;
-            border: 1px solid var(--sub-color-4);
+            height: 32px;
+            background-color: var(--sub-color-4) !important;
             border-radius: 3px;
-            color: var(--font-1);
+            color: var(--common-white);
             svg {
                 fill: var(--common-white);
                 margin-right: 8px;
@@ -96,24 +98,23 @@
         }
 
         .finish {
-            background-color: var(--run);
-            border: 1px solid var(--sub-color-1);
-            opacity: 0.5;
+            background-color: var(--sub-color-1);
+            opacity: 0.3;
             border-radius: 3px;
-            height: 26px;
+            height: 32px;
             cursor: no-drop;
-            color: var(--font-1);
+            color: var(--common-white);
 
             svg {
                 width: 12px;
                 height: 12px;
-                fill: var(--font-1);
+                fill: var(--common-white);
                 margin-right: 6px;
             }
         }
 
         .finish:hover {
-            color:  var(--font-1);
+            color:  var(--common-white);
         }
     }
 }

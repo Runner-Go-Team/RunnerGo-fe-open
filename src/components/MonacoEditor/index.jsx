@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useImperativeHandle, forwardRef } from 'react';
 import Editor, { loader } from '@monaco-editor/react';
 import { useSelector } from 'react-redux';
 import createDependencyProposals from './dependencyProposals';
 import './index.less';
+import { isFunction, isArray } from 'lodash';
 
 const ftObj = {
   90: '10px',
@@ -24,7 +25,7 @@ loader.config({
 // 给代码编辑加自定义提示
 loader.init().then((monaco) => {
   monaco.languages.registerCompletionItemProvider('javascript', {
-    provideCompletionItems (model, position) {
+    provideCompletionItems(model, position) {
       // find out if we are completing a property in the 'dependencies' object.
       const textUntilPosition = model.getValueInRange({
         startLineNumber: 1,
@@ -51,7 +52,7 @@ loader.init().then((monaco) => {
     },
   });
 });
-const MonacoEditor = (props) => {
+const MonacoEditor = (props, ref) => {
   const {
     language,
     _theme,
@@ -60,7 +61,6 @@ const MonacoEditor = (props) => {
     Height,
     options = { minimap: { enabled: false }, scrollbar: { useShadows: false } },
     editorDidMount = undefined,
-    ref,
     lineNumbers = 'on', // 关闭编辑器行号
     showCheck = true // 是否校验并提示数据格式问题
   } = props;
@@ -84,7 +84,17 @@ const MonacoEditor = (props) => {
   }, [theme]);
 
   const [editor, seteditor] = useState();
+  const formatEditor = () => {
+    // const newVal = EditFormat(editorValue).value;
+    // onChange(newVal);
+    if (editor && isFunction(editor?.getAction)) {
+      editor.getAction('editor.action.formatDocument').run();
+    }
+  };
 
+  useImperativeHandle(ref, () => ({
+    formatEditor,
+  }));
   const [ftSize, setFtSize] = useState('14px');
   useEffect(() => {
     setFtSize(ftObj?.[SYSSCALE] || '14px');
@@ -112,16 +122,21 @@ const MonacoEditor = (props) => {
     return (
       <Editor
         height={Height}
-        ref={ref}
         language={language}
         value={typeof value === 'string' ? value : value?.toString()}
         onMount={(e) => {
           JeditorDidMount(e);
           editorDidMount && editorDidMount(e);
         }}
-        onChange={(val) => {
-          if (onChange && MONOCAINIT) {
-            onChange(val);
+        onChange={(val, changeObj) => {
+          if (
+            !isArray(changeObj?.changes) ||
+            changeObj.changes.length <= 0 ||
+            !changeObj.changes[0]?.forceMoveMarkers
+          ) {
+            if (onChange) {
+              onChange(val);
+            }
           }
         }}
         theme={editotThem}
@@ -146,4 +161,4 @@ const MonacoEditor = (props) => {
   return <>{mEditor}</>;
 };
 
-export default MonacoEditor;
+export default forwardRef(MonacoEditor);

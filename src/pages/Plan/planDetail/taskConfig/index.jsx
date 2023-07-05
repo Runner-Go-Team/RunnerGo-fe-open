@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Radio, Switch, Table, Button, Message, Dropdown } from 'adesign-react';
-import { Save as SvgSave, Import as SvgImport, Right as SvgRight, Left as SvgLeft } from 'adesign-react/icons';
+import { Button, Message } from 'adesign-react';
+import {
+    Save as SvgSave,
+    Import as SvgImport,
+    Right as SvgRight,
+    Left as SvgLeft
+} from 'adesign-react/icons';
 import { fetchPreConfig } from '@services/plan';
 import { useSelector, useDispatch } from 'react-redux';
 import './index.less';
@@ -12,15 +17,21 @@ import { useTranslation } from 'react-i18next';
 import 'echarts/lib/echarts';
 import ReactEcharts from 'echarts-for-react';
 import cn from 'classnames';
-import { DatePicker, Tooltip, Input, Select } from '@arco-design/web-react';
+import { DatePicker, Tooltip, Input, Select, Collapse, Switch, Radio, Table, Menu, Dropdown } from '@arco-design/web-react';
+import { IconSwap, IconFullscreen } from '@arco-design/web-react/icon';
+
 import SvgExplain from '@assets/icons/Explain';
 import dayjs from 'dayjs';
 import PreviewPreset from '@modals/PreviewPreset';
+import FullScreenComp from '@components/FullScreenComp';
 import { fetchTeamPackage } from '@services/pay';
 const { RangePicker } = DatePicker;
-const { Group } = Radio;
+const { Group: RadioGroup } = Radio;
 
 const { Option } = Select;
+
+const { Item: CollapseItem } = Collapse;
+
 
 
 
@@ -31,12 +42,15 @@ const TaskConfig = (props) => {
     const [initData, setInitData] = useState({});
     const dispatch = useDispatch();
     const [planDetail, setPlanDetail] = useState({});
+    const [fullScreenTable, setFullScreenTable] = useState(false);
     const task_config = useSelector((store) => store.plan.task_config);
     const open_scene = useSelector((store) => store.plan.open_plan_scene);
     const open_scene_name = useSelector((store) => store.plan.open_scene_name);
     const language = useSelector((store) => store.user.language);
     const hide_config = useSelector((store) => store.plan.hide_config);
     const { id: plan_id } = useParams();
+
+
 
     const taskList = {
         '0': '-',
@@ -65,7 +79,9 @@ const TaskConfig = (props) => {
                                 task_type,
                                 control_mode,
                                 timed_task_conf,
-                                debug_mode
+                                debug_mode,
+                                is_open_distributed,
+                                machine_dispatch_mode_conf
                             } = plan_task;
                             setMode(mode);
                             setControlMode(control_mode);
@@ -81,6 +97,11 @@ const TaskConfig = (props) => {
                             setModeConf(mode_conf);
                             setTaskType(task_type);
                             setDebugMode(debug_mode ? debug_mode : 'stop');
+                            setIsOpenDistributed(is_open_distributed);
+                            setActiveCollapse(is_open_distributed);
+                            const { machine_allot_type, usable_machine_list } = machine_dispatch_mode_conf || {};
+                            setMachineAllotType(machine_allot_type);
+                            setUsableMachineList(usable_machine_list || []);
 
                             if (timed_task_conf) {
 
@@ -106,7 +127,9 @@ const TaskConfig = (props) => {
                                     control_mode,
                                     debug_mode: debug_mode ? debug_mode : 'stop',
                                     mode_conf: mode_conf ? mode_conf : {},
-                                    timed_task_conf: timed_task_conf ? timed_task_conf : {}
+                                    timed_task_conf: timed_task_conf ? timed_task_conf : {},
+                                    is_open_distributed,
+                                    machine_dispatch_mode_conf
                                 },
                             })
                         } else {
@@ -136,7 +159,9 @@ const TaskConfig = (props) => {
             timed_task_conf,
             task_type,
             control_mode,
-            debug_mode
+            debug_mode,
+            is_open_distributed,
+            machine_dispatch_mode_conf,
         } = preinstall;
         const { concurrency, duration, max_concurrency, round_num, start_concurrency, step, step_run_time } = mode_conf;
         setMode(task_mode);
@@ -152,6 +177,11 @@ const TaskConfig = (props) => {
         setStepRunTime(step_run_time);
         setTaskType(task_type);
         setDebugMode(debug_mode ? debug_mode : "stop");
+        setIsOpenDistributed(is_open_distributed);
+        setActiveCollapse(is_open_distributed);
+        const { machine_allot_type, usable_machine_list } = machine_dispatch_mode_conf;
+        setMachineAllotType(machine_allot_type);
+        setUsableMachineList(usable_machine_list);
 
 
         if (round_num > 0 && (!duration > 0)) {
@@ -174,7 +204,9 @@ const TaskConfig = (props) => {
             mode_conf: mode_conf ? mode_conf : {},
             timed_task_conf: timed_task_conf ? timed_task_conf : {},
             task_type,
-            debug_mode: debug_mode ? debug_mode : 'stop'
+            debug_mode: debug_mode ? debug_mode : 'stop',
+            is_open_distributed,
+            machine_dispatch_mode_conf
         }
 
 
@@ -185,7 +217,7 @@ const TaskConfig = (props) => {
     }
 
 
-    const modeList = [t('plan.modeList.1'), t('plan.modeList.2'), t('plan.modeList.3'), t('plan.modeList.4'), t('plan.modeList.5')];
+    const modeList = [t('plan.modeList.1'), t('plan.modeList.2'), t('plan.modeList.3'), t('plan.modeList.4'), t('plan.modeList.5'), t('plan.modeList.6')];
     const controlModeList = [t('plan.controlModeList.0'), t('plan.controlModeList.1')];
 
     const controlExplain = {
@@ -221,6 +253,18 @@ const TaskConfig = (props) => {
     // cron表达式
     const [cron_expr, setCronExpr] = useState('');
 
+    // 是否开启分布式调度: 0-关闭 1-开启
+    const [is_open_distributed, setIsOpenDistributed] = useState(0);
+
+    // 机器分配方式: 0-权重 1-自定义
+    const [machine_allot_type, setMachineAllotType] = useState(0);
+
+    // 机器表格数据
+    const [usable_machine_list, setUsableMachineList] = useState([]);
+
+    // 机器表格column
+    const [machine_column, setMachineColumn] = useState([]);
+
     const updateTaskConfig = (type, value) => {
         const _task_config = cloneDeep(task_config);
         const arr = ['duration', 'round_num', 'concurrency', 'start_concurrency', 'step', 'step_run_time', 'max_concurrency'];
@@ -243,6 +287,12 @@ const TaskConfig = (props) => {
             _task_config['mode'] = mode;
             _task_config['mode_conf'] = mode_conf;
             _task_config['mode_conf'][type] = value;
+        } else if (type === 'is_open_distributed') {
+            _task_config['is_open_distributed'] = value;
+        } else if (type === 'machine_allot_type') {
+            _task_config['machine_dispatch_mode_conf']['machine_allot_type'] = value;
+        } else if (type === 'usable_machine_list') {
+            _task_config['machine_dispatch_mode_conf']['usable_machine_list'] = value;
         } else {
             if (task_type === 2) {
                 _task_config['timed_task_conf'][type] = value;
@@ -272,31 +322,16 @@ const TaskConfig = (props) => {
                 </div>
                 <div className="right">
                     {
-                        mode === 1 ? <div className="right-container-first">
+                        (mode === 1 || mode === 6) ? <div className="right-container-first">
 
-                            <div className='config-set-select-item'>
-                                <Select getPopupContainer={(triggerNode) => triggerNode.parentNode} disabled={status === 2} value={default_mode} onChange={(e) => {
-                                    setDefaultMode(e);
-                                    const _mode_conf = cloneDeep(mode_conf);
-                                    if (e === 'duration') {
-                                        _mode_conf.round_num = '';
-                                        setModeConf(_mode_conf);
-                                        updateTaskConfig('round_num', '');
-                                    } else if (e === 'round_num') {
-                                        _mode_conf.duration = '';
-                                        setModeConf(_mode_conf);
-                                        updateTaskConfig('duration', '');
-                                    }
-                                }}>
-                                    <Option value="duration">{t('plan.duration')}</Option>
-                                    <Option value="round_num">{t('plan.roundNum')}</Option>
-                                </Select>
+                            <div className='right-item'>
+                                <span style={{ minWidth: '90px' }}><span className='must-input'>*&nbsp;</span>{mode === 1 ? t('plan.duration') : t('plan.roundNum')} </span>
 
                                 <Input
-                                    value={default_mode === 'duration' ? mode_conf.duration : mode_conf.round_num}
-                                    placeholder={default_mode === 'duration' ? t('placeholder.unitS') : t('placeholder.unitR')}
+                                    value={mode === 1 ? mode_conf.duration : mode_conf.round_num}
+                                    placeholder={mode === 1 ? t('placeholder.unitS') : t('placeholder.unitR')}
                                     onChange={(e) => {
-                                        if (default_mode === 'duration') {
+                                        if (mode === 1) {
                                             if (parseInt(e) > 0) {
                                                 const _mode_conf = cloneDeep(mode_conf);
                                                 _mode_conf.duration = parseInt(e);
@@ -316,7 +351,7 @@ const TaskConfig = (props) => {
                                                 setDuration('');
                                                 updateTaskConfig('duration', '');
                                             }
-                                        } else if (default_mode === 'round_num') {
+                                        } else if (mode === 6) {
                                             if (parseInt(e) > 0) {
                                                 const _mode_conf = cloneDeep(mode_conf);
                                                 _mode_conf.round_num = parseInt(e);
@@ -541,46 +576,120 @@ const TaskConfig = (props) => {
     }
 
     const savePlan = () => {
-        if (mode === 1) {
-            if (task_type === 2) {
-                if (frequency === 0 && taskExecTime === 0) {
-                    Message('error', t('message.taskConfigEmpty'));
-                    return;
-                } else if (frequency !== 0 && (taskExecTime === 0 || taskCloseTime === 0)) {
-                    Message('error', t('message.taskConfigEmpty'));
-                    return;
-                }
+        if (is_open_distributed === 1 && machine_allot_type === 0) {
+            // 处理自定义分布式的权重模式
 
-                if (frequency !== 0 && taskCloseTime <= taskExecTime) {
-                    Message('error', t('message.endGTstart'));
-                    return;
-                }
-            }
-
-            const { duration, round_num, concurrency } = mode_conf;
-
-            if (!duration && !round_num) {
-
-                Message('error', t('message.taskConfigEmpty'));
-                return;
-            } else if (!concurrency) {
-
-                Message('error', t('message.taskConfigEmpty'));
+            let count = usable_machine_list.reduce((sum, item) => sum + item.weight, 0);
+            if (count !== 100) {
+                Message('error', t('message.weightTotalErr'));
                 return;
             }
+        } else if (is_open_distributed === 1 && machine_allot_type === 1) {
+            // 处理自定义分布式的自定义模式
 
+            let _usable_machine_list = usable_machine_list.filter(item => item.machine_status === 1);
+
+            if (mode === 1 || mode === 6) {
+                for (let i = 0; i < _usable_machine_list.length; i++) {
+                    const { concurrency, duration, round_num } = _usable_machine_list[i];
+                    if (mode === 1) {
+                        if (!concurrency || !duration) {
+                            Message('error', t('message.taskConfigEmpty'));
+                            return;
+                        }
+                    } else {
+                        if (!concurrency || !round_num) {
+                            Message('error', t('message.taskConfigEmpty'));
+                            return;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < _usable_machine_list[i].length; i++) {
+                    const { start_concurrency, step, step_run_time, max_concurrency, duration } = _usable_machine_list[i];
+
+                    if (!start_concurrency || !step || !step_run_time || !max_concurrency || !duration) {
+
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    }
+
+                    if (max_concurrency < start_concurrency) {
+                        Message('error', t('message.maxConcurrencyLessStart'));
+                        return;
+                    }
+                }
+            }
         } else {
-            const { start_concurrency, step, step_run_time, max_concurrency, duration } = mode_conf;
+            // 处理非自定义分布式的情况
+            if (mode === 1) {
+                if (task_type === 2) {
+                    if (frequency === 0 && taskExecTime === 0) {
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    } else if (frequency !== 0 && (taskExecTime === 0 || taskCloseTime === 0)) {
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    }
 
-            if (!start_concurrency || !step || !step_run_time || !max_concurrency || !duration) {
+                    if (frequency !== 0 && taskCloseTime <= taskExecTime) {
+                        Message('error', t('message.endGTstart'));
+                        return;
+                    }
+                }
 
-                Message('error', t('message.taskConfigEmpty'));
-                return;
-            }
+                const { duration, round_num, concurrency } = mode_conf;
 
-            if (max_concurrency < start_concurrency) {
-                Message('error', t('message.maxConcurrencyLessStart'));
-                return;
+                if (!duration) {
+
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                } else if (!concurrency) {
+
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                }
+
+            } else if (mode === 6) {
+                if (task_type === 2) {
+                    if (frequency === 0 && taskExecTime === 0) {
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    } else if (frequency !== 0 && (taskExecTime === 0 || taskCloseTime === 0)) {
+                        Message('error', t('message.taskConfigEmpty'));
+                        return;
+                    }
+
+                    if (frequency !== 0 && taskCloseTime <= taskExecTime) {
+                        Message('error', t('message.endGTstart'));
+                        return;
+                    }
+                }
+
+                const { duration, round_num, concurrency } = mode_conf;
+
+                if (!round_num) {
+
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                } else if (!concurrency) {
+
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                }
+            } else {
+                const { start_concurrency, step, step_run_time, max_concurrency, duration } = mode_conf;
+
+                if (!start_concurrency || !step || !step_run_time || !max_concurrency || !duration) {
+
+                    Message('error', t('message.taskConfigEmpty'));
+                    return;
+                }
+
+                if (max_concurrency < start_concurrency) {
+                    Message('error', t('message.maxConcurrencyLessStart'));
+                    return;
+                }
             }
         }
 
@@ -804,6 +913,194 @@ const TaskConfig = (props) => {
         }
     }, [status, theme]);
 
+    const senior_config_column = [
+        {
+            title: t('plan.machineName'),
+            dataIndex: 'machine_name',
+            width: 100,
+            fixed: 'left'
+        },
+        {
+            title: t('plan.region'),
+            dataIndex: 'region',
+            width: 60,
+        },
+        {
+            title: t('plan.ip'),
+            dataIndex: 'ip',
+            width: 100,
+        },
+    ];
+
+    const [select_column, setSelectColumn] = useState('duration');
+    const [activeCollapse, setActiveCollapse] = useState(0);
+
+    const updateChange = (list, index, field, value) => {
+        let _data = cloneDeep(list);
+
+        if (`${parseInt(value)}` === `${NaN}`) {
+            _data[index][field] = null;
+            setUsableMachineList(_data);
+            updateTaskConfig('usable_machine_list', _data);
+        } else {
+            _data[index][field] = parseInt(value);
+            setUsableMachineList(_data);
+            updateTaskConfig('usable_machine_list', _data);
+        }
+    }
+
+    const updateBlur = (list, index, field, value) => {
+        if (value === null) {
+            let _data = cloneDeep(list);
+            _data[index][field] = 0;
+            setUsableMachineList(_data);
+            updateTaskConfig('usable_machine_list', _data);
+        }
+    }
+
+
+    useEffect(() => {
+
+        if (machine_allot_type === 0) {
+            setMachineColumn([
+                ...senior_config_column,
+                {
+                    title: t('plan.weight'),
+                    dataIndex: 'weight',
+                    width: 120,
+                    render: (col, item, index) => (
+                        <Input
+                            value={col}
+                            disabled={item.machine_status === 2}
+                            onChange={(e) => {
+                                if (parseInt(e) > 100) {
+                                    updateChange(usable_machine_list, index, 'weight', 100);
+                                } else {
+                                    updateChange(usable_machine_list, index, 'weight', e);
+                                }
+                            }}
+                            onBlur={(e) => updateBlur(usable_machine_list, index, 'weight', e.target.value)}
+                        />
+                    )
+                }
+            ])
+        } else if (machine_allot_type === 1) {
+            if (mode === 1 || mode === 6) {
+                setMachineColumn([
+                    ...senior_config_column,
+                    {
+                        title: t('plan.concurrency'),
+                        dataIndex: 'concurrency',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                disabled={item.machine_status === 2}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'concurrency', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'concurrency', e.target.value)}
+                            />
+                        )
+                    },
+                    mode === 1 ?
+                        {
+                            title: t('plan.duration'),
+                            dataIndex: 'duration',
+                            width: 120,
+                            render: (col, item, index) => (
+                                <Input
+                                    value={col}
+                                    disabled={item.machine_status === 2}
+                                    onChange={(e) => updateChange(usable_machine_list, index, 'duration', e)}
+                                    onBlur={(e) => updateBlur(usable_machine_list, index, 'duration', e.target.value)}
+                                />
+                            )
+                        } : {
+                            title: t('plan.roundNum'),
+                            dataIndex: 'round_num',
+                            width: 120,
+                            render: (col, item, index) => (
+                                <Input
+                                    value={col}
+                                    disabled={item.machine_status === 2}
+                                    onChange={(e) => updateChange(usable_machine_list, index, 'round_num', e)}
+                                    onBlur={(e) => updateBlur(usable_machine_list, index, 'round_num', e.target.value)}
+                                />
+                            )
+                        }
+                ])
+            } else {
+                setMachineColumn([
+                    ...senior_config_column,
+                    {
+                        title: t('plan.startConcurrency'),
+                        dataIndex: 'start_concurrency',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                disabled={item.machine_status === 2}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'start_concurrency', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'start_concurrency', e.target.value)}
+                            />
+                        )
+                    },
+                    {
+                        title: t('plan.step'),
+                        dataIndex: 'step',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                disabled={item.machine_status === 2}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'step', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'step', e.target.value)}
+                            />
+                        )
+                    },
+                    {
+                        title: t('plan.stepRunTime'),
+                        dataIndex: 'step_run_time',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                disabled={item.machine_status === 2}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'step_run_time', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'step_run_time', e.target.value)}
+                            />
+                        )
+                    },
+                    {
+                        title: t('plan.maxConcurrency'),
+                        dataIndex: 'max_concurrency',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                disabled={item.machine_status === 2}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'max_concurrency', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'max_concurrency', e.target.value)}
+                            />
+                        )
+                    },
+                    {
+                        title: t('plan.duration'),
+                        dataIndex: 'duration',
+                        width: 120,
+                        render: (col, item, index) => (
+                            <Input
+                                value={col}
+                                disabled={item.machine_status === 2}
+                                onChange={(e) => updateChange(usable_machine_list, index, 'duration', e)}
+                                onBlur={(e) => updateBlur(usable_machine_list, index, 'duration', e.target.value)}
+                            />
+                        )
+                    },
+                ])
+            }
+        }
+    }, [machine_allot_type, mode, select_column, usable_machine_list, task_config])
+
 
     return (
         <>
@@ -918,25 +1215,27 @@ const TaskConfig = (props) => {
                             <div className='item' style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                                 <p >{t('plan.mode')}:</p>
                                 <Select value={mode} style={{ width: '300px', height: '32px', marginLeft: '14px' }} onChange={(e) => {
-                                    if (e === 1) {
-                                        setDuration(0);
-                                        updateTaskConfig('duration', 0);
-                                        setRoundNum(0);
-                                        updateTaskConfig('round_num', 0);
-                                        setConcurrency(0);
-                                        updateTaskConfig('concurrency', 0);
-                                    } else {
-                                        setStartConcurrency(0);
-                                        updateTaskConfig('start_concurrency', 0);
-                                        setStep(0);
-                                        updateTaskConfig('step', 0);
-                                        setStepRunTime(0);
-                                        updateTaskConfig('step_run_time', 0);
-                                        setMaxConcurrency(0);
-                                        updateTaskConfig('max_concurrency', 0);
-                                        setDuration(0);
-                                        updateTaskConfig('duration', 0);
-                                    }
+                                    setDuration(0);
+                                    updateTaskConfig('duration', 0);
+
+                                    setRoundNum(0);
+                                    updateTaskConfig('round_num', 0);
+
+                                    setConcurrency(0);
+                                    updateTaskConfig('concurrency', 0);
+
+                                    setStartConcurrency(0);
+                                    updateTaskConfig('start_concurrency', 0);
+
+                                    setStep(0);
+                                    updateTaskConfig('step', 0);
+
+                                    setStepRunTime(0);
+                                    updateTaskConfig('step_run_time', 0);
+
+                                    setMaxConcurrency(0);
+                                    updateTaskConfig('max_concurrency', 0);
+
                                     setMode(e);
                                     setXEchart([]);
                                     setYEchart([]);
@@ -948,22 +1247,64 @@ const TaskConfig = (props) => {
                                         ))
                                     }
                                 </Select>
-                                {/* <Radio.Group value={mode} onChange={(e) => {
-        setMode(e);
-        // from === 'preset' && onChange('mode', e);
-        // from === 'default' && 
-        updateTaskConfig('mode', parseInt(e));
-    }} >
-        {modeList.map((item, index) => (<Radio value={index + 1} style={{ marginBottom: '16px' }}>{item}</Radio>))}
-    </Radio.Group> */}
                             </div>
                             <div className='other-config'>
                                 {
+                                    !(is_open_distributed === 1 && machine_allot_type === 1)
+                                    &&
                                     taskConfig()
                                 }
                             </div>
+                            <div className='senior-config'>
+                                <Collapse activeKey={activeCollapse} onChange={(e) => {
+                                    setActiveCollapse(activeCollapse === 1 ? 0 : 1)
+                                }}>
+                                    <CollapseItem name={1} header={t('plan.seniorConfig')}>
+                                        <div className='custom-distributed'>
+                                            <div className='config' style={{ justifyContent: is_open_distributed === 1 ? 'center' : 'flex-start' }}>
+                                                <p>{t('plan.customDistributed')}</p>
+                                                <Switch checked={Boolean(is_open_distributed)} size='small' onChange={(e) => {
+                                                    setIsOpenDistributed(Number(e));
+                                                    // setActiveCollapse(Number(e));
+                                                    updateTaskConfig('is_open_distributed', Number(e));
+                                                }} />
+                                                <Tooltip content={is_open_distributed === 0 ? t('plan.useDiyRun') : t('plan.totalWeightTip')}>
+                                                    <SvgExplain className='explain-icon' />
+                                                </Tooltip>
+                                                {
+                                                    is_open_distributed === 1 && <RadioGroup value={machine_allot_type} onChange={(e) => {
+                                                        setMachineAllotType(e);
+                                                        updateTaskConfig('machine_allot_type', e);
+                                                    }}>
+                                                        <Radio value={0}>{t('plan.machineAllotType.0')}</Radio>
+                                                        <Radio value={1}>{t('plan.machineAllotType.1')}</Radio>
+                                                    </RadioGroup>
+                                                }
+                                            </div>
+                                            {Boolean(is_open_distributed) && (
+                                                <div className='full-screen-icon-box'>
+                                                    <IconFullscreen onClick={() => setFullScreenTable(true)} />
+                                                </div>
+                                            )}
+                                            {
+                                                is_open_distributed === 1 &&
+                                                <Table
+                                                    border
+                                                    borderCell
+                                                    columns={machine_column}
+                                                    data={usable_machine_list}
+                                                    pagination={false}
+                                                    scroll={{
+                                                        x: 350,
+                                                    }}
+                                                />
+                                            }
+                                        </div>
+                                    </CollapseItem>
+                                </Collapse>
+                            </div>
                             {
-                                ((x_echart[0] || x_echart[1]) && (y_echart[0] || y_echart[1])) ?
+                                ((x_echart[0] || x_echart[1]) && (y_echart[0] || y_echart[1])) && (machine_allot_type !== 1) ?
                                     <>
                                         <ReactEcharts style={{ marginTop: '10px' }} className='echarts' option={getOption(t('plan.configEchart'), x_echart, y_echart)} />
                                         <p>{t('plan.xUnit')}</p>
@@ -980,6 +1321,21 @@ const TaskConfig = (props) => {
                         }
                     </div>
                 </div>
+            }
+
+            {
+                fullScreenTable ? <FullScreenComp onChange={() => setFullScreenTable(false)}>
+                    <Table
+                        border
+                        borderCell
+                        columns={machine_column}
+                        data={usable_machine_list}
+                        pagination={false}
+                        scroll={{
+                            x: 350,
+                        }}
+                    />
+                </FullScreenComp> : <></>
             }
 
         </>

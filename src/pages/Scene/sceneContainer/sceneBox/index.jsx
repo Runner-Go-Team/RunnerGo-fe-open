@@ -6,6 +6,7 @@ import { cloneDeep, debounce } from 'lodash';
 import Box from "./box";
 import ConditionController from "./controller/condition";
 import WaitController from "./controller/wait";
+import MysqlBox from "./mysql";
 import ReactFlow, {
     addEdge,
     MiniMap,
@@ -29,7 +30,8 @@ import SvgMouse from '@assets/icons/mouse.svg';
 const nodeTypes = {
     api: Box,
     condition_controller: ConditionController,
-    wait_controller: WaitController
+    wait_controller: WaitController,
+    sql: MysqlBox
 };
 
 const edgeTypes = {
@@ -120,6 +122,8 @@ const SceneBox = (props) => {
     const open_plan_scene = useSelector((store) => store.plan.open_plan_scene);
     const open_auto_plan_scene = useSelector((store) => store.auto_plan.open_plan_scene);
     const open_case = useSelector((store) => store.case.open_case);
+
+    const scene_env_id = useSelector((store) => store.env.scene_env_id);
 
     const open_data_list = {
         'scene': open_scene,
@@ -287,7 +291,7 @@ const SceneBox = (props) => {
                     payload: _open_data,
                 })
                 setTimeout(() => {
-                    Bus.$emit('saveScenePlan', _nodes, _edges, id_apis, node_config, open_data, id, 'plan');
+                    Bus.$emit('saveScenePlan', _nodes, _edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                 }, 100);
             } else if (from === 'auto_plan') {
                 dispatch({
@@ -371,7 +375,7 @@ const SceneBox = (props) => {
                         payload: _open_data,
                     })
                     setTimeout(() => {
-                        Bus.$emit('saveScenePlan', nodes, _edges, id_apis, node_config, open_data, id, 'plan');
+                        Bus.$emit('saveScenePlan', nodes, _edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                     }, 100);
                 } else if (from === 'auto_plan') {
                     dispatch({
@@ -463,112 +467,221 @@ const SceneBox = (props) => {
         const _open_data = cloneDeep(open_data);
         let ids = [];
         let _nodes = cloneDeep(nodes);
+        // 来判断导入的是不是前置条件
         if (import_node && import_node.length) {
-            let _position = [];
-            import_node.forEach(item => {
-                const id = v4();
-                let position = getNewCoordinate(nodes.concat(_position));
-                _position.push({ position })
-                const new_node = {
-                    id,
-                    type: 'api',
-                    data: {
+            let mysql_node = import_node.filter(item => item.target_type === 'sql');
+            if (mysql_node.length > 0) {
+                mysql_node.forEach(item => {
+                    const id = v4();
+                    const new_node = {
                         id,
-                        from,
-                    },
-                    position,
-                    dragHandle: '.drag-content',
+                        type: 'sql',
+                        data: {
+                            id,
+                            from
+                        },
+                        position: {
+                            x: 0,
+                            y: 0
+                        },
+                        positionAbsolute: {
+                            x: 0,
+                            y: 0
+                        },
+                        dragHandle: '.drag-content',
+                    };
+
+                    _nodes.push(new_node);
+                    _open_data.nodes = _nodes;
+
+                    ids.push(id);
+
+                    item.id = id;
+                })
+                if (from === 'scene') {
+                    Bus.$emit('addNewSceneMysql', ids, mysql_node, ids.map(item => new Object()), from, () => {
+                        dispatch({
+                            type: 'scene/updateImportNode',
+                            payload: [],
+                        })
+                        dispatch({
+                            type: 'scene/updateNodes',
+                            payload: _nodes,
+                        })
+                        dispatch({
+                            type: 'scene/updateOpenScene',
+                            payload: _open_data
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveScene');
+                        }, 100);
+                    });
+
+                } else if (from === 'plan') {
+                    Bus.$emit('addNewPlanMysql', ids, id_apis, node_config, mysql_node, ids.map(item => new Object()), from, (id_apis, node_config) => {
+                        dispatch({
+                            type: 'plan/updateImportNode',
+                            payload: [],
+                        })
+                        dispatch({
+                            type: 'plan/updateNodes',
+                            payload: _nodes,
+                        })
+                        dispatch({
+                            type: 'plan/updateOpenScene',
+                            payload: _open_data
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
+                        }, 100);
+                    });
+
+                } else if (from === 'auto_plan') {
+                    Bus.$emit('addNewAutoPlanMysql', ids, mysql_node, ids.map(item => new Object()), () => {
+                        dispatch({
+                            type: 'auto_plan/updateImportNode',
+                            payload: [],
+                        })
+                        dispatch({
+                            type: 'auto_plan/updateNodes',
+                            payload: _nodes,
+                        })
+                        dispatch({
+                            type: 'auto_plan/updateOpenScene',
+                            payload: _open_data
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveSceneAutoPlan', id);
+                        }, 100);
+                    });
+                } else if (from === 'case') {
+                    Bus.$emit('addNewCaseMysql', ids, mysql_node, ids.map(item => new Object()), () => {
+                        dispatch({
+                            type: 'case/updateImportNode',
+                            payload: [],
+                        })
+                        dispatch({
+                            type: 'case/updateNodes',
+                            payload: _nodes,
+                        })
+                        dispatch({
+                            type: 'case/updateOpenScene',
+                            payload: _open_data
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveCase');
+                        }, 100);
+                    });
+
                 }
-                item.id = id;
-                ids.push(id);
-                setNodes((nds) => nds.concat(new_node));
+            } else {
+                let _position = [];
+                import_node.forEach(item => {
+                    const id = v4();
+                    let position = getNewCoordinate(nodes.concat(_position));
+                    _position.push({ position })
+                    const new_node = {
+                        id,
+                        type: 'api',
+                        data: {
+                            id,
+                            from,
+                        },
+                        position,
+                        dragHandle: '.drag-content',
+                    }
+                    item.id = id;
+                    ids.push(id);
+                    setNodes((nds) => nds.concat(new_node));
 
-                _nodes.push(new_node);
-                _open_data.nodes = _nodes;
+                    _nodes.push(new_node);
+                    _open_data.nodes = _nodes;
 
-                // if (_open_data.nodes) {
-                //     _open_data.nodes.push(new_node);
-                // } else {
-                //     _open_data.nodes = [new_node];
-                //     _open_data.edges = [];
-                // }
-            });
-            if (from === 'scene') {
-                Bus.$emit('addNewSceneApi', ids, import_node, ids.map(item => new Object()), from, () => {
-                    dispatch({
-                        type: 'scene/updateImportNode',
-                        payload: [],
-                    })
-                    dispatch({
-                        type: 'scene/updateNodes',
-                        payload: _nodes,
-                    })
-                    dispatch({
-                        type: 'scene/updateOpenScene',
-                        payload: _open_data
-                    })
-                    setTimeout(() => {
-                        Bus.$emit('saveScene');
-                    }, 100);
+                    // if (_open_data.nodes) {
+                    //     _open_data.nodes.push(new_node);
+                    // } else {
+                    //     _open_data.nodes = [new_node];
+                    //     _open_data.edges = [];
+                    // }
                 });
+                if (from === 'scene') {
+                    Bus.$emit('addNewSceneApi', ids, import_node, ids.map(item => new Object()), from, () => {
+                        dispatch({
+                            type: 'scene/updateImportNode',
+                            payload: [],
+                        })
+                        dispatch({
+                            type: 'scene/updateNodes',
+                            payload: _nodes,
+                        })
+                        dispatch({
+                            type: 'scene/updateOpenScene',
+                            payload: _open_data
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveScene');
+                        }, 100);
+                    });
 
-            } else if (from === 'plan') {
-                Bus.$emit('addNewPlanApi', ids, id_apis, node_config, import_node, ids.map(item => new Object()), from, (id_apis, node_config) => {
-                    dispatch({
-                        type: 'plan/updateImportNode',
-                        payload: [],
-                    })
-                    dispatch({
-                        type: 'plan/updateNodes',
-                        payload: _nodes,
-                    })
-                    dispatch({
-                        type: 'plan/updateOpenScene',
-                        payload: _open_data
-                    })
-                    setTimeout(() => {
-                        Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
-                    }, 100);
-                });
+                } else if (from === 'plan') {
+                    Bus.$emit('addNewPlanApi', ids, id_apis, node_config, import_node, ids.map(item => new Object()), from, (id_apis, node_config) => {
+                        dispatch({
+                            type: 'plan/updateImportNode',
+                            payload: [],
+                        })
+                        dispatch({
+                            type: 'plan/updateNodes',
+                            payload: _nodes,
+                        })
+                        dispatch({
+                            type: 'plan/updateOpenScene',
+                            payload: _open_data
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
+                        }, 100);
+                    });
 
-            } else if (from === 'auto_plan') {
-                Bus.$emit('addNewAutoPlanApi', ids, import_node, {}, () => {
-                    dispatch({
-                        type: 'auto_plan/updateImportNode',
-                        payload: [],
-                    })
-                    dispatch({
-                        type: 'auto_plan/updateNodes',
-                        payload: _nodes,
-                    })
-                    dispatch({
-                        type: 'auto_plan/updateOpenScene',
-                        payload: _open_data
-                    })
-                    setTimeout(() => {
-                        Bus.$emit('saveSceneAutoPlan', id);
-                    }, 100);
-                });
-            } else if (from === 'case') {
-                Bus.$emit('addNewCaseApi', ids, import_node, {}, () => {
-                    dispatch({
-                        type: 'case/updateImportNode',
-                        payload: [],
-                    })
-                    dispatch({
-                        type: 'case/updateNodes',
-                        payload: _nodes,
-                    })
-                    dispatch({
-                        type: 'case/updateOpenScene',
-                        payload: _open_data
-                    })
-                    setTimeout(() => {
-                        Bus.$emit('saveCase');
-                    }, 100);
-                });
+                } else if (from === 'auto_plan') {
+                    Bus.$emit('addNewAutoPlanApi', ids, import_node, {}, () => {
+                        dispatch({
+                            type: 'auto_plan/updateImportNode',
+                            payload: [],
+                        })
+                        dispatch({
+                            type: 'auto_plan/updateNodes',
+                            payload: _nodes,
+                        })
+                        dispatch({
+                            type: 'auto_plan/updateOpenScene',
+                            payload: _open_data
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveSceneAutoPlan', id);
+                        }, 100);
+                    });
+                } else if (from === 'case') {
+                    Bus.$emit('addNewCaseApi', ids, import_node, {}, () => {
+                        dispatch({
+                            type: 'case/updateImportNode',
+                            payload: [],
+                        })
+                        dispatch({
+                            type: 'case/updateNodes',
+                            payload: _nodes,
+                        })
+                        dispatch({
+                            type: 'case/updateOpenScene',
+                            payload: _open_data
+                        })
+                        setTimeout(() => {
+                            Bus.$emit('saveCase');
+                        }, 100);
+                    });
 
+                }
             }
+
         }
     }, [import_node]);
 
@@ -579,7 +692,6 @@ const SceneBox = (props) => {
     }, [nodes, success_edge, failed_edge])
 
     useEffect(() => {
-        console.log(open_data);
         if (Object.entries((open_data || {})).length > 0) {
             const { nodes, edges } = open_data;
             // 1. 对nodes进行赋值, 渲染视图
@@ -715,7 +827,7 @@ const SceneBox = (props) => {
                     payload: _open_data
                 })
                 setTimeout(() => {
-                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                 }, 100);
             } else if (from === 'auto_plan') {
                 dispatch({
@@ -786,7 +898,7 @@ const SceneBox = (props) => {
                     payload: _open_data
                 })
                 setTimeout(() => {
-                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                 }, 100);
             } else if (from === 'auto_plan') {
                 dispatch({
@@ -890,7 +1002,6 @@ const SceneBox = (props) => {
         const id = v4();
         const _open_data = cloneDeep(open_data);
         if (action === 'add' && type === 'api') {
-            const apiList = nodes.filter(item => item.type === 'api');
             const new_node = {
                 id,
                 type: 'api',
@@ -908,7 +1019,7 @@ const SceneBox = (props) => {
                 },
                 mode: 1,
                 dragHandle: '.drag-content',
-            }
+            };
             setPosition([]);
             let _nodes = cloneDeep(nodes);
             _nodes.push(new_node);
@@ -937,7 +1048,7 @@ const SceneBox = (props) => {
                         payload: _open_data
                     })
                     setTimeout(() => {
-                        Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                        Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                     }, 300);
                 });
             } else if (from === 'auto_plan') {
@@ -1016,7 +1127,7 @@ const SceneBox = (props) => {
                     payload: _open_data
                 })
                 setTimeout(() => {
-                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                 }, 100);
             } else if (from === 'auto_plan') {
                 Bus.$emit('addNewAutoPlanControl', new_node.id);
@@ -1094,7 +1205,7 @@ const SceneBox = (props) => {
                     payload: _open_data
                 })
                 setTimeout(() => {
-                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                    Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                 }, 100);
             } else if (from === 'auto_plan') {
                 Bus.$emit('addNewAutoPlanControl', new_node.id);
@@ -1124,6 +1235,156 @@ const SceneBox = (props) => {
                 }, 100);
             }
 
+            setNodes((nds) => nds.concat(new_node));
+        } else if (action === 'add' && type === 'sql') {
+            const new_node = {
+                id,
+                type: 'sql',
+                data: {
+                    id,
+                    from,
+                },
+                position: {
+                    x: 0,
+                    y: 0
+                },
+                positionAbsolute: {
+                    x: 0,
+                    y: 0
+                },
+                dragHandle: '.drag-content',
+            };
+            let _nodes = cloneDeep(nodes);
+            _nodes.push(new_node);
+            _open_data.nodes = _nodes;
+            if (from === 'scene') {
+                Bus.$emit('addNewSceneMysql', new_node.id, { id }, { id }, from, (id_apis) => {
+                    dispatch({
+                        type: 'scene/updateNodes',
+                        payload: _nodes,
+                    })
+                    dispatch({
+                        type: 'scene/updateOpenScene',
+                        payload: _open_data
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveScene');
+                    }, 100);
+
+                    // 新建前置条件自动打开
+                    const api_now = cloneDeep(id_apis[id]);
+                    api_now.id = id;
+
+                    dispatch({
+                        type: 'scene/updateApiNow',
+                        payload: api_now,
+                    })
+                    dispatch({
+                        type: 'scene/updateShowMysqlConfig',
+                        payload: true
+                    })
+                    dispatch({
+                        type: 'scene/updateIdNow',
+                        payload: id,
+                    })
+                });
+
+            } else if (from === 'plan') {
+                Bus.$emit('addNewPlanMysql', new_node.id, id_apis, node_config, { id }, { id }, from, (id_apis, node_config) => {
+                    dispatch({
+                        type: 'plan/updateNodes',
+                        payload: _nodes,
+                    })
+                    dispatch({
+                        type: 'plan/updateOpenScene',
+                        payload: _open_data
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveScenePlan', _nodes, edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
+                    }, 300);
+
+                    // 新建前置条件后自动打开
+                    const api_now = cloneDeep(id_apis[id]);
+                    api_now.id = id;
+
+                    dispatch({
+                        type: 'plan/updateApiNow',
+                        payload: api_now,
+                    })
+                    dispatch({
+                        type: 'plan/updateShowMysqlConfig',
+                        payload: true
+                    })
+                    dispatch({
+                        type: 'plan/updateIdNow',
+                        payload: id,
+                    })
+                });
+            } else if (from === 'auto_plan') {
+                Bus.$emit('addNewAutoPlanMysql', new_node.id, { id }, { id }, (id_apis) => {
+                    dispatch({
+                        type: 'auto_plan/updateNodes',
+                        payload: _nodes,
+                    })
+                    dispatch({
+                        type: 'auto_plan/updateOpenScene',
+                        payload: _open_data
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveSceneAutoPlan', id);
+                    }, 100);
+
+                    // 新建前置条件自动打开
+                    const api_now = cloneDeep(id_apis[id]);
+                    api_now.id = id;
+
+                    dispatch({
+                        type: 'auto_plan/updateApiNow',
+                        payload: api_now,
+                    })
+                    dispatch({
+                        type: 'auto_plan/updateShowMysqlConfig',
+                        payload: true
+                    })
+                    dispatch({
+                        type: 'auto_plan/updateIdNow',
+                        payload: id,
+                    })
+                });
+
+            } else if (from === 'case') {
+                Bus.$emit('addNewCaseMysql', new_node.id, { id }, { id }, (id_apis) => {
+                    dispatch({
+                        type: 'case/updateNodes',
+                        payload: _nodes,
+                    })
+                    dispatch({
+                        type: 'case/updateOpenScene',
+                        payload: _open_data
+                    })
+                    setTimeout(() => {
+                        Bus.$emit('saveCase');
+                    }, 100);
+
+                    // 新建前置条件默认打开
+                    const api_now = cloneDeep(id_apis[id]);
+                    api_now.id = id;
+
+                    dispatch({
+                        type: 'case/updateApiNow',
+                        payload: api_now,
+                    })
+                    dispatch({
+                        type: 'case/updateShowMysqlConfig',
+                        payload: true
+                    })
+                    dispatch({
+                        type: 'case/updateIdNow',
+                        payload: id,
+                    })
+                });
+
+            }
             setNodes((nds) => nds.concat(new_node));
         }
 
@@ -1210,7 +1471,7 @@ const SceneBox = (props) => {
                             payload: __edges
                         });
                         setTimeout(() => {
-                            Bus.$emit('saveScenePlan', nodes, __edges, id_apis, node_config, open_data, id, 'plan');
+                            Bus.$emit('saveScenePlan', nodes, __edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                         }, 100);
                     } else if (from === 'auto_plan') {
 
@@ -1274,6 +1535,10 @@ const SceneBox = (props) => {
         svgMouse && (svgMouse.style.display = 'block')
     } else if (!add_new) {
         svgMouse && (svgMouse.style.display = 'none')
+    }
+
+    const createMysqlPreCondition = () => {
+
     }
 
     useEffect(() => {
@@ -1492,7 +1757,7 @@ const SceneBox = (props) => {
                 payload: _open_data,
             })
             setTimeout(() => {
-                Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_data, id, 'plan');
+                Bus.$emit('saveScenePlan', nodes, edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
             }, 100);
         } else if (from === 'auto_plan') {
             dispatch({
@@ -1634,7 +1899,7 @@ const SceneBox = (props) => {
                         setEdges(_edges);
 
                         setTimeout(() => {
-                            Bus.$emit('saveScenePlan', _nodes, _edges, id_apis, node_config, open_data, id, 'plan');
+                            Bus.$emit('saveScenePlan', _nodes, _edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                         }, 100);
                     } else if (from === 'auto_plan') {
                         dispatch({
@@ -1710,7 +1975,7 @@ const SceneBox = (props) => {
                             payload: _open_data,
                         })
                         setTimeout(() => {
-                            Bus.$emit('saveScenePlan', nodes, _edges, id_apis, node_config, open_data, id, 'plan');
+                            Bus.$emit('saveScenePlan', nodes, _edges, id_apis, node_config, open_data, id, 'plan', null, scene_env_id);
                         }, 100);
                     } else if (from === 'auto_plan') {
                         dispatch({

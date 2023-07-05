@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { Tooltip } from '@arco-design/web-react';
 import cn from 'classnames';
 import Bus from '@utils/eventBus';
+import { getCookie } from '@utils';
 const { Collapse, CollapseItem } = CollapseComponent;
 
 const TeamList = (props) => {
@@ -101,6 +102,14 @@ const TeamList = (props) => {
             action: 'INIT_APPLICATION',
           });
 
+          dispatch({
+            type:'mock/coverOpenMockApis',
+            payload:{}
+          });
+
+          dispatch({
+            type:'mock/recoverMockApis',
+          });
 
           dispatch({
             type: 'dashboard/updateRefresh',
@@ -110,7 +119,7 @@ const TeamList = (props) => {
           // 告知websocket服务, 切换团队了
           const params = {
             team_id,
-            token: localStorage.getItem('runnergo-token')
+            token: getCookie('token')
           }
 
           Bus.$emit('sendWsMessage', JSON.stringify({

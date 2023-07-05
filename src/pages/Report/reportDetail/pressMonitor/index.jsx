@@ -15,6 +15,7 @@ let press_monitor_t = null;
 
 const PressMonitor = (props) => {
     const { status, tab } = props;
+    console.log(status, tab);
 
     let base = +new Date(1988, 9, 3);
     let oneDay = 24 * 3600 * 1000;
@@ -37,7 +38,7 @@ const PressMonitor = (props) => {
         if (report_id) {
             getMonitorData();
 
-            if (status === 2 && tab !== '3') {
+            if (status === 2) {
                 if (setIntervalList) {
                     let _index = setIntervalList.findIndex(item => item === press_monitor_t);
                     setIntervalList.splice(_index, 1);
@@ -234,7 +235,14 @@ const PressMonitor = (props) => {
             {
                 metrics.map(item => (
                     <div className='machine-info'>
-                        <p className='ip'>HostName: { item.machine_name }</p>
+                        <p className='info-title'>
+                            <p className='machine-name'>{ item.machine_name }</p>
+                            <p className='concurrency'>{ `${t('report.concurrency')}: ${item.concurrency}`}</p>
+                        </p>
+                        <p className='info-content'>
+                            <p className='region'>{ item.region }</p>
+                            <p className='ip'>IP: { item.ip }</p>
+                        </p>
                         <div className='monitor-list'>
                             <ReactEcharts className='echarts-monitor' option={getOption('cpu', item.cpu)} />
                             <ReactEcharts className='echarts-monitor' option={getOption('disk_io', item.disk_io)} />

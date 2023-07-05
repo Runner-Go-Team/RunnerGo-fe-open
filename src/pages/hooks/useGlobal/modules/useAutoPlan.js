@@ -25,6 +25,7 @@ const useAutoPlan = () => {
     const node_config = useSelector((store) => store.auto_plan.node_config);
     const open_plan_scene = useSelector((store) => store.auto_plan.open_plan_scene);
     const api_now = useSelector((store) => store.auto_plan.api_now);
+    const env_id = useSelector((store) => store.env.scene_env_id);
 
     const addOpenAutoPlanScene = (id) => {
         dispatch({
@@ -129,6 +130,12 @@ const useAutoPlan = () => {
                     Bus.$emit('addNewAutoPlanApi', idList, apiList, configList);
                 }
 
+                const { env_id } = data;
+                dispatch({
+                    type: 'env/updateSceneEnvId',
+                    payload: env_id
+                })
+
 
                 dispatch({
                     type: 'auto_plan/updateOpenScene',
@@ -187,6 +194,54 @@ const useAutoPlan = () => {
         callback && callback();
     };
 
+    const addNewAutoPlanMysql = (id, api = {}, config = {}, callback) => {
+
+        let newApi = cloneDeep(api);
+
+        let _id = isArray(id) ? id : [id];
+        let _api = isArray(api) ? api : [api];
+        let _config = isArray(config) ? config : [config];
+        let length = _config.length;
+        let new_apis = cloneDeep(id_apis);
+        let new_nodes = cloneDeep(node_config);
+
+        for (let i = 0; i < _api.length; i++) {
+            let newApi = cloneDeep(_api[i]);
+
+            if (Object.entries(_api[i]).length < 2) {
+                newApi = getBaseCollection('sql');
+                newApi.is_changed = false;
+                newApi.id = _api[i].id;
+
+                delete newApi['target_id'];
+                delete newApi['parent_id'];
+            } else {
+
+            }
+
+            new_apis[newApi.id] = newApi;
+
+            dispatch({
+                type: 'auto_plan/updateIdApis',
+                payload: new_apis,
+            })
+        }
+
+        for (let i = 0; i < _config.length; i++) {
+
+            new_nodes[_id[i]] = _config[i];
+
+            dispatch({
+                type: 'auto_plan/updateNodeConfig',
+                payload: new_nodes,
+            })
+
+        }
+
+        callback && callback(new_apis);
+    };
+
+
     // function getNodesByLevel(nodes, edges) {
     //     let arr = [];
     //     while (nodes.length > 0) {
@@ -223,7 +278,7 @@ const useAutoPlan = () => {
             return next_list;
         };
 
-        const _nodes = nodes ? nodes.map(item => {
+        const _nodes = nodes && nodes.filter(item => item.type !== 'sql').map(item => {
             const api = id_apis[item.id];
             if (api) {
                 return {
@@ -242,7 +297,7 @@ const useAutoPlan = () => {
                     next_list: get_next(item.id, edges),
                 }
             }
-        }) : null;
+        });
 
         const params = {
             scene_id: open_plan_scene.target_id ? open_plan_scene.target_id : open_plan_scene.scene_id,
@@ -252,6 +307,15 @@ const useAutoPlan = () => {
             edges,
             source: 3,
             plan_id: id,
+            env_id,
+            prepositions: nodes.filter(item => item.type === 'sql').map(item => {
+                const api = id_apis[item.id];
+                return {
+                    ...item,
+                    api,
+                    ...node_config[item.id],
+                }
+            })
             // nodes_round: getNodesByLevel(_nodes, edges ? edges : [])
             // multi_level_nodes: JSON.stringify(formatSceneData(nodes, edges))
             // songsong: formatSceneData(nodes, edges),
@@ -472,7 +536,8 @@ const useAutoPlan = () => {
 
     useEventBus('addOpenAutoPlanScene', addOpenAutoPlanScene, [id_apis, node_config]);
     useEventBus('addNewAutoPlanApi', addNewAutoPlanApi, [id_apis, node_config]);
-    useEventBus('saveSceneAutoPlan', saveSceneAutoPlan, [nodes, edges, id_apis, node_config, open_plan_scene]);
+    useEventBus('addNewAutoPlanMysql', addNewAutoPlanMysql, [id_apis, node_config]);
+    useEventBus('saveSceneAutoPlan', saveSceneAutoPlan, [nodes, edges, id_apis, node_config, open_plan_scene, env_id]);
     useEventBus('saveAutoPlanApi', saveAutoPlanApi, [api_now, id_apis]);
     useEventBus('updateAutoPlanApi', updateAutoPlanApi, [id_apis]);
     useEventBus('addNewAutoPlanControl', addNewAutoPlanControl, [node_config]);

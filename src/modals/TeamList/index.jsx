@@ -7,7 +7,7 @@ import { InviteMembers as SvgInvite, Team as SvgTeam, Edit as SvgEdit } from 'ad
 import { fetchTeamMemberList, fetchRemoveMember, fetchTeamList, fetchQuitTeam, fetchDissTeam, fetchUpdateConfig, fetchCreateTeam } from '@services/user';
 import { tap } from 'rxjs';
 import dayjs from 'dayjs';
-import InvitationModal from '../ProjectInvitation';
+import InvitationModal from '../Notice';
 import Bus from '@utils/eventBus';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchDashBoardInfo } from '@services/dashboard';

@@ -3,6 +3,7 @@ import { Message } from 'adesign-react';
 import { EditFormat, isJSON } from '@utils';
 import { isObject } from 'lodash';
 import MonacoEditor from '@components/MonacoEditor';
+import { jsonRawWarper } from './style';
 
 const JsonRaw = (props) => {
   const { value, onChange } = props;
@@ -28,7 +29,7 @@ const JsonRaw = (props) => {
   const beautifyText = isObject(value) ? EditFormat(jsonText).value : '';
 
   return (
-    <div style={{ height: 400 }}>
+    <div className={jsonRawWarper}>
       <MonacoEditor value={beautifyText} onChange={handleChangeRaw.bind(null)} />
     </div>
   );

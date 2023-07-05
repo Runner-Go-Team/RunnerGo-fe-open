@@ -6,6 +6,7 @@ import { isBoolean, isNumber } from "lodash";
 
 const CheckboxGroup = Checkbox.Group;
 
+
 const Setting = (props) => {
     const { parameter, onChange } = props;
     const { t } = useTranslation();

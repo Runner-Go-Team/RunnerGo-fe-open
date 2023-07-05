@@ -18,7 +18,6 @@ import dayjs from 'dayjs';
 import SvgSendEmail from '@assets/icons/SendEmail';
 import SvgStop from '@assets/icons/Stop';
 import { useTranslation } from 'react-i18next';
-import InvitationModal from '@modals/ProjectInvitation';
 import { fetchEmailList } from '@services/plan';
 import { Tooltip, Input } from '@arco-design/web-react';
 import { debounce } from 'lodash';
@@ -41,7 +40,6 @@ const DetailHeader = (props) => {
 
     const { id: plan_id } = useParams();
     const [planDetail, setPlanDetail] = useState({});
-    const [showEmail, setShowEmail] = useState(false);
     const [emailList, setEmailList] = useState([]);
     const [planName, setPlanName] = useState('');
     const [planDesc, setPlanDesc] = useState('');
@@ -66,7 +64,6 @@ const DetailHeader = (props) => {
 
     useEffect(() => {
         if (plan_detail) {
-            console.log(plan_detail);
             const { plan } = plan_detail;
 
             const { status, plan_name, remark } = plan;
@@ -274,7 +271,7 @@ const DetailHeader = (props) => {
                 </div>
                 <div className='detail-header-right'>
                     {/* <Button className='notice' onClick={() => setPreSet(true)}>{t('plan.preinstall')}</Button> */}
-                    <Button className='notice' disabled={planDetail.status !== 1} preFix={<SvgSendEmail width="16" height="16" />} onClick={() => setShowEmail(true)}>{t('btn.notifyEmail')}</Button>
+                    <Button className='notice' disabled={planDetail.status !== 1} preFix={<SvgSendEmail width="16" height="16" />} onClick={() => Bus.$emit('openModal','Notice',{event_id:101, plan_id ,options:{plan_ids:[plan_id]}})}>{t('btn.notif')}</Button>
                     {
                         planDetail.status === 1
                             ? (
@@ -305,9 +302,6 @@ const DetailHeader = (props) => {
                         <TaskConfig onChange={(type, value) => onConfigChange(type, value)} from="preset" />
                     </Modal>
                 )
-            }
-            {
-                showEmail && <InvitationModal from="plan" email={true} onCancel={() => setShowEmail(false)} />
             }
         </>
     )

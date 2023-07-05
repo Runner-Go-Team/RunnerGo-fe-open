@@ -20,6 +20,9 @@ import reportReducer from './report';
 import autoReportReducer from './auto_report';
 import webSocketReducer from './websocket';
 import machineReducer from './machine';
+import envReducer from './env';
+import permissionReducer from './permission';
+import mockReducer from './mock';
 
 
 const reducers = combineReducers({
@@ -42,7 +45,10 @@ const reducers = combineReducers({
     report: reportReducer,
     auto_report: autoReportReducer,
     websocket: webSocketReducer,
-    machine: machineReducer
+    machine: machineReducer,
+    env: envReducer,
+    permission: permissionReducer,
+    mock: mockReducer
 });
 
 export default reducers;

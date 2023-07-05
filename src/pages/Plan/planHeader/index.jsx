@@ -12,10 +12,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isArray } from 'lodash';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import cnUS from '@arco-design/web-react/es/locale/zh-CN';
+import SvgSendEmail from '@assets/icons/SendEmail';
 import { fetchBatchDelete } from '@services/plan';
 import InputText from '@components/InputText';
 
 import { DatePicker, ConfigProvider } from '@arco-design/web-react';
+import Bus from '@utils/eventBus';
 const { RangePicker } = DatePicker;
 
 const PlanHeader = (props) => {
@@ -110,7 +112,17 @@ const PlanHeader = (props) => {
                     showTime="true"
                 />
                 {
-                    selectPlan.length > 0 && (!canDelete ?
+                    selectPlan.length > 0 && (
+                        <>
+                        <Button
+                                className='notice'
+                                type='primary'
+                                onClick={() => Bus.$emit('openModal','Notice',{event_id:101,batch:true ,options:{plan_ids:selectPlan.map(item => item.plan_id)}})}
+                                preFix={<SvgSendEmail width="16" height="16" />}
+                            >
+                                {t('btn.batch_notif')}
+                            </Button>
+                        {!canDelete ?
                         <Tooltip
                             bgColor={theme === 'dark' ? '#39393D' : '#E9E9E9'}
                             className='tooltip-diy'
@@ -132,7 +144,8 @@ const PlanHeader = (props) => {
                             onClick={() => toDelete()}
                         >
                             {t('btn.delete')}
-                        </Button>
+                        </Button>}
+                        </>
                     )
                 }
                 {/* <Button className='searchBtn' onClick={() => onChange(keyword)}>搜索</Button> */}

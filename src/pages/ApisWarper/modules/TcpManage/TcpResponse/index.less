@@ -1,0 +1,111 @@
+.tcp-manage-response {
+    margin-top: 4px;
+    background-color: var(--module);
+    padding: 8px 12px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .apipost-tabs {
+        height: 100%;
+    }
+
+    &-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        color: var(--font-3);
+        font-size: 12px;
+        margin-top: 10px;
+        padding-left: 15px;
+
+        .left {
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            color: var(--font-3);
+            font-size: 12px;
+
+            .arco-input-group-wrapper {
+                margin-left: 14px;
+                width: 238px;
+
+                .arco-input-group {
+                    background-color: var(--bg);
+
+                    .arco-input-inner-wrapper {
+                        background-color: var(--bg);
+                    }
+
+                    .arco-input-inner-wrapper-focus {
+                        border-color: var(--theme-color);
+                    }
+                }
+
+                svg {
+                    width: 14px;
+                    height: 14px;
+                }
+            }
+
+            .arco-select {
+                margin-left: 10px;
+                width: 102px;
+            }
+
+            .clear-message {
+                margin-left: 18px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+
+                svg {
+                    width: 14px;
+                    height: 14px;
+                    color: var(--font-3);
+                    margin-right: 4px;
+                    cursor: pointer;
+
+                }
+            }
+        }
+
+        .connect-status {
+            border-radius: 3px;
+            min-width: 64px;
+            height: 28px;
+            line-height: 28px;
+            text-align: center;
+            background-color: var(--sub-color-1-10);
+            color: var(--sub-color-1);
+            font-size: 12px;
+        }
+
+
+    }
+
+    &-container {
+        flex: 1;
+        overflow: overlay;
+        margin-bottom: 40px;
+
+        .item {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            border-radius: 2px;
+
+            svg {
+                min-width: 16px;
+                min-height: 16px;
+                color: var(--font-1);
+                margin-left: 4px;
+                cursor: pointer;
+            }
+        }
+
+    }
+}

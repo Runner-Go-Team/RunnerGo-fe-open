@@ -7,6 +7,7 @@ import { getSyncProjectApi } from '@services/projects';
 // import { SourceAutoImport } from '@indexedDB/project';
 import { isLogin } from '@utils/common';
 import Bus from '@utils/eventBus';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { isArray, isBoolean } from 'lodash';
 import { ImportModal } from './style';
@@ -15,7 +16,7 @@ import ManualImport from './ManualImport';
 
 const ImportProject = (props) => {
     const { onCancel, teamId } = props;
-
+    const { t }=useTranslation();
     const [loading, setLoading] = useState(false);
     const [tabType, setTabType] = useState('hand');
     const [importObj, setImportObj] = useState({});
@@ -112,7 +113,7 @@ const ImportProject = (props) => {
         <>
             <Modal
                 className={ImportModal}
-                title="导入文件"
+                title={t('import.import_file')}
                 visible
                 onCancel={onCancel}
                 footer={getFooter()}

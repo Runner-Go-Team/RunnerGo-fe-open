@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep';
-import set from 'lodash/set';
+
 
 const NAMESPACE = 'opens';
 
@@ -40,6 +40,10 @@ const initialState = {
   ], // apipost 默认请求头
 
   open_res: {}, // 响应结果
+  sql_res: {}, // mysql oracle的响应结果
+  tcp_res: {}, // tcp的响应结果
+  ws_res: {}, // websocket的响应结果
+  dubbo_res: {}, // dubbo的响应结果
   saveId: null,
 };
 
@@ -58,6 +62,10 @@ const actionTypes = {
   InitApis: 'InitApis',
   updateSaveAll: 'updateSaveAll',
   updateSaveId: 'updateSaveId',
+  updateSqlRes: 'updateSqlRes',
+  updateTcpRes: 'updateTcpRes',
+  updateWsRes: 'updateWsRes',
+  updateDubboRes: 'updateDubboRes',
 }
 
 export const opensReducer = (state = initialState, action) => {
@@ -175,6 +183,26 @@ export const opensReducer = (state = initialState, action) => {
       return {
         ...state,
         saveId: action.payload,
+      }
+    case `${NAMESPACE}/${actionTypes.updateSqlRes}`:
+      return {
+        ...state,
+        sql_res: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateTcpRes}`:
+      return {
+        ...state,
+        tcp_res: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateWsRes}`:
+      return {
+        ...state,
+        ws_res: action.payload
+      }
+    case `${NAMESPACE}/${actionTypes.updateDubboRes}`:
+      return {
+        ...state,
+        dubbo_res: action.payload
       }
     default:
       return state;

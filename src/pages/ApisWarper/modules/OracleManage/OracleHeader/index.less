@@ -1,0 +1,140 @@
+.sql-manage-detail-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--module);
+    padding: 8px 16px 10px 8px;
+    margin-top: 2px;
+
+    .header-left {
+        .arco-select {
+            width: 90px;
+
+            .arco-select-view {
+                background-color: var(--bg);
+            }
+        }
+
+        .arco-select:hover {
+            .arco-select-view {
+                border-color: transparent;
+            }
+        }
+
+        .mysql {
+            color: var(--mysql);
+
+            .arco-select-view {
+                color: var(--mysql);
+            }
+        }
+    }
+
+    .header-right {
+        display: flex;
+
+        .run-btn {
+            min-width: 58px;
+            height: 26px;
+            background-color: var(--sub-color-2-10);
+            border: 1px solid var(--sub-color-1);
+            border-radius: 3px;
+            margin-right: 10px;
+            font-size: 12px;
+            color: var(--font-1);
+
+            svg {
+                width: 14px;
+                height: 14px;
+                fill: var(--font-1);
+            }
+        }
+
+        .run-btn:hover {
+            background-color: var(--sub-color-2-10);
+            border: 1px solid var(--sub-color-1);
+            color: var(--font-1);
+        }
+
+        .arco-btn-group {
+            display: flex;
+        }
+
+
+        .save-btn {
+            background: var(--theme-20);
+            border: 1px solid var(--theme-color);
+            border-radius: 3px 0px 0px 3px;
+            height: 26px;
+            margin-right: 0;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            width: 66px;
+            color: var(--font-1);
+            padding-left: 11px;
+            padding-right: 11px;
+
+            svg {
+                min-width: 14px;
+                min-height: 14px;
+                fill: var(--font-1);
+            }
+
+            span {
+                margin-left: 4px;
+            }
+        }
+
+        .save-btn:hover {
+            background: var(--theme-20);
+            border: 1px solid var(--theme-color);
+            color: var(--font-1);
+        }
+
+        .save-more-btn {
+            background: var(--theme-10);
+            border-width: 1px 1px 1px 0px;
+            border-style: solid;
+            border-color: var(--theme-color);
+            border-radius: 0px 3px 3px 0px;
+            height: 26px;
+            width: 24px;
+
+            svg {
+                width: 12px;
+                height: 12px;
+                fill: var(--font-1);
+            }
+        }
+
+        .save-more-btn:hover {
+            background: var(--theme-10);
+            border-color: var(--theme-color);
+            color: var(--font-1);
+        }
+    }
+
+    .drop-folder {
+        padding: 8px;
+        background-color: var(--bg);
+        max-width: 267px;
+        max-height: 260px;
+        overflow: overlay;
+
+        .drop-item {
+            width: 100%;
+            height: 32px;
+            white-space: nowrap;
+            line-height: 32px;
+            cursor: pointer;
+            text-align: center;
+            color: var(--font-1);
+            font-size: var(--size-12px);
+            padding: 8px;
+        
+            &:hover {
+                background-color: var(--module)
+            }
+        }
+    }
+}

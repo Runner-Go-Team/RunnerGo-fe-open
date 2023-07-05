@@ -10,10 +10,13 @@ import { useNavigate } from 'react-router-dom';
 import EditAvatar from '../EditAvatar';
 import EditPwd from '../EditPwd';
 import EditEmail from '../EditEmail';
+import EditAccount from '../EditAccount';
 import { fetchUpdateName, fetchUpdatePwd, fetchCheckPassword } from '@services/user';
 import { Tooltip } from '@arco-design/web-react';
 import SvgClose from '@assets/logo/close';
 import Bus from '@utils/eventBus';
+import { RD_ADMIN_URL } from '@config';
+import { setCookie } from '@utils';
 
 const InfoManage = (props) => {
     const { onCancel } = props;
@@ -25,6 +28,7 @@ const InfoManage = (props) => {
     const [confirmPwd, setConfirmPwd] = useState('');
     const [showMask, setShowMask] = useState(false);
     const [showEditName, setEditName] = useState(false);
+    const [showEditAccount, setEditAccount] = useState(false);
     const [showEditEmail, setEditEmail] = useState(false);
     const [nameError, setNameError] = useState(false);
 
@@ -109,7 +113,10 @@ const InfoManage = (props) => {
         localStorage.removeItem('open_scene');
         localStorage.removeItem('open_plan');
         localStorage.removeItem("package_info");
-        navigate('/login');
+
+        setCookie('token', '');
+        window.location.href = `${RD_ADMIN_URL}/#/login`;
+
         Message('success', t('message.quitSuccess'));
     }
 
@@ -188,10 +195,17 @@ const InfoManage = (props) => {
                     </div>
                     <div className='info-item'>
                         <div className='info-item-left'>
+                            <p>{t('sign.account')}</p>
+                            <p>{userInfo.account}</p>
+                        </div>
+                        <Button className='info-item-right' onClick={() => setEditAccount(true)}>{t('index.update')}</Button>
+                    </div>
+                    <div className='info-item'>
+                        <div className='info-item-left'>
                             <p>{t('sign.email')}</p>
                             <p>{userInfo.email || '—'}</p>
                         </div>
-                        <Button className='info-item-right' onClick={() => setEditEmail(true)}>{ userInfo.email ? t('index.update') : t('modal.bindNow') }</Button>
+                        <Button className='info-item-right' onClick={() => setEditEmail(true)}>{userInfo.email ? t('index.update') : t('modal.bindNow')}</Button>
                     </div>
                     <div className='info-item' style={{ borderBottom: 0 }}>
                         <div className='info-item-left'>
@@ -217,6 +231,7 @@ const InfoManage = (props) => {
             {
                 showEditEmail && <EditEmail onCancel={() => setEditEmail(false)} />
             }
+            {showEditAccount && <EditAccount onCancel={() => setEditAccount(false)} />}
         </div>
     )
 };

@@ -24,3 +24,8 @@ export const fetchDeletePreset = (
 export const fetchCopyPreset = (
     params
 ) => ajax('post', '/management/api/v1/preinstall/copy', 'json', false, params);
+
+// 获取当前所有可用压力机列表
+export const fetchMachineList = (
+    params
+) => ajax('post', '/management/api/v1/preinstall/get_available_machine_list', 'json', false, params);

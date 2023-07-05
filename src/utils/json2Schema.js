@@ -192,6 +192,11 @@ function processObject(object, output, nested) {
     if (format) {
       output.properties[key].format = format;
     }
+    if(String(value)){
+      output.properties[key].mock = {
+        mock: String(value)
+      };
+    }
   }
 
   return nested ? output.properties : output;

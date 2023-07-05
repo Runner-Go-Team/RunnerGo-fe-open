@@ -7,8 +7,9 @@ import Plan from './Plan';
 import Report from "./Report";
 import Machine from "./Machine";
 import HomePage from "./HomePage";
-
-import EmailReport from "./EmailReport";
+import Env from "./Env";
+import Test from './Test';
+;import EmailReport from "./EmailReport";
 import AutoEmailReport from "./AutoEmailReport";
 
 import InvitateExpire from "./InvitateExpire";
@@ -18,21 +19,11 @@ import Page404 from "./404";
 import TestPlan from "./TestPlan";
 import TestReport from "./TestReport";
 import InvitatePage from "./InvitatePage";
-
+import MockService from './MockService';
 
 import LinkMore from "./LinkMore";
 
 const Route = [
-    {
-        name: 'login',
-        path: '/login/*',
-        element: () => <Login><LoginPro /></Login>,
-    },
-    {
-        name: 'find',
-        path: '/find',
-        element: () => <Login><FindPassword /></Login>
-    },
     {
         name: 'index',
         path: '/index',
@@ -42,6 +33,11 @@ const Route = [
         name: 'apis',
         path: '/apis/*',
         element: Apis,
+    },
+    {
+        name: 'mockservice',
+        path: '/mockservice',
+        element: MockService,
     },
     {
         name: 'scene',
@@ -112,6 +108,16 @@ const Route = [
         name: 'linkoverstep',
         path: '/linkoverstep',
         element: LinkMore
+    },
+    {
+        name: 'env',
+        path: '/env',
+        element: Env
+    },
+    {
+        name: 'test',
+        path: '/test',
+        element: Test
     }
 ];
 

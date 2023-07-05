@@ -10,6 +10,7 @@ import qs from 'qs';
 import { getUserConfig$ } from '@rxUtils/user';
 import { tap } from "rxjs";
 import { useTranslation } from 'react-i18next';
+import { getCookie } from '@utils';
 
 import { global$ } from '@hooks/useGlobal/global';
 
@@ -38,7 +39,7 @@ const InvitatePage = () => {
     }, [invite_verify_code]);
 
     const acceptInvitate = () => {
-        const token = localStorage.getItem('runnergo-token');
+        const token = getCookie('token');
         const expire_time_sec = localStorage.getItem('expire_time_sec');
         const isExpire = new Date().getTime() > parseInt(expire_time_sec || 0);
         if (token && !isExpire) {

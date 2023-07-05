@@ -1,0 +1,114 @@
+.env-detail {
+    background-color: var(--module);
+    flex: 1;
+    height: 100%;
+    margin-left: 2px;
+    padding: 8px;
+    box-sizing: border-box;
+    max-height: 100%;
+    overflow: scroll;
+
+    .arco-tabs-content {
+        padding-top: 0;
+    }
+
+    &-header {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 15px;
+
+        &-left {
+            display: flex;
+            align-items: center;
+
+            p {
+                color: var(--font-3);
+                white-space: nowrap;
+                font-size: 14px;
+            }
+
+            .arco-input {
+                background-color: var(--bg);
+                // width: 114px;
+                height: 32px;
+                padding: 6px 8px;
+                box-sizing: border-box;
+            }
+        }
+        
+        &-right {
+            display: flex;
+            align-items: center;
+
+            .arco-btn {
+                color: var(--font-1);
+                border-radius: 3px;
+                display: flex;
+                align-items: center;
+                padding: 0 8px;
+                svg {
+                    width: 16px;
+                    height: 16px;
+                    fill: var(--font-1);
+                }
+
+                span {
+                    margin-left: 5px;
+                }
+            }
+
+            .delete-btn {
+                background-color: var(--sub-color-4);
+                color: var(--common-white);
+                margin-right: 10px;
+                font-size: 12px;
+
+                svg {
+                    fill: var(--bg);
+                }
+            }
+
+            .delete-btn:hover {
+                background-color: var(--sub-color-4) !important;
+            }
+
+            .save-btn {
+                background-color: var(--theme-20);
+                border: 1px solid var(--theme-color);
+            }
+
+            .save-btn:hover {
+                background-color: var(--theme-20) !important;
+                border: 1px solid var(--theme-color) !important;
+            }
+        }
+    }
+
+    &-container {
+        margin-top: 10px;
+        height: 100%;
+
+        .apipost-tabs {
+            height: 100%;
+
+            .apipost-tabs-content {
+                height: 100%;
+            }
+        }
+    }
+
+    .empty {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+
+        p {
+            font-size: 16px;
+            margin-top: 30px;
+            color: var(--scene-border);
+        }
+    }
+}

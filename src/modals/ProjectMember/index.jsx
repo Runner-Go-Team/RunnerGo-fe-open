@@ -7,17 +7,18 @@ import { InviteMembers as SvgInvite } from 'adesign-react/icons';
 import { fetchTeamMemberList, fetchRemoveMember, fetchQuitTeam, fetchUpdateConfig, fetchUpdateRole } from '@services/user';
 import { tap } from 'rxjs';
 import dayjs from 'dayjs';
-import InvitationModal from '../ProjectInvitation';
 import Bus from '@utils/eventBus';
 import { useSelector, useDispatch } from 'react-redux';
+import { IconSearch } from '@arco-design/web-react/icon';
 import { fetchDashBoardInfo } from '@services/dashboard';
 
 import { global$ } from '@hooks/useGlobal/global';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import InvitateSuccess from '@modals/InvitateSuccess';
-// import { Select } from '@arco-design/web-react';
-import { Select, Table } from '@arco-design/web-react';
+import AddInternalMember from '../AddInternalMember';
+import { Input } from '@arco-design/web-react';
+import { Pagination, Select, Table } from '@arco-design/web-react';
+import { debounce, isNumber } from 'lodash';
 
 const { Option } = Select;
 
@@ -25,21 +26,17 @@ const ProjectMember = (props) => {
     const { onCancel } = props;
     const [data, setData] = useState([]);
     const [showInvite, setShowInvite] = useState(false);
-    const [roleId, setRoleId] = useState(1);
-    const [userId, setUserId] = useState(0);
-
+    const user_id = useSelector((store) => store?.user?.userInfo?.user_id);
+    const [searchValue, setSearchValue] = useState(null);
+    const [pageSize, setPageSize] = useState(20);
+    const [page, setPage] = useState(1);
+    const [total, setTotal] = useState(10);
     const userInfo = useSelector((store) => store.user.userInfo);
     const teamList = useSelector((store) => store.teams.teamData);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { t } = useTranslation();
-
-    const [showInvitateSuccess, setShowInvitate] = useState(false);
-
-    const [addLength, setAddLength] = useState(0);
-    const [unRegister, setUnRegister] = useState(0);
-    const [unEmail, setUnEmail] = useState(0);
 
     const removeMember = (member_id, role_id, nickname) => {
         // // 当前用户是普通成员, 没有移除任何人的权限
@@ -177,12 +174,10 @@ const ProjectMember = (props) => {
         3: t('modal.roleList.1')
     }
 
-    const fetchData = (res) => {
-        const { data: { user: { user_id, role_id } } } = res;
-        setUserId(user_id);
-        setRoleId(role_id);
+    const fetchData = () => {
         const query = {
-            team_id: localStorage.getItem('team_id')
+            team_id: localStorage.getItem('team_id'),
+            keyword: searchValue || '', page, size: pageSize
         }
         fetchTeamMemberList(query)
             .pipe(
@@ -192,122 +187,50 @@ const ProjectMember = (props) => {
                         let dataList = [];
 
                         dataList = members.map((item, index) => {
-                            const { avatar, email, nickname, join_time_sec, invite_user_name } = item;
+                            const { avatar, email, account , nickname, join_time_sec, invite_user_name, team_role_name } = item;
                             const userInfo = {
                                 avatar,
                                 email,
-                                nickname
+                                nickname,
+                                account
                             }
-                            // 1. 本人是超级管理员
-                            //    自己的权限是文本，其它人的都是select
-                            // 2. 本人是管理员
-                            //    自己、超管、其它管理员的权限都是文本, 成员是select
-                            // 3. 本人是成员
-                            //    所有人的权限都是文本
-                            if (role_id === 1) {
-                                return {
-                                    member: <MemberInfo userInfo={userInfo} me={item.user_id === user_id} />,
-                                    join_time_sec: dayjs(join_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                                    invite_user_name,
-                                    power:
-                                        item.role_id === 1
-                                            ?
-                                            <p className='default-power'>{roleList[item.role_id]}</p>
-                                            :
-                                            <div>
-                                                {
-                                                    <Select
-                                                        value={item.role_id}
-                                                        onChange={(e) => setRole(e, item.user_id)}
-                                                    >
-                                                        <Option value={2}>{t('modal.roleList.0')}</Option>
-                                                        <Option value={3}>{t('modal.roleList.1')}</Option>
-                                                    </Select>
-                                                }
-                                            </div>,
-                                    handle: <p style={{ cursor: 'pointer', color: '#f00' }} onClick={() => {
-                                        if (item.user_id === user_id) {
-                                            outTeam(user_id);
-                                        } else {
-                                            removeMember(item.user_id, item.role_id, item.nickname);
-                                        }
-                                    }}>
-                                        {
-                                            item.role_id !== 1
-                                                ? item.user_id === user_id ? t('modal.quitTeam') : t('modal.delMem')
-                                                : ''
-                                        }
-                                    </p>,
-                                }
-                            } else if (role_id === 2) {
-                                return {
-                                    member: <MemberInfo userInfo={userInfo} me={item.user_id === user_id} />,
-                                    join_time_sec: dayjs(join_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                                    invite_user_name,
-                                    power: <p className='default-power'>{roleList[item.role_id]}</p>,
-                                    handle: <p style={{ cursor: 'pointer', color: '#f00' }} onClick={() => {
-                                        if (item.user_id === user_id) {
-                                            outTeam(user_id);
-                                        } else {
-                                            removeMember(item.user_id, item.role_id, item.nickname);
-                                        }
-                                    }}>
-                                        {
-                                            item.role_id !== 1
-                                                ? item.user_id === user_id ? t('modal.quitTeam') : ''
-                                                : ''
-                                        }
-                                    </p>,
-                                }
-                            } else if (role_id === 3) {
-                                return {
-                                    member: <MemberInfo userInfo={userInfo} me={item.user_id === user_id} />,
-                                    join_time_sec: dayjs(join_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                                    invite_user_name,
-                                    power:
-                                        item.role_id === 1 || item.role_id === 3
-                                            ?
-                                            <p className='default-power'>{roleList[item.role_id]}</p>
-                                            :
-                                            <div>
-                                                {
-                                                    <Select
-                                                        value={item.role_id}
-                                                        onChange={(e) => setRole(e, item.user_id)}
-                                                    >
-                                                        <Option value={2}>{t('modal.roleList.0')}</Option>
-                                                        <Option value={3}>{t('modal.roleList.1')}</Option>
-                                                    </Select>
-                                                }
-                                            </div>
-                                    ,
-                                    handle: <p style={{ cursor: 'pointer', color: '#f00' }} onClick={() => {
-                                        if (item.user_id === user_id) {
-                                            outTeam(user_id);
-                                        } else {
-                                            removeMember(item.user_id, item.role_id, item.nickname);
-                                        }
-                                    }}>
-                                        {
-                                            item.role_id === 2
-                                                ? t('modal.delMem')
-                                                : item.user_id === user_id ? t('modal.quitTeam') : ''
-                                        }
-                                    </p>,
-                                }
+                            return {
+                                member: <MemberInfo userInfo={userInfo} me={item.user_id === user_id} />,
+                                join_time_sec: dayjs(join_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
+                                invite_user_name,
+                                team_role_name,
                             }
-
                         });
                         setData(dataList);
+                        if (isNumber(res?.data?.total)) {
+                            setTotal(res.data.total);
+                        }
                     }
                 })
             )
             .subscribe();
     }
+    const debounceFetchData = debounce(() => {
+        fetchData();
+    }, 200)
     useEffect(() => {
-        getUserInfo().pipe(tap(fetchData)).subscribe();
-        // fetchData();
+        // getUserInfo().pipe(tap(fetchData)).subscribe();
+        fetchData();
     }, [])
+    useEffect(() => {
+        fetchData();
+    }, [page, pageSize]);
+
+    useEffect(() => {
+        if (searchValue != null) {
+            if (page != 1) {
+                // 回到第一页
+                setPage(1);
+            } else {
+                debounceFetchData();
+            }
+        }
+    }, [searchValue])
     const columns = [
         {
             title: t('column.teamMember.member'),
@@ -325,22 +248,18 @@ const ProjectMember = (props) => {
         },
         {
             title: t('column.teamMember.power'),
-            dataIndex: 'power',
+            dataIndex: 'team_role_name',
         },
-        {
-            title: t('column.teamMember.handle'),
-            dataIndex: 'handle'
-        }
     ];
 
     const MemberInfo = (props) => {
-        const { userInfo: { nickname, avatar: avatarUrl, email }, me } = props;
+        const { userInfo: { nickname, avatar: avatarUrl, email, account }, me } = props;
         return (
             <div className='member-info'>
                 <img className='avatar' src={avatarUrl || avatar} />
                 <div className='detail'>
                     <p class='name'><p className='common' style={{ maxWidth: me ? '110px' : '175px' }}>{nickname} </p><p>{me ? `(${t('modal.me')})` : ''}</p></p>
-                    <p className='email'>{email}</p>
+                    <p className='email'>{account || '-'}</p>
                 </div>
             </div>
         )
@@ -351,7 +270,7 @@ const ProjectMember = (props) => {
             <div className={HeaderLeftModal}>
                 <div className='member-header-left'>
                     <p className='title'>{t('modal.teamMemTitle')}</p>
-                    <Button className='invite-btn' preFix={<SvgInvite />} onClick={() => setShowInvite(true)}>{t('btn.invitation')}</Button>
+                    {/* <Button className='invite-btn' preFix={<SvgInvite />} onClick={() => setShowInvite(true)}>{t('btn.invitation')}</Button> */}
                 </div>
             </div>
         )
@@ -359,24 +278,21 @@ const ProjectMember = (props) => {
 
     return (
         <div>
-            {showInvite && <InvitationModal onCancel={({ addLength, unRegister, unEmail }) => {
+            {showInvite && <AddInternalMember onCancel={() => {
                 setShowInvite(false);
-                setAddLength(0);
-                setUnRegister(0);
-                setUnEmail(0);
-                addLength && setAddLength(addLength);
-                unRegister && setUnRegister(unRegister);
-                unEmail && setUnEmail(unEmail);
-                getUserInfo().pipe(tap(fetchData)).subscribe();
-                if (addLength || unRegister || unEmail) {
-                    setShowInvitate(true);
-                }
             }} />}
-            {
-                showInvitateSuccess && <InvitateSuccess addLength={addLength} unRegister={unRegister} unEmail={unEmail} onCancel={() => setShowInvitate(false)} />
-            }
-            <Modal className={ProjectMemberModal} visible={true} title={<HeaderLeft />} footer={null} onCancel={onCancel}>
-                <Table pagination={false} columns={columns} data={data} />
+
+            <Modal className={ProjectMemberModal} visible={true} title={<HeaderLeft />} footer={<>
+                <Pagination pageSize={pageSize} onPageSizeChange={(val) => {
+                    setPageSize(val);
+                }} size='default' current={page} onChange={(val) => {
+                    setPage(val);
+                }} total={total} showTotal showJumper sizeCanChange sizeOptions={[20, 30, 40, 50, 80, 100]} />
+            </>} onCancel={onCancel}>
+                <div className="search-input">
+                    <Input value={searchValue || ''} onChange={setSearchValue} style={{ width: 238, height: 28 }} prefix={<IconSearch />} placeholder={t('placeholder.searchNickNameAccount')} />
+                </div>
+                <Table scroll={{y:true}} ellipsis={true} pagination={false} columns={columns} data={data} />
             </Modal>
         </div>
     )

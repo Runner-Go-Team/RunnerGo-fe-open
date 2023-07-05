@@ -11,7 +11,7 @@ import {
 } from 'adesign-react/icons';
 import { useNavigate } from 'react-router-dom';
 import { fetchReportList, fetchDeleteReport } from '@services/auto_report';
-import { debounce } from 'lodash';
+import { debounce, cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 // import Pagination from '@components/Pagination';
 import SvgEmpty from '@assets/img/empty';
@@ -379,6 +379,33 @@ const TestReportList = () => {
                         onChange: (selectedRowKeys, selectedRows) => {
                             setSelectedRowKeys(selectedRowKeys);
                             setSelectReport(selectedRows);
+                        },
+                        checkboxProps: (record) => {
+                            return {
+                                onChange:(checked)=>{
+                                    const { report_id } = record;
+
+                                    let _arr1 = cloneDeep(selectedRowKeys);
+                                    let _arr2 = cloneDeep(selectReport);
+                                    if (checked) {
+                                        if (!selectedRowKeys.find(item => item === report_id)) {
+
+                                            _arr1.push(report_id);
+                                            setSelectedRowKeys(_arr1);
+
+                                            _arr2.push(record);
+                                            setSelectReport(_arr2);
+                                        }
+                                    } else {
+                                        let index1 = selectedRowKeys.findIndex(item => item === report_id);
+                                        _arr1.splice(index1, 1);
+                                        setSelectedRowKeys(_arr1);
+                                        let index2 = selectReport.findIndex(item => item.report_id === report_id);
+                                        _arr2.splice(index2, 1);
+                                        setSelectReport(_arr2);
+                                    }
+                                }
+                            }
                         },
                     }
                 }
