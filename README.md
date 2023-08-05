@@ -59,7 +59,7 @@ export const RD_FileURL = 'file-server服务的地址';
 #### config/client
 
 **主要用于存储cookie**
-
+需要与 fe-admin-open工程中server.js 的domain配置具有相同主域名
 ```js
     const FE_Host = {
         development: '',
@@ -71,7 +71,7 @@ export const RD_FileURL = 'file-server服务的地址';
 #### config/server
 
 **http接口**
-
+后端 manager 服务地址 exp http://{manager-host}:{manager:port}
 ```js
     const RD_BaseURL = {
         development: '开发环境地址',
@@ -81,7 +81,7 @@ export const RD_FileURL = 'file-server服务的地址';
 ```
 
 **websocket接口**
-
+后端 RunnerGo-management-websocket-open  服务地址 exp ws://{websocket-host}:{manager:port}
 ```js
     const RD_websocketUrl = {
         development: '开发环境地址',
@@ -91,7 +91,7 @@ export const RD_FileURL = 'file-server服务的地址';
 ```
 
 **后台权限系统地址(主要用于工作台和后台的跳转)**
-
+后端 permission 服务地址 exp http://{permission-host}:{permission:port}
 ```js
     const RD_AdminURL = {
         development: '后台开发环境地址',
