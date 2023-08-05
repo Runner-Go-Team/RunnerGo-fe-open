@@ -1,4 +1,4 @@
-// 后端http接口地址
+// 后端http接口地址 后端 manager 服务地址 exp http://{manager-host}:{manager:port}
 export const RD_BaseURL = {
     development: '开发环境地址',
     test: '测试环境地址',
@@ -6,14 +6,14 @@ export const RD_BaseURL = {
 };
 
 
-// 后端websocke地址
+// 后端websocke地址  后端 RunnerGo-management-websocket-open  服务地址 exp ws://{websocket-host}:{manager:port}
 export const RD_websocketUrl = {
     development: '开发环境地址',
     test: '测试环境地址',
     production: '线上环境地址'
 };
 
-// 后台权限系统地址
+// 后台权限系统地址 后端 permission 服务地址 exp http://{permission-host}:{permission:port}
 export const RD_AdminURL = {
     development: '后台开发环境地址',
     test: '后台测试环境地址',
