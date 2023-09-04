@@ -475,6 +475,16 @@ const PlanList = () => {
                                 }
                             }
                         },
+                        onSelectAll: (selected, selectedRows) => {
+                            let arr = selectedRows.filter(item => item.status === 1);
+                            if (selected) {
+                                setSelectPlan(arr);
+                                setSelectedRowKeys(arr.map(item => item.plan_id));
+                            } else {
+                                setSelectPlan([]);
+                                setSelectedRowKeys([]);
+                            }
+                        }
                     }
                 }
                 onChange={(a, sort, filter, c) => {

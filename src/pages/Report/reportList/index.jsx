@@ -391,6 +391,16 @@ const ReportList = () => {
                                 }
                             }
                         },
+                        onSelectAll: (selected, selectedRows) => {
+                            let arr = selectedRows.filter(item => item.status === 2);
+                            if (selected) {
+                                setSelectReport(arr);
+                                setSelectedRowKeys(arr.map(item => item.report_id));
+                            } else {
+                                setSelectReport([]);
+                                setSelectedRowKeys([]);
+                            }
+                        }
                     }
                 }
                 onChange={(a, sort, filter, c) => {

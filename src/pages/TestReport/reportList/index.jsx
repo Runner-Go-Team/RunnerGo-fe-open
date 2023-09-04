@@ -382,6 +382,7 @@ const TestReportList = () => {
                         },
                         checkboxProps: (record) => {
                             return {
+                                disabled: record.status === 1,
                                 onChange:(checked)=>{
                                     const { report_id } = record;
 
@@ -407,6 +408,16 @@ const TestReportList = () => {
                                 }
                             }
                         },
+                        onSelectAll: (selected, selectedRows) => {
+                            let arr = selectedRows.filter(item => item.status === 2);
+                            if (selected) {
+                                setSelectReport(arr);
+                                setSelectedRowKeys(arr.map(item => item.report_id));
+                            } else {
+                                setSelectReport([]);
+                                setSelectedRowKeys([]);
+                            }
+                        }
                     }
                 }
                 onChange={(a, sort, filter, c) => {
