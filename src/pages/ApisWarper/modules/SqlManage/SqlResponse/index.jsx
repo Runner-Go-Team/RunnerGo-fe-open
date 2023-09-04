@@ -89,8 +89,8 @@ const SqlResponse = (props) => {
             title: <div className="sql-response-assert-title">
                 <p className="title">断言结果</p>
                 {
-                    resData && resData.assert ?
-                        resData.assert.filter(item => !item.is_succeed).length > 0
+                    resData && resData.assert && resData.assert.assertion_msgs && resData.assert.assertion_msgs.length > 0 ?
+                        resData.assert.assertion_msgs.filter(item => !item.is_succeed).length > 0
                             ? <p className="fail"></p>
                             : <p className="success"></p>
                         : <></>

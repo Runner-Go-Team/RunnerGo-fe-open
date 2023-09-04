@@ -11,18 +11,16 @@ const SqlRegularResult = (props) => {
     const { t } = useTranslation();
 
     const sql_detail = data || {};
-    const regex = isArray(sql_detail.regex) ? sql_detail.regex : [];
+    const regex = sql_detail && sql_detail.regex && sql_detail.regex.regs ? sql_detail.regex.regs : [];
 
     const _regex = [];
 
     if (regex && regex.length > 0) {
         regex.forEach(item => {
-            for (let i in item) {
-                _regex.push(`${i}=${item[i]}`)
-            }
+            _regex.push(`${item.key}=${item.value}`)
         })
     }
-
+    
     return (
         <div className="res-regex can-copy">
             {

@@ -11,7 +11,7 @@ const SqlAssertResult = (props) => {
     const { t } = useTranslation();
 
     const sql_detail = data || {};
-    const assert = isArray(sql_detail.assert) ? sql_detail.assert : [];
+    const assert = sql_detail && sql_detail.assert && sql_detail.assert.assertion_msgs ? sql_detail.assert.assertion_msgs : [];
 
     return (
         <div className="res-assert can-copy">

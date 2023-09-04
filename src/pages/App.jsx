@@ -73,10 +73,10 @@ const App = () => {
     useEffect(() => {
 
         const token = getCookie('token');
-        if (!token) {
+        if (!token && (!['/email/report', '/email/autoReport'].includes(location.pathname))) {
             window.location.href = RD_ADMIN_URL;
         }
-
+        
     }, [location.pathname]);
 
     (!['/email/report', '/email/autoReport'].includes(location.pathname)) && useGlobal(null);

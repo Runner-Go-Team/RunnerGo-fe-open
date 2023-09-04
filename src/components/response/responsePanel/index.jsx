@@ -146,21 +146,21 @@ const ResPonsePanel = (props) => {
       id: '5',
       title: (
         <div style={{ position: 'relative' }}>
-          <span style={{ marginRight: ((response_data && response_data.assertion) || (scene_result && scene_result.assertion)) ? '8px' : 0 }}>{t('apis.resAssert')}</span>
+          <span style={{ marginRight: ((response_data && response_data.assert && response_data.assert.assertion_msgs) || (scene_result && scene_result.assert && scene_result.assert.assertion_msgs)) ? '8px' : 0 }}>{t('apis.resAssert')}</span>
           {
             response_data ?
-              response_data && response_data.assertion
+              response_data && response_data.assert && response_data.assert.assertion_msgs
                 ?
                 (
-                  response_data.assertion.filter(item => !item.is_succeed).length > 0
+                  response_data.assert.assertion_msgs.filter(item => !item.is_succeed).length > 0
                     ? <p style={{ 'min-width': '6px', 'min-height': '6px', borderRadius: '50%', top: '0', right: '0', backgroundColor: '#f00', position: 'absolute' }}></p>
                     : <p style={{ 'min-width': '6px', 'min-height': '6px', borderRadius: '50%', top: '0', right: '0', backgroundColor: '#0f0', position: 'absolute' }}></p>
                 )
                 : <></>
-              : scene_result && scene_result.assertion
+              : scene_result && scene_result.assert && scene_result.assert.assertion_msgs
                 ?
                 (
-                  scene_result.assertion.filter(item => !item.is_succeed).length > 0
+                  scene_result.assert.assertion_msgs.filter(item => !item.is_succeed).length > 0
                     ? <p style={{ 'min-width': '6px', 'min-height': '6px', borderRadius: '50%', top: '0', right: '0', backgroundColor: '#f00', position: 'absolute' }}></p>
                     : <p style={{ 'min-width': '6px', 'min-height': '6px', borderRadius: '50%', top: '0', right: '0', backgroundColor: '#0f0', position: 'absolute' }}></p>
                 )

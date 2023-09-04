@@ -681,7 +681,7 @@ const useCase = () => {
                                     payload: scenes,
                                 })
 
-                                if (data.scenes.filter(item => item.request_type === 'api').length === length) {
+                                if (data.scenes.filter(item => item.request_type !== 'sql').length === length) {
                                     clearInterval(case_t);
                                     dispatch({
                                         type: 'case/updateRunStatus',

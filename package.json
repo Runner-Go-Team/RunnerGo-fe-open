@@ -84,7 +84,7 @@
     "jsonpath": "^1.1.1",
     "jspdf": "^2.5.1",
     "mockjs": "^1.1.0",
-    "module2apipostfull": "^0.0.10",
+    "module2apipostfull": "^0.0.41",
     "mousetrap": "^1.6.5",
     "mousetrap-global-bind": "^1.1.0",
     "node-polyfill-webpack-plugin": "^2.0.0",

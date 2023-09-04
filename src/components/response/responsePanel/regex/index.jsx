@@ -5,18 +5,17 @@ import NotResponse from '../notResponse';
 
 const ResRegex = (props) => {
     const { data } = props;
-    const regex = data.regex || [];
+    const regex = data && data.regex && data.regex.regs ? data.regex.regs : []; 
     const [regexList, setRegexList] = useState([]);
     const _regexList = [];
     const { t } = useTranslation();
     if (regex) {
 
         regex.forEach(item => {
-            for (let i in item) {
-                _regexList.push(`${i}=${item[i]}`)
-            }
+            _regexList.push(`${item.key}=${item.value}`)
         })
     }
+
 
 
     // useEffect(() => {

@@ -78,8 +78,8 @@ const ServicePreUrl = (props) => {
                         <Select disabled={from === 'auto_report'} value={service_name ? service_name : ''} onChange={(e) => {
                             let item = serviceList.find(item => item.service_name === e);
                             if (item) {
-                                const { content, service_name, env_id } = item;
-                                onChange('service_id', e);
+                                const { content, service_name, env_id, service_id } = item;
+                                onChange('service_id', service_id);
                                 onChange('pre_url', content)
                                 onChange('service_name', service_name);
                                 if (from !== 'apis') {
@@ -98,10 +98,10 @@ const ServicePreUrl = (props) => {
                     </Tooltip>
                     :
                     <Select disabled={from === 'auto_report'} placeholder={t('placeholder.selectService')} onChange={(e) => {
-                        let item = serviceList.find(item => item.service_name === service_name);
+                        let item = serviceList.find(item => item.service_name === e);
                         if (item) {
-                            const { content, service_name, env_id } = item;
-                            onChange('service_id', e);
+                            const { content, service_name, env_id, service_id } = item;
+                            onChange('service_id', service_id);
                             onChange('pre_url', content)
                             onChange('service_name', service_name);
                             if (from !== 'apis') {

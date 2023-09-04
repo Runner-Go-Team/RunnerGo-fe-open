@@ -71,6 +71,7 @@ export const RequestWrapper = styled.div`
     // padding-left: 0;
     height: 100%;
     overflow: auto;
+    padding-bottom: 50px;
     // overflow-y: hidden;
     .system-header {
       margin: 0 0 8px 0;

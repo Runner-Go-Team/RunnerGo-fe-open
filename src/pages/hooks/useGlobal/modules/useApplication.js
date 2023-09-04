@@ -27,7 +27,7 @@ import Bus, { useEventBus } from '@utils/eventBus';
 import { useNavigate } from 'react-router-dom';
 import { getSceneList$ } from '@rxUtils/scene';
 import { getAutoPlanList$ } from '@rxUtils/auto_plan';
-import { RD_WEBSOCKET_URL } from '@config';
+import { RD_WEBSOCKET_URL, RD_Ws_Port } from '@config';
 
 import { fetchDashBoardInfo, fetchRunningPlan } from '@services/dashboard';
 import { fetchApiList } from '@services/apis';

@@ -6,7 +6,7 @@ import NotResponse from '../notResponse';
 const ResAssert = (props) => {
     const { data } = props;
 
-    const assert = data.assert || [];
+    const assert = data && data.assert && data.assert.assertion_msgs ? data.assert.assertion_msgs : [];
     const { t } = useTranslation();
     return (
         <div className='res-assert can-copy'>

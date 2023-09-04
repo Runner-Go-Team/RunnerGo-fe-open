@@ -29,7 +29,6 @@ export const RD_BASE_URL = RD_BaseURL[NODE_ENV];
 export const RD_WEBSOCKET_URL = RD_websocketUrl[NODE_ENV];
 export const RD_ADMIN_URL = RD_AdminURL[NODE_ENV];
 
-
 export default {
     RD_BASE_URL,
     RD_WEBSOCKET_URL,

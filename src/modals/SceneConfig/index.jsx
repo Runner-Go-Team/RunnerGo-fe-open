@@ -664,6 +664,8 @@ const SceneConfig = (props) => {
         const { originFile: { size, name } } = files[0];
         const nameType = name.split('.')[1];
 
+        const { protocol, hostname } = window.location;
+
         if (fileList.filter(item => item.name === name).length > 0) {
             Message("error", t('message.filenameRepeat'));
             return;
@@ -850,7 +852,7 @@ const SceneConfig = (props) => {
         document.body.removeChild(a);
     }
 
-    
+
     const getTableData = (tab) => {
         let lastDataList = [
             { is_checked: 1, key: '', value: '' },

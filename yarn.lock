@@ -5825,10 +5825,10 @@
   dependencies:
     "commander" "*"
 
-"module2apipostfull@^0.0.10":
-  "integrity" "sha512-Ms7Dp6Jvl1MJIJVR3bURkf02fx/fIqYUvLD8ZoDiInaK1tZSMb/pJFUwE71tbLOQJi4gW3hNBEOzs7L/euHHiA=="
-  "resolved" "https://registry.npmmirror.com/module2apipostfull/-/module2apipostfull-0.0.10.tgz"
-  "version" "0.0.10"
+"module2apipostfull@^0.0.41":
+  "integrity" "sha512-lq8L39I7KgeOYN7zIyuSjyjOK2qC0fl1Fd8SVqrFS+FkxFoLAnOf6PT3GkhC4hO0+90B2SzFH4VEcwTn7PkKpg=="
+  "resolved" "https://registry.npmjs.org/module2apipostfull/-/module2apipostfull-0.0.41.tgz"
+  "version" "0.0.41"
   dependencies:
     "@rollup/plugin-node-resolve" "^13.3.0"
     "@types/uuid" "^8.3.4"
