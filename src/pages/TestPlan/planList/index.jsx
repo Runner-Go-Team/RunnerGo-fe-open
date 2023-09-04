@@ -261,15 +261,10 @@ const TestPlanList = () => {
             }
             setTotal(total);
             const planList = auto_plan_list ? auto_plan_list.map(item => {
-                const { task_type, mode, status, created_at, updated_at, plan_name, user_name, remark } = item;
+                const { status } = item;
                 return {
                     ...item,
-                    task_type: taskList[task_type],
-                    mode: modeList[mode],
-                    status: statusList[status],
                     canDelete: status === 1,
-                    created_at: dayjs(created_at * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                    updated_at: dayjs(updated_at * 1000).format('YYYY-MM-DD HH:mm:ss'),
                     handle: <HandleContent data={item} />
                 }
             }) : [];
@@ -316,6 +311,9 @@ const TestPlanList = () => {
                 return true;
             },
             width: 190,
+            render: (col, item) => {
+                return statusList[col];
+            }
         },
         {
             title: t('plan.planName'),
@@ -336,19 +334,28 @@ const TestPlanList = () => {
             //     setTaskType(value);
             //     return true;
             // },
-            width: 135
+            width: 135,
+            render: (col, item) => {
+                return taskList[col];
+            }
         },
         {
             title: t('plan.createTime'),
             dataIndex: 'created_at',
             width: 190,
-            sorter: true
+            sorter: true,
+            render: (col, item) => {
+                return dayjs(col * 1000).format('YYYY-MM-DD HH:mm:ss')
+            }
         },
         {
             title: t('plan.updateTime'),
             dataIndex: 'updated_at',
             width: 190,
-            sorter: true
+            sorter: true,
+            render: (col, item) => {
+                return dayjs(col * 1000).format('YYYY-MM-DD HH:mm:ss');
+            }
         },
         {
             title: t('plan.operator'),
@@ -447,6 +454,7 @@ const TestPlanList = () => {
                             }
                         },
                         onSelectAll: (selected, selectedRows) => {
+                            console.log(selected, selectedRows);
                             let arr = selectedRows.filter(item => item.status === 1);
                             if (selected) {
                                 setSelectPlan(arr);

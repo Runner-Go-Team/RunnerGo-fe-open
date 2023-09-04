@@ -155,18 +155,11 @@ const TestReportList = () => {
             }
             setTotal(total);
             const list = auto_plan_report_list ? auto_plan_report_list.map(item => {
-                const { task_type, status, start_time_sec, end_time_sec, report_id, plan_name, run_user_name, task_mode, test_case_run_order, scene_run_order, report_name } = item;
+                const { status, report_id } = item;
 
                 return {
                     ...item,
-                    status: statusList[status],
                     canDelete: status === 2,
-                    task_type: taskList[task_type],
-                    task_mode: modeList[task_mode],
-                    scene_run_order: sceneRunList[scene_run_order],
-                    test_case_run_order: caseRunList[test_case_run_order],
-                    start_time_sec: dayjs(start_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
-                    end_time_sec: status === 1 ? '-' : dayjs(end_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
                     handle: <HandleContent report_id={report_id} />
                 }
             }) : [];
@@ -213,6 +206,9 @@ const TestReportList = () => {
                 setStatus(value);
                 return true;
             },
+            render: (col, item) => {
+                return statusList[col];
+            }
         },
         {
             title: t('index.reportName'),
@@ -238,34 +234,53 @@ const TestReportList = () => {
                 setTaskType(value);
                 return true;
             },
-            width: 200
+            width: 200,
+            render: (col, item) => {
+                return taskList[col];
+            }
         },
         {
             title: t('autoReport.runMode'),
             dataIndex: 'task_mode',
-            width: 135
+            width: 135,
+            render: (col, item) => {
+                return modeList[col];
+            }
         },
         {
             title: t('autoReport.caseOrder'),
             dataIndex: 'test_case_run_order',
-            width: 150
+            width: 150,
+            render: (col, item) => {
+                return caseRunList[col];
+            }
         },
         {
             title: t('autoReport.sceneOrder'),
             dataIndex: 'scene_run_order',
-            width: 150
+            width: 150,
+            render: (col, item) => {
+                return sceneRunList[col];
+            }
         },
         {
             title: t('index.startTime'),
             dataIndex: 'start_time_sec',
             width: 200,
             sorter: true,
+            render: (col, item) => {
+                return dayjs(col * 1000).format('YYYY-MM-DD HH:mm:ss');
+            }
         },
         {
             title: t('index.endTime'),
             dataIndex: 'end_time_sec',
             width: 200,
-            sorter: true
+            sorter: true,
+            render: (col, item) => {
+                const { status } = item;
+                return status === 1 ? '-' : dayjs(col * 1000).format('YYYY-MM-DD HH:mm:ss')
+            }
         },
         {
             title: t('index.performer'),
