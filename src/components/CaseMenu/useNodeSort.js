@@ -4,7 +4,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import { of } from 'rxjs';
 import { tap, filter, map, switchMap } from 'rxjs/operators';
 import isArray from 'lodash/isArray';
-import { pushTask } from '@asyncTasks/index';
 import Bus from '@utils/eventBus';
 
 const useNodeSort = (props) => {

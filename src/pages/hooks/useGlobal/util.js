@@ -4,7 +4,6 @@ import { Message } from 'adesign-react';
 import { onlineStatus } from '@utils/common';
 import { fetchUserConfigRequest } from '@services/user';
 import { fetchUserTeamList, fetchUserProjectList } from '@services/projects';
-import { pushTask } from '@asyncTasks/index';
 // import { Task, Await_Task } from '@indexedDB/asyn_task';
 import { createDefaultProject, handlePullProjectList } from '@busLogics/projects';
 import { getUserConfig, updateUserDefaultConfig } from '@busLogics/user';
@@ -25,13 +24,6 @@ const handleCreateUserConfig = async (uuid) => {
         // 添加默认项目
         const projectInfo = await createDefaultProject(defaultTeamId, uuid);
 
-        pushTask({
-            task_id: projectInfo.id,
-            action: 'SAVE',
-            model: 'PROJECT',
-            payload: projectInfo.project_id,
-            project_id: 'NOT_NEED',
-        });
 
         defaultProjectId = projectInfo.project_id;
     } else {
@@ -126,12 +118,7 @@ export const handleLoginedUserInit = async (uuid) => {
             currentTeamId,
             currentProjectId
         );
-        pushTask({
-            action: 'PULL',
-            model: 'COLLECTION',
-            project_id: currentProjectId,
-            task_id: currentProjectId,
-        });
+      
     }
     // 已登录离线
     const userConfig = await getUserConfig(uuid);

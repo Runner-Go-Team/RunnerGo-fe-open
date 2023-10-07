@@ -23,7 +23,7 @@ const AddInternalMember = (props) => {
     const [pageSize, setPageSize] = useState(20);
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(10);
-    const team_id = localStorage.getItem('team_id');
+    const team_id = sessionStorage.getItem('team_id');
     const teamPermissions = useSelector((store) => store?.permission?.teamPermissions?.[team_id]) || [];
     const companyPermissions = useSelector((store) => store?.permission?.companyPermissions);
     const { t } = useTranslation();
@@ -37,7 +37,7 @@ const AddInternalMember = (props) => {
         try {
             // 获取团队角色列表
             const params = {
-                team_id: localStorage.getItem('team_id')
+                team_id: sessionStorage.getItem('team_id')
             }
             ServiceGetUserRole(params).subscribe({
                 next: (res) => {
@@ -50,7 +50,7 @@ const AddInternalMember = (props) => {
             });
 
             const params1 = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 keyword: searchValue || '',
                 page,
                 size: pageSize
@@ -157,7 +157,7 @@ const AddInternalMember = (props) => {
             return;
         }
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             members,
         }
         addTeamMember(params).subscribe({

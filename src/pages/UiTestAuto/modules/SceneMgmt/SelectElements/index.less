@@ -1,0 +1,191 @@
+.runnerGo-card-special-item {
+  .tips{
+    font-size: 12px;
+    color: var(--font-3);
+  }
+  .element-attr-list {
+    max-height: 13vh;
+    overflow: auto;
+
+    .element-attr-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      width: 452px;
+
+      .arco-select-view{
+        height: 30px;
+        line-height: 28px;
+      }
+      .arco-input{
+        height: 30px;
+      }
+      .info,
+      .operations {
+        display: flex;
+        align-items: center;
+      }
+
+      .info {
+        flex: 1;
+
+        .arco-select,
+        .arco-input {
+          margin-left: 10px;
+          flex-shrink: 0;
+        }
+        .arco-input-inner-wrapper{
+          padding-left: 0; 
+         }
+      }
+
+      .operations {
+        svg {
+          margin-left: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  label {
+    .tab-select-element {
+      font-size: 12px;
+      padding: 6.5px 10px 6.5px 10px;
+      border-radius: 5px;
+      background: var(--border-line);
+      margin-left: 10px;
+      color: var(--font-1);
+      &.active {
+        border: 1px solid var(--theme-color);
+      }
+    }
+  }
+
+  .select-elements {
+    display: flex;
+    justify-content: space-between;
+    height: 194px;
+    background: var(--modal-footer);
+    margin-top: 6px;
+    text-align: left;
+    border-radius: 5px;
+    .left,
+    .right {
+      padding: 10px;
+    }
+
+    .right {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      .element-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 6px;
+        flex: 1;
+        overflow: auto;
+
+        .element-list-item {
+          padding: 6px;
+
+          .arco-radio {
+            overflow: hidden;
+            align-items: center;
+            display: flex;
+            height: 24px;
+            .arco-radio-text {
+              display: block;
+              max-width: 210px;
+              flex: 1;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+          }
+
+          &.active {
+            background: var(--select-hover);
+          }
+        }
+      }
+      .arco-input{
+        background: var(--module);
+      }
+    }
+
+    .left {
+      width: 169px;
+      border-right: 1px solid var(--module);
+
+      .other-tree-node {
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        flex-wrap: nowrap;
+        line-height: 1.5715;
+        font-size: 12px;
+        color: var(--font-3);
+        align-items: center;
+        padding-left: 8px;
+        padding-right: 5px;
+        border-radius: 2px;
+        .icon {
+          height: 30px;
+          margin-right: 1px;
+          display: flex;
+          align-items: center;
+        }
+
+        &.active {
+          background-color: var(--select-hover);
+          color: var(--font-1);
+        }
+
+        &:hover {
+          background-color: var(--select-hover);
+          color: var(--font-1);
+        }
+      }
+
+      .arco-tree {
+        max-height: 142px;
+
+        .arco-tree-node-title-text {
+          display: block;
+          max-width: 138px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .arco-tree {
+      height: 100%;
+
+      .arco-tree-node-selected {
+        background-color: var(--select-hover);
+      }
+
+      .arco-tree-node {
+        padding-left: 8px;
+        border-radius: 2px;
+        .arco-tree-node-title-text {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+.save-to-element{
+  text-align: center;
+  margin-bottom: 16px;
+  height: 30px;
+  .acro-btn{
+    height: 30px;
+    font-size: 12px;
+  }
+}

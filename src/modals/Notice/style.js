@@ -11,6 +11,9 @@ export const InviteModalWrapper = css`
     
     }
     .group-list-search {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
         .arco-input-inner-wrapper {
             background-color: var(--bg) !important;
         }

@@ -1,0 +1,252 @@
+.runnergo-ui-test-report-detatils {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--module);
+
+  .detatils-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--bg);
+    padding: 8px;
+
+    .left {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .running-state {
+          padding: 3.5px 8px;
+          font-size: 12px;
+          border-radius: 2px;
+        }
+
+        .running-state-over {
+          border: 1px solid rgba(76, 203, 126, 1);
+          background: rgba(76, 203, 126, 0.1);
+          color: rgba(76, 203, 126, 1);
+        }
+
+        .running-state-running {
+          border: 1px solid rgba(237, 120, 71, 1);
+          background: rgba(237, 120, 71, 0.1);
+          color: rgba(237, 120, 71, 1);
+        }
+
+        .arco-input {
+          width: 98px;
+          height: 24px;
+          border-radius: 3px;
+        }
+
+        .back-plan-list {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 24px;
+          height: 24px;
+          border-radius: 3px;
+          background: var(--border-line);
+          cursor: pointer;
+
+          svg {
+            font-size: 13px;
+          }
+        }
+      }
+
+      .bottom {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 16px;
+        color: var(--font-1);
+        white-space: nowrap;
+        padding: 3.5px 32px;
+
+        .arco-input {
+          width: 256px;
+          height: 20px;
+          font-size: 12px;
+        }
+
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .notice {
+        background: var(--theme-color);
+        border-radius: 3px;
+        color: var(--common-white);
+
+        .acro-icon {
+          font-size: 16px;
+          color: var(--common-white);
+        }
+      }
+      .report-debug-btn {
+        background: rgba(76, 203, 126, 1);
+        color: var(--common-white);
+        border-radius: 3px;
+      }
+      .report-debug-btn-run{
+        background: rgba(201, 53, 63, 1);
+      }
+    }
+  }
+
+  .sum-card-list {
+    display: flex;
+    border-bottom: 2px solid var(--bg);
+
+    .sum-card-item {
+      padding: 20px 31px;
+      flex-grow: 1;
+
+      .left {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .title {
+          font-size: 14px;
+          color: var(--font-3);
+
+          .arco-icon {
+            font-size: 14px;
+            margin-left: 10px;
+          }
+        }
+
+        .content {
+          font-size: 28px;
+          color: var(--font-1);
+          line-height: 36px;
+        }
+
+        .footer {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .success-text {
+          padding: 5px 8px;
+          font-size: 12px;
+          color: rgba(76, 203, 126, 1);
+          background: rgba(76, 203, 126, 0.1);
+        }
+
+        .failed-text {
+          padding: 5px 8px;
+          font-size: 12px;
+          color: rgba(201, 53, 63, 1);
+          background: rgba(201, 53, 63, 0.1);
+        }
+
+        .un-exec-text {
+          padding: 5px 8px;
+          font-size: 12px;
+          color: var(--font-3);
+          background: var(--border-line);
+        }
+      }
+    }
+
+    .sum-card-item:not(:last-child) {
+      border-right: 2px solid var(--bg);
+    }
+  }
+
+  .report-scene-info {
+    display: flex;
+    flex: 1;
+    height: calc(100% - 207px);
+    & > .left {
+      // width: 364px;
+      width: 20%;
+      padding: 16px;
+      border-right: 2px solid var(--bg);
+
+      .title {
+        font-size: 14px;
+        color: var(--font-1);
+      }
+      .arco-tabs{
+        margin-top: 10px;
+      }
+      .report-scene-info-scene-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-height: 53vh;
+        overflow: auto;
+        .item {
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          gap: 6px;
+          line-height: 17px;
+          white-space: nowrap;
+          &.active {
+            background: var(--select-hover);
+          }
+
+          &:hover {
+            background: var(--select-hover);
+          }
+
+          .status {
+            font-size: 12px;
+          }
+
+          .progress {
+            width: 185px;
+          }
+
+          .name {
+            color: var(--font-1);
+            font-size: 12px;
+            width: 70%;
+          }
+
+          .ratio-success {
+            color: rgba(76, 203, 126, 1);
+          }
+
+          .ratio-failed {
+            color: rgba(201, 53, 63, 1);
+          }
+        }
+      }
+
+      .arco-tabs-header-nav-line .arco-tabs-header-title {
+        margin: 0 16px 0 0;
+      }
+    }
+
+    & > .right {
+      flex: 1;
+      overflow: hidden;
+    }
+  }
+}

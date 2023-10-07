@@ -1,0 +1,41 @@
+.appearance-texts {
+  .text-add {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .appearance-texts-item {
+    border: 1px solid var(--border-line);
+
+    .appearance-texts-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-line);
+      padding: 8px;
+      .appearance-texts-item-header-left{
+        max-width: 75%;
+      }
+      .header-right{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        .arco-icon{
+          font-size: 18px;
+          color: var(--font-1);
+        }
+      }
+    }
+    .appearance-texts-item-body{
+      padding: 8px;
+      .arco-textarea{
+        resize: none;
+      }
+    }
+    .runnerGo-card-special {
+      padding: 8px;
+    }
+  }
+}

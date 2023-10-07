@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Modal, Button, Message } from 'adesign-react';
+import ArcoModal from '@modals/ArcoModal';
 import MonacoEditor from '@components/MonacoEditor';
 import { EditFormat, isJSON } from '@utils';
 import { isObject } from 'lodash';
 import { jsonRawWarper } from '../../jsonTable/modals/style';
+import { Message, Button } from '@arco-design/web-react';
 
 const EditRow = (props) => {
   const { value, onChange, onCancel } = props;
@@ -37,8 +38,7 @@ const EditRow = (props) => {
   }, []);
 
   return (
-    <Modal
-      visible
+    <ArcoModal
       title="Raw"
       onCancel={onCancel}
       footer={
@@ -52,7 +52,7 @@ const EditRow = (props) => {
       <div className={jsonRawWarper}>
         <MonacoEditor value={tempText} onChange={setTempText.bind(null)} />
       </div>
-    </Modal>
+    </ArcoModal>
   );
 };
 

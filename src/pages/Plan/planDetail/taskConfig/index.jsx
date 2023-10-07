@@ -62,7 +62,7 @@ const TaskConfig = (props) => {
     useEffect(() => {
         if (open_scene && taskType) {
             const query = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 plan_id,
                 scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
                 task_type: taskType
@@ -701,7 +701,7 @@ const TaskConfig = (props) => {
         const params = {
             plan_id,
             name: open_scene_name,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
             ...task_config,
         };

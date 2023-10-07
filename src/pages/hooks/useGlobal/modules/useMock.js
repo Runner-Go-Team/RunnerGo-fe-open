@@ -175,7 +175,7 @@ const useMock = (props) => {
     if (id) {
       if (!open_apis.hasOwnProperty(id)) {
         try {
-          const resp = await lastValueFrom(fetchGetMockDetail({ team_id: localStorage.getItem('team_id'), target_ids: id }));
+          const resp = await lastValueFrom(fetchGetMockDetail({ team_id: sessionStorage.getItem('team_id'), target_ids: id }));
           if (resp?.code == 0 && isArray(resp?.data?.targets) && resp.data.targets.length > 0) {
             newApi = resp.data.targets[0];
             updateTargetMockId(id);
@@ -228,7 +228,7 @@ const useMock = (props) => {
     if (newCollection.sort = -1) {
       newCollection = targetReorder(newCollection);
     }
-    newCollection['team_id'] = localStorage.getItem('team_id');
+    newCollection['team_id'] = sessionStorage.getItem('team_id');
 
     try {
       const res = await lastValueFrom(fetchSaveMockFolder(newCollection))
@@ -371,7 +371,7 @@ const useMock = (props) => {
         addOpensByObj(newTarget);
       } else if (point == 'folder-open-tag') {
         try {
-          const resp = await lastValueFrom(fetchGetMockDetail({ team_id: localStorage.getItem('team_id'), target_ids: id }));
+          const resp = await lastValueFrom(fetchGetMockDetail({ team_id: sessionStorage.getItem('team_id'), target_ids: id }));
           if (resp?.code == 0 && isArray(resp?.data?.targets) && resp.data.targets.length > 0) {
             newTarget = resp.data.targets[0];
             if (!isPlainObject(newTarget)) {
@@ -381,12 +381,12 @@ const useMock = (props) => {
           newTarget.target_id = uuidV4();
           newTarget.name += '副本';
           newTarget.is_changed = 1;
-          newTarget.team_id = localStorage.getItem('team_id');
+          newTarget.team_id = sessionStorage.getItem('team_id');
           addOpensByObj(newTarget, true);
         } catch (error) { }
       } else {
         try {
-          const resp = await lastValueFrom(fetchGetMockDetail({ team_id: localStorage.getItem('team_id'), target_ids: id }));
+          const resp = await lastValueFrom(fetchGetMockDetail({ team_id: sessionStorage.getItem('team_id'), target_ids: id }));
           if (resp?.code == 0 && isArray(resp?.data?.targets) && resp.data.targets.length > 0) {
             newTarget = resp.data.targets[0];
             if (!isPlainObject(newTarget)) {
@@ -397,7 +397,7 @@ const useMock = (props) => {
           newTarget.name += '副本';
           newTarget.is_changed = 1;
           newTarget = targetReorder(newTarget);
-          newTarget.team_id = localStorage.getItem('team_id');
+          newTarget.team_id = sessionStorage.getItem('team_id');
           const res = await lastValueFrom(fetchMockSave(newTarget))
           if (res?.code == 0) {
             // 刷新目录列表
@@ -410,7 +410,7 @@ const useMock = (props) => {
   };
   const getMockList = async () => {
     try {
-      const res = await lastValueFrom(fetchMockApiList({ team_id: refGlobal?.current?.CURRENT_TEAM_ID || localStorage.getItem('team_id') }))
+      const res = await lastValueFrom(fetchMockApiList({ team_id: refGlobal?.current?.CURRENT_TEAM_ID || sessionStorage.getItem('team_id') }))
       if (res?.code == 0 && isArray(res?.data?.targets)) {
         const tempApiList = {};
         const targets = res.data.targets;
@@ -454,7 +454,7 @@ const useMock = (props) => {
       if (tempTarget.sort == -1) {
         tempTarget = targetReorder(tempTarget);
       }
-      tempTarget.team_id = localStorage.getItem('team_id');
+      tempTarget.team_id = sessionStorage.getItem('team_id');
       try {
         const res = await lastValueFrom(fetchMockSave({ ...tempTarget, ...options }))
         if (res?.code == 0) {
@@ -475,7 +475,7 @@ const useMock = (props) => {
     const open_res = refGlobal?.current?.mockOpenRes || {};
     const params = {
       target_id: id,
-      team_id: localStorage.getItem('team_id'),
+      team_id: sessionStorage.getItem('team_id'),
     };
     const _open_res = cloneDeep(open_res);
     _open_res[id] = {
@@ -539,7 +539,7 @@ const useMock = (props) => {
     const { target_id, data } = params;
     try {
       let newApi = '';
-      const resp = await lastValueFrom(fetchGetMockDetail({ team_id: localStorage.getItem('team_id'), target_ids: target_id }));
+      const resp = await lastValueFrom(fetchGetMockDetail({ team_id: sessionStorage.getItem('team_id'), target_ids: target_id }));
       if (resp?.code == 0 && isArray(resp?.data?.targets) && resp.data.targets.length > 0) {
         newApi = resp.data.targets[0];
       }

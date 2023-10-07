@@ -54,7 +54,7 @@ const AddDb = (props) => {
         let params = {
             database_id: databaseId,
             env_id: selectEnvId,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             type,
             server_name: serverName,
             host,

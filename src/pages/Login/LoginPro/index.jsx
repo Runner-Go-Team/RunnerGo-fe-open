@@ -81,7 +81,7 @@ const LoginPro = () => {
                         const { expire_time_sec, team_id, token } = data;
                         localStorage.setItem('expire_time_sec', expire_time_sec * 1000);
                         localStorage.setItem('runnergo-token', token);
-                        localStorage.setItem('team_id', team_id);
+                        sessionStorage.setItem('team_id', team_id);
                         dispatch({
                             type: 'user/updateTeamId',
                             payload: team_id

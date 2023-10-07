@@ -1,0 +1,94 @@
+.settings-and-asserts {
+  margin-top: 12px;
+  height: auto;
+
+  .arco-tabs-header-nav-line .arco-tabs-header-title {
+    margin: 0 8px;
+  }
+
+  .arco-tabs-header-nav-line.arco-tabs-header-nav-horizontal>.arco-tabs-header-scroll .arco-tabs-header-title:first-of-type {
+    margin-left: 8px;
+  }
+
+  .settings {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 12px;
+
+    .arco-input,
+    .arco-select-view-value {
+      font-size: 12px;
+    }
+    .settings-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+
+      .settings-item-right {
+        display: flex;
+        align-items: center;
+      }
+
+      .unit {
+        width: 19px;
+        text-align: center;
+      }
+
+      .arco-select.arco-select-single .arco-select-view {
+        height: 40px;
+        line-height: 40px;
+      }
+
+      .arco-cascader-size-default.arco-cascader-single .arco-cascader-view {
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+  }
+
+  .asserts {
+    .add-assert {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+      font-size: 12px;
+
+      .arco-btn {
+        font-size: 12px;
+      }
+    }
+
+    .assert-item {
+      border: 1px solid var(--border-line);
+      cursor: pointer;
+      .assert-item-content {
+        border-top: 1px solid var(--border-line);
+      }
+
+      .assert-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px;
+        cursor: pointer;
+        .header-right {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .arco-icon {
+            font-size: 18px;
+            color: var(--font-1);
+          }
+        }
+      }
+
+      .runnerGo-card-special {
+        padding: 8px;
+      }
+    }
+  }
+}

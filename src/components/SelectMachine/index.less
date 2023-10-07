@@ -1,0 +1,41 @@
+.runnergo-ui-select-machine {
+  .search-header{
+    margin-bottom: 16px;
+  }
+  .select-machine-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    overflow-y: auto;
+    max-height: 39vh;
+    .select-machine-item {
+      background-color: var(--modal-footer);
+      border-radius: 5px;
+      font-size: 12px;
+      width: 292px;
+      overflow: hidden;
+      // height: 138px;
+      .header {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        color: var(--font-1);
+        border-bottom: 1px solid var(--border-line);
+      }
+
+      .content {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        padding: 10px;
+        .right{
+          .right-item{
+            display: flex;
+            align-items: center;
+            max-width: 159px;
+          }
+        }
+      }
+    }
+  }
+}

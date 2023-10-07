@@ -70,7 +70,7 @@ const useAutoPlan = () => {
         })
         const { target_id } = id;
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             scene_id: target_id,
         };
         fetchSceneFlowDetail(query).subscribe({
@@ -301,7 +301,7 @@ const useAutoPlan = () => {
 
         const params = {
             scene_id: open_plan_scene.target_id ? open_plan_scene.target_id : open_plan_scene.scene_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             version: 1,
             nodes: _nodes,
             edges,
@@ -482,7 +482,7 @@ const useAutoPlan = () => {
         })
 
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_id: _ids,
             // source: 2,
         };
@@ -495,7 +495,7 @@ const useAutoPlan = () => {
             // sort: parseInt(sort),
             // target_id: target_id,
             targets: targetList,
-            // team_id: localStorage.getItem('team_id'),
+            // team_id: sessionStorage.getItem('team_id'),
         };
         fetchChangeSort(params).subscribe({
             next: (res) => {
@@ -510,7 +510,7 @@ const useAutoPlan = () => {
     const runAutoPlan = (id, callback) => {
         console.log(id);
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_id: id
         };
         fetchRunAutoPlan(params).subscribe({
@@ -523,7 +523,7 @@ const useAutoPlan = () => {
 
     const stopAutoPlan = (id, callback) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_id: id
         };
         fetchStopAutoPlan(params).subscribe({

@@ -1,0 +1,78 @@
+.ui-scene-body {
+  display: flex;
+  flex: 1;
+  background: var(--module);
+  width: 100%;
+  height: calc(100%);
+
+  .body-left {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    .body-left-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      color: var(--font-1);
+      border-bottom: 1px solid var(--border-line);
+      .left{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .title {
+        font-size: 16px;
+        font-weight: 400;
+      }
+
+      .more {
+        .arco-btn {
+          height: 30px;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .body-right {
+    width: 434px;
+    border-radius: 2px;
+    border-left: 2px solid var(--bg);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .body-right-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-line);
+      padding: 20px 16px;
+      .title {
+        font-size: 16px;
+        color: var(--font-1);
+      }
+
+      svg {
+        font-size: 16px;
+        cursor: pointer;
+      }
+    }
+
+    .body-right-content {
+      height: 70vh;
+      overflow: auto;
+      padding: 16px;
+    }
+
+    .body-right-footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top: 1px solid var(--border-line);
+      padding: 10px 16px;
+    }
+  }
+}

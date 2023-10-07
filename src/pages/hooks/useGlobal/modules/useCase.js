@@ -149,7 +149,7 @@ const useCase = () => {
 
     const importCaseApi = (ids) => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_ids: ids,
         };
         fetchApiDetail(QueryString.stringify(query, { indices: false })).subscribe({
@@ -395,7 +395,7 @@ const useCase = () => {
         if (isPlainObject(param)) {
             newSceneGroup = { ...newSceneGroup, ...param };
         }
-        newSceneGroup['team_id'] = localStorage.getItem('team_id');
+        newSceneGroup['team_id'] = sessionStorage.getItem('team_id');
         delete newSceneGroup['target_id'];
         const from_list = {
             'scene': 1,
@@ -499,7 +499,7 @@ const useCase = () => {
         const params = {
             scene_id: scene_id,
             scene_case_id: case_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             version: 1,
             nodes: _nodes,
             edges,
@@ -653,7 +653,7 @@ const useCase = () => {
         const length = nodes.length;
         const { scene_id, case_id } = open_info;
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             scene_id,
             scene_case_id: case_id
         };
@@ -700,7 +700,7 @@ const useCase = () => {
     const stopCase = (callback) => {
         const { scene_id, scene_case_id } = open_case;
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             scene_id,
             scene_case_id
         };
@@ -722,7 +722,7 @@ const useCase = () => {
 
     const cloneCase = (case_id, callback) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             case_id
         };
         fetchCopyCase(params).subscribe({
@@ -742,7 +742,7 @@ const useCase = () => {
 
     const deleteCase = (case_id, callback) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             case_id,
         };
         fetchDeleteCase(params).subscribe({

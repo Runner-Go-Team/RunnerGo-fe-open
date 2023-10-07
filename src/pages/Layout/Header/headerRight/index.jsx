@@ -23,7 +23,6 @@ import { global$ } from '@hooks/useGlobal/global';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import InvitateSuccess from '@modals/InvitateSuccess';
-import RunningShow from './runningShow';
 import GlobalConfig from './globalConfig';
 import { Dropdown, Tooltip } from '@arco-design/web-react';
 import { IconSunFill, IconMoonFill } from '@arco-design/web-react/icon';
@@ -40,26 +39,17 @@ const HeaderRight = () => {
     const [showLog, setShowLog] = useState(false);
     // 个人资料
     const [showInfo, setShowInfo] = useState(false);
-    // 切换语言
-    const [showLge, setShowLge] = useState(false);
-    // 切换主题
-    const [showTheme, setShowTheme] = useState(false);
-    const [memberList, setMemberList] = useState([]);
-
-    const [outsideClose, setOutsideClose] = useState(true);
-
 
     const teamMember = useSelector((store) => store.teams.teamMember);
-    const navigate = useNavigate();
-    const refMenu = useRef();
     const dispatch = useDispatch();
     const theme = useSelector((store) => store.user.theme);
     const userInfo = useSelector((store) => store.user.userInfo);
+    const team_type = useSelector((store) => store.user.team_type);
 
     let { i18n, t } = useTranslation();
     useEffect(() => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         }
         fetchTeamMemberList(query)
             .pipe(
@@ -82,7 +72,7 @@ const HeaderRight = () => {
             <Dropdown
                 position="bl"
                 trigger="click"
-                droplist={<UserCard setShowInfo={setShowInfo}/>}
+                droplist={<UserCard setShowInfo={setShowInfo} />}
             >
                 <div>
                     <div className='person-avatar'>
@@ -93,21 +83,6 @@ const HeaderRight = () => {
         )
     };
 
-    const loginOut = () => {
-        Bus.$emit('closeWs');
-        localStorage.removeItem('runnergo-token');
-        localStorage.removeItem('expire_time_sec');
-        localStorage.removeItem('team_id');
-        localStorage.removeItem('settings');
-        localStorage.removeItem('open_apis');
-        localStorage.removeItem('open_scene');
-        localStorage.removeItem('open_plan');
-        localStorage.removeItem("package_info");
-        // localStorage.clear();
-        setCookie('token', '');
-        window.location.href = `${RD_ADMIN_URL}/#/login`;
-        Message('success', t('message.quitSuccess'));
-    };
 
     const changeTheme = (color) => {
         const url = `/skins/${color}.css`;
@@ -127,7 +102,6 @@ const HeaderRight = () => {
 
     return (
         <div className='header-right'>
-            <RunningShow />
             <GlobalConfig />
             <div className='team-person'>
                 <RenderMemberList />
@@ -135,7 +109,9 @@ const HeaderRight = () => {
                     <p>{teamMember.length}</p>
                 </div>
             </div>
-            <Button className='invite' preFix={<SvgInvite />} onClick={() => setShowModal(true)}>{t('header.invitation')}</Button>
+            <Tooltip content={team_type === 1 ? t('header.privateCanNotInvite') : ''}>
+                <Button className='invite' disabled={team_type === 1} preFix={<SvgInvite />} onClick={() => setShowModal(true)}>{t('header.invitation')}</Button>
+            </Tooltip>
             <div className='more-btn'>
                 <Button className='handle-log' onClick={() => setShowLog(true)}>{t('header.handleLog')}</Button>
                 {/* <Button className='handle-log' preFix={<SvgLogout />} onClick={() => loginOut()}>{t('header.signOut')}</Button> */}

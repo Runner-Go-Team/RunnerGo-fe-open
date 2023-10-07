@@ -160,7 +160,7 @@ const useScene = () => {
         })
 
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_id: _ids,
             // source: 1,
         };
@@ -173,7 +173,7 @@ const useScene = () => {
             // sort: parseInt(sort),
             // target_id: target_id,
             targets: targetList,
-            // team_id: localStorage.getItem('team_id'),
+            // team_id: sessionStorage.getItem('team_id'),
         };
         fetchChangeSort(params).subscribe({
             next: (res) => {
@@ -267,7 +267,7 @@ const useScene = () => {
         });
         const params = {
             scene_id: open_scene.target_id ? open_scene.target_id : open_scene.scene_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             version: 1,
             nodes: _nodes,
             edges,
@@ -636,7 +636,7 @@ const useScene = () => {
 
     const importApiList = (ids) => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_ids: ids,
         };
         fetchApiDetail(QueryString.stringify(query, { indices: false })).subscribe({
@@ -731,7 +731,7 @@ const useScene = () => {
         }
         const { target_id, scene_id } = id;
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             scene_id: _id
         };
         fetchSceneFlowDetail(query).subscribe({
@@ -818,7 +818,7 @@ const useScene = () => {
         }
         const params = {
             target_id: id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             source: from_list[from],
             plan_id: plan_id ? plan_id : ''
         };
@@ -890,14 +890,14 @@ const useScene = () => {
 
         if (from === 'scene') {
             params = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 scene_id: id,
                 source: from_list[from]
             }
         } else {
             params = {
                 plan_id,
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 scene_id: id,
                 source: from_list[from]
             }
@@ -928,7 +928,7 @@ const useScene = () => {
 
     const cloneSceneFlow = (id, clone_id) => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             scene_id: clone_id,
         };
 
@@ -964,7 +964,7 @@ const useScene = () => {
 
     const cloneSceneTask = (newId, oldId, plan_id) => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_id,
             scene_id: oldId
         };
@@ -976,7 +976,7 @@ const useScene = () => {
                 plan_task.scene_id = newId;
                 plan_task.name = 'alskjdklajsd';
                 plan_task.remark = 'asdlkjaskldjasd';
-                plan_task.team_id = localStorage.getItem('team_id')
+                plan_task.team_id = sessionStorage.getItem('team_id')
 
                 fetchSavePlan(plan_task).subscribe();
 
@@ -1108,7 +1108,7 @@ const useScene = () => {
 
     const runScene = (scene_id, length, from) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             scene_id: scene_id,
         };
 
@@ -1240,13 +1240,13 @@ const useScene = () => {
                 scene_id: scene_id,
                 scene_case_id: scene_case_id,
                 node_id,
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
             };
         } else {
             params = {
                 scene_id: scene_id,
                 node_id,
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
             };
         }
         const _run_api_res = cloneDeep(run_api_res);
@@ -1329,20 +1329,20 @@ const useScene = () => {
         let params = {
             scene_id: scene_id,
             node_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         };
         // if (from === 'case' && scene_case_id) {
         //     params = {
         //         scene_id: scene_id,
         //         scene_case_id: scene_case_id,
         //         node_id,
-        //         team_id: localStorage.getItem('team_id'),
+        //         team_id: sessionStorage.getItem('team_id'),
         //     };
         // } else {
         //     params = {
         //         scene_id: scene_id,
         //         node_id,
-        //         team_id: localStorage.getItem('team_id'),
+        //         team_id: sessionStorage.getItem('team_id'),
         //     };
         // }
         const _run_api_res = cloneDeep(run_api_res);
@@ -1461,7 +1461,7 @@ const useScene = () => {
     const stopScene = (scene_id, from, callback) => {
         const params = {
             scene_id: scene_id,
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         };
         fetchStopScene(params).subscribe({
             next: (res) => {
@@ -1601,7 +1601,7 @@ const useScene = () => {
 
         if (env_id) {
             const params = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 env_id
             };
 

@@ -31,7 +31,7 @@ const ButtonBox = (props) => {
     const [importMockApi, setImportMockApi] = useState(false);
     const [isExpandAll, setIsExpandAll] = useState(false);
     const [showFolder, setShowFolder] = useState(false);
-    const currentTeamId = localStorage.getItem('team_id');
+    const currentTeamId = sessionStorage.getItem('team_id');
     const [showApi, setImportApi] = useState(false);
     const [showProject, setImportProject] = useState(false);
     const userTeams = useSelector((store) => store.teams.teamData);
@@ -39,7 +39,7 @@ const ButtonBox = (props) => {
     const mockApis = useSelector((store) => store?.mock?.mock_apis);
 
     const currentTeamName = useMemo(() => {
-        let currentTeamId = localStorage.getItem('team_id');
+        let currentTeamId = sessionStorage.getItem('team_id');
         let teamName = userTeams[currentTeamId] ? userTeams[currentTeamId].name : '默认团队';
 
         return teamName;
@@ -91,7 +91,7 @@ const ButtonBox = (props) => {
 
     const onApiPickerSubmit = debounce(async (ids) => {
         try {
-            const res = await lastValueFrom(fetchSaveMockToTarget({targetIDs:ids,team_id:localStorage.getItem('team_id')}))
+            const res = await lastValueFrom(fetchSaveMockToTarget({targetIDs:ids,team_id:sessionStorage.getItem('team_id')}))
             if(res?.code == 0){
                 Message('success', '添加成功');
                 // 添加成功 刷新测试对象目录列表

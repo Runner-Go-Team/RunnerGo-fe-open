@@ -33,7 +33,7 @@ const DbTab = (props) => {
 
     const getDbList = () => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             env_id: selectEnvId,
             page,
             size
@@ -61,7 +61,7 @@ const DbTab = (props) => {
                 const params = {
                     database_id,
                     env_id: selectEnvId,
-                    team_id: localStorage.getItem('team_id')
+                    team_id: sessionStorage.getItem('team_id')
                 };
 
                 fetchDeleteDb(params).subscribe({

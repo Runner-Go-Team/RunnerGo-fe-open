@@ -32,7 +32,7 @@ const ServiceTab = (props) => {
 
     const getServiceList = () => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             env_id: selectEnvId,
             page,
             size
@@ -60,7 +60,7 @@ const ServiceTab = (props) => {
                 const params = {
                     service_id,
                     env_id: selectEnvId,
-                    team_id: localStorage.getItem('team_id')
+                    team_id: sessionStorage.getItem('team_id')
                 };
         
                 fetchDeleteService(params).subscribe({

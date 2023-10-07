@@ -133,7 +133,7 @@ const ReportHeader = (props) => {
     const stopReport = () => {
         const params = {
             plan_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             report_ids: [report_id ? report_id : JSON.parse(contrast)[select_plan].report_id],
         };
 

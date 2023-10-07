@@ -1,0 +1,119 @@
+.step-result {
+  font-size: 14px;
+  .title{
+    color: var(--font-1);
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 12px;
+  }
+  .step-result-item {
+    display: flex;
+    // align-items: center;
+    margin-bottom: 12px;
+    label{
+      white-space: nowrap;
+    }
+    .content {
+      max-width: 350px;
+      word-wrap: break-word;
+    }
+  }
+
+  .withdraws-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .withdraws-item {
+      display: flex;
+      gap: 6px;
+      line-height: 20px;
+
+      .key,
+      .value {
+        overflow: hidden;
+        word-wrap: break-word;
+        height: auto;
+      }
+      .value{
+        flex: 1;
+      }
+    }
+  }
+
+  .assert-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .assert-item {
+      .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        line-height: 20px;
+
+        .left {
+          display: flex;
+          align-items: center;
+          color: var(--font-1);
+          font-size: 14px;
+
+          .status.success {
+            color: rgba(76, 203, 126, 1);
+          }
+
+          .status.failed {
+            color: rgba(201, 53, 63, 1)
+          }
+
+          .status {
+            margin-left: 4px;
+          }
+        }
+
+        .right {
+          font-size: 14px;
+          color: var(--theme-color);
+          cursor: pointer;
+        }
+      }
+
+      .failed-reason {
+        color: var(--font-1);
+        margin-top: 6px;
+
+        .text {
+          margin-top: 6px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+
+  .line {
+    height: 1px;
+    background: var(--border-line);
+    margin: 12px 0;
+  }
+
+  .screens-hot {
+    .title {
+      padding-left: 6px;
+      border-left: 4px solid var(--theme-color);
+    }
+
+    .full-screen-component {
+      img {
+        height: 100%;
+        width: 100%;
+      }
+    }
+
+    img {
+      width: 468px;
+      height: 210px;
+      margin-top: 12px;
+    }
+  }
+}

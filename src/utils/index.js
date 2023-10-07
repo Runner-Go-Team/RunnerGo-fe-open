@@ -1,20 +1,17 @@
 /* eslint-disable eqeqeq */
-// import { Message } from 'adesign-react';
 import * as jsondiffpatch from 'jsondiffpatch';
 import { REQUEST_DIST } from '@constants/confilct';
 import { FE_HOST } from '@config/client';
 import Mock from 'mockjs';
-import ATools from 'apipost-tools';
+import ATools, { isJson } from 'apipost-tools';
 import IATools from 'apipost-inside-tools';
 import { v4 as uuidV4 } from 'uuid';
-import JSONbig from 'json-bigint';
 import { getBaseCollection } from '@constants/baseCollection';
 import JSON5 from 'json5';
 import X2JS from 'x2js';
 import jsonpath from 'jsonpath';
 import { VARTYPES } from '@constants/typeList';
-import { Message } from 'adesign-react';
-import { global$ } from '@hooks/useGlobal/global';
+import { Message } from '@arco-design/web-react';
 import i18next from 'i18next';
 
 import copy from 'copy-to-clipboard'
@@ -43,10 +40,10 @@ import dayjs from 'dayjs';
 // 复制文本到剪切板
 export const copyStringToClipboard = (str, showMessage = true) => {
     try {
-        showMessage && Message('success', i18next.t('message.copyClipboard'));
+        showMessage && Message.success(i18next.t('message.copyClipboard'));
         copy(str);
     } catch (error) {
-        showMessage && Message('error', i18next.t('message.copyError'));
+        showMessage && Message.error(i18next.t('message.copyError'));
     }
 };
 
@@ -788,7 +785,7 @@ export const JsonXml2Obj = (json, _descList, Parameter) => {
             }
         }
     } else {
-        Message('error', '当前仅支持JSON、XML格式的快速提取，其他格式请手动添加');
+        Message.error('当前仅支持JSON、XML格式的快速提取，其他格式请手动添加');
         return [];
     }
     const lists = multiObj2singleObj(jsonStr);
@@ -1158,7 +1155,20 @@ export const pathArr = (array) => {
     return temp;
 };
 export const openUrl = (url) => {
+    // if (isElectron()) {
+    //     const { shell } = window?.electron || {};
+    //     const token = getCookie('token');
+    //     // BASE_URL/api/uc?url=&token=
+    //     const _res = shell.openExternal(
+    //         `${FE_BASEURL}/api/uc?hash_token=${token}&reffer=${encodeURI(url)}`
+    //     );
+
+    //     if (!_res) {
+    //         window.open(url);
+    //     }
+    // } else {
     window.open(url);
+    // }
 };
 export const customizer = (objValue, srcValue) => {
     if (Object.prototype.toString.call(objValue) == Object.prototype.toString.call(srcValue)) {
@@ -1359,17 +1369,301 @@ export const parseModelToJsonSchema = async (model, parentModels = []) => {
 
 export const FotmatTimeStamp = (timeStamp, format) => {
     try {
-      let time_temp = `${timeStamp}`;
-      if (time_temp.length === 10) {
-        time_temp = time_temp * 1000;
-      }
-      time_temp = parseInt(time_temp, 10);
-  
-      return dayjs(time_temp).format(format);
+        let time_temp = `${timeStamp}`;
+        if (time_temp.length === 10) {
+            time_temp = time_temp * 1000;
+        }
+        time_temp = parseInt(time_temp, 10);
+
+        return dayjs(time_temp).format(format);
     } catch (error) {
-      return '-';
+        return '-';
     }
-  }
+}
+
+export const array2ArcoTree = (items, fieldNames = {}) => {
+    try {
+        const tempFieldNames = {
+            keyName: 'target_id',
+            titleName: 'name',
+            pidName: 'parent_id',
+            ...fieldNames
+        }
+        const result = [];
+        const itemMap = {};
+        for (const item of items) {
+            const id = item[tempFieldNames.keyName];
+            const pid = item[tempFieldNames.pidName];
+            if (!id || id == undefined) {
+                continue;
+            }
+            if (!itemMap.hasOwnProperty(id)) {
+                itemMap[id] = {
+                    children: [],
+                }
+            }
+
+            itemMap[id] = {
+                ...item,
+                key: id,
+                title: item[tempFieldNames.titleName],
+                children: itemMap[id]['children']
+            }
+
+            const treeItem = itemMap[id];
+            if (pid == 0 || pid == undefined) {
+                result.push(treeItem);
+                result.sort((a, b) => a?.sort - b?.sort);
+            } else {
+                if (!itemMap.hasOwnProperty(pid)) {
+                    itemMap[pid] = {
+                        children: [],
+                    }
+                }
+                itemMap[pid].children.push(treeItem);
+                itemMap[pid].children.sort((a, b) => a?.sort - b?.sort);
+            }
+        }
+        return result;
+    } catch (error) {
+        return [];
+    }
+}
+
+export const filterArcoTree = (tree, key) => {
+    if (!isArray(tree)) {
+        return [];
+    }
+    for (let index = 0; index < tree.length; index++) {
+        const item = tree[index];
+        if (item.key === key) {
+            tree.splice(index, 1)
+            return tree;
+        }
+        if (isArray(item?.children)) {
+            item.children = filterArcoTree(item.children, key);
+        }
+    }
+
+    return tree;
+}
+
+// 根据json的key生成key所在的路径
+export const findPathForKey = (json, keyToFind, currentPath = '') => {
+    for (const key in json) {
+        if (json.hasOwnProperty(key)) {
+            const currentKeyPath = currentPath ? `${currentPath}.${key}` : key;
+
+            if (key === keyToFind) {
+                return currentKeyPath;
+            }
+
+            if (typeof json[key] === 'object') {
+                const nestedResult = findPathForKey(json[key], keyToFind, currentKeyPath);
+                if (nestedResult) {
+                    return nestedResult;
+                }
+            }
+        }
+    }
+
+    return null;
+};
+
+
+// 将json数据导出为json文件
+export const exportJsonFile = (json, filename) => {
+    let jsonDataStr = isJSON(json) ? json : JSON.stringify(json, null, 2);
+    let blob = new Blob([jsonDataStr], { type: "application/json" });
+    let url = URL.createObjectURL(blob);
+
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+};
+
+const hasNonFolderChildren = (node, list) => {
+    if (node?.target_type !== 'folder') {
+        return true; // 如果当前节点不是目录，返回 true
+    }
+
+    for (let index = 0; index < list.length; index++) {
+        const item = list[index];
+        if (node?.target_id == item?.parent_id) {
+            if (hasNonFolderChildren(item, list)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// 移除空文件夹
+export const removeEmptyFolders = (arr) => {
+    // 创建一个新的空数组，用来存放结果
+    let result = [];
+    // 遍历原数组的每个元素
+    for (let item of arr) {
+        // 如果元素的target_type不是folder，就直接加入结果数组
+        if (item.target_type !== "folder") {
+            result.push(item);
+        } else {
+            // 否则，判断元素是否有子节点
+            // 创建一个标志变量，初始值为false
+            // let hasChild = false;
+            // // 再次遍历原数组，查找是否有其他元素的parent_id等于当前元素的target_id
+            // for (let other of arr) {
+            //     if (other.parent_id === item.target_id) {
+            //         // 如果找到了，就将标志变量设为true，并跳出循环
+
+            //         hasChild = true;
+            //         break;
+            //     }
+            // }
+            // // 如果标志变量仍为false，说明当前元素没有子节点，就不加入结果数组
+            // // 如果标志变量为true，说明当前元素有子节点，就加入结果数组
+            // if (hasChild) {
+            //     result.push(item);
+            // }
+
+            if (arr.find(elem => elem.parent_id === item.target_id) && hasNonFolderChildren(item,arr)) {
+                result.push(item);
+            }
+        }
+    }
+    // 返回结果数组
+    return result;
+}
+
+// 将key-value的tree data转换为arco tree需要的children连接的数据
+export const buildTree = (data, renderName) => {
+    if (isArray(data)) {
+        return data;
+    }
+    let _data = Object.values(data);
+    let root = _data.filter(item => item.parent_id === "0").map(item => {
+        if (renderName) {
+            return {
+                ...item,
+                render_name: item.target_type !== 'folder' ? `[${item.method}] ${item.name}` : `${item.name}`
+            }
+        } else {
+            return item;
+        }
+    });
+
+    const getChildren = (data, target_id, visited) => {
+        const children = data.filter(item => item.parent_id === target_id).map(item => {
+            if (renderName) {
+                return {
+                    ...item,
+                    render_name: item.target_type !== 'folder' ? `[${item.method}] ${item.name}` : `${item.name}`
+                }
+            } else {
+                return item;
+            }
+        });
+        children.forEach(child => {
+            if (child.target_type !== "folder") return;
+
+            if (!visited.includes(child.target_id)) {
+                visited.push(child.target_id);
+                child.children = getChildren(data, child.target_id, visited);
+            }
+
+        });
+
+        return children;
+    }
+
+    let visitedNodes = [];
+    for (let i = 0; i < root.length; i++) {
+        root[i].children = getChildren(_data, root[i].target_id, visitedNodes);
+    }
+
+    return root;
+}
+
+// 返回所有树形children节点的key
+export const getAllKeys = (data, check, field = 'key') => {
+    if (!isArray(data) || !(data.length > 0) || !check) {
+        return [];
+    }
+    // 定义一个空数组，用来存放key
+    let keys = [];
+    // 定义一个递归函数，用来遍历树形数据的每个节点
+    const traverse = (node) => {
+        // 如果节点有key属性，就将其添加到数组中
+        if (node[field]) {
+            keys.push(node[field]);
+        }
+        // 如果节点有children属性，就遍历其子节点
+        if (node.children) {
+            for (let child of node.children) {
+                traverse(child);
+            }
+        }
+    }
+    // 调用递归函数，从根节点开始遍历
+    for (let i = 0; i < data.length; i++) {
+        traverse(data[i]);
+    }
+    // 返回数组
+    return keys;
+};
+
+// 模糊搜索arco tree结构数据
+export const arcoTreeSearch = (data, searchTerm) => {
+    const loop = (data) => {
+        const result = [];
+        data.forEach((item) => {
+            if (item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+                result.push({ ...item });
+            } else if (item.children) {
+                const filterData = loop(item.children);
+
+                if (filterData.length) {
+                    result.push({ ...item, children: filterData });
+                }
+            }
+        });
+        return result;
+    };
+
+    return loop(data);
+};
+
+// 判断B数组内是否完全包含A数组内的所有元素(基本类型)
+export const isArrayFullyContained = (A, B) => {
+    for (let i = 0; i < A.length; i++) {
+        if (B.indexOf(A[i]) === -1) {
+            return false;
+        }
+    }
+    return true;
+};
+
+// 检查环境名是否需要tooltip展示
+export const checkNameTooltip = (name, size = 100) => {
+    const span = document.createElement('span');
+    span.innerText = name;
+
+    document.body.appendChild(span);
+
+    let showTooltip = span.offsetWidth > size;
+
+    document.body.removeChild(span);
+
+    return showTooltip;
+}
+
 
 export default {
     copyStringToClipboard, // 复制字符串
@@ -1415,5 +1709,15 @@ export default {
     customizer,
     PhoneReg,
     parseModelToJsonSchema,
-    FotmatTimeStamp
+    FotmatTimeStamp,
+    array2ArcoTree,
+    filterArcoTree,
+    findPathForKey, // 根据json的key生成key所在的路径
+    exportJsonFile, // 将json数据导出为json文件
+    removeEmptyFolders, // 移除空文件夹
+    buildTree, // 将key-value的tree data转换为arco tree需要的children连接的数据
+    getAllKeys, // 返回所有树形节点的key
+    arcoTreeSearch, // 模糊搜索arco tree结构数据
+    isArrayFullyContained, // 判断B数组内是否完全包含A数组内的所有元素(基本类型)
+    checkNameTooltip, // 检查名称是否需要tooltip展示
 };

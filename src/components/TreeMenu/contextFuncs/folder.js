@@ -34,7 +34,7 @@ export const modifyFolder = async ({ target_id }, props) => {
     const from = props?.from;
     if (from == 'mock') {
         fetchMockFolderDetail({
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_id,
         }).subscribe({
             next(res) {
@@ -44,7 +44,7 @@ export const modifyFolder = async ({ target_id }, props) => {
         })
     } else {
         fetchFolderDetail({
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_id,
         }).subscribe({
             next(res) {

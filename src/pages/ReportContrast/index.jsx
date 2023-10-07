@@ -20,7 +20,7 @@ const ReportContrast = () => {
 
     useEffect(() => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             report_ids: JSON.parse(contrast).map(item => item.report_id)
         };
         fetchContrastReport(params).subscribe({

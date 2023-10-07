@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { cloneDeep, isString } from 'lodash';
 import { global$ } from '@hooks/useGlobal/global';
 import { DelApiRequest, fetchDeleteApi } from '@services/apis';
-import { pushTask } from '@asyncTasks/index';
 import Bus from '@utils/eventBus';
 import { Message } from 'adesign-react';
 
@@ -120,7 +119,7 @@ export const deleteMultiData = async (target_id) => {
                     payload: {
                         page: 1,
                         size: 100,
-                        team_id: localStorage.getItem('team_id')
+                        team_id: sessionStorage.getItem('team_id')
                     },
                 });
             } else {
@@ -128,13 +127,7 @@ export const deleteMultiData = async (target_id) => {
             }
         },
         error (err) {
-            pushTask({
-                task_id: targetIds.toString(),
-                action: 'DELETE',
-                model: 'API',
-                payload: deleteIds,
-                project_id,
-            });
+           
         },
     });
 };

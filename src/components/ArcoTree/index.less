@@ -1,0 +1,108 @@
+.arco-tree {
+  .arco-tree-node-switcher {
+    margin-right: 6px;
+    width: auto;
+    height: 30px;
+  }
+
+  .adesign-to-arco-icon {
+    stroke-width: 0px !important;
+    fill: currentColor;
+  }
+
+  .arco-tree-node-title-group {
+    display: flex;
+    align-items: center;
+
+    .arco-tree-node-title-group-text {
+      font-size: 12px;
+      flex: 1;
+      text-align: left;
+      width: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .arco-tree-node {
+    font-size: 12px;
+    color: var(--font-3);
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 5px;
+
+    .arco-tree-node-extra {
+      display: none;
+      height: 30px;
+      align-items: center;
+      margin-left: 8px;
+
+      .arco-tree-node-extra-more {
+        padding: 0 8px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+    }
+    .arco-tree-node-title{
+      line-height: 30px;
+      padding: 0;
+    }
+    .arco-tree-node-title:hover {
+      background-color: var(--border-line);
+      color: var(--font-1);
+    }
+
+    &:hover {
+      background-color: var(--border-line);
+      color: var(--font-1);
+
+      .arco-tree-node-extra {
+        display: flex;
+      }
+    }
+  }
+
+  .arco-tree-node-selected {
+    background-color: var(--border-line);
+
+    .arco-tree-node-title {
+      color: var(--font-1);
+    }
+  }
+}
+
+.arco-menu.arco-tree-right-menu-list {
+  background-color: var(--bg);
+  backdrop-filter: blur(20px);
+  position: relative;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: none;
+  box-shadow: none;
+
+  .arco-menu-inner {
+    padding: 8px;
+    padding-bottom: 4px;
+  }
+
+  .arco-menu-item {
+    min-width: 88px;
+    height: 32px;
+    padding: 0 12px;
+    margin-bottom: 4px;
+    display: flex;
+    font-size: var(--size-12px);
+    align-items: center;
+    justify-content: space-between;
+    color: var(--content-color-primary);
+    cursor: pointer;
+    border-radius: 2px;
+    background-color: transparent;
+
+    &:hover {
+      background-color: var(--module);
+    }
+  }
+}

@@ -52,7 +52,7 @@ const OracleDbInfo = (props) => {
     useEffect(() => {
         if (env_id > 0) {
             const params = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 env_id,
             };
 

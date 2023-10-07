@@ -59,7 +59,6 @@ const HeaderLeft = () => {
             <Tooltip content={t('tooltip.company_admin')}>
             {theme === 'dark' ? <SvgLogo1 className="logo" onClick={toAdmin} /> : <SvgLogo2 className="logo" onClick={toAdmin} />}
             </Tooltip>
-
             <TeamProject />
 
         </div>

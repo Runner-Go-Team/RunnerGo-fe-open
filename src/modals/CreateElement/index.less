@@ -1,0 +1,36 @@
+.runnerGo-element-create-modal {
+  width: 735px;
+  height: 500px;
+  .element-attr-list {
+    max-height: 13vh;
+    overflow: auto;
+    .element-attr-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      width: 639px;
+      .info,
+      .operations {
+        display: flex;
+        align-items: center;
+      }
+      .info{
+        flex: 1;
+        .arco-select,
+        .arco-input{
+          margin-left: 10px;
+          flex-shrink: 0;
+        }
+        .arco-input-inner-wrapper{
+         padding-left: 0; 
+        }
+      }
+      .operations {
+        svg {
+          margin-left: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

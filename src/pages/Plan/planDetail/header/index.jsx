@@ -99,7 +99,7 @@ const DetailHeader = (props) => {
     const getEmailList = () => {
         const query = {
             plan_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         }
         fetchEmailList(query).subscribe({
             next: (res) => {
@@ -111,7 +111,7 @@ const DetailHeader = (props) => {
 
     const getReportDetail = () => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_id,
         };
 
@@ -158,7 +158,7 @@ const DetailHeader = (props) => {
             return;
         }
         let params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_name: planName,
             remark: planDesc,
             task_type: planDetail.task_type,

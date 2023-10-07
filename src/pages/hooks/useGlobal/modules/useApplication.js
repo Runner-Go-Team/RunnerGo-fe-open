@@ -210,7 +210,7 @@ const useProject = (props) => {
                 Bus.$emit('getTeamList');
                 Bus.$emit('initWebSocket');
                 Bus.$emit('reloadOpens');
-                const team_id = localStorage.getItem('team_id');
+                const team_id = sessionStorage.getItem('team_id');
                 return of(team_id).pipe(
                     // concatMap(() => getUserTeamList$().pipe(tap(handleInitTeams))),
                     // concatMap(() => getIndexPage$().pipe(tap(handleInitIndex))),
@@ -264,7 +264,7 @@ const useProject = (props) => {
     // 获取当前团队成员列表
     const getTeamMemberList = () => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         }
         fetchTeamMemberList(query)
             .pipe(
@@ -306,7 +306,7 @@ const useProject = (props) => {
     // 获取当前运行中的计划
     const getRunningPlan = () => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             page: 1,
             size: 5
         };
@@ -326,7 +326,7 @@ const useProject = (props) => {
             tap((res) => {
                 const { data: { settings } } = res;
                 const team_id = settings.current_team_id;
-                localStorage.setItem('team_id', team_id);
+                sessionStorage.setItem('team_id', team_id);
                 dispatch({
                     type: 'user/updateTeamId',
                     payload: team_id
@@ -366,7 +366,7 @@ const useProject = (props) => {
         const params = {
             page,
             size,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         };
         fetchApiList(params).subscribe({
             next: ({ data: { targets, total }, code }) => {

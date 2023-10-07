@@ -5,7 +5,7 @@ export const getAutoPlanList$ = (plan_id) => {
     let params = {
         page: 1,
         size: 100,
-        team_id: localStorage.getItem('team_id'),
+        team_id: sessionStorage.getItem('team_id'),
         source: 3,
         plan_id,
     };

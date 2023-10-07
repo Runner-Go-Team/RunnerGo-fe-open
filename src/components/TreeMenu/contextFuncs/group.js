@@ -33,7 +33,7 @@ export const modifyFolder = async ({target_id}, props, a, from) => {
         'auto_plan': 3
     }
     fetchGroupDetail({
-        team_id: localStorage.getItem('team_id'),
+        team_id: sessionStorage.getItem('team_id'),
         target_id,
         source: from_list[from]
     }).subscribe({

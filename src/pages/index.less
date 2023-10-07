@@ -30,11 +30,11 @@
     .main-page {
       flex: 1;
       border-radius: var(--border-radius-default);
-      overflow-y: scroll;
+      overflow-y: auto;
       // overflow: hidden;
       max-height: calc(100vh - 50px);
       height: calc(100vh - 50px);
-      padding-right: 10px;
+      padding-right: 2px;
       padding-left: 10px;
     }
 
@@ -51,7 +51,11 @@
     text-overflow: ellipsis;
   }
 }
-
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 img {
   object-fit: cover;
 }
@@ -395,4 +399,14 @@ svg {
   border-radius: 5px;
   color: var(--common-white);
   background: var(--theme-color);
+}
+.resizebox-ustom-trigger-vertical{
+  width: 2px;
+  height: 100%;
+  background-color: transparent;
+}
+.resizebox-ustom-trigger-vertical:hover{
+  width: 2px;
+  height: 100%;
+  background-color: var(--theme-color);
 }

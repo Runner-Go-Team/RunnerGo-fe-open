@@ -78,7 +78,7 @@ const PlanList = () => {
 
     const copyPlan = (plan_id) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_id,
         };
         fetchCopyPlan(params).subscribe({
@@ -259,7 +259,7 @@ const PlanList = () => {
         const query = {
             page: currentPage,
             size: pageSize,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             keyword,
             start_time_sec: startTime,
             end_time_sec: endTime,

@@ -86,7 +86,8 @@
         "customer": "Customer service",
         "offline": "Off-line team",
         "teamNum": "Number of team members",
-        "homePage": "Personal homepage"
+        "homePage": "Personal homepage",
+        "privateCanNotInvite": "Private teams cannot invite members"
     },
     "leftBar": {
         "index": "Home",
@@ -108,7 +109,13 @@
         "language": "language",
         "theme": "theme",
         "env": "Env",
-        "mockservice": "Mock server"
+        "mockservice": "Mock server",
+        "mgmt": {
+            "element": "Element Mgmt",
+            "scene": "Scene Mgmt",
+            "plan": "Plan Mgmt",
+            "report": "Report Mgmt"
+        }
     },
     "placeholder": {
         "searchApis": "Search for Directory/API",
@@ -194,7 +201,11 @@
         "wsName": "Please input a websocket name",
         "wsUrl": "Please enter the WebSocket request or path",
         "json_path": "JSON Path Expression, e.g., $.data.info.name",
-        "json_path_doc": "JSON Path Documentation"
+        "json_path_doc": "JSON Path Documentation",
+        "nameFilter": "Filter by name",
+        "inputVarName": "Please input a var name",
+        "intervalTime": "Interval time",
+        "runNumMax": "Number of executions (maximum of 100)"
     },
     "btn": {
         "view": "View",
@@ -213,7 +224,7 @@
         "switchLanguage": "Chinese English switch",
         "notifyEmail": "Notify",
         "notif": "Notify",
-        "batch_notif":"Batch Nofify",
+        "batch_notif": "Batch Nofify",
         "breakTask": "Abort Task",
         "done": "Done",
         "sending": "Sending...",
@@ -258,7 +269,10 @@
         "asyncApipostApi": "Async Apipost Api",
         "connect": "Connect",
         "stopConnect": "Disconnect",
-        "connecting": "Connecting..."
+        "connecting": "Connecting...",
+        "connectAndSave": "Connect And Save",
+        "rerun": "Rerun",
+        "copyCode": "Copy Code"
     },
     "message": {
         "saveSuccess": "Saving succeeded!",
@@ -425,7 +439,15 @@
         "didNotSelectMember": "You have not selected any members!",
         "disableSceneSuccess": "Disable Scene Success",
         "enableSceneSuccess": "Enable Scene Success",
-        "weightTotalErr": "The total weight of the machine must be equal to 100!"
+        "weightTotalErr": "The total weight of the machine must be equal to 100!",
+        "extractSuccess": "Extract Success!",
+        "exportSuccess": "Export Success!!",
+        "onlyExtractKey": "Only Can Extract JSON Key",
+        "runningReportCanNotExport": "Running report cannot be exported!",
+        "plsInputCode": "Please enter the code",
+        "selectEnvBeforeSave": "Please select an environment to save first",
+        "selectRepeatSyncData": "The synchronized data has already been selected. Selecting this item will cancel the original item",
+        "sceneSelectEnvEmpty": "There is no environment selected for this scene. Please select the environment in the scene and proceed"
     },
     "modal": {
         "globalCookieTip": "The global cookie in the enabled state will automatically be brought to every interface under the team",
@@ -541,7 +563,66 @@
         "teamRole": "Team role",
         "function": "Function",
         "functionName": "Function name",
-        "remark": "Remark"
+        "remark": "Remark",
+        "permissionDenied": "You currently do not have permission for this operation",
+        "setTagName": "Set Tag Name",
+        "tagName": "Tag Name",
+        "deleteTagContent": "Are you sure to delete Tag",
+        "restoreHistory": "Restore History",
+        "restoreHistoryContent": "A new record will be generated using the history content of {{time}}, and the original modification history will not be affected. Are you sure to restore?",
+        "restoreThisRecord": "Restore this record",
+        "preRecord": "previous record",
+        "curRecord": "current record",
+        "earlierRecords": "earlier records",
+        "thisRecord": "this record",
+        "noDiff": "no diff",
+        "sync": "Sync",
+        "syncType": "Sync Type",
+        "syncTypePush": "Push",
+        "syncTypePull": "Pull",
+        "selectDataSource": "Select Data Source",
+        "checkAll": "Check All",
+        "syncConfig": "Sync Config",
+        "baseInfo": "Base Info",
+        "requestParam": "Request Param",
+        "requestMethod": "Request Method",
+        "requestAuth": "Auth",
+        "requestAssert": "Assert",
+        "requestRegex": "Regex",
+        "requestConfig": "Api Config",
+        "requestPreScript": "Pre Script",
+        "syncSceneTip": "When synchronizing a scenario, all use cases and test objects in that scenario will be synchronized. Please operate with caution!",
+        "exportData": "Export Data",
+        "selectedNum": "{{num}} items selected",
+        "exportType": "Export Dimension",
+        "sceneExportTypeList": {
+            "1": "Scene",
+            "2": "Case",
+            "3": "Scene And Case"
+        },
+        "sceneApiBatchModal": {
+            "nodeName": "Name",
+            "method": "Method",
+            "url": "URL",
+            "status": "Status",
+            "statusList": {
+                "0": "Normal",
+                "1": "Disabled"
+            },
+            "quoteApisName": "Quote Api Name",
+            "syncApisTitle": "Sync Api Name",
+            "handleType": "Operate Type",
+            "push": "Push",
+            "pull": "Pull",
+            "selectData": "Select Data",
+            "disEnableTitle": "Batch Disabled/Enabled",
+            "disabled": "Disabled",
+            "enabled": "Enabled",
+            "select": "Select",
+            "batchDeleteTitle": "Batch Delete",
+            "changeServiceTitle": "Batch Change Service",
+            "selectService": "Select Service"
+        }
     },
     "column": {
         "teamManage": {
@@ -686,6 +767,9 @@
             "52": "Create Dubbo",
             "53": "Modify Dubbo",
             "54": "Delete Dubbo",
+            "55": "Create Api Case",
+            "56": "Modify Api Case",
+            "57": "Run One Click Stress",
             "101": "Create mock folder",
             "102": "Create mock interface",
             "103": "Modify mock folder",
@@ -708,6 +792,9 @@
         "auth": "Authentication",
         "assert": "Assertion",
         "setting": "API settings",
+        "preScript": "Pre Script",
+        "oneClickStressTest": "One click pressure measurement",
+        "historyReport": "History Report",
         "assertBody": "Assertion body",
         "condition": "condition",
         "regular": "Association extraction",
@@ -783,6 +870,8 @@
         ],
         "copyApi": "Clone Api",
         "deleteApi": "Delete Api",
+        "exportApi": "Export Api",
+        "exportFolder": "Export Folder",
         "editFolder": "Edit Directory",
         "deleteFolder": "Delete Directory",
         "createHttp": "New HTTP Request",
@@ -847,6 +936,14 @@
         "connectTest": "Connection testing",
         "eventName": "Event name",
         "eventDesc": "Event desc",
+        "sql": {
+            "tabList": {
+                "0": "Edit SQL",
+                "1": "Assertion",
+                "2": "Regex",
+                "3": "DataBase Info"
+            }
+        },
         "tcp": {
             "sendMessage": "send message",
             "config": "set up",
@@ -898,7 +995,53 @@
                 "3": "Event",
                 "4": "Config"
             }
-        }
+        },
+        "dubbo": {
+            "reqTab": {
+                "0": "Base Param",
+                "1": "Assertion",
+                "2": "Regex"
+            },
+            "registerName": "Register name",
+            "registerAddress": "Register address",
+            "version": "Version"
+        },
+        "versionManage": "Version Manage",
+        "markTagVersion": "Tag version",
+        "mySelf": "MySelf",
+        "markedTag": "Marked",
+        "baseInfo": "Basic information",
+        "cookieParam": "Request Parameter Cookie",
+        "headerParam": "Request Parameter Header",
+        "queryParam": "Request Parameter Query",
+        "bodyParam": "Request parameter Body",
+        "authParam": "Request parameter Auth",
+        "assertParam": "Assertion",
+        "regexParam": "Association extraction",
+        "httpSetParam": "Api settings",
+        "baseParam": "Base Params",
+        "config": "Config",
+        "sqlString": "SQL",
+        "databaseInfo": "Database Info",
+        "requestParam": "Request Param",
+        "historyCompare": "History Compare",
+        "editTag": "Edit Tag",
+        "deleteTag": "Delete Tag",
+        "extract": "Extract Key",
+        "export": "Export",
+        "execResponse": "Exec Response",
+        "saveToEnv": "Save To Env",
+        "saveCase": "Save Case",
+        "saveToCase": "Save To Case",
+        "updateToApi": "Update To Api",
+        "updateToCase": "Update To Case",
+        "runConfig": "Run Config",
+        "uploadDataFile": "Upload Data File",
+        "apiCase": "Api Case"
+    },
+    "elements":{
+        "createElement":"Create New Element",
+        "createScene":"Create New Scene"
     },
     "scene": {
         "fullScreen": "Full screen",
@@ -908,6 +1051,7 @@
         "createScene": "New Scene",
         "editScene": "Edit Scene",
         "deleteScene": "Delete Scene",
+        "exportScene": "Export Scene",
         "cloneScene": "Clone Scene",
         "disableScene": "Disable Scene",
         "enableScene": "Enable Scene",
@@ -952,6 +1096,8 @@
         },
         "editApi": "Edit",
         "deleteApi": "Delete",
+        "disableApi": "Disable",
+        "startApi": "Start",
         "copyApi": "Copy",
         "importApiTitle": "API AddIt",
         "importSqlTitle": "SQL AddIt",
@@ -965,7 +1111,15 @@
         "fileCnFormat": "When uploading CSV and txt files containing Chinese characters, the file format needs to be changed to UTF-8 encoding",
         "runTime": "execution time",
         "preCondition": "Preconditions",
-        "introduce": "introduce"
+        "introduce": "introduce",
+        "exportOrImport": "Import/Export",
+        "batchOperate": "Batch Operate",
+        "batchList": {
+            "0": "Disable/Enable",
+            "1": "Async Test",
+            "2": "Change Services",
+            "3": "Delete"
+        }
     },
     "plan": {
         "planId": "Plan ID",
@@ -992,6 +1146,7 @@
         "createdBy": "Created by",
         "notRun": "Not running",
         "running": "Running",
+        "expired": "Expired",
         "preinstall": "Default",
         "group": "grouping",
         "createScene": "New Scene",
@@ -1037,7 +1192,8 @@
             "0": "once",
             "1": "every day",
             "2": "weekly",
-            "3": "monthly"
+            "3": "monthly",
+            "4": "fixed time interval"
         },
         "startTaskTime": "Start execution time",
         "explain": "After saving the configuration and starting to run, it will automatically run at the specified time. The effective time range of this scheduled task is 365 days after setting",
@@ -1064,7 +1220,10 @@
         },
         "switchDuration": "Switch to Round",
         "switchRoundNum": "Switch to duration",
-        "echartEmptyShow": "Unable to generate ladder diagram due to incomplete configuration"
+        "echartEmptyShow": "Unable to generate ladder diagram due to incomplete configuration",
+        "runNum": "Run Num",
+        "minute": "Minute",
+        "hour": "Hour"
     },
     "report": {
         "done": "Completed",
@@ -1133,7 +1292,9 @@
         "unitMs": "Unit (ms)",
         "unitNumber": "Unit (number)",
         "machineName": "Machine Name",
-        "config": "Config"
+        "config": "Config",
+        "export": "Export",
+        "cantDelete": "There is a running report and cannot be deleted!"
     },
     "tooltip": {
         "start": "Run",
@@ -1141,7 +1302,10 @@
         "view": "See",
         "copy": "Copy",
         "delete": "Delete",
-        "company_admin": "Enterprise Admin Dashboard"
+        "company_admin": "Enterprise Admin Dashboard",
+        "exportReport": "Export Report",
+        "timedPlanExpire": "The scheduled task for this plan has expired",
+        "preScriptInputTips": "The execution result of the following code will be assigned to this variable, and {{variable name}} will be used when passing parameters on the interface"
     },
     "machine": {
         "serverType": {
@@ -1306,7 +1470,8 @@
         "empty": "No Data",
         "envManage": "Env Manage",
         "serviceTabExplain": "If interfaces in the same environment require different pre URLs or server addresses, multiple services can be created to meet the requirements. When switching environments, the services used by the interface will also switch to the corresponding services in the new environment",
-        "dbTabExplain": "If SQL in the same environment needs to connect to different databases, multiple databases can be created to meet the requirements. When switching environments, the database used by SQL will also switch to the corresponding database in the new environment"
+        "dbTabExplain": "If SQL in the same environment needs to connect to different databases, multiple databases can be created to meet the requirements. When switching environments, the database used by SQL will also switch to the corresponding database in the new environment",
+        "emptyEnv": "No Env"
     },
     "mock": {
         "createMock": "Create mock",

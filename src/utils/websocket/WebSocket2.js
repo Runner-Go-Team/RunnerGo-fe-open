@@ -151,7 +151,7 @@ class WebSocket2 {
           route_url: "start_heartbeat",
           param: JSON.stringify({
             token: getCookie('token'),
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
           })
         }));
         that.PingStart();

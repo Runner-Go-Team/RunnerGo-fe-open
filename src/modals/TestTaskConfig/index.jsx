@@ -51,7 +51,7 @@ const TestTaskConfig = (props) => {
         if (plan_id !== 0) {
             const params = {
                 plan_id,
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
             };
             fetchGetConfig(params).subscribe({
                 next: (res) => {
@@ -118,7 +118,7 @@ const TestTaskConfig = (props) => {
         }
         const params = {
             plan_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             task_type: taskType,
             task_mode: taskMode,
             scene_run_order: sceneRunOrder,

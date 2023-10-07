@@ -1,0 +1,233 @@
+.runngerGo-ui-plan-task-modal {
+
+    .apipost-modal-container {
+        width: 458px;
+    }
+
+    .apipost-modal-body {
+        background-color: var(--module);
+        margin-bottom: 80px;
+    }
+
+    .apipost-modal-close {
+        display: none;
+    }
+
+    .top {
+        display: flex;
+        justify-content: space-between;
+        margin: 30px 0;
+
+        .title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--font-1);
+        }
+
+        .close-btn {
+            width: 24px;
+            height: 24px;
+            //   background-color: var(--theme-color);
+            border-radius: 3px;
+            color: var(--font-1);
+            margin-top: -5px;
+            svg {
+                width: 13px;
+                height: 13px;
+
+                fill: var(--font-1);
+            }
+
+            &:hover {
+                background-color: var(--color-fill-2);
+            }
+        }
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+
+        .item {
+            display: flex;
+            margin-bottom: 18px;
+
+            .label {
+                margin-top: 2px;
+            }
+        }
+
+        .time-select {
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+
+            .explain {
+                display: flex;
+                align-items: center;
+                width: 100%;
+
+                &-left {
+                    display: flex;
+                    align-items: center;
+
+                    p {
+                        margin-right: 6px;
+                    }
+
+                    svg {
+                        cursor: pointer;
+                    }
+                }
+
+                &-right {
+                    background-color: var(--bg);
+                    width: 168px;
+                    height: 32px;
+                    border: none;
+                    border-radius: 3px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 6px;
+                    padding-right: 0;
+                    box-sizing: border-box;
+                    margin-right: 20px;
+                    margin-left: 6px;
+                    white-space: nowrap;
+
+                    .time-item {
+                        display: flex;
+                        flex-direction: column !important;
+                    }
+
+
+                    .arco-select {
+                        height: 30px;
+                        background-color: var(--bg);
+                        border-color: transparent;
+                        margin-left: 10px;
+
+                        .arco-select-view-text {
+                            font-size: 14px;
+                        }
+
+                        .arco-select-view-suffix {
+                            svg {
+                                width: 8px;
+                                height: 8px;
+                                min-width: 8px;
+                                fill: var(--font-1);
+                            }
+                        }
+                    }
+                }
+            }
+
+            .fixed-time-interval {
+                display: flex;
+                flex-direction: column;
+                gap: 10px 0;
+                margin-top: 15px;
+
+                .label {
+                    font-size: 14px;
+                }
+
+                .item {
+                    display: flex;
+                    align-items: center;
+
+                    .arco-input {
+                        background-color: var(--bg);
+                        height: 30px;
+                        flex: 1;
+                    }
+
+                    .time-input {
+                        width: 114px;
+                    }
+
+                    .arco-select {
+                        margin: 0 10px;
+                        width: 74px;
+
+                        border-radius: 5px;
+
+                        .arco-select-view {
+                            border-radius: 5px;
+                        }
+                    }
+                }
+
+                .time-explain {
+                    line-height: 14px;
+                    margin-bottom: 20px;
+                }
+            }
+
+
+            .select-date {
+                display: flex;
+                margin-top: 15px;
+                width: 100%;
+
+                &-left {
+                    background-color: var(--bg-1);
+                    width: 146px;
+                    height: 32px;
+                    border: 1px solid var(--bg-4);
+                    border-radius: 3px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 6px;
+                    padding-right: 0;
+                    box-sizing: border-box;
+                    margin-right: 20px;
+
+                    .arco-select {
+                        height: 30px;
+                        background-color: var(--bg-1);
+                        border-color: transparent;
+
+                        .arco-select-view-text {
+                            font-size: 14px;
+                        }
+
+                        .arco-select-view-suffix {
+                            svg {
+                                width: 8px;
+                                height: 8px;
+                                min-width: 8px;
+                                fill: var(--font-1);
+                            }
+                        }
+                    }
+                }
+
+                &-right {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+            }
+
+            .time-explain {
+                white-space: normal !important;
+                margin-top: 20px;
+            }
+        }
+    }
+
+    .flex-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .apipost-radio-wrapper {
+            margin-bottom: 8px;
+        }
+    }
+}

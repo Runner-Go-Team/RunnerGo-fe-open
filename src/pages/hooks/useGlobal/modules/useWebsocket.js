@@ -1,24 +1,20 @@
 /* eslint-disable no-await-in-loop */
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Bus from '@utils/eventBus';
-import { isLogin, onlineStatus } from '@utils/common';
-import WebSocket2 from '@utils/websocket/WebSocket2';
 import { useTranslation } from 'react-i18next';
-import { Message } from 'adesign-react';
+import { Message } from '@arco-design/web-react';
 import { getUserConfig$ } from '@rxUtils/user';
 import { global$ } from '@hooks/useGlobal/global';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { RD_ADMIN_URL } from '@config';
-
-
+import { isString } from 'lodash';
 
 const useWebsocket = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-    const runningPlan = useSelector((store) => store.dashboard.runningPlan);
-
+    const location = useLocation();
 
     // 处理协作推送的消息
     const handleWebSocket = (res) => {
@@ -38,9 +34,9 @@ const useWebsocket = () => {
 
         if (code !== 0) {
             if (i18n.language === 'en') {
-                Message('error', em);
+                Message.error(em);
             } else {
-                Message('error', et);
+                Message.error(et);
             }
             return;
         }
@@ -102,14 +98,6 @@ const useWebsocket = () => {
                 type: 'machine/updateMachineList',
                 payload: data
             })
-        } else if (route_url === 'running_plan_count') {
-            const { run_plan_num } = data;
-            if (run_plan_num !== (runningPlan && runningPlan.run_plan_num)) {
-                dispatch({
-                    type: 'dashboard/updateRunningPlan',
-                    payload: data
-                })
-            }
         } else if (route_url === 'disband_team_notice') {
             let setIntervalList = window.setIntervalList;
 
@@ -146,7 +134,7 @@ const useWebsocket = () => {
             localStorage.removeItem("package_info");
             // localStorage.clear();
             window.location.href = `${RD_ADMIN_URL}/#/login`;
-            Message('error', t('message.userLogout'));
+            Message.error(t('message.userLogout'));
         } else if (route_url === 'auto_plan_detail') {
             dispatch({
                 type: 'auto_plan/updateAutoPlanDetail',
@@ -162,6 +150,22 @@ const useWebsocket = () => {
                 type: 'scene/updateSceneGlobalParam',
                 payload: data
             })
+        } else if (route_url === 'ui_engine_result') {
+            console.log(location.pathname, "location.pathname",data);
+            // 报告结果
+            if (data?.is_report) {
+                if (location.pathname.includes('/uiTestAuto/report') && isString(data?.topic)) {
+                    Bus.$emit('element/getReportDetails', { report_id: data.topic })
+                    if(data.end){
+                        Bus.$emit('planList/debounceGetReportList')
+                    }
+                }
+            } else {
+                dispatch({
+                    type: 'uitest_auto/updateSceneRunResult',
+                    payload: data
+                })
+            }
         }
 
     };
@@ -175,13 +179,13 @@ const useWebsocket = () => {
     }
 
     useEffect(() => {
-        Bus.$on('websocket_worker', handleWebSocket, [runningPlan]);
+        Bus.$on('websocket_worker', handleWebSocket);
         Bus.$on('websocket_change_state', handleWsState);
         return () => {
             Bus.$off('websocket_worker');
             Bus.$off('websocket_change_state');
         };
-    }, [runningPlan]);
+    }, [location.pathname]);
 };
 
 export default useWebsocket;

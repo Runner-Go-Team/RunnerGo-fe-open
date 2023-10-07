@@ -21,7 +21,7 @@ const DebugApi = (props) => {
     useEffect(() => {
         if (eventId.length > 0 && caseId.length > 0) {
             const params = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 case_id: caseId,
                 event_id: eventId
             };

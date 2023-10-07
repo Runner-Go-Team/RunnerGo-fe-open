@@ -43,7 +43,7 @@ const TeamList = (props) => {
 
     const getUserInfo = () => {
         return fetchDashBoardInfo({
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         }).pipe((res) => {
             return res;
         });
@@ -65,7 +65,7 @@ const TeamList = (props) => {
 
     const deleteTeam = (data, confirmTeam, userId) => {
         const myTeam = Object.values(teamList).find(item => item.type === 1 && item.created_user_id === userId);
-        const team_id = localStorage.getItem('team_id');
+        const team_id = sessionStorage.getItem('team_id');
         Modal.confirm({
             title: t('modal.dissmissTeam'),
             content:
@@ -117,7 +117,7 @@ const TeamList = (props) => {
                             if (delete_id === team_id) {
                                 const settings = JSON.parse(localStorage.getItem('settings'));
                                 settings.settings.current_team_id = data.team_id;
-                                localStorage.setItem('team_id', data.team_id);
+                                sessionStorage.setItem('team_id', data.team_id);
                                 global$.next({
                                     action: 'INIT_APPLICATION',
                                 });
@@ -145,7 +145,7 @@ const TeamList = (props) => {
         // return;
         const { team_id: quit_id } = confirmTeam;
         // 判断当前团队是否是该用户的私有团队
-        const team_id = localStorage.getItem('team_id');
+        const team_id = sessionStorage.getItem('team_id');
         // const team_item = data.find(item => item.team_id === confirmTeam.team_id);
 
         // // 当前团队是私有团队, 并且团队的创建者是自己
@@ -168,7 +168,7 @@ const TeamList = (props) => {
                     if (quit_id === team_id) {
                         const settings = JSON.parse(localStorage.getItem('settings'));
                         settings.settings.current_team_id = data.team_id;
-                        localStorage.setItem('team_id', data.team_id);
+                        sessionStorage.setItem('team_id', data.team_id);
                         global$.next({
                             action: 'INIT_APPLICATION',
                         });

@@ -33,7 +33,7 @@ const EnvMenu = (props) => {
     const getEnvList = (default_open_first) => {
         const params = {
             name: keyWord,
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         };
 
         fetchEnvList(params).subscribe({
@@ -63,7 +63,7 @@ const EnvMenu = (props) => {
 
     const createEnv = () => {
         const params = {
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         };
 
         fetchCreateEnv(params).subscribe({
@@ -99,7 +99,7 @@ const EnvMenu = (props) => {
         const params = {
             env_id,
             env_name,
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         };
         fetchUpdateEnvName(params).subscribe({
             next: (res) => {
@@ -116,7 +116,7 @@ const EnvMenu = (props) => {
     const deleteEnv = (env_id) => {
         const params = {
             env_id,
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         };
 
         fetchDeleteEnv(params).subscribe({
@@ -134,7 +134,7 @@ const EnvMenu = (props) => {
     const cloneEnv = (env_id) => {
         const params = {
             env_id,
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         };
 
         fetchCloneEnv(params).subscribe({

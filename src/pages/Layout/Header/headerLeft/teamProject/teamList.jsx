@@ -37,7 +37,7 @@ const TeamList = (props) => {
   const uuid = localStorage.getItem('uuid');
 
   useEffect(() => {
-    setTeamId(parseInt(localStorage.getItem('team_id') || 0))
+    setTeamId(parseInt(sessionStorage.getItem('team_id') || 0))
   }, []);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const TeamList = (props) => {
         const { code } = res;
         if (code === 0) {
           dropRef?.current?.setPopupVisible(false)
-          localStorage.setItem('team_id', team_id);
+          sessionStorage.setItem('team_id', team_id);
           localStorage.removeItem('open_scene');
           dispatch({
             type: 'opens/coverOpenApis',

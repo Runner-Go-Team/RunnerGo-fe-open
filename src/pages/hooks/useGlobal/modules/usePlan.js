@@ -23,7 +23,7 @@ const usePlan = () => {
 
     const savePreConfig = ({ task_type, mode, cron_expr, mode_conf }, callback, plan_id) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             task_type,
             mode,
             cron_expr,
@@ -41,7 +41,7 @@ const usePlan = () => {
 
     const createPlan = ({ name, remark, taskType }, callback) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_name: name,
             remark,
             task_type: taskType
@@ -64,7 +64,7 @@ const usePlan = () => {
 
     const createTPlan = ({ name, remark }, callback) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_name: name,
             remark,
         };
@@ -80,7 +80,7 @@ const usePlan = () => {
 
     const deletePlan = (id, callback) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_id: id,
         };
         fetchDeletePlan(params).subscribe({
@@ -99,7 +99,7 @@ const usePlan = () => {
 
     const deleteTPlan = (id, callback) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_id: id,
         };
         fetchDeleteTPlan(params).subscribe({
@@ -168,7 +168,7 @@ const usePlan = () => {
         })
         const { target_id } = id;
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             scene_id: target_id,
         };
         fetchSceneFlowDetail(query).subscribe({
@@ -435,7 +435,7 @@ const usePlan = () => {
 
         const params = {
             scene_id: open_scene.target_id ? open_scene.target_id : open_scene.scene_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             version: 1,
             nodes: _nodes,
             edges,
@@ -479,7 +479,7 @@ const usePlan = () => {
         const params = {
             name,
             remark,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         };
         fetchCreatePlan(params).pipe(
             concatMap((res) => {
@@ -487,7 +487,7 @@ const usePlan = () => {
                 const query = {
                     page: 1,
                     size: 100,
-                    team_id: localStorage.getItem('team_id'),
+                    team_id: sessionStorage.getItem('team_id'),
                     source: 2,
                     plan_id,
                 };
@@ -628,7 +628,7 @@ const usePlan = () => {
         })
 
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_id: _ids,
             // source: 2,
         };
@@ -641,7 +641,7 @@ const usePlan = () => {
             // sort: parseInt(sort),
             // target_id: target_id,
             targets: targetList,
-            // team_id: localStorage.getItem('team_id'),
+            // team_id: sessionStorage.getItem('team_id'),
         };
         fetchChangeSort(params).subscribe({
             next: (res) => {
@@ -659,7 +659,7 @@ const usePlan = () => {
             'auto_plan': 3
         }
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_id,
             target_id_list: ids,
             source: from_list[from]
@@ -698,7 +698,7 @@ const usePlan = () => {
 
     const importSceneApi = (ids, from) => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_ids: ids,
         };
         fetchApiDetail(QueryString.stringify(query, { indices: false })).subscribe({
@@ -766,7 +766,7 @@ const usePlan = () => {
     const runPlan = (plan_id, callback) => {
         const params = {
             plan_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         };
         fetchRunPlan(params).subscribe({
             next: (res) => {
@@ -779,7 +779,7 @@ const usePlan = () => {
 
     const stopPlan = (plan_id, callback) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_ids: [plan_id],
         };
         fetchStopPlan(params).subscribe({

@@ -208,7 +208,7 @@ const ManualImport = (props, ref) => {
     })
 
     const params = {
-      team_id: localStorage.getItem('team_id'),
+      team_id: sessionStorage.getItem('team_id'),
       apis
     };
     fetchImportApi(params).subscribe({
@@ -220,7 +220,7 @@ const ManualImport = (props, ref) => {
             params: {
               page: 1,
               size: 100,
-              team_id: localStorage.getItem('team_id'),
+              team_id: sessionStorage.getItem('team_id'),
             }
           });
           onCancel();
@@ -432,7 +432,7 @@ const ManualImport = (props, ref) => {
         })
 
         const params = {
-          team_id: localStorage.getItem('team_id'),
+          team_id: sessionStorage.getItem('team_id'),
           apis: newApis
         };
         fetchImportApi(params).subscribe({
@@ -444,7 +444,7 @@ const ManualImport = (props, ref) => {
                 params: {
                   page: 1,
                   size: 100,
-                  team_id: localStorage.getItem('team_id'),
+                  team_id: sessionStorage.getItem('team_id'),
                 }
               });
               onCancel();

@@ -1,0 +1,40 @@
+.runnerGo-recycle-bin-modal{
+  width: 800px;
+  height: 554px;
+  .runnerGo-recycle-bin-modal-header{
+  
+  }
+  .recycle-bin-list{
+    margin-top: 13px;
+    height: 48vh;
+    overflow: auto;
+    max-height: 400px;
+    .recycle-bin-list-item{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      color: var(--font-1);
+      height: 40px;
+      border-radius: 5px;
+      &:hover{
+        background-color: var(--border-line);
+      }
+      svg{
+        font-size: 16px;
+      }
+      .right{
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        .delete{
+          color: rgba(207, 81, 94, 1);
+        }
+        .delete,
+        .recover{
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

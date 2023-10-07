@@ -799,7 +799,7 @@ const ReportContent = (props) => {
         const params = {
             report_id: report_id,
             plan_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             mode_conf: {
                 duration,
                 concurrency,
@@ -833,7 +833,7 @@ const ReportContent = (props) => {
         const params = {
             report_id: report_id,
             description: desc,
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         };
         fetchUpdateDesc(params).subscribe({
             next: (res) => {

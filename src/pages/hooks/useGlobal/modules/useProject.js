@@ -11,7 +11,6 @@ import { getShareList } from '@rxUtils/share';
 import { getSingleTestList$ } from '@rxUtils/runner/singleTest';
 import { getCombinedTestList$ } from '@rxUtils/runner/combinedTest';
 import { getReportList$ } from '@rxUtils/runner/testReports';
-import { pushTask } from '@asyncTasks/index';
 import { getLocalTargets } from '@busLogics/projects';
 import isObject from 'lodash/isObject';
 import Bus, { useEventBus } from '@utils/eventBus';
@@ -157,28 +156,10 @@ const useProject = () => {
                 if (resp?.code === 10000) {
                     await UserProjects.update(project, { is_push: 1 });
                 } else {
-                    pushTask(
-                        {
-                            task_id: project.id,
-                            action: 'SAVE',
-                            model: 'PROJECT',
-                            payload: project.id,
-                            project_id: 'NOT_NEED',
-                        },
-                        -1
-                    );
+                   
                 }
             } catch (error) {
-                pushTask(
-                    {
-                        task_id: project.id,
-                        action: 'SAVE',
-                        model: 'PROJECT',
-                        payload: project.id,
-                        project_id: 'NOT_NEED',
-                    },
-                    -1
-                );
+                
             }
         }
     };

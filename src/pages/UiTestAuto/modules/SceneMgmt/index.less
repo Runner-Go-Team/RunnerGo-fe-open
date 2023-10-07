@@ -1,0 +1,403 @@
+.runnerGo-scene-mgmt {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: var(--module);
+  overflow: hidden;
+  .runnerGo-scene-mgmt-left {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    min-width: 250px;
+    max-width: 350px;
+    height: 100%;
+    text-align: 'center';
+    padding: 16px !important;
+
+    .tree-header {
+
+      .other-tree-node {
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        flex-wrap: nowrap;
+        line-height: 1.5715;
+        font-size: 12px;
+        color: var(--font-3);
+        align-items: center;
+        padding-left: 8px;
+        padding-right: 5px;
+        border-radius: 5px;
+        &:hover {
+          background-color: var(--border-line);
+          color: var(--font-1);
+        }
+
+        .icon {
+          height: 30px;
+          margin-right: 8px;
+          display: flex;
+          align-items: center;
+        }
+
+        svg {
+          width: 14px;
+          height: 14px;
+          fill: currentColor;
+        }
+      }
+
+      .other-tree-node.active {
+        background-color: var(--border-line);
+        color: var(--font-1);
+      }
+
+      .arco-input-group-wrapper {
+        margin-bottom: 16px;
+      }
+
+      .operation-btns {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 34px;
+        width: 100%;
+        padding: 0 8px;
+        margin-bottom: 16px;
+
+        .line {
+          width: 1px;
+          height: 18px;
+          background-color: var(--border-line);
+        }
+
+        .operation-btn {
+          cursor: pointer;
+
+          .arco-icon-robot {
+            width: 16px;
+            height: 16px;
+            stroke-width: 0px;
+            fill: currentColor;
+          }
+
+          .arco-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+          }
+        }
+
+      }
+    }
+
+    .tree-footer {
+      margin-top: 16px;
+
+      .recycle-bin-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--border-line);
+        height: 30px;
+        padding: 12px;
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--font-1);
+        cursor: pointer;
+
+        .arco-icon {
+          margin-right: 8px;
+        }
+      }
+
+      .recycle-bin-btn:hover {
+        opacity: 0.8;
+      }
+    }
+
+    .arco-tree {
+      flex: 1;
+    }
+  }
+
+  &>.right {
+    flex: 1;
+    border-left: 2px solid var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    .ui-scene-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 48px;
+      border-radius: 2px;
+      padding: 8px;
+      border-bottom: 2px solid var(--bg);
+
+      .arco-input {
+        width: 216px;
+        background: var(--bg);
+      }
+
+      .ui-scene-header-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .description {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .arco-input {
+            width: 125px;
+            font-size: 12px;
+          }
+        }
+      }
+
+      .ui-scene-header-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .arco-btn {
+          border-radius: 3px;
+        }
+
+        .arco-btn>svg+span {
+          margin-left: 4px;
+        }
+
+        .scene-save-btn {
+          background: rgba(64, 82, 236, 0.3);
+          color: var(--theme-color);
+        }
+
+        .scene-debug-btn {
+          background: rgba(76, 203, 126, 1);
+          color: var(--common-white);
+          border-radius: 3px;
+          svg{
+          margin-right: 10px;
+          }
+        }
+
+        .plan-scene-debug-btn {
+          background: rgba(76, 203, 126, 0.1);
+          color: rgba(76, 203, 126, 1);
+        }
+
+        .plan-scene-debug-btn-run {
+          background: rgba(201, 53, 63, 1);
+        }
+      }
+    }
+
+    .ui-scene-body {
+      display: flex;
+      flex: 1;
+      background: var(--module);
+      width: 100%;
+      height: calc(100% - 48px);
+
+      .body-left {
+        flex: 1;
+        overflow: hidden;
+        .body-left-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 16px;
+          color: var(--font-1);
+          border-bottom: 1px solid var(--border-line);
+
+          .left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+
+          .title {
+            font-size: 16px;
+            font-weight: 400;
+          }
+
+          .more {
+            .arco-btn {
+              height: 30px;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+
+      .body-right {
+        width: 502px;
+        border-radius: 2px;
+        border-left: 2px solid var(--bg);
+        height: 100%;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+        .body-right-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid var(--border-line);
+          padding: 20px 16px;
+          & > .title{
+            font-size: 16px;
+            color: var(--font-1);
+            line-height: 22px;
+          }
+
+          svg {
+            font-size: 16px;
+            cursor: pointer;
+          }
+        }
+
+        .body-right-content {
+          height: 70vh;
+          overflow: auto;
+          padding: 16px;
+          flex: 1;
+        }
+
+        .body-right-footer {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-top: 1px solid var(--border-line);
+          padding: 10px 16px;
+          .arco-btn {
+            width: 100%;
+            height: 34px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.runnergo-ui-scene-running-config {
+  display: flex;
+  flex-direction: column;
+  width: 229px;
+  max-height: 200px;
+  border-radius: 5px;
+  border: 1px solid var(--border-line);
+  background: var(--module);
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--font-1);
+  gap: 6px;
+
+  .arco-input-group-wrapper {
+    width: 68px;
+
+    .arco-input {
+      width: 100%;
+    }
+  }
+
+  .arco-input {
+    width: 63px;
+    height: 26px;
+    border-radius: 2px;
+    background: var(--bg);
+    font-size: 12px;
+  }
+
+  .arco-select-view {
+    line-height: 26px;
+    height: 26px;
+  }
+
+  .card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .arco-radio-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .arco-radio {
+        margin-right: 0;
+        font-size: 12px;
+        font-weight: 400;
+        padding: 0;
+
+        .arco-radio-text {
+          margin-left: 4px;
+        }
+      }
+    }
+
+    .card-right {
+      width: 140px;
+    }
+  }
+
+  .arco-btn {
+    width: 56px;
+    height: 22px;
+    border-radius: 2px;
+    color: var(--font-1);
+    font-weight: 400;
+    font-size: 12px;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 6px;
+
+    .arco-btn-primary {
+      margin-left: 6px;
+    }
+  }
+}
+
+.runnergo-ui-test-scene-drawer {
+  .arco-input {
+    background: var(--modal-footer);
+  }
+  .arco-drawer-header{
+    height: 56px;
+  }
+  .arco-select {
+    .arco-select-view {
+      background-color: var(--modal-footer);
+    }
+  }
+
+  .arco-tree-select {
+    .arco-tree-select-view {
+      background-color: var(--modal-footer);
+      color: var(--font-1);
+      border-radius: 5px;
+    }
+  }
+
+  .arco-tree-select.arco-tree-select-focused .arco-tree-select-view {
+    background-color: var(--modal-footer);
+    color: var(--font-1);
+  }
+
+  .arco-tree-select:hover .arco-tree-select-view {
+    background-color: var(--modal-footer);
+    font-weight: 500;
+  }
+}

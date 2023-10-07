@@ -72,7 +72,7 @@ const TPlanListHeader = (props) => {
             cancelText: t('btn.cancel'),
             onOk: () => {
                 const params = {
-                    team_id: localStorage.getItem('team_id'),
+                    team_id: sessionStorage.getItem('team_id'),
                     plan_ids: selectPlan.map(item => item.plan_id)
                 };
                 fetchBatchDelete(params).subscribe({

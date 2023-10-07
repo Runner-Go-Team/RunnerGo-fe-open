@@ -34,7 +34,6 @@ const SqlPicker = (props) => {
   const refTree = useRef(null);
   const { t } = useTranslation();
 
-  console.log(treeDatas);
 
   const [checkAll, setCheckAll] = useState('unCheck');
   const [checkedApiKeys, setCheckedApiKeys] = useState([]);
@@ -124,10 +123,11 @@ const SqlPicker = (props) => {
               Message('error', t('message.importEmpty'));
               return;
             }
-            if (checkedApiKeys.length > 1) {
+            if (filteredTreeList.filter(item => item.target_type === 'sql' && checkedApiKeys.includes(item.target_id)).length > 1) {
               Message('error', t('scene.onlyOnePreCond'));
               return;
             }
+
             onSubmit(checkedApiKeys, treeDatas)
           }} disabled={checkedApiKeys.length === 0} className="apipost-blue-btn" type="primary">
             {t('scene.addPreCondition')}

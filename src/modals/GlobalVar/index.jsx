@@ -512,7 +512,7 @@ const GlobalVar = (props) => {
 
     useEffect(() => {
         const params = {
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         };
 
         Bus.$emit('sendWsMessage', JSON.stringify({
@@ -595,7 +595,7 @@ const GlobalVar = (props) => {
     const saveCookie = (data) => {
         const _list = cloneDeep(data ? data : cookieList);
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             param_type: 1,
             cookies: _list
         };
@@ -609,7 +609,7 @@ const GlobalVar = (props) => {
     const saveHeader = (data) => {
         const _list = cloneDeep(data ? data : headerList);
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             param_type: 2,
             headers: _list
         };
@@ -622,7 +622,7 @@ const GlobalVar = (props) => {
     const saveVar = (data) => {
         const _list = cloneDeep(data ? data : varList);
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             param_type: 3,
             variables: _list
         };
@@ -635,7 +635,7 @@ const GlobalVar = (props) => {
     const saveAssert = (data) => {
         const _list = cloneDeep(data ? data : assertList);
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             param_type: 4,
             asserts: _list
         };

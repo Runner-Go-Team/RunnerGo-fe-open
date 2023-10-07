@@ -59,7 +59,7 @@ const EnvDetail = (props) => {
             onOk: () => {
                 const params = {
                     env_id: selectEnvId,
-                    team_id: localStorage.getItem('team_id')
+                    team_id: sessionStorage.getItem('team_id')
                 };
 
                 fetchDeleteEnv(params).subscribe({
@@ -87,7 +87,7 @@ const EnvDetail = (props) => {
             const params = {
                 env_id: selectEnvId,
                 env_name: e,
-                team_id: localStorage.getItem('team_id')
+                team_id: sessionStorage.getItem('team_id')
             };
 
             fetchUpdateEnvName(params).subscribe({

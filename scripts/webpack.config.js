@@ -44,7 +44,6 @@ module.exports = {
             '@rxUtils': path.resolve(__dirname, '../src/rxUtils'),
             '@hooks': path.resolve(__dirname, '../src/pages/hooks'),
             '@services': path.resolve(__dirname, '../src/services'),
-            '@asyncTasks': path.resolve(__dirname, '../src/asyncTasks'),
             '@busLogics': path.resolve(__dirname, '../src/busLogics'),
             '@modals': path.resolve(__dirname, '../src/modals'),
         }

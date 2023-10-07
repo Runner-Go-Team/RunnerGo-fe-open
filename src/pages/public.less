@@ -29,3 +29,54 @@
 //     // writing-mode: inherit;
 //   }
 // }
+
+.runnerGo-card-special {
+    .tips{
+        font-size: 12px;
+        color: var(--font-3);
+        margin-bottom: 16px;
+    }
+    .runnerGo-card-special-item {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 16px;
+        .arco-select-view-value,
+        .arco-input{
+            font-size: 14px;
+        }
+        .flex{
+            display: flex;
+            align-items: center;
+        }
+        .arco-select-view{
+            height: 40px;
+            line-height: 38px;
+            .arco-input-tag-view{
+                min-height: 40px;
+                .arco-input-tag-inner{
+                    flex-wrap: nowrap;
+                }
+            }
+        }
+        &>label {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--font-1);
+            text-align: left;
+
+            .required {
+                color: rgba(207, 81, 94, 1);
+            }
+        }
+
+        .content {
+            margin-top: 6px;
+        }
+        .flex-gap-10{
+            display: flex;
+            gap: 10px;
+        }
+    }
+
+}

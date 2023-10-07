@@ -7,7 +7,6 @@ import { singleTest } from '@rxUtils/runner';
 import produce from 'immer';
 import TestResult from '@components/TestResult';
 import { saveProcessReports } from '@services/test';
-import { pushTask } from '@asyncTasks/index';
 
 import MiniTest from './miniMode';
 import './index.less';
@@ -100,13 +99,7 @@ const ExecuteInfo = () => {
             }
           },
           error(err) {
-            pushTask({
-              task_id: `${project_id}/${reportInfo.report_id}`,
-              action: 'SAVE',
-              model: 'TEST_REPORT',
-              payload: reportInfo.report_id,
-              project_id,
-            });
+            
           },
         });
         setCompleteInfo(resp.data);

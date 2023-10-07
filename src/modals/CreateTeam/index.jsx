@@ -37,7 +37,7 @@ const CreateTeam = (props) => {
                     const settings = JSON.parse(localStorage.getItem('settings'));
                     settings.settings.current_team_id = team_id;
                     localStorage.setItem('settings', settings);
-                    localStorage.setItem('team_id', team_id);
+                    sessionStorage.setItem('team_id', team_id);
                     localStorage.removeItem('open_scene');
                     dispatch({
                         type: 'opens/coverOpenApis',

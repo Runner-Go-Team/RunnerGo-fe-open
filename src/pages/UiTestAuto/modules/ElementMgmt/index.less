@@ -1,0 +1,126 @@
+.runnerGo-element-mgmt {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  .arco-input {
+    height: 28px;
+    line-height: 28px;
+  }
+
+  .runnerGo-element-mgmt-left {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    min-width: 250px;
+    max-width: 350px;
+    height: 100%;
+    background-color: var(--module);
+    text-align: 'center';
+    padding: 16px !important;
+
+    .tree-header {
+
+      .other-tree-node {
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        flex-wrap: nowrap;
+        line-height: 1.5715;
+        font-size: 12px;
+        color: var(--font-3);
+        align-items: center;
+        padding-left: 8px;
+        padding-right: 5px;
+
+        &:hover {
+          background-color: var(--border-line);
+          color: var(--font-1);
+        }
+
+        .icon {
+          height: 30px;
+          margin-right: 8px;
+          display: flex;
+          align-items: center;
+        }
+
+        svg {
+          width: 14px;
+          height: 14px;
+          fill: currentColor;
+        }
+      }
+
+      .other-tree-node.active {
+        background-color: var(--border-line);
+        color: var(--font-1);
+      }
+
+      .arco-input-group-wrapper {
+        margin-bottom: 16px;
+      }
+
+      .operation-btns {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 34px;
+        width: 100%;
+        padding: 0 8px;
+        margin-bottom: 16px;
+
+        .line {
+          width: 1px;
+          height: 18px;
+          background-color: var(--border-line);
+        }
+
+        .operation-btn {
+          cursor: pointer;
+
+          .arco-icon-robot {
+            width: 16px;
+            height: 16px;
+            stroke-width: 0px;
+            fill: currentColor;
+          }
+
+          .arco-icon {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+          }
+        }
+
+      }
+    }
+
+    .arco-tree {
+      flex: 1;
+    }
+  }
+
+  &>.right {
+    flex: 1;
+    background-color: var(--module);
+    margin-left: 2px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+
+    .arco-table-container {
+      max-height: calc(100% - 44px);
+      overflow: auto;
+      .arco-table-content-scroll{
+        height: 100%;
+        .arco-table-content-inner{
+          height: 100%;
+          .arco-table-body{
+            max-height: calc(100% - 41px);
+          }
+        }
+      }
+    }
+  }
+}

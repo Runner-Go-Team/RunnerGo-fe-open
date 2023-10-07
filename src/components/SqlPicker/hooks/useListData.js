@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 // import { ITreeMenuItem } from '@dto/apis';
 import { cloneDeep, isEqual, merge, isUndefined } from 'lodash';
+import { removeEmptyFolders } from '@utils';
 
 
 const useListData = (props) => {
@@ -51,19 +52,20 @@ const useListData = (props) => {
     });
     const dataList = [];
     Object.entries(newList).forEach(([target_id, data]) => {
-      if (['sql'].includes(data.target_type)) {
+      if (['sql', 'folder'].includes(data.target_type)) {
         dataList.push({
           ...data,
           target_id,
         });
       }
     });
-    return dataList;
+
+    return removeEmptyFolders(dataList);
   }, [treeData, filterParams]);
 
   // 被过滤后的树形菜单对象，带children
   const filteredTreeData = React.useMemo(() => {
-    const newTreeData= {};
+    const newTreeData = {};
     const dataList = cloneDeep(filteredTreeList);
     dataList.forEach((item) => {
       if (!isUndefined(item.target_id)) {

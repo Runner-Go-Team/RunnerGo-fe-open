@@ -4,7 +4,7 @@ import { IconClose } from '@arco-design/web-react/icon';
 import { useTranslation } from 'react-i18next';
 
 const FullScreenComp = (props) => {
-    const { children, onChange } = props;
+    const { children, onChange, title , hideTitle=false} = props;
     const { t } = useTranslation();
 
     return (
@@ -15,7 +15,7 @@ const FullScreenComp = (props) => {
                     <p>{ t('header.signOut') }</p>
                 </div>
                 <p className='line'></p>
-                <p className='title'>{ t('plan.customDistributed') }</p>
+                {!hideTitle && <p className='title'>{title || t('plan.customDistributed') }</p>}
             </div>
             <div className='container'>
                 { children }

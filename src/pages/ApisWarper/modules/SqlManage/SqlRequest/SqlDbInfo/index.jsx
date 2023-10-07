@@ -34,7 +34,7 @@ const SqlDbInfo = (props) => {
     useEffect(() => {
         if (from === 'apis' ? (env_id > 0) : (scene_env_id > 0)) {
             const params = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 env_id: from === 'apis' ? env_id : scene_env_id,
             };
 

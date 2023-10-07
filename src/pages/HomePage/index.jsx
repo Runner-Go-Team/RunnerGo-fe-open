@@ -79,7 +79,7 @@ const HomePage = () => {
 
     const getIndex = () => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             token: getCookie('token'),
         };
         Bus.$emit('sendWsMessage', JSON.stringify({

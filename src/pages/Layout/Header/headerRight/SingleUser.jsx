@@ -1,14 +1,11 @@
 /* eslint-disable eqeqeq */
 import React, { useContext } from 'react';
-import { useSelector } from 'react-redux';
-import { Dropdown, Message } from 'adesign-react';
+import { Dropdown } from 'adesign-react';
+import { Message } from '@arco-design/web-react';
 import cn from 'classnames';
-import { changeUserRole } from '@services/projects';
-import UserContext from './userContext';
 import avatar from '@assets/logo/avatar.png'
 
 const SingleUser = (props) => {
-  const project_id = useSelector((store) => store.workspace.CURRENT_PROJECT_ID);
   const { useMsg, onSecMenuToggle, currentUser } = props;
   const { is_manager: IsManager, is_super_admin: IsAdmin } = currentUser;
   // const { getAllProUser } = useContext(UserContext);
@@ -38,10 +35,10 @@ const SingleUser = (props) => {
   //   }).subscribe({
   //     next(resp) {
   //       if (resp?.code === 10000) {
-  //         Message('success', '修改权限成功');
+  //         Message.success('修改权限成功');
   //         getAllProUser();
   //       } else {
-  //         Message('error', resp?.msg || '暂无修改权限');
+  //         Message.error(resp?.msg || '暂无修改权限');
   //       }
   //     },
   //     error(resp) {},
@@ -90,7 +87,7 @@ const SingleUser = (props) => {
         ) : (
           <div
             onClick={(e) => {
-              Message('error', `${roleMsg()}权限不支持修改`);
+              Message.error(`${roleMsg()}权限不支持修改`);
               e.stopPropagation();
             }}
             className={roleClass()}
@@ -125,7 +122,7 @@ const SingleUser = (props) => {
             <>
               <div
                 onClick={(e) => {
-                  Message('error', `暂无修改权限`);
+                  Message.error(`暂无修改权限`);
                   e.stopPropagation();
                 }}
                 className={roleClass()}

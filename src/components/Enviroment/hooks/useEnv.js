@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Message } from 'adesign-react';
 // import { Envs } from '@indexedDB/project';
-import { pushTask } from '@asyncTasks/index';
 import { saveEnvRequest, deleteEnvRequest } from '@services/envs';
 // import { IEnvDataItem, IEnv } from '@models/project/env';
 import { getLocalEnvsDatas } from '@rxUtils/env';
@@ -52,13 +51,7 @@ const useEnvs = (props) => {
         }
       },
       error() {
-        pushTask({
-          task_id: `${project_id}/${env_id}`,
-          action: 'SAVE',
-          model: 'ENVS',
-          payload: `${project_id}/${env_id}`,
-          project_id,
-        });
+        
       },
     });
 
@@ -85,13 +78,7 @@ const useEnvs = (props) => {
         }
       },
       error() {
-        pushTask({
-          task_id: `${CURRENT_PROJECT_ID}/${env_id}`,
-          action: 'DELETE',
-          model: 'ENVS',
-          payload: env_id,
-          project_id: CURRENT_PROJECT_ID,
-        });
+       
       },
     });
     // env_id: "be2c01ef-bac1-4bac-b7d5-a6e5cbc26881"

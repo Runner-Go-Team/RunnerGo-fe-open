@@ -20,6 +20,7 @@ import { isArray } from 'lodash';
 import SvgPayTeam from '@assets/icons/pay-team';
 import dayjs from 'dayjs';
 import { RD_ADMIN_URL } from '@config';
+import { useDispatch } from 'react-redux';
 
 const TeamProject = () => {
     const [filterValue, setFilterValue] = useState('');
@@ -31,21 +32,34 @@ const TeamProject = () => {
     const userTeams = useSelector((store) => store.teams.teamData);
     const [teamExpirationDate, setTeamExpirationDate] = useState(0);
     const { t } = useTranslation();
+    const dispatch = useDispatch();
 
     const currentTeamName = useMemo(() => {
         // let teamName = '离线团队';
-        let team_id = localStorage.getItem('team_id');
-        let teamName = userTeams[team_id] ? userTeams[team_id].name : '';
+        let team_id = sessionStorage.getItem('team_id');
+        let team_name = '';
+        // 1私有 2公开
+        let team_type = 2;
+        if (userTeams[team_id]) {
+            let { name, type } = userTeams[team_id];
+            team_name = name;
+            team_type = type;
+        }
+
         let expiration_date = userTeams[team_id] ? userTeams[team_id].expiration_date : 0;
         setTeamExpirationDate(expiration_date > 0 ? dayjs(expiration_date * 1000).format('YYYY-MM-DD') : 0);
         // if (isString(currentTeamId) && isObject(userTeams) && currentTeamId !== '-1') {
         //     teamName = userTeams?.[currentTeamId]?.name;
         // }
-        if (teamName) {
-            document.title = teamName;
+        if (team_name) {
+            document.title = team_name;
+            dispatch({
+                type: 'user/updateTeamType',
+                payload: team_type
+            })
         }
         
-        return teamName;
+        return team_name;
     }, [userTeams, currentTeamId]);
 
     // 用户手动切换项目
@@ -61,6 +75,7 @@ const TeamProject = () => {
         });
         refDropdown?.current?.setPopupVisible(false);
     };
+
 
     return (
         <TeamProjectPanel>

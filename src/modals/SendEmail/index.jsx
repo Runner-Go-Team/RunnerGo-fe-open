@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { cloneDeep, findIndex, uniqBy, remove, filter, isObject } from 'lodash';
 import { Modal, Button, Input, Select, CheckBox, Message, Spin } from 'adesign-react';
-import { FE_BASEURL } from '@config/index';
 import {
   getTeamListWithProject,
   getProjectInviteUrl,

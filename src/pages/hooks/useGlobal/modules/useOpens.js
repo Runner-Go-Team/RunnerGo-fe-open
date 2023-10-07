@@ -20,7 +20,6 @@ import {
     max,
 } from 'lodash';
 import { global$ } from '@hooks/useGlobal/global';
-import { pushTask } from '@asyncTasks/index';
 import {
     versionCheck,
     targetParameter2Obj,
@@ -327,7 +326,7 @@ const useOpens = () => {
         });
         selected && Bus.$emit('updateTargetId', Obj.target_id);
         callback && callback();
-        const team_id = localStorage.getItem('team_id');
+        const team_id = sessionStorage.getItem('team_id');
         const openNavs =
             apGlobalConfigStore.get(`project_current:${team_id}`)?.open_navs || [];
         openNavs.push(Obj.target_id);
@@ -355,7 +354,7 @@ const useOpens = () => {
         const params = {
             page: 1,
             size: 100,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         }
         global$.next({
             action: 'GET_APILIST',
@@ -495,7 +494,7 @@ const useOpens = () => {
         const _open_apis = cloneDeep(open_apis);
 
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_ids: id,
         }
 
@@ -533,7 +532,7 @@ const useOpens = () => {
                         params: {
                             page: 1,
                             size: 100,
-                            team_id: localStorage.getItem('team_id'),
+                            team_id: sessionStorage.getItem('team_id'),
                         }
                     });
                 }
@@ -622,7 +621,7 @@ const useOpens = () => {
             })
             if (!open_apis.hasOwnProperty(id)) {
                 const query = {
-                    team_id: localStorage.getItem('team_id'),
+                    team_id: sessionStorage.getItem('team_id'),
                     target_ids: [id]
                 };
 
@@ -646,7 +645,7 @@ const useOpens = () => {
                             })
 
                             Bus.$emit('updateTargetId', tempApis[id].target_id);
-                            const team_id = localStorage.getItem('team_id');
+                            const team_id = sessionStorage.getItem('team_id');
                             const openNavs =
                                 apGlobalConfigStore.get(`project_current:${team_id}`)?.open_navs || [];
                             openNavs.push(tempApis[id].target_id);
@@ -689,7 +688,7 @@ const useOpens = () => {
 
         // const uuid = localStorage.getItem('uuid');
         // User.update(uuid, { 'workspace.CURRENT_TARGET_ID': id }).then(() => {
-        const team_id = localStorage.getItem('team_id');
+        const team_id = sessionStorage.getItem('team_id');
         if (typeof id === 'number') {
             apGlobalConfigStore.set(`project_current:${team_id}`, { CURRENT_TARGET_ID: id });
         }
@@ -734,7 +733,7 @@ const useOpens = () => {
         for (let id in open_apis) {
             ids.push(typeof open_apis[id].parent_id === 'number' ? parseInt(id) : id);
         }
-        const team_id = localStorage.getItem('team_id');
+        const team_id = sessionStorage.getItem('team_id');
 
         const openNavs =
             apGlobalConfigStore.get(`project_current:${team_id}`)?.open_navs || [];
@@ -780,7 +779,7 @@ const useOpens = () => {
             tempTarget = targetReorder(tempTarget);
         }
 
-        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.team_id = sessionStorage.getItem('team_id');
         tempTarget.source = 0;
 
         fetchHandleApi(tempTarget).subscribe({
@@ -821,7 +820,7 @@ const useOpens = () => {
             tempTarget = targetReorder(tempTarget);
         }
 
-        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.team_id = sessionStorage.getItem('team_id');
         tempTarget.source = 0;
 
         fetchHandleApi(tempTarget).subscribe({
@@ -862,7 +861,7 @@ const useOpens = () => {
             tempTarget = targetReorder(tempTarget);
         }
 
-        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.team_id = sessionStorage.getItem('team_id');
         tempTarget.source = 0;
 
         fetchHandleApi(tempTarget).subscribe({
@@ -903,7 +902,7 @@ const useOpens = () => {
             tempTarget = targetReorder(tempTarget);
         }
 
-        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.team_id = sessionStorage.getItem('team_id');
         tempTarget.source = 0;
 
         fetchHandleApi(tempTarget).subscribe({
@@ -944,7 +943,7 @@ const useOpens = () => {
             tempTarget = targetReorder(tempTarget);
         }
 
-        tempTarget.team_id = localStorage.getItem('team_id');
+        tempTarget.team_id = sessionStorage.getItem('team_id');
         tempTarget.source = 0;
 
         fetchHandleApi(tempTarget).subscribe({
@@ -1027,7 +1026,7 @@ const useOpens = () => {
             // }
 
             tempTarget.parent_id = tempTarget.parent_id;
-            tempTarget.team_id = localStorage.getItem('team_id');
+            tempTarget.team_id = sessionStorage.getItem('team_id');
             // 5月份开始, 所有接口管理的接口和目录都加上source字段, 值为0
             tempTarget.source = 0;
 
@@ -1067,7 +1066,7 @@ const useOpens = () => {
                                 params: {
                                     page: 1,
                                     size: 100,
-                                    team_id: localStorage.getItem('team_id'),
+                                    team_id: sessionStorage.getItem('team_id'),
                                 }
                             });
                             // dispatch({
@@ -1227,31 +1226,11 @@ const useOpens = () => {
                                 },
                             });
                         } else {
-                            // 添加异步任务
-                            pushTask(
-                                {
-                                    task_id: tempTarget.target_id,
-                                    action: 'SAVE',
-                                    model: tempTarget?.target_type.toUpperCase(),
-                                    payload: tempTarget.target_id,
-                                    project_id: CURRENT_PROJECT_ID,
-                                },
-                                -1
-                            );
+                            
                         }
                     },
                     error() {
-                        // 添加异步任务
-                        pushTask(
-                            {
-                                task_id: tempTarget.target_id,
-                                action: 'SAVE',
-                                model: tempTarget?.target_type.toUpperCase(),
-                                payload: tempTarget.target_id,
-                                project_id: CURRENT_PROJECT_ID,
-                            },
-                            -1
-                        );
+                        
                     },
                 });
             }
@@ -1310,13 +1289,13 @@ const useOpens = () => {
     };
 
     const reloadOpens = () => {
-        const team_id = localStorage.getItem('team_id');
+        const team_id = sessionStorage.getItem('team_id');
         if (team_id) {
             const openNavs =
                 apGlobalConfigStore.get(`project_current:${team_id}`)?.open_navs || [];
             if (openNavs && openNavs.length > 0 && openNavs.filter(item => typeof item === 'number').length > 0) {
                 const query = {
-                    team_id: localStorage.getItem('team_id'),
+                    team_id: sessionStorage.getItem('team_id'),
                     target_ids: openNavs.filter(item => typeof item === 'number')
                 };
                 fetchApiDetail(QueryString.stringify(query, { indices: false })).subscribe({
@@ -1412,7 +1391,7 @@ const useOpens = () => {
         })
         const params = {
             api_detail: debug_target_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         };
         fetchRunAutoReportApi(params).pipe(
             tap(res => {
@@ -1452,7 +1431,7 @@ const useOpens = () => {
     const sendApi = (id) => {
         const params = {
             target_id: id ? id : open_api_now,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         };
         const _open_res = cloneDeep(open_res);
         _open_res[id] = {
@@ -1567,7 +1546,7 @@ const useOpens = () => {
                     } else {
 
                         let _open_apis = cloneDeep(open_apis);
-                        let localApi = JSON.parse(localStorage.getItem(`project_current:${localStorage.getItem('team_id')}`)).open_navs;
+                        let localApi = JSON.parse(localStorage.getItem(`project_current:${sessionStorage.getItem('team_id')}`)).open_navs;
                         for (let i in _open_apis) {
                             if (_open_apis[i].parent_id === target_id) {
                                 delete _open_apis[i];
@@ -1591,7 +1570,7 @@ const useOpens = () => {
                             type: 'opens/coverOpenApis',
                             payload: _open_apis
                         })
-                        localStorage.setItem(`project_current:${localStorage.getItem('team_id')}`, JSON.stringify({ open_navs: localApi }));
+                        localStorage.setItem(`project_current:${sessionStorage.getItem('team_id')}`, JSON.stringify({ open_navs: localApi }));
 
 
                         global$.next({
@@ -1608,7 +1587,7 @@ const useOpens = () => {
 
     const copyApi = (target_id) => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_ids: target_id
         };
         fetchApiDetail(query).subscribe({
@@ -1635,7 +1614,7 @@ const useOpens = () => {
                         params: {
                             page: 1,
                             size: 100,
-                            team_id: localStorage.getItem('team_id'),
+                            team_id: sessionStorage.getItem('team_id'),
                         }
                     });
                 }
@@ -1662,7 +1641,7 @@ const useOpens = () => {
         if (ids) {
             const _ids = JSON.parse(ids);
             const query = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 target_ids: _ids
             };
             fetchApiDetail(QueryString.stringify(query, { indices: false })).subscribe({
@@ -1693,7 +1672,7 @@ const useOpens = () => {
         }
         const params = {
             target_id: open_api_now,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         };
 
         fetchRunSql(params).subscribe({
@@ -1770,7 +1749,7 @@ const useOpens = () => {
             return;
         }
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_id: open_api_now
         };
         fetchRunTcp(params).subscribe({
@@ -1905,7 +1884,7 @@ const useOpens = () => {
             return;
         }
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_id: open_api_now
         };
         fetchRunWebSocket(params).subscribe({
@@ -2041,7 +2020,7 @@ const useOpens = () => {
             return;
         }
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             target_id: open_api_now
         };
         fetchRunDubbo(params).subscribe({

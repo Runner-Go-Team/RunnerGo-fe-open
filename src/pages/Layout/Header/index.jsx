@@ -7,6 +7,7 @@ import Bus from '@utils/eventBus';
 import { global$ } from '@hooks/useGlobal/global';
 import SvgLogo1 from '@assets/logo/runner_dark';
 import SvgLogo2 from '@assets/logo/runner_white';
+import Tabs from './Tabs';
 
 const Header = () => {
     // const team_id = useSelector((store) => store.user.team_id);
@@ -17,7 +18,9 @@ const Header = () => {
             {/* <div className='header-left'> */}
 
             <HeaderLeft />
-
+            <div className="header-center">
+                <Tabs />
+            </div>
             {/* </div> */}
             {/* <div className='header-right'> */}
             <HeaderRight />

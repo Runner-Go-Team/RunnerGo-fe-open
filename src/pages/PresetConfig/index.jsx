@@ -133,7 +133,7 @@ const PresetConfig = () => {
 
     const getTableData = () => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             page: currentPage,
             size: pageSize,
             conf_name: searchWord,
@@ -189,7 +189,7 @@ const PresetConfig = () => {
     const copyPreset = (id) => {
         const params = {
             id,
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         };
         fetchCopyPreset(params).subscribe({
             next: (res) => {
@@ -211,7 +211,7 @@ const PresetConfig = () => {
             onOk: () => {
                 const params = {
                     id,
-                    team_id: localStorage.getItem('team_id'),
+                    team_id: sessionStorage.getItem('team_id'),
                     conf_name: name
                 };
                 fetchDeletePreset(params).subscribe({

@@ -126,7 +126,7 @@ const ReportContent = () => {
     const getReportInfo = () => {
         const query = {
             report_id: report_id ? report_id : JSON.parse(contrast)[select_plan].report_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         };
         
         Bus.$emit('sendWsMessage', JSON.stringify({

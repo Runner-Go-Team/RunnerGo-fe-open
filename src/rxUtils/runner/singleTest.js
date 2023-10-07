@@ -18,7 +18,6 @@ import { chunk, isArray, isString, isUndefined, sortBy } from 'lodash';
 import { getAllSimpleProcessTestList, getMultiProcessTestList } from '@services/projects';
 import React from 'react';
 import { deleteProcessTest, saveProcessTestSortRequest } from '@services/test';
-import { pushTask } from '@asyncTasks/index';
 // import { ISingleProcessTest } from '@models/runner/singleProcessTest';
 // import { TYPE_GET_TEST_MAX_SORT, TYPE_GET_TEST_LIST } from './types';
 
@@ -160,13 +159,7 @@ export const deleteLocalTestItem = async (test_id, project_id) => {
             }
         },
         error() {
-            pushTask({
-                task_id: `${project_id}/${test_id}`,
-                action: 'DELETE',
-                model: 'SINGLE_TEST',
-                payload: reqData,
-                project_id,
-            });
+           
         },
     });
 };
@@ -216,13 +209,7 @@ export const updateSingleTestSort$ = (params) => {
         }),
         concatMap(updateLocalSingleTestSort.bind(null, params.target_list)),
         tap(() => {
-            pushTask({
-                task_id: `${params.project_id}/${params.source_id}`,
-                action: 'SORT',
-                model: 'SINGLE_TEST',
-                payload: params,
-                project_id: params.project_id,
-            });
+           
         })
     );
 

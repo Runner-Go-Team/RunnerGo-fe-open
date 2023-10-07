@@ -67,7 +67,7 @@ const TReportListHeader = (props) => {
             cancelText: t('btn.cancel'),
             onOk: () => {
                 const params = {
-                    team_id: localStorage.getItem('team_id'),
+                    team_id: sessionStorage.getItem('team_id'),
                     report_ids: selectReport.map(item => item.report_id)
                 };
                 fetchDeleteReport(params).subscribe({

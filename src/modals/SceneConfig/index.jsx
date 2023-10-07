@@ -526,7 +526,7 @@ const SceneConfig = (props) => {
     useEffect(() => {
         if (open_scene) {
             const params = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id
             };
 
@@ -582,7 +582,7 @@ const SceneConfig = (props) => {
     useEffect(() => {
         if (open_scene) {
             const query = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
             };
             fetchImportList(query).subscribe({
@@ -604,7 +604,7 @@ const SceneConfig = (props) => {
 
     const getFileList = () => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
         };
         fetchImportList(query).subscribe({
@@ -692,7 +692,7 @@ const SceneConfig = (props) => {
             )
     
             const params = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
                 name,
                 url,
@@ -713,7 +713,7 @@ const SceneConfig = (props) => {
             const url = `${RD_FileURL}/${res.data[0].filename}`;
             
             const params = {
-                team_id: localStorage.getItem('team_id'),
+                team_id: sessionStorage.getItem('team_id'),
                 scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
                 name,
                 url,
@@ -734,7 +734,7 @@ const SceneConfig = (props) => {
     const saveCookie = (data) => {
         const _list = cloneDeep(data ? data : cookieList);
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             param_type: 1,
             cookies: _list,
             scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id
@@ -749,7 +749,7 @@ const SceneConfig = (props) => {
     const saveHeader = (data) => {
         const _list = cloneDeep(data ? data : headerList);
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             param_type: 2,
             headers: _list,
             scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id
@@ -763,7 +763,7 @@ const SceneConfig = (props) => {
     const saveVar = (data) => {
         const _list = cloneDeep(data ? data : varList);
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             param_type: 3,
             variables: _list,
             scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id
@@ -777,7 +777,7 @@ const SceneConfig = (props) => {
     const saveAssert = (data) => {
         const _list = cloneDeep(data ? data : assertList);
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             param_type: 4,
             asserts: _list,
             scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id
@@ -796,7 +796,7 @@ const SceneConfig = (props) => {
             cancelText: t('btn.cancel'),
             onOk: () => {
                 const params = {
-                    team_id: localStorage.getItem('team_id'),
+                    team_id: sessionStorage.getItem('team_id'),
                     scene_id: open_scene.scene_id ? open_scene.scene_id : open_scene.target_id,
                     name,
                 };

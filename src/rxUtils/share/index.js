@@ -17,7 +17,6 @@ import {
 // import { ShareList } from '@indexedDB/share';
 // import { ICreateShare } from '@dto/share/index';
 import { createShareRequest, fetchUserShareList, fetchUserShareSimpleList } from '@services/share';
-import { pushTask } from '@asyncTasks/index';
 import { chunk, cloneDeep, isArray, isString, isUndefined } from 'lodash';
 import { getUserConfig$ } from '../user';
 
@@ -195,16 +194,7 @@ export const getShareList = (project_id) => {
 
 // 添加分享异步任务
 const addCreateShareTask = (shareInfo) => {
-    pushTask(
-        {
-            task_id: shareInfo.issue_id,
-            action: 'SAVE',
-            model: 'SHARE',
-            payload: shareInfo.issue_id,
-            project_id: shareInfo.project_id,
-        },
-        -1
-    );
+   
 };
 
 // 新建分享信息 若云端新建成功返回true
@@ -251,13 +241,7 @@ const deleteLocalData = async (issue_id) => {
 
 // 添加删除异步任务
 const pushTaskForDeleteShare = ({ issue_id, project_id, shareName }) => {
-    pushTask({
-        action: 'DELETE',
-        model: 'SHARE',
-        payload: { issue_id, project_id, shareName },
-        project_id,
-        task_id: issue_id,
-    });
+   
 };
 
 // 删除本地分享

@@ -29,18 +29,22 @@ import SvgTest from '@assets/icons/left-test';
 import SvgPer from '@assets/icons/left-performance';
 
 import { useTranslation } from 'react-i18next';
+import useLeftToolbar from './useLeftToolbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { Menu, Dropdown } from '@arco-design/web-react';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
 import { setCookie } from '@utils';
+import { isArray } from "lodash";
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
 
 
-const LeftToolbar = () => {
+const LeftToolbar = (props) => {
+    const { type }=props;
     // let [currentPath, setCurrentPath] = useState(`/${location.hash.split('/')[1]}`);
     const { t, i18n } = useTranslation();
+    const { leftBarItems, uiTestAutoBarItems } = useLeftToolbar();
     const refMenu = useRef();
     // 切换语言
     const [showLge, setShowLge] = useState(false);
@@ -62,7 +66,19 @@ const LeftToolbar = () => {
 
     useEffect(() => {
         const { pathname } = location;
+        if(type == 'uiTestAuto'){
+            if(pathname.startsWith('/uiTestAuto/plan')){
+                setSelectKey(['/uiTestAuto/plan'])
+            }else if(pathname.startsWith('/uiTestAuto/scene')){
+                setSelectKey(['/uiTestAuto/scene'])
+            }else if(pathname.startsWith('/uiTestAuto/report')){
+                setSelectKey(['/uiTestAuto/report'])
+            }else{
+                setSelectKey([pathname])
+            }
+        }else{
         setSelectKey([`/${pathname.split('/')[1]}`])
+        }
     }, [location]);
 
     const changeTheme = (color) => {
@@ -112,7 +128,33 @@ const LeftToolbar = () => {
             </SubMenu>
         </Menu>
     );
-
+    const renderMenuItemDom = (leftBarArr)=>{
+        if(isArray(leftBarArr)){
+            return leftBarArr.map(item => {
+                if (item?.type == 'MenuItem') {
+                    return <Link to={item.link}>
+                        <MenuItem key={item.link}>{item.icon}{item.title}</MenuItem>
+                    </Link>
+                } else if (item?.type == 'SubMenu') {
+                    return <SubMenu
+                        key={item.key}
+                        selectable
+                        title={item.title}
+                        onCollapseChange={()=>{}}
+                    >
+                        {isArray(item?.menuItems) && item.menuItems.map(i => <Link to={i.link}>
+                            <MenuItem className="sub-item" key={i.link}>{i.icon}{i.title}</MenuItem>
+                        </Link>)}
+                    </SubMenu>
+                } else if (item?.type == 'MenuItem.click') {
+                    return <MenuItem onClick={() => {
+                        item?.onClick && item.onClick();
+                    }} key={item.link}>{item.icon}{item.title}</MenuItem>
+                }
+            })
+        }
+    }
+    console.log(selectKey,"selectKey");
     return (
         <>
             <div className="left-toolbars">
@@ -123,8 +165,12 @@ const LeftToolbar = () => {
                     defaultOpenKeys={openKeys}
                     collapse={!collapseStatus}
                     onClickMenuItem={(k, e, kp) => {
-                        setSelectKey([k]);
-
+                        try {
+                            if(k.split('-')[0] == 'SubMenu'){
+                                return;
+                            }
+                            setSelectKey([k]);
+                        } catch (error) {}
                     }}
                     onClickSubMenu={(k, ok, kp) => {
                         setOpenKeys(ok);
@@ -134,68 +180,9 @@ const LeftToolbar = () => {
                     onCollapseChange={(e) => {
                     }}
                 >
-                    <Link to="/index">
-                        <MenuItem key='/index'><SvgHome className="arco-icon arco-icon-robot" />{t('leftBar.index')}</MenuItem>
-                    </Link>
-                    <Link to="/apis">
-                        <MenuItem key='/apis'><SvgApis className="arco-icon arco-icon-robot" />{t('leftBar.apis')}</MenuItem>
-                    </Link>
-                    <Link to="/scene">
-                        <MenuItem key='/scene'><SvgScene className="arco-icon arco-icon-robot" />{t('leftBar.scene')}</MenuItem>
-                    </Link>
-                    <SubMenu
-                        key='1'
-                        selectable
-                        title={
-                            <div className="sub-menu-title">
-                                <SvgPer className="arco-icon arco-icon-robot" />{t('leftBar.performance')}
-                            </div>
-                        }
-                    >
-
-                        <Link to="/plan">
-                            <MenuItem className="sub-item" key='/plan'>{t('leftBar.plan')}</MenuItem>
-                        </Link>
-                        <Link to="/report">
-                            <MenuItem className="sub-item" key='/report'>{t('leftBar.report')}</MenuItem>
-                        </Link>
-                        <Link to="/preset">
-                            <MenuItem className="sub-item" key='/preset'>{t('leftBar.preset')}</MenuItem>
-                        </Link>
-                    </SubMenu>
-                    <SubMenu
-                        key='2'
-                        selectable
-                        title={
-                            <div className="sub-menu-title">
-                                <SvgTest className="arco-icon arco-icon-robot" />{t('leftBar.test')}
-                            </div>
-                        }
-                    >
-                        <Link to="/Tplan">
-                            <MenuItem className="sub-item" key='/Tplan'>{t('leftBar.plan')}</MenuItem>
-                        </Link>
-                        <Link to="/Treport">
-                            <MenuItem className="sub-item" key='/Treport'>{t('leftBar.report')}</MenuItem>
-                        </Link>
-                    </SubMenu>
-
-                    <Link to="/env">
-                        <MenuItem key="/env"><SvgEnv className="arco-icon arco-icon-robot" />{t('leftBar.env')}</MenuItem>
-                    </Link>
-
-                    <Link to="/machine">
-                        <MenuItem key='/machine'><SvgMachine className="arco-icon arco-icon-robot" />{t('leftBar.machine')}</MenuItem>
-                    </Link>
-                    <Link to="/mockservice">
-                        <MenuItem key='/mockservice'><SvgMock className="arco-icon arco-icon-robot" />{t('leftBar.mockservice')}</MenuItem>
-                    </Link>
-                    <MenuItem onClick={() => {
-                        window.open('https://wiki.runnergo.cn/docs/', '_blank');
-                    }} key='/doc'><SvgDoc className="arco-icon arco-icon-robot" />{t('leftBar.docs')}</MenuItem>
-
+                    {renderMenuItemDom(type == 'uiTestAuto' ? uiTestAutoBarItems : leftBarItems)}
                 </Menu>
-{/* 
+                {/* 
                 <div className="settings">
                     {
                         collapseStatus ? <Dropdown trigger="click" droplist={dropList} position="bl">

@@ -20,9 +20,40 @@
     }
 
     .header-left {
+
         // order: 1;
-        svg{
+        svg {
             cursor: pointer;
+        }
+    }
+
+    .header-center {
+        .runnergo-ui-test-tab-name {
+            position: relative;
+
+            .beta {
+                position: absolute;
+                right: -41px;
+                top: 3px;
+            }
+        }
+
+        .header-center-tabs {
+            display: flex;
+
+            .header-center-tabs-item {
+                line-height: 50px;
+                max-height: 50px;
+                margin-left: 30px;
+                font-size: 14px;
+                color: var(--font-3);
+                cursor: pointer;
+            }
+
+            .header-center-tabs-item.active {
+                color: var(--font-1);
+                border-bottom: 4px solid var(--theme-color);
+            }
         }
     }
 

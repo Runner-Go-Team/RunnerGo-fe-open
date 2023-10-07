@@ -120,11 +120,14 @@
 
   .arco-menu-selected {
     color: var(--theme-color) !important;
-    background-color: var(--theme-10) !important;
 
     .sub-menu-title {
-      color: var(--font-1) !important;
+      color: var(--theme-color) !important;
       font-size: 12px;
+    }
+
+    .arco-menu-item-inner {
+      color: var(--theme-color) !important;
     }
 
     .is-open {
@@ -150,12 +153,15 @@
 
     .arco-icon {
       // margin-right: 6px;
+      stroke: var(--font-3);
       color: var(--font-3);
+      // stroke-width: 0;
+      fill: none !important;
     }
   }
 
   .sub-item .arco-menu-item-inner {
-    color: var(--font-color) !important;
+    color: var(--font-color);
   }
 
   .arco-menu-vertical {
@@ -180,6 +186,8 @@
 
     .arco-icon {
       color: var(--font-3);
+      stroke-width: 0;
+      fill: var(--font-3);
     }
   }
 

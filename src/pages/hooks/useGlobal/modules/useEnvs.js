@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { from } from 'rxjs';
 import { tap, filter, map, catchError } from 'rxjs/operators';
 import { saveEnvRequest } from '@services/envs';
-import { pushTask } from '@asyncTasks/index';
 import isObject from 'lodash/isObject';
 // import { Envs } from '@indexedDB/project';
 import { global$ } from '../global';
@@ -17,29 +16,11 @@ const useEnvs = () => {
                 next(resp) {
                     if (resp?.code === 10000) {
                     } else {
-                        pushTask(
-                            {
-                                task_id: env.id,
-                                action: 'SAVE',
-                                model: 'ENVS',
-                                payload: env.id,
-                                project_id: env.project_id,
-                            },
-                            -1
-                        );
+                       
                     }
                 },
                 error() {
-                    pushTask(
-                        {
-                            task_id: env.id,
-                            action: 'SAVE',
-                            model: 'ENVS',
-                            payload: env.id,
-                            project_id: env.project_id,
-                        },
-                        -1
-                    );
+                   
                 },
             });
         }

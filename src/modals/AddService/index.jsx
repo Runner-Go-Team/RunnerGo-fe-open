@@ -36,7 +36,7 @@ const AddService = (props) => {
         let params = {
             service_id: serviceId,
             env_id: selectEnvId,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             service_name: serviceName,
             content: serviceContent,
         };

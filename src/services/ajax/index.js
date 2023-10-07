@@ -17,13 +17,13 @@ export const rxAjax = (
     params,
     query
 ) => {
-
+    
     let request = ajax({
         method,
         url: `${RD_BASE_URL}${url}`,
         headers: {
             Authorization: getCookie('token') || "",
-            CurrentTeamID: localStorage.getItem('team_id') ? localStorage.getItem('team_id') : "0"
+            CurrentTeamID: sessionStorage.getItem('team_id') ? sessionStorage.getItem('team_id') : "0"
         },
         body: params,
         queryParams: query,

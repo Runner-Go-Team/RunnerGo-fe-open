@@ -101,7 +101,7 @@ const TestReportList = () => {
 
     const deleteReport = (report_id) => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             report_ids: [report_id],
         };
 
@@ -172,7 +172,7 @@ const TestReportList = () => {
         const params = {
             page: currentPage,
             size: pageSize,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_name: keyword,
             start_time_sec: startTime,
             end_time_sec: endTime,

@@ -4,7 +4,6 @@ import { Modal, Button, Tabs as TabComponent, Message, Input } from 'adesign-rea
 import { Refresh2 as RefreshSvg, Search } from 'adesign-react/icons';
 import { isLogin } from '@utils/common';
 import { restoreApiRequest, fetchRecycleList, fetchStrongDeleteApi, fetchRecallApi } from '@services/apis';
-// import { pushTask } from '@asyncTasks/index';
 import { global$ } from '@hooks/useGlobal/global';
 import Api from './api';
 import Folder from './folder';
@@ -28,7 +27,7 @@ const Recycle = (props) => {
     const query = {
       page,
       size,
-      team_id: localStorage.getItem('team_id'),
+      team_id: sessionStorage.getItem('team_id'),
     };
     fetchRecycleList(query)
       .pipe(

@@ -75,7 +75,7 @@ const TPlanDetailHeader = (props) => {
     const getEmailList = () => {
         const query = {
             plan_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
         }
         fetchTPlanEmailList(query).subscribe({
             next: (res) => {
@@ -104,7 +104,7 @@ const TPlanDetailHeader = (props) => {
 
     const getReportDetail = () => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_id,
         };
         Bus.$emit('sendWsMessage', JSON.stringify({
@@ -125,7 +125,7 @@ const TPlanDetailHeader = (props) => {
             return;
         }
         let params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             plan_name: planName,
             remark: planDesc,
             plan_id,

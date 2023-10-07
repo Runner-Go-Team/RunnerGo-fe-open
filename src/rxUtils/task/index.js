@@ -1,6 +1,5 @@
 // import { Task, Await_Task } from '@indexedDB/asyn_task';
 import { concatMap, mergeMap, tap, iif, of, reduce } from 'rxjs';
-import { executeTask } from '@asyncTasks/utils/executeTask';
 import { isArray } from 'lodash';
 import { isLogin } from '@utils/common';
 
@@ -27,7 +26,6 @@ export const uploadTasks = (project_id) => {
             concatMap(() => restoreAllAwaitTask(project_id)),
             concatMap(() => getTaskList(project_id)),
             concatMap((d) => of(...d)),
-            mergeMap(executeTask),
             reduce((a, b) => a + 1, 0),
             tap(console.log.bind(null, '异步上传任务----执行完成'))
         ),

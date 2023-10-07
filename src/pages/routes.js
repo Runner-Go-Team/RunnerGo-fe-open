@@ -11,6 +11,7 @@ import Env from "./Env";
 import Test from './Test';
 ;import EmailReport from "./EmailReport";
 import AutoEmailReport from "./AutoEmailReport";
+import UiTestAuto from './UiTestAuto';
 
 import InvitateExpire from "./InvitateExpire";
 import ReportContrast from "./ReportContrast";
@@ -118,7 +119,13 @@ const Route = [
         name: 'test',
         path: '/test',
         element: Test
-    }
+    }, 
+    {
+        name: 'uiTestAuto',
+        path: '/uitestauto/*',
+        element: UiTestAuto
+    },
+
 ];
 
 

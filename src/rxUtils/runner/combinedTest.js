@@ -19,7 +19,6 @@ import {
 import { chunk, isArray, isString, isUndefined } from 'lodash';
 // import { ICombinedProcessTest } from '@models/runner/combinedProcessTest';
 import { deleteProcessTest, saveProcessTestSortRequest } from '@services/test';
-import { pushTask } from '@asyncTasks/index';
 // import { TYPE_GET_COMBINED_TEST_LIST, TYPE_GET_COMBINED_TEST_MAX_SORT } from './types';
 
 // 获取测试套件最大sort
@@ -154,13 +153,7 @@ export const deleteLocalCombinedTestItem = async (combined_id, project_id) => {
             }
         },
         error() {
-            pushTask({
-                task_id: `${project_id}/${combined_id}`,
-                action: 'DELETE',
-                model: 'SINGLE_TEST',
-                payload: reqData,
-                project_id,
-            });
+           
         },
     });
 };
@@ -199,13 +192,7 @@ export const updateCombinedTestSort$ = (params) => {
         }),
         concatMap(updateLocalCombinedTestSort.bind(null, params.target_list)),
         tap(() => {
-            pushTask({
-                task_id: `${params.project_id}/${params.source_id}`,
-                action: 'SORT',
-                model: 'COMBINED_TEST',
-                payload: params,
-                project_id: params.project_id,
-            });
+           
         })
     );
 

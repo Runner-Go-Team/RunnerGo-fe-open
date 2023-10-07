@@ -1,0 +1,128 @@
+.runnerGo-card-special-item {
+  .add-file-btn{
+    background: var(--border-line);
+    width: 100%;
+  }
+ 
+  .file-list {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    gap: 6px;
+    .file-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 0 5px;
+      height: 30px;
+      background-color: var(--modal-footer);
+      border-radius: 2px;
+
+      .file-list-item-left {
+        padding-right: 3px;
+      }
+
+      .file-list-item-middle {
+        cursor: pointer;
+        flex: 1;
+        line-height: 30px;
+      }
+
+      .file-list-item-right {
+        display: flex;
+        align-items: center;
+        .arco-icon{
+          margin: 0 10px;
+          cursor: pointer;
+          font-size: 16px;
+          color: var(--font-1);
+        }
+        svg {
+          margin: 0 10px;
+          cursor: pointer;
+          height: 16px;
+          width: 16px;
+          color: var(--font-1);
+        }
+
+        p {
+          margin: 0 8px;
+          cursor: pointer;
+        }
+
+        .delete {
+          color: var(--run-red);
+        }
+      }
+    }
+    .mark{
+      border: 1px solid var(--theme-color);
+    }
+  }
+
+  .response-tabs {
+    width: 212px;
+    height: 33px;
+    background: var(--bg);
+    border-radius: 4px;
+    padding: 4px;
+    display: flex;
+    margin-top: 10px;
+
+    .response-tabs-item {
+      display: flex;
+      align-items: center;
+      border-radius: 2px;
+      padding: 4px 12px;
+      color: var(--font-1);
+      cursor: pointer;
+
+      svg {
+        margin-right: 8px;
+        fill: var(--font-1);
+      }
+    }
+
+    .response-tabs-item.active {
+      background: var(--module);
+    }
+  }
+
+  .response-raw {
+    margin-top: 8px;
+
+    .json-schema-template .template-table .schema-td {
+      width: 200px !important;
+
+      .item-manage {
+        // width: 71px;
+      }
+    }
+
+    svg {
+      fill: var(--content-color-secondary);
+    }
+
+    .protogenesis-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+
+      .apipost-btn {
+        padding: 4px 12px;
+        color: var(--font-1);
+
+        // background: transparent;
+        svg {
+          margin-right: 8px;
+          fill: var(--font-1);
+        }
+      }
+    }
+  }
+}

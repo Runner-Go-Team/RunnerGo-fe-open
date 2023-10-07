@@ -23,6 +23,7 @@ import machineReducer from './machine';
 import envReducer from './env';
 import permissionReducer from './permission';
 import mockReducer from './mock';
+import uiTestAutoReducer from './uitest_auto';
 
 
 const reducers = combineReducers({
@@ -48,7 +49,8 @@ const reducers = combineReducers({
     machine: machineReducer,
     env: envReducer,
     permission: permissionReducer,
-    mock: mockReducer
+    mock: mockReducer,
+    uitest_auto:uiTestAutoReducer,
 });
 
 export default reducers;

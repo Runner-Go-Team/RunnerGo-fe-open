@@ -55,7 +55,7 @@ const ProjectMember = (props) => {
             okText: t('btn.okDelMum'),
             onOk: () => {
                 const params = {
-                    team_id: localStorage.getItem('team_id'),
+                    team_id: sessionStorage.getItem('team_id'),
                     member_id,
                 }
                 fetchRemoveMember(params)
@@ -79,7 +79,7 @@ const ProjectMember = (props) => {
 
     const getUserInfo = () => {
         return fetchDashBoardInfo({
-            team_id: localStorage.getItem('team_id')
+            team_id: sessionStorage.getItem('team_id')
         }).pipe((res) => {
             return res;
         });
@@ -102,7 +102,7 @@ const ProjectMember = (props) => {
 
     const outTeam = (userId) => {
         // 判断当前团队是否是该用户的私有团队
-        const team_id = localStorage.getItem('team_id');
+        const team_id = sessionStorage.getItem('team_id');
         const team_item = teamList[team_id];
 
         // // 当前团队是私有团队, 并且团队的创建者是自己
@@ -122,7 +122,7 @@ const ProjectMember = (props) => {
                     const myTeam = _teamList.find(item => item.type === 1 && item.created_user_id === userId);
                     const settings = JSON.parse(localStorage.getItem('settings'));
                     settings.settings.current_team_id = myTeam.team_id;
-                    localStorage.setItem('team_id', myTeam.team_id);
+                    sessionStorage.setItem('team_id', myTeam.team_id);
                     dispatch({
                         type: 'opens/coverOpenApis',
                         payload: {},
@@ -151,7 +151,7 @@ const ProjectMember = (props) => {
         // all： xxx => 超级管理员 false 超级管理员 => xxx false 
 
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             user_id,
             role_id: parseInt(role_id),
         };
@@ -176,7 +176,7 @@ const ProjectMember = (props) => {
 
     const fetchData = () => {
         const query = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             keyword: searchValue || '', page, size: pageSize
         }
         fetchTeamMemberList(query)
@@ -187,7 +187,7 @@ const ProjectMember = (props) => {
                         let dataList = [];
 
                         dataList = members.map((item, index) => {
-                            const { avatar, email, account , nickname, join_time_sec, invite_user_name, team_role_name } = item;
+                            const { avatar, email, account , nickname, join_time_sec, invite_user_name, team_role_name,company_role_level } = item;
                             const userInfo = {
                                 avatar,
                                 email,
@@ -198,7 +198,7 @@ const ProjectMember = (props) => {
                                 member: <MemberInfo userInfo={userInfo} me={item.user_id === user_id} />,
                                 join_time_sec: dayjs(join_time_sec * 1000).format('YYYY-MM-DD HH:mm:ss'),
                                 invite_user_name,
-                                team_role_name,
+                                team_role_name:company_role_level == 1 ? '超管' : team_role_name,
                             }
                         });
                         setData(dataList);

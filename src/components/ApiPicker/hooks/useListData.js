@@ -1,43 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 // import { ITreeMenuItem } from '@dto/apis';
+import { removeEmptyFolders } from '@utils';
 import { cloneDeep, isEqual, merge, isUndefined } from 'lodash';
 
 
 const useListData = (props) => {
   const { filterParams, treeData } = props;
-
-  const removeEmptyFolders = (arr) => {
-    // 创建一个新的空数组，用来存放结果
-    let result = [];
-    // 遍历原数组的每个元素
-    for (let item of arr) {
-      // 如果元素的target_type不是folder，就直接加入结果数组
-      if (item.target_type !== "folder") {
-        result.push(item);
-      } else {
-        // 否则，判断元素是否有子节点
-        // 创建一个标志变量，初始值为false
-        let hasChild = false;
-        // 再次遍历原数组，查找是否有其他元素的parent_id等于当前元素的target_id
-        for (let other of arr) {
-          if (other.parent_id === item.target_id) {
-            // 如果找到了，就将标志变量设为true，并跳出循环
-            hasChild = true;
-            break;
-          }
-        }
-        // 如果标志变量仍为false，说明当前元素没有子节点，就不加入结果数组
-        // 如果标志变量为true，说明当前元素有子节点，就加入结果数组
-        if (hasChild) {
-          result.push(item);
-        }
-      }
-    }
-    // 返回结果数组
-    return result;
-  }
-  
 
   // 查找当前节点及全部上层对象
   const getParentItems = (

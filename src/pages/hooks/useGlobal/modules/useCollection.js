@@ -14,7 +14,6 @@ import { getBaseCollection } from '@constants/baseCollection';
 import { SaveTargetRequest, addMultiTargetRequest, fetchHandleFolder } from '@services/apis';
 import { fetchCreateGroup, fetchCreateScene } from '@services/scene';
 import { cloneDeep, isArray, isPlainObject, isString, isUndefined, max } from 'lodash';
-import { pushTask } from '@asyncTasks/index';
 import dayjs from 'dayjs';
 import { global$ } from '../global';
 import { fetchSceneList } from '@services/scene';
@@ -107,7 +106,7 @@ const useCollection = () => {
         if (isPlainObject(param)) {
             newScene = { ...newScene, ...param };
         }
-        newScene['team_id'] = localStorage.getItem('team_id');
+        newScene['team_id'] = sessionStorage.getItem('team_id');
         let from_list = {
             'scene': 1,
             'plan': 2,
@@ -155,7 +154,7 @@ const useCollection = () => {
         if (isPlainObject(param)) {
             newSceneGroup = { ...newSceneGroup, ...param };
         }
-        newSceneGroup['team_id'] = localStorage.getItem('team_id');
+        newSceneGroup['team_id'] = sessionStorage.getItem('team_id');
         const from_list = {
             'scene': 1,
             'plan': 2,
@@ -226,7 +225,7 @@ const useCollection = () => {
         // 添加本地库
         // await Collection.put(newCollection, newCollection?.target_id);
         // 上传服务器 失败走异步任务
-        newCollection['team_id'] = localStorage.getItem('team_id');
+        newCollection['team_id'] = sessionStorage.getItem('team_id');
 
         newCollection['source'] = 0;
         // return;
@@ -241,17 +240,7 @@ const useCollection = () => {
                 }
             },
             error: () => {
-                // 失败存异步任务
-                pushTask(
-                    {
-                        task_id: newCollection.target_id,
-                        action: 'SAVE',
-                        model: newCollection?.target_type.toUpperCase(),
-                        payload: newCollection.target_id,
-                        project_id: CURRENT_PROJECT_ID,
-                    },
-                    -1
-                );
+               
             },
         });
 
@@ -314,29 +303,10 @@ const useCollection = () => {
                 })
             );
             if (resp.code !== 10000) {
-                // 失败存异步任务
-                pushTask(
-                    {
-                        task_id: uuidv4(),
-                        action: 'BATCHSAVE',
-                        model: 'API',
-                        payload: targets,
-                        project_id,
-                    },
-                    -1
-                );
+                
             }
         } catch (error) {
-            pushTask(
-                {
-                    task_id: uuidv4(),
-                    action: 'BATCHSAVE',
-                    model: 'API',
-                    payload: targets,
-                    project_id,
-                },
-                -1
-            );
+            
         }
         RELOAD_LOCAL_COLLECTIONS &&
             global$.next({
@@ -349,7 +319,7 @@ const useCollection = () => {
         const params = {
             page,
             size,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             source: 1,
         };
         fetchSceneList(params).subscribe({

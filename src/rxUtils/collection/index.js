@@ -83,7 +83,7 @@ export const getApiList$ = (params) => {
     const defaultParams = {
         // page: 1,
         // size: 100,
-        team_id: localStorage.getItem('team_id'),
+        team_id: sessionStorage.getItem('team_id'),
         source: 0
     }
     return from(fetchApiList(defaultParams)).pipe(

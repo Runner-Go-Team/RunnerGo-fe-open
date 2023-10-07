@@ -121,7 +121,7 @@ const PreviewEnv = (props) => {
 
     const getDbList = () => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             env_id: envId,
             page: page1,
             size: size1
@@ -141,7 +141,7 @@ const PreviewEnv = (props) => {
 
     const getServiceList = () => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             env_id: envId,
             page,
             size

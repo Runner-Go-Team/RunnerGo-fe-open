@@ -224,7 +224,7 @@ const CaseMenu = (props) => {
         e.stopPropagation();
         const params = {
             case_id,
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             is_checked: value ? 1 : 2
         };
         fetchSwitchCase(params).subscribe({

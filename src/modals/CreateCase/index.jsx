@@ -364,7 +364,7 @@ const CreateCase = (props) => {
                 if (isPlainObject(_case)) {
                     const params = {
                         case_id: _case.case_id,
-                        team_id: localStorage.getItem('team_id'),
+                        team_id: sessionStorage.getItem('team_id'),
                         scene_id: open_data.scene_id ? open_data.scene_id : open_data.target_id,
                         name: caseName,
                         description,
@@ -396,7 +396,7 @@ const CreateCase = (props) => {
                     })
                 } else {
                     const params = {
-                        team_id: localStorage.getItem('team_id'),
+                        team_id: sessionStorage.getItem('team_id'),
                         scene_id: open_data.scene_id ? open_data.scene_id : open_data.target_id,
                         name: caseName,
                         description,

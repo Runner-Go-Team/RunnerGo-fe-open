@@ -101,7 +101,8 @@
         "offline": "离线团队",
         "teamNum": "团队成员数量",
         "teamExpiration": "团队过期时间",
-        "homePage": "个人主页"
+        "homePage": "个人主页",
+        "privateCanNotInvite": "私有团队不可邀请成员"
     },
     "leftBar": {
         "index": "首页",
@@ -123,7 +124,13 @@
         "language": "语言",
         "theme": "主题",
         "env": "环境管理",
-        "mockservice": "Mock服务"
+        "mockservice": "Mock服务",
+        "mgmt":{
+            "element":"元素管理",
+            "scene":"场景管理",
+            "plan":"计划管理",
+            "report":"报告管理"
+        }
     },
     "placeholder": {
         "searchApis": "搜索目录或接口",
@@ -211,7 +218,11 @@
         "wsName": "请输入WebSocket名称",
         "wsUrl": "请输入WebSocket请求或路径",
         "json_path":"JSON Path表达式,如: $.data.info.name",
-        "json_path_doc":"Json Path 使用文档"
+        "json_path_doc":"Json Path 使用文档",
+        "nameFilter": "根据名称筛选",
+        "inputVarName": "请输入变量名",
+        "intervalTime": "间隔时间",
+        "runNumMax": "执行次数（最大100）"
     },
     "btn": {
         "view": "查看",
@@ -280,7 +291,10 @@
         "asyncApipostApi": "同步Apipost接口",
         "connect": "连接",
         "stopConnect": "断开连接",
-        "connecting": "连接中..."
+        "connecting": "连接中...",
+        "connectAndSave": "连接并保存",
+        "rerun": "重新运行",
+        "copyCode": "复制代码"
     },
     "message": {
         "saveSuccess": "保存成功!",
@@ -463,7 +477,15 @@
         "didNotSelectMember": "您未选择任何成员!",
         "disableSceneSuccess": "禁用成功!",
         "enableSceneSuccess": "启用成功!",
-        "weightTotalErr": "机器权重总和必须等于100!"
+        "weightTotalErr": "机器权重总和必须等于100!",
+        "extractSuccess": "提取成功!",
+        "exportSuccess": "导出成功!",
+        "onlyExtractKey": "只能提取JSON的Key",
+        "runningReportCanNotExport": "运行中的报告无法导出!",
+        "plsInputCode": "请输入代码",
+        "selectEnvBeforeSave": "请先选择一个环境进行保存",
+        "selectRepeatSyncData": "已经选择过同步的数据，选择该项则取消原项",
+        "sceneSelectEnvEmpty": "该场景未选择环境，请在场景中选择环境后操作"
     },
     "modal": {
         "globalCookieTip": "开启状态的全局cookie将自动带到该团队下的每一个接口内",
@@ -690,7 +712,66 @@
         "teamRole": "团队角色",
         "function": "函数名称",
         "functionName": "函数",
-        "remark": "备注"
+        "remark": "备注",
+        "permissionDenied": "您暂无该操作权限哦",
+        "setTagName": "设置Tag名称",
+        "tagName": "Tag名称",
+        "deleteTagContent": "是否确认删除Tag",
+        "restoreHistory": "恢复历史",
+        "restoreHistoryContent": "将使用 {{time}} 的历史记录内容生成一个新记录, 原本的修改历史不受影响。确定恢复吗？",
+        "restoreThisRecord": "还原此记录",
+        "preRecord": "前一个记录",
+        "curRecord": "当前记录",
+        "earlierRecords": "更早记录",
+        "thisRecord": "该记录",
+        "noDiff": "无差异",
+        "sync": "同步",
+        "syncType": "同步方式",
+        "syncTypePush": "推送",
+        "syncTypePull": "拉取",
+        "selectDataSource": "选择数据源",
+        "checkAll": "全选",
+        "syncConfig": "同步设置",
+        "baseInfo": "基础信息",
+        "requestParam": "请求参数",
+        "requestMethod": "请求方法",
+        "requestAuth": "认证",
+        "requestAssert": "断言",
+        "requestRegex": "关联提取",
+        "requestConfig": "接口设置",
+        "requestPreScript": "前置脚本",
+        "syncSceneTip": "同步场景时该场景下所有的用例和测试对象都会同步，请谨慎操作!",
+        "exportData": "导出数据",
+        "selectedNum": "已选 {{num}} 项",
+        "exportType": "导出维度",
+        "sceneExportTypeList": {
+            "1": "场景",
+            "2": "用例",
+            "3": "场景及用例"
+        },
+        "sceneApiBatchModal": {
+            "nodeName": "名称",
+            "method": "请求方法",
+            "url": "URL",
+            "status": "状态",
+            "statusList": {
+                "0": "正常",
+                "1": "禁用"
+            },
+            "quoteApisName": "引用的测试对象名称",
+            "syncApisTitle": "同步测试对象",
+            "handleType": "操作方式",
+            "push": "推送",
+            "pull": "拉取",
+            "selectData": "选择数据",
+            "disEnableTitle": "批量禁用/启用",
+            "disabled": "禁用",
+            "enabled": "启用",
+            "select": "选择",
+            "batchDeleteTitle": "批量删除",
+            "changeServiceTitle": "批量更改服务",
+            "selectService": "选择服务"
+        }
     },
     "column": {
         "teamManage": {
@@ -859,6 +940,9 @@
             "52": "创建dubbo",
             "53": "修改dubbo",
             "54": "删除dubbo",
+            "55": "新建接口用例",
+            "56": "修改接口用例",
+            "57": "运行一键压测",
             "101": "创建mock文件夹",
             "102": "创建mock接口",
             "103": "修改mock文件夹",
@@ -881,6 +965,9 @@
         "auth": "认证",
         "assert": "断言",
         "setting": "接口设置",
+        "preScript": "前置脚本",
+        "oneClickStressTest": "一键压测",
+        "historyReport": "历史报告",
         "assertBody": "断言体",
         "condition": "条件",
         "regular": "关联提取",
@@ -950,6 +1037,8 @@
         "tabMore": ["关闭所有标签", "强制关闭所有标签", "关闭其它标签", "强制关闭其它标签", "保存所有标签"],
         "copyApi": "复制接口",
         "deleteApi": "删除接口",
+        "exportApi": "导出接口",
+        "exportFolder": "导出目录",
         "editFolder": "编辑目录",
         "deleteFolder": "删除目录",
         "createHttp": "新建Http接口",
@@ -1014,6 +1103,14 @@
         "connectTest": "连接测试",
         "eventName": "事件名",
         "eventDesc": "事件描述",
+        "sql": {
+            "tabList": {
+                "0": "编辑器SQL",
+                "1": "断言",
+                "2": "关联提取",
+                "3": "数据库"
+            }
+        },
         "tcp": {
             "sendMessage": "发送消息",
             "config": "设置",
@@ -1065,7 +1162,53 @@
                 "3": "事件",
                 "4": "设置"
             }
-        }
+        },
+        "dubbo": {
+            "reqTab": {
+                "0": "基本参数",
+                "1": "断言",
+                "2": "关联提取"
+            },
+            "registerName": "注册中心",
+            "registerAddress": "注册中心地址",
+            "version": "版本号"
+        },
+        "versionManage": "版本管理",
+        "markTagVersion": "标记tag版本",
+        "mySelf": "我自己",
+        "markedTag": "已标记",
+        "baseInfo": "基本信息",
+        "cookieParam": "请求参数Cookie",
+        "headerParam": "请求参数Header",
+        "queryParam": "请求参数Query",
+        "bodyParam": "请求参数Body",
+        "authParam": "请求参数Auth",
+        "assertParam": "断言",
+        "regexParam": "关联提取",
+        "httpSetParam": "接口设置",
+        "baseParam": "基本参数",
+        "config": "设置",
+        "sqlString": "SQL语句",
+        "databaseInfo": "数据库信息",
+        "requestParam": "请求参数",
+        "historyCompare": "历史对比",
+        "editTag": "编辑tag",
+        "deleteTag": "删除tag",
+        "extract": "提取此Key",
+        "export": "导出",
+        "execResponse": "执行结果",
+        "saveToEnv": "保存至环境",
+        "saveCase": "保存用例",
+        "saveToCase": "保存为用例",
+        "updateToApi": "更新至接口",
+        "updateToCase": "更新至用例",
+        "runConfig": "运行配置",
+        "uploadDataFile": "上传数据文件",
+        "apiCase": "接口用例"
+    },
+    "elements":{
+        "createElement":"新建元素",
+        "createScene":"新建场景"
     },
     "scene": {
         "fullScreen": "进入全屏",
@@ -1076,6 +1219,7 @@
         "createScene": "新建场景",
         "editScene": "编辑场景",
         "deleteScene": "删除场景",
+        "exportScene": "导出场景",
         "cloneScene": "克隆场景",
         "disableScene": "禁用场景",
         "enableScene": "启用场景",
@@ -1121,6 +1265,8 @@
         "editApi": "编辑接口",
         "deleteApi": "删除接口",
         "copyApi": "克隆接口",
+        "disableApi": "禁用接口",
+        "startApi": "启用接口",
         "importApiTitle": "API添加器",
         "importSqlTitle": "SQL添加器",
         "addApi": "添加接口",
@@ -1133,7 +1279,15 @@
         "fileCnFormat": "上传csv、txt格式文件中包含中文字符时, 需将文件格式改成UTF-8编码",
         "runTime": "执行时间",
         "preCondition": "前置条件",
-        "introduce": "引入"
+        "introduce": "引入",
+        "exportOrImport": "导入/导出",
+        "batchOperate": "批量操作",
+        "batchList": {
+            "0": "禁用/启用",
+            "1": "同步测试对象",
+            "2": "更改服务",
+            "3": "删除"
+        }
     },
     "plan": {
         "rankId": "序号",
@@ -1162,6 +1316,7 @@
         "createdBy": "创建人",
         "notRun": "未运行",
         "running": "运行中",
+        "expired": "已过期",
         "preinstall": "预设配置",
         "group": "目录",
         "createScene": "新建场景",
@@ -1207,7 +1362,8 @@
             "0": "一次",
             "1": "每天",
             "2": "每周",
-            "3": "每月"
+            "3": "每月",
+            "4": "固定时间间隔"
         },
         "startTaskTime": "开始执行时间",
         "explain": "保存配置并开始运行后, 将会在指定时间自动运行, 该定时任务有效时间范围为设置后365天",
@@ -1235,7 +1391,10 @@
         },
         "switchDuration": "切换为轮次",
         "switchRoundNum": "切换为持续时长",
-        "echartEmptyShow": "配置未完成无法生成阶梯图"
+        "echartEmptyShow": "配置未完成无法生成阶梯图",
+        "runNum": "执行次数",
+        "minute": "分钟",
+        "hour": "小时"
     },
     "report": {
         "done": "已完成",
@@ -1307,7 +1466,9 @@
         "unitMs": "单位(毫秒)",
         "unitNumber": "单位(个)",
         "machineName": "机器名称",
-        "config": "配置"
+        "config": "配置",
+        "export": "导出",
+        "cantDelete": "存在运行中的报告, 无法删除!"
     },
     "tooltip": {
         "start": "运行",
@@ -1315,7 +1476,10 @@
         "view": "查看",
         "copy": "复制",
         "delete": "删除",
-        "company_admin": "企业管理后台"
+        "company_admin": "企业管理后台",
+        "exportReport": "导出报告",
+        "timedPlanExpire": "该计划的定时任务已过期",
+        "preScriptInputTips": "以下代码的执行结果会赋值给此变量，在接口传参时{{变量名}}使用"
     },
     "machine": {
         "serverType": {
@@ -1693,7 +1857,8 @@
         "empty": "暂无数据",
         "envManage": "环境管理",
         "serviceTabExplain": "若同一环境下的接口需要使用不同的前置URL或服务器地址，可以创建多个服务来满足需求。切换环境时，接口所使用的服务也会切换到新环境中对应的服务",
-        "dbTabExplain": "若同一环境下的SQL需要连接不同的数据库，可以创建多个数据库来满足需求。切换环境时，SQL所使用的数据库也会切换到新环境中对应的数据库"
+        "dbTabExplain": "若同一环境下的SQL需要连接不同的数据库，可以创建多个数据库来满足需求。切换环境时，SQL所使用的数据库也会切换到新环境中对应的数据库",
+        "emptyEnv": "暂无环境"
     },
     "mock": {
         "createMock": "新建Mock",

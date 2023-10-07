@@ -1,0 +1,60 @@
+.scene-sync-mode {
+  display: flex;
+  align-items: center;
+  .arco-btn{
+    padding: 0 7px;
+    margin-left: 20px;
+  }
+  .scene-sync-mode-text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .arco-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+.scene-sync-mode-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 384px;
+  border-radius: 5px;
+  background: var(--module);
+  border: 1px solid var(--border-line);
+  padding: 10px;
+  margin-top: 6px;
+  color: var(--font-1);
+  .target-source-description{
+    font-size: 12px;
+    line-height: 19px;
+    color: var(--font-3);
+  }
+  .conten-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    .arco-radio{
+    margin-right: 0px;
+    font-size: 12px; 
+    }
+    .import-scene {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--theme-color);
+      cursor: pointer;
+      .arco-icon {
+        font-size: 16px;
+        color: var(--theme-color);
+      }
+    }
+  }
+  .footer{
+    text-align: center;
+  }
+}

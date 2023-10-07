@@ -1,0 +1,189 @@
+.ui-scene-step {
+  padding: 16px 16px 0;
+  overflow: hidden;
+  height: 100%;
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: calc(100% - 72px);
+    overflow-y: auto;
+
+    @media (max-width: 1440px) {
+      .step-list-item .item-name {
+        /* 在小屏幕上添加属性或样式 */
+        min-width: 70px !important;
+        /* 其他属性 */
+      }
+    }
+
+    .step-list-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid var(--border-line);
+      padding: 0 10px;
+      cursor: pointer;
+
+      .step-child-node {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .item-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 40px;
+        width: 100%;
+
+        .item-left {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 50%;
+          .arco-checkbox {
+            padding-left: 0px;
+          }
+
+          .item-sort {
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: var(--border-line);
+            font-size: 12px;
+            color: var(--font-1);
+          }
+
+          .item-name {
+            flex: 1;
+            color: var(--font-1);
+          }
+
+          .item-type {
+            min-width: 55px;
+            &.code_operation{
+              color: rgba(192, 195, 7, 1);
+            }
+            &.open_page,
+            &.close_page,
+            &.toggle_window,
+            &.forward,
+            &.back,
+            &.refresh {
+              color: var(--theme-color);
+            }
+
+            &.data_withdraw {
+              color: rgba(57, 151, 83, 1);
+            }
+
+            &.mouse_clicking,
+            &.mouse_scrolling,
+            &.mouse_movement,
+            &.mouse_dragging {
+              color: rgba(109, 64, 236, 1);
+            }
+
+            &.input_operations {
+              color: rgba(64, 153, 236, 1);
+            }
+
+            &.wait_events {
+              color: rgba(64, 215, 236, 1)
+            }
+
+            &.for_loop,
+            &.while_loop {
+              color: rgba(237, 120, 71, 1)
+            }
+
+            &.assert {
+              color: rgba(151, 57, 57, 1)
+            }
+
+            &.if_condition {
+              color: rgba(198, 39, 115, 1)
+            }
+          }
+        }
+
+        .item-right {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          .end-times {
+            white-space: nowrap;
+          }
+
+          .icon-run-step {
+            color: rgba(76, 203, 126, 1);
+          }
+
+          .step-list-item-response-show {
+            background: var(--border-line);
+            padding: 2px 10px;
+            font-size: 12px;
+            height: 26px;
+            border-radius: 2px;
+          }
+
+          .arco-icon {
+            font-size: 20px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .step-list-item-success {
+      border: 1px solid rgba(76, 203, 126, 1);
+
+      .step-list-item-response-show {
+        color: rgba(76, 203, 126, 1);
+      }
+    }
+
+    .step-list-item-failed {
+      border: 1px solid rgba(201, 53, 63, 1);
+
+      .step-list-item-response-show {
+        color: rgba(201, 53, 63, 1);
+      }
+    }
+
+    .step-list-item-active {
+      border: 1px solid var(--theme-color);
+    }
+
+    .step-list-item-forbidden {
+      opacity: 0.5;
+    }
+
+    .step-list-item-dragging {
+      opacity: 0.1;
+    }
+
+    .step-list-item-top {
+      border-top: 2px solid var(--theme-color);
+    }
+
+    .step-list-item-inside {
+      background: var(--theme-color);
+    }
+
+    .step-list-item-bottom {
+      border-bottom: 2px solid var(--theme-color);
+    }
+  }
+
+}

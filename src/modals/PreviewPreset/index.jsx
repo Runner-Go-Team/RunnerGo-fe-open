@@ -115,7 +115,7 @@ const PreviewPreset = (props) => {
 
     const getPreList = () => {
         const params = {
-            team_id: localStorage.getItem('team_id'),
+            team_id: sessionStorage.getItem('team_id'),
             page: currentPage,
             size: pageSize,
             conf_name: searchWord,
