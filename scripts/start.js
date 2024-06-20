@@ -43,6 +43,7 @@ const devConfig = {
         },
         historyApiFallback: false,
         hot: true,
+        allowedHosts: "all",
         proxy: {
             '/': {
                 bypass(req, res, proxyOptions) {
